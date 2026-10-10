@@ -30,7 +30,7 @@ Một use case = một story = một file `docs/stories/UC-xx-<ten-ngan>.md`, th
 ### `story done UC-xx`
 Kiểm từng AC, không suy từ việc đọc code:
 - **Tự động:** chạy test của AC. Đạt khi test chạy qua **và** có assert thật (test không assert gì là FAIL vì nó đạt vô nghĩa).
-- **Hỏi Tai** (gộp tối đa 4 câu một lần) cho AC về hành vi trên giao diện hoặc trải nghiệm: "Đạt / Không đạt / Chưa thử". Chưa thử → `CHƯA KIỂM`.
+- **Hỏi người dùng máy** (ghi trong `CLAUDE.local.md`; gộp tối đa 4 câu một lần) cho AC về hành vi trên giao diện hoặc trải nghiệm: "Đạt / Không đạt / Chưa thử". Chưa thử → `CHƯA KIỂM`.
 - **UI:** cần ảnh chụp thật từng màn hình bị đổi, lưu ở `docs/test-evidence/UC-xx/` (chụp bằng `webapp-testing`).
 
 Sau đó:
@@ -38,6 +38,7 @@ Sau đó:
 2. Có AC `FAIL` hoặc `CHƯA KIỂM` → story **chưa xong**, nói rõ thiếu gì. Không tự đánh dấu xong.
 3. Nhắc chạy `ponytail-review` trên thay đổi của story.
 4. Tất cả đạt → `Trạng thái: Hoàn thành`, ghi ngày. Gợi ý story tiếp theo theo thứ tự trong `docs/stories/`.
+5. Cập nhật `docs/TIEN-DO.md` theo CLAUDE.md (mục "Làm việc hai người"), kể cả khi story chưa xong.
 
 ### `story report`
 Gom bảng truy vết của mọi story thành `docs/test-report.md`: số AC, đạt / không đạt / chưa kiểm theo từng use case, danh sách lỗi còn mở. Chỉ lấy số liệu từ các story, không ước lượng.

@@ -233,17 +233,6 @@ Ghi chú: UC-29 và UC-30 chỉ **gợi ý**; người dùng vẫn phải xác n
 
 ---
 
-## 5. Chia việc theo phân hệ (đề xuất)
+## 5. Chia việc
 
-| Phân hệ | UC | Người chính | Tuần dự kiến |
-|---|---|---|---|
-| Chung + Xe/Tài xế | UC-01…05, 27 | Kiệt | 3–4 |
-| Đơn | UC-06…10, 22 | Tài | 3–4 |
-| Chuyến (lõi) | UC-11…16 | Tài | 5–6 |
-| Quét mã (tài xế) | UC-17…21 | Kiệt | 5–6 |
-| Quyết toán | UC-23…26, 31 | Kiệt | 7 |
-| Tra cứu | UC-28 | Tài | 7 |
-| Phụ trợ | UC-29, 30 | Cả hai | 8–9 (chỉ khi lõi đã qua test) |
-| Kiểm thử, báo cáo | — | Cả hai | 9–10 |
-
-Lý do: Chuyến và Đơn gắn chặt (ghép đơn) nên một người nắm; Quét mã và Quyết toán cùng dùng dữ liệu chi phí/tài xế nên người kia nắm. Tuần 1–2 dành cho đặc tả + thiết kế.
+Xem `docs/TIEN-DO.md` (ai làm UC nào, tuần nào, trạng thái).
