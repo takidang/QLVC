@@ -1,6 +1,6 @@
 # Đặc tả yêu cầu – Hệ thống quản lý vận tải
 
-> Phiên bản: 0.2 (đề xuất) · Cập nhật: 10/10/2026 · Nhóm 10
+> Phiên bản: 0.4 (đề xuất) · Cập nhật: 10/10/2026 · Nhóm 10
 > Quy tắc nghiệp vụ, trạng thái, cấu hình: xem `docs/nghiep-vu.md` (`BR-xx`, `ST-xx`, `CFG-xx`).
 > Ưu tiên MoSCoW: **M** = phải có (bản demo), **S** = nên có, **C** = có thì tốt (làm nếu dư thời gian).
 
@@ -66,7 +66,7 @@ Ghi chú: UC-29 và UC-30 chỉ **gợi ý**; người dùng vẫn phải xác n
 - **Tiền điều kiện:** Đã đăng nhập vai trò Điều phối/Quản lý; khách đã có trong hệ thống (hoặc tạo nhanh tại chỗ).
 - **Kích hoạt:** Khách gọi điện/nhắn yêu cầu gửi hàng.
 - **Luồng chính:**
-  1. Điều phối chọn khách, nhập hàng hóa (mô tả, kg thực, m³, số kiện), điểm lấy (địa chỉ, tỉnh, người liên hệ, SĐT, khung giờ lấy), điểm giao (địa chỉ, tỉnh, người nhận, SĐT, hạn giao).
+  1. Điều phối chọn khách, nhập hàng hóa (mô tả, kg thực, m³, số kiện), điểm lấy (địa chỉ, tỉnh, tọa độ chấm trên bản đồ Leaflet, người liên hệ, SĐT, khung giờ lấy), điểm giao (địa chỉ, tỉnh, tọa độ chấm trên bản đồ Leaflet, người nhận, SĐT, hạn giao).
   2. Hệ thống kiểm BR-31.
   3. Hệ thống tính KL quy đổi, KL tính cước, cước tạm tính (BR-46…48) và hiển thị.
   4. Điều phối lưu. Hệ thống tạo đơn trạng thái `MOI`, sinh mã đơn duy nhất và mã QR.
@@ -123,7 +123,7 @@ Ghi chú: UC-29 và UC-30 chỉ **gợi ý**; người dùng vẫn phải xác n
 
 ### UC-16 Hủy chuyến
 - **Tác nhân:** Điều phối viên · **Tiền điều kiện:** Chuyến ∈ {`LEN_KE_HOACH`, `GHEP_DON`, `DA_CHOT`}.
-- **Luồng chính:** 1. Nhập lý do (bắt buộc). 2. Hệ thống kiểm BR-25. 3. Mọi ghép → không hiệu lực, đơn → `CHO_GHEP`. 4. Nếu đã có tạm ứng → tạo khoản tài xế phải hoàn, báo Kế toán. 5. Chuyến → `HUY`.
+- **Luồng chính:** 1. Nhập lý do (bắt buộc). 2. Hệ thống kiểm BR-25. 3. Mọi ghép → không hiệu lực, đơn → `CHO_GHEP`. 4. Nếu đã có tạm ứng → các khoản tạm ứng `HIEU_LUC` chuyển `PHAI_HOAN` (BR-25), báo Kế toán. 5. Chuyến → `HUY`.
 
 ### UC-18 Bắt đầu bốc / xuất phát / kết thúc chuyến
 - **Tác nhân:** Tài xế
@@ -184,7 +184,7 @@ Ghi chú: UC-29 và UC-30 chỉ **gợi ý**; người dùng vẫn phải xác n
   2. Kế toán duyệt/điều chỉnh/từ chối từng khoản chi (ghi lý do khi điều chỉnh).
   3. Hệ thống tính lãi chuyến (BR-51) và chênh lệch tạm ứng (BR-55).
   4. Kế toán xác nhận → chuyến `DA_QUYET_TOAN`, khóa (BR-29).
-- **Ngoại lệ:** 4a. Còn khoản chi `CHO_DUYET` → không cho quyết toán.
+- **Ngoại lệ:** 4a. Còn khoản chi `CHO_DUYET` hoặc còn tạm ứng `CHO_QUAN_LY_DUYET` → không cho quyết toán (BR-55). 4b. Chuyến không ở `HOAN_THANH` → từ chối.
 - **Hậu điều kiện:** Có số lãi/lỗ chuyến và số tiền tài xế phải nộp/được nhận.
 
 ### UC-31 Điều chỉnh cước đơn
@@ -197,8 +197,6 @@ Ghi chú: UC-29 và UC-30 chỉ **gợi ý**; người dùng vẫn phải xác n
 - **Tác nhân:** Khách hàng
 - **Luồng chính:** 1. Khách vào trang tra cứu, nhập mã đơn + 4 số cuối SĐT. 2. Hệ thống kiểm BR-59. 3. Hiện trạng thái và các mốc (đã xác nhận, đã lấy, đã giao/thất bại kèm thời gian).
 - **Ngoại lệ:** 2a. Sai thông tin → thông báo chung "Không tìm thấy đơn" (không tiết lộ mã đơn có tồn tại hay không). 2b. Quá 10 lần sai/phút từ một IP → tạm chặn (NFR-SEC-05).
-
-> Phiên bản 0.3: thêm UC-31.
 
 > Các UC còn lại (UC-01…07, 10, 11, 14, 17, 25, 26, 27, 29, 30) là CRUD/xem báo cáo: đặc tả rút gọn khi làm story tương ứng.
 

@@ -1,8 +1,7 @@
 # Nghiệp vụ – Hệ thống quản lý vận tải (chuyến là trung tâm)
 
-> Phiên bản: 0.2 (đề xuất, chờ thầy góp ý) · Cập nhật: 10/10/2026 · Nhóm 10
+> Phiên bản: 0.4 (đề xuất, chờ thầy góp ý) · Cập nhật: 10/10/2026 · Nhóm 10
 > Nguyên tắc: **Chuyến xe là trung tâm, đơn hàng là thứ được ghép vào chuyến.**
-> Phiên bản 0.3: thêm BR-61, BR-62; BR-53 kiểm cả khi sửa.
 > Mọi use case, user story và test case trỏ về mã `BR-xx`, `ST-xx`, `CFG-xx` trong file này.
 > Nguồn sự thật về nghiệp vụ cho code và tài liệu. Sửa ở đây trước, rồi chép sang Project instructions trên claude.ai để hai nơi không lệch nhau.
 > Đề tài (thầy giao): "Hệ thống quản lý vận tải cho một doanh nghiệp vận tải hàng hóa nhỏ: CHUYẾN XE LÀ TRUNG TÂM, ĐƠN HÀNG LÀ THỨ ĐƯỢC GHÉP VÀO CHUYẾN."
@@ -45,7 +44,7 @@ Giả định: A5 = ghi công nợ, không COD; A6 = không tính thêm phí ở
 | **Tuyến** | Danh sách **nút** có thứ tự (tỉnh/thành hoặc kho), mỗi nút có `phút_từ_điểm_đầu` (thời gian chạy dự kiến) và cờ `là_điểm_nghỉ`. Có định mức chi phí (dầu, cầu đường, bốc xếp, lương tài xế) dùng cho tạm ứng và lãi dự kiến |
 | **Chuyến** | Xe + tài xế + tuyến + giờ khởi hành dự kiến + danh sách đơn + danh sách điểm dừng + chi phí + lãi lỗ |
 | **Điểm dừng** | Một địa chỉ cụ thể trên chuyến, loại `LAY` hoặc `GIAO`, thuộc một nút của tuyến, có thứ tự |
-| **Đơn hàng** | Khách + hàng (kg thực, m³, số kiện, mô tả) + điểm lấy + khung giờ lấy + điểm giao + hạn giao + cước. Một đơn = một mã QR |
+| **Đơn hàng** | Khách + hàng (kg thực, m³, số kiện, mô tả) + điểm lấy + khung giờ lấy + điểm giao + hạn giao + cước. Điểm lấy và điểm giao có tọa độ (Điều phối chấm trên bản đồ khi tạo đơn). Một đơn = một mã QR |
 | **Ghép** | Bản ghi liên kết Đơn–Chuyến, có cờ `hiệu_lực`. Lịch sử ghép được giữ (đơn giao thất bại có thể có nhiều lần ghép) |
 | **ETA điểm dừng** | Giờ khởi hành chuyến + `phút_từ_điểm_đầu` của nút chứa điểm dừng |
 | **Khoảng thời gian chuyến** | `[giờ khởi hành dự kiến, giờ kết thúc dự kiến)` – kết thúc = khởi hành + thời gian toàn tuyến + `CFG-05` |
@@ -114,8 +113,8 @@ Thời điểm kiểm: G = khi ghép đơn, C = khi chốt chuyến, X = khi gá
 |---|---|---|
 | BR-22 | Chỉ chuyển `LEN_KE_HOACH → GHEP_DON` khi chuyến đã gán xe và tài xế thỏa BR-11…BR-19 (vì kiểm tải cần biết xe) | Chặn |
 | BR-23 | Chốt chuyến (`GHEP_DON → DA_CHOT`) khi: có ≥ 1 đơn; mọi BR nhóm A và B đều thỏa (kiểm lại toàn bộ vì giấy tờ/lịch có thể đã đổi) | Chặn |
-| BR-24 | Mở chốt (`DA_CHOT → GHEP_DON`) chỉ khi chưa có lượt quét nào và chưa cấp tạm ứng | Chặn |
-| BR-25 | Hủy chuyến chỉ khi trạng thái ∈ {`LEN_KE_HOACH`, `GHEP_DON`, `DA_CHOT`}; mọi đơn trong chuyến về `CHO_GHEP`; nếu đã cấp tạm ứng thì phát sinh khoản tài xế phải hoàn lại | Chặn |
+| BR-24 | Mở chốt (`DA_CHOT → GHEP_DON`) chỉ khi chưa cấp tạm ứng | Chặn |
+| BR-25 | Hủy chuyến chỉ khi trạng thái ∈ {`LEN_KE_HOACH`, `GHEP_DON`, `DA_CHOT`}; mọi đơn trong chuyến về `CHO_GHEP`; nếu đã cấp tạm ứng thì các khoản tạm ứng `HIEU_LUC` chuyển sang `PHAI_HOAN`; Kế toán xác nhận tài xế đã nộp thì chuyển `DA_HOAN`, ghi nhật ký BR-62 | Chặn |
 | BR-26 | Bắt đầu bốc (`DA_CHOT → DANG_BOC`) chỉ do **tài xế của chuyến**, trong ngày khởi hành dự kiến | Chặn |
 | BR-27 | Xuất phát (`DANG_BOC → DANG_CHAY`) khi tài xế xác nhận; đơn chưa quét lấy ở điểm lấy đầu tiên vẫn có thể được lấy ở các điểm sau | — |
 | BR-28 | Kết thúc (`DANG_CHAY → HOAN_THANH`) chỉ khi mọi đơn hiệu lực đã ở trạng thái kết thúc của chuyến: `DA_GIAO`, `GIAO_THAT_BAI` hoặc `KHONG_LAY_DUOC` | Chặn |
@@ -127,7 +126,7 @@ Thời điểm kiểm: G = khi ghép đơn, C = khi chốt chuyến, X = khi gá
 | Mã | Quy tắc | Mức |
 |---|---|---|
 | BR-31 | Đơn hợp lệ: có khách, kg > 0, m³ > 0, số kiện ≥ 1, điểm lấy ≠ điểm giao, khung giờ lấy `từ < đến`, hạn giao > giờ lấy sớm nhất | Chặn |
-| BR-32 | Xác nhận đơn (`MOI → CHO_GHEP`) tính và **chốt cước** (lưu bản sao đơn giá, hệ số); đổi bảng giá sau đó không ảnh hưởng đơn đã xác nhận | — |
+| BR-32 | Xác nhận đơn (`MOI → CHO_GHEP`) tính và **chốt cước**: lưu bản sao đơn giá/kg, cước tối thiểu, hệ số quy đổi `CFG-01` và bước làm tròn `CFG-06` vào đơn. BR-33 tính lại cước chỉ từ bản sao này, không đọc bảng giá mới; đổi bảng giá hay cấu hình sau đó không ảnh hưởng đơn đã xác nhận | — |
 | BR-33 | Sửa kg/m³/điểm/khung giờ chỉ khi đơn chưa `DA_LAY_HANG`; nếu đơn đang ghép thì kiểm lại BR-01…BR-06, vi phạm thì từ chối sửa. Đơn đã xác nhận thì hệ thống tính lại cước theo đơn giá đã chốt (không lấy bảng giá mới). Cước không bao giờ nhập tay ở bước này; điều chỉnh tay theo BR-61 | Chặn |
 | BR-34 | Hủy đơn chỉ khi trạng thái ∈ {`MOI`, `CHO_GHEP`, `DA_GHEP`}; đang ghép thì gỡ khỏi chuyến trước | Chặn |
 | BR-35 | Không giao một phần: một đơn hoặc giao thành công toàn bộ, hoặc giao thất bại | Chặn |
@@ -144,7 +143,7 @@ Thời điểm kiểm: G = khi ghép đơn, C = khi chốt chuyến, X = khi gá
 | BR-41 | Giao thành công bắt buộc: ≥ 1 ảnh, chữ ký người nhận, tên người nhận | Chặn |
 | BR-42 | Giao thất bại / không lấy được bắt buộc: lý do (chọn từ danh mục) + ≥ 1 ảnh | Chặn |
 | BR-43 | Mỗi lượt quét lưu: giờ **máy chủ**, GPS (vĩ độ, kinh độ, độ chính xác) nếu điện thoại cho phép. Không có GPS vẫn cho quét nhưng gắn cờ `thiếu_GPS` | Cảnh báo |
-| BR-44 | Vị trí quét cách điểm dừng > `CFG-03` km → gắn cờ `sai_vị_trí`, hiện cho Điều phối viên | Cảnh báo |
+| BR-44 | Vị trí quét cách **tọa độ địa chỉ của đơn** (điểm lấy khi quét lấy, điểm giao khi quét giao; không tính tới tâm nút vì nút là tỉnh) > `CFG-03` km → gắn cờ `sai_vị_trí`, hiện cho Điều phối viên | Cảnh báo |
 | BR-45 | Quét lại một đơn đã chuyển trạng thái → không tạo bản ghi mới, trả về trạng thái hiện tại (idempotent) | — |
 
 ### Nhóm F – Cước, chi phí, tạm ứng, quyết toán, công nợ
@@ -160,7 +159,7 @@ Thời điểm kiểm: G = khi ghép đơn, C = khi chốt chuyến, X = khi gá
 | BR-52 | Khi chốt, hiện **lãi dự kiến** = Σ cước đơn − định mức chi phí tuyến; âm thì cảnh báo | Cảnh báo |
 | BR-53 | Tạm ứng chỉ cấp khi chuyến `DA_CHOT` trở đi và trước `HOAN_THANH`; tổng tạm ứng ≤ định mức tuyến, vượt phải có Quản lý duyệt. Kiểm lại ở **mọi lần tạo và sửa** khoản tạm ứng: sửa làm tổng vượt định mức → khoản đó về `CHO_QUAN_LY_DUYET`, chưa có hiệu lực đến khi Quản lý duyệt | Chặn |
 | BR-54 | Chi phí phát sinh phải có số tiền > 0, ghi chú và ≥ 1 ảnh chứng từ | Chặn |
-| BR-55 | Quyết toán chỉ khi `HOAN_THANH`; Kế toán duyệt từng khoản chi. Chênh lệch = tổng tạm ứng − tổng chi do tài xế chi được duyệt: dương → tài xế nộp lại, âm → công ty trả thêm | Chặn |
+| BR-55 | Quyết toán chỉ khi `HOAN_THANH`, không còn khoản chi `CHO_DUYET` và không còn tạm ứng `CHO_QUAN_LY_DUYET`; Kế toán duyệt từng khoản chi. Chênh lệch = tổng tạm ứng − tổng chi do tài xế chi được duyệt: dương → tài xế nộp lại, âm → công ty trả thêm | Chặn |
 | BR-56 | Công nợ: đơn `DA_GIAO` tự sinh khoản phải thu bằng cước. **Trạng thái thanh toán** (`CHUA_THU`, `THU_MOT_PHAN`, `DA_THU`) là trường riêng, không phải trạng thái vòng đời đơn | — |
 | BR-61 | Điều chỉnh cước tay (giảm giá, phụ phí): chỉ Kế toán hoặc Quản lý; đơn đã xác nhận cước; bắt buộc lý do; cước sau điều chỉnh ≥ 0. Lưu cước hệ thống tính và khoản điều chỉnh riêng (cước cuối = cước tính + điều chỉnh), không ghi đè cước tính. **Khóa** khi: khoản phải thu của đơn đã `THU_MOT_PHAN` trở lên, **hoặc** chuyến ghi nhận doanh thu đơn đó đã `DA_QUYET_TOAN` (BR-29), hoặc đơn `HUY`/`HOAN_HANG`. Có khoản phải thu `CHUA_THU` thì cập nhật số phải thu theo | Chặn |
 | BR-62 | Nhật ký tiền: mọi lần tạo, sửa, duyệt, từ chối cước điều chỉnh, chi phí, tạm ứng, quyết toán, khoản phải thu đều ghi: người làm, thời điểm (giờ máy chủ), giá trị cũ, giá trị mới, lý do. Chỉ thêm, không sửa/xóa. Tách khỏi lịch sử trạng thái (BR-30) | Chặn |
