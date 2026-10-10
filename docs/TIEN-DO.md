@@ -16,6 +16,7 @@
 
 ## Đang chặn / cần người kia
 <!-- Ngày – Ai cần gì từ ai. Xong thì gạch ~~...~~ -->
+- 10/10 – Kiệt phân tích lại nghiệp vụ trên nhánh `kiet/nghiep-vu` (sửa `nghiep-vu.md`, `use-cases.md`, `so-do.md`), xong mở PR vào `main` để Tài review. Trong lúc chờ: không sửa ba file đó trên `main`; Tài làm UC-01 trước, models theo ERD chờ PR merge.
 
 ## Câu hỏi chờ thầy
 - A1–A6 (nghiep-vu.md mục 1): chưa gửi
