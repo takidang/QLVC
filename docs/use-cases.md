@@ -45,9 +45,10 @@
 | UC-20 | Quét mã giao hàng | Tài xế | Quét mã | M | BR-35, 38, 40–45 |
 | UC-21 | Ghi chi phí phát sinh | Tài xế | Quyết toán | M | BR-54 |
 | UC-22 | Xử lý đơn giao thất bại / không lấy được | Điều phối | Đơn | M | BR-36, 37 |
-| UC-23 | Cấp tạm ứng chuyến | Kế toán | Quyết toán | M | BR-53 |
-| UC-24 | Quyết toán chuyến | Kế toán | Quyết toán | M | BR-29, 50, 51, 55 |
-| UC-25 | Theo dõi công nợ và ghi nhận thu tiền | Kế toán | Quyết toán | S | BR-56 |
+| UC-23 | Cấp / sửa tạm ứng chuyến | Kế toán | Quyết toán | M | BR-53, 62 |
+| UC-24 | Quyết toán chuyến | Kế toán | Quyết toán | M | BR-29, 50, 51, 55, 62 |
+| UC-25 | Theo dõi công nợ và ghi nhận thu tiền | Kế toán | Quyết toán | S | BR-56, 62 |
+| UC-31 | Điều chỉnh cước đơn | Kế toán | Quyết toán | S | BR-61, 62 |
 | UC-26 | Báo cáo lãi lỗ theo chuyến / xe / tuyến | Quản lý | Quyết toán | S | BR-51 |
 | UC-27 | Xem bảng cảnh báo (giấy tờ, quét sai vị trí, thiếu GPS) | Điều phối | Xe/Tài xế | S | BR-21, 43, 44 |
 | UC-28 | Tra cứu đơn | Khách | Tra cứu | M | BR-59 |
@@ -173,7 +174,7 @@ Ghi chú: UC-29 và UC-30 chỉ **gợi ý**; người dùng vẫn phải xác n
 - **Tác nhân:** Kế toán (Quản lý duyệt khi vượt định mức)
 - **Tiền điều kiện:** Chuyến `DA_CHOT`, `DANG_BOC` hoặc `DANG_CHAY`.
 - **Luồng chính:** 1. Hệ thống gợi ý số tiền = định mức tuyến − tạm ứng đã cấp. 2. Kế toán nhập số tiền, hình thức (tiền mặt/chuyển khoản). 3. Kiểm BR-53 → lưu.
-- **Luồng thay thế:** 3a. Vượt định mức → trạng thái `CHO_QUAN_LY_DUYET`; Quản lý duyệt/từ chối.
+- **Luồng thay thế:** 3a. Vượt định mức → trạng thái `CHO_QUAN_LY_DUYET`; Quản lý duyệt/từ chối. 3b. **Sửa** khoản tạm ứng (khi chuyến chưa quyết toán): nhập số mới + lý do → kiểm lại BR-53 → nếu tổng vượt định mức thì khoản đó về `CHO_QUAN_LY_DUYET`; ghi nhật ký BR-62.
 
 ### UC-24 Quyết toán chuyến
 - **Tác nhân:** Kế toán
@@ -186,10 +187,18 @@ Ghi chú: UC-29 và UC-30 chỉ **gợi ý**; người dùng vẫn phải xác n
 - **Ngoại lệ:** 4a. Còn khoản chi `CHO_DUYET` → không cho quyết toán.
 - **Hậu điều kiện:** Có số lãi/lỗ chuyến và số tiền tài xế phải nộp/được nhận.
 
+### UC-31 Điều chỉnh cước đơn
+- **Tác nhân:** Kế toán (hoặc Quản lý)
+- **Tiền điều kiện:** Đơn đã xác nhận cước; chưa bị khóa theo BR-61.
+- **Luồng chính:** 1. Mở đơn, xem cước hệ thống tính và các lần điều chỉnh trước. 2. Nhập khoản điều chỉnh (âm = giảm giá, dương = phụ phí) và lý do. 3. Hệ thống kiểm BR-61 → lưu điều chỉnh, cập nhật cước cuối và khoản phải thu `CHUA_THU` (nếu có), ghi nhật ký BR-62.
+- **Ngoại lệ:** 3a. Đơn đã khóa (đã thu một phần, chuyến đã quyết toán, đơn hủy/hoàn) → từ chối, nêu lý do khóa. 3b. Cước cuối < 0 → từ chối. 3c. Vai trò khác Kế toán/Quản lý → 403.
+
 ### UC-28 Tra cứu đơn
 - **Tác nhân:** Khách hàng
 - **Luồng chính:** 1. Khách vào trang tra cứu, nhập mã đơn + 4 số cuối SĐT. 2. Hệ thống kiểm BR-59. 3. Hiện trạng thái và các mốc (đã xác nhận, đã lấy, đã giao/thất bại kèm thời gian).
 - **Ngoại lệ:** 2a. Sai thông tin → thông báo chung "Không tìm thấy đơn" (không tiết lộ mã đơn có tồn tại hay không). 2b. Quá 10 lần sai/phút từ một IP → tạm chặn (NFR-SEC-05).
+
+> Phiên bản 0.3: thêm UC-31.
 
 > Các UC còn lại (UC-01…07, 10, 11, 14, 17, 25, 26, 27, 29, 30) là CRUD/xem báo cáo: đặc tả rút gọn khi làm story tương ứng.
 
@@ -233,7 +242,7 @@ Ghi chú: UC-29 và UC-30 chỉ **gợi ý**; người dùng vẫn phải xác n
 | Đơn | UC-06…10, 22 | Tài | 3–4 |
 | Chuyến (lõi) | UC-11…16 | Tài | 5–6 |
 | Quét mã (tài xế) | UC-17…21 | Kiệt | 5–6 |
-| Quyết toán | UC-23…26 | Kiệt | 7 |
+| Quyết toán | UC-23…26, 31 | Kiệt | 7 |
 | Tra cứu | UC-28 | Tài | 7 |
 | Phụ trợ | UC-29, 30 | Cả hai | 8–9 (chỉ khi lõi đã qua test) |
 | Kiểm thử, báo cáo | — | Cả hai | 9–10 |

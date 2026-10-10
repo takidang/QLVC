@@ -2,6 +2,7 @@
 
 > Phiên bản: 0.2 (đề xuất, chờ thầy góp ý) · Cập nhật: 10/10/2026 · Nhóm 10
 > Nguyên tắc: **Chuyến xe là trung tâm, đơn hàng là thứ được ghép vào chuyến.**
+> Phiên bản 0.3: thêm BR-61, BR-62; BR-53 kiểm cả khi sửa.
 > Mọi use case, user story và test case trỏ về mã `BR-xx`, `ST-xx`, `CFG-xx` trong file này.
 > Nguồn sự thật về nghiệp vụ cho code và tài liệu. Sửa ở đây trước, rồi chép sang Project instructions trên claude.ai để hai nơi không lệch nhau.
 > Đề tài (thầy giao): "Hệ thống quản lý vận tải cho một doanh nghiệp vận tải hàng hóa nhỏ: CHUYẾN XE LÀ TRUNG TÂM, ĐƠN HÀNG LÀ THỨ ĐƯỢC GHÉP VÀO CHUYẾN."
@@ -127,7 +128,7 @@ Thời điểm kiểm: G = khi ghép đơn, C = khi chốt chuyến, X = khi gá
 |---|---|---|
 | BR-31 | Đơn hợp lệ: có khách, kg > 0, m³ > 0, số kiện ≥ 1, điểm lấy ≠ điểm giao, khung giờ lấy `từ < đến`, hạn giao > giờ lấy sớm nhất | Chặn |
 | BR-32 | Xác nhận đơn (`MOI → CHO_GHEP`) tính và **chốt cước** (lưu bản sao đơn giá, hệ số); đổi bảng giá sau đó không ảnh hưởng đơn đã xác nhận | — |
-| BR-33 | Sửa kg/m³/điểm/khung giờ chỉ khi đơn chưa `DA_LAY_HANG`; nếu đơn đang ghép thì kiểm lại BR-01…BR-06, vi phạm thì từ chối sửa. Đơn đã xác nhận thì hệ thống tính lại cước theo đơn giá đã chốt (không lấy bảng giá mới). Cước không bao giờ nhập tay ở bước này; điều chỉnh tay xem `docs/security-rules.md` | Chặn |
+| BR-33 | Sửa kg/m³/điểm/khung giờ chỉ khi đơn chưa `DA_LAY_HANG`; nếu đơn đang ghép thì kiểm lại BR-01…BR-06, vi phạm thì từ chối sửa. Đơn đã xác nhận thì hệ thống tính lại cước theo đơn giá đã chốt (không lấy bảng giá mới). Cước không bao giờ nhập tay ở bước này; điều chỉnh tay theo BR-61 | Chặn |
 | BR-34 | Hủy đơn chỉ khi trạng thái ∈ {`MOI`, `CHO_GHEP`, `DA_GHEP`}; đang ghép thì gỡ khỏi chuyến trước | Chặn |
 | BR-35 | Không giao một phần: một đơn hoặc giao thành công toàn bộ, hoặc giao thất bại | Chặn |
 | BR-36 | Đơn `GIAO_THAT_BAI` hoặc `KHONG_LAY_DUOC`: khi chuyến hoàn thành, bản ghi ghép chuyển `hiệu_lực = false`; Điều phối viên chọn **ghép lại** (→ `CHO_GHEP`) hoặc **hoàn hàng** (→ `HOAN_HANG`, chỉ với `GIAO_THAT_BAI`) | — |
@@ -157,10 +158,12 @@ Thời điểm kiểm: G = khi ghép đơn, C = khi chốt chuyến, X = khi gá
 | BR-50 | Doanh thu của đơn ghi nhận cho **chuyến giao thành công**; chuyến giao thất bại ghi doanh thu đơn đó = 0 (chi phí vẫn tính) | — |
 | BR-51 | Lãi chuyến = Σ doanh thu đơn ghi nhận − (dầu + cầu đường + bốc xếp + lương tài xế + phát sinh) | — |
 | BR-52 | Khi chốt, hiện **lãi dự kiến** = Σ cước đơn − định mức chi phí tuyến; âm thì cảnh báo | Cảnh báo |
-| BR-53 | Tạm ứng chỉ cấp khi chuyến `DA_CHOT` trở đi và trước `HOAN_THANH`; tổng tạm ứng ≤ định mức tuyến, vượt phải có Quản lý duyệt | Chặn |
+| BR-53 | Tạm ứng chỉ cấp khi chuyến `DA_CHOT` trở đi và trước `HOAN_THANH`; tổng tạm ứng ≤ định mức tuyến, vượt phải có Quản lý duyệt. Kiểm lại ở **mọi lần tạo và sửa** khoản tạm ứng: sửa làm tổng vượt định mức → khoản đó về `CHO_QUAN_LY_DUYET`, chưa có hiệu lực đến khi Quản lý duyệt | Chặn |
 | BR-54 | Chi phí phát sinh phải có số tiền > 0, ghi chú và ≥ 1 ảnh chứng từ | Chặn |
 | BR-55 | Quyết toán chỉ khi `HOAN_THANH`; Kế toán duyệt từng khoản chi. Chênh lệch = tổng tạm ứng − tổng chi do tài xế chi được duyệt: dương → tài xế nộp lại, âm → công ty trả thêm | Chặn |
 | BR-56 | Công nợ: đơn `DA_GIAO` tự sinh khoản phải thu bằng cước. **Trạng thái thanh toán** (`CHUA_THU`, `THU_MOT_PHAN`, `DA_THU`) là trường riêng, không phải trạng thái vòng đời đơn | — |
+| BR-61 | Điều chỉnh cước tay (giảm giá, phụ phí): chỉ Kế toán hoặc Quản lý; đơn đã xác nhận cước; bắt buộc lý do; cước sau điều chỉnh ≥ 0. Lưu cước hệ thống tính và khoản điều chỉnh riêng (cước cuối = cước tính + điều chỉnh), không ghi đè cước tính. **Khóa** khi: khoản phải thu của đơn đã `THU_MOT_PHAN` trở lên, **hoặc** chuyến ghi nhận doanh thu đơn đó đã `DA_QUYET_TOAN` (BR-29), hoặc đơn `HUY`/`HOAN_HANG`. Có khoản phải thu `CHUA_THU` thì cập nhật số phải thu theo | Chặn |
+| BR-62 | Nhật ký tiền: mọi lần tạo, sửa, duyệt, từ chối cước điều chỉnh, chi phí, tạm ứng, quyết toán, khoản phải thu đều ghi: người làm, thời điểm (giờ máy chủ), giá trị cũ, giá trị mới, lý do. Chỉ thêm, không sửa/xóa. Tách khỏi lịch sử trạng thái (BR-30) | Chặn |
 
 ### Nhóm G – Phân quyền, tra cứu, dữ liệu
 
@@ -244,6 +247,7 @@ Thời điểm kiểm: G = khi ghép đơn, C = khi chốt chuyến, X = khi gá
 | Lập chuyến, ghép đơn, chốt, hủy | ✔ | ✔ | | | |
 | Xem chuyến của mình, quét mã, ghi phát sinh | | | ✔ | | |
 | Tạm ứng, quyết toán, công nợ | ✔ (duyệt vượt định mức) | | | ✔ | |
+| Điều chỉnh cước tay (BR-61) | ✔ | | | ✔ | |
 | Báo cáo lãi lỗ | ✔ | xem | | ✔ | |
 | Tra cứu đơn | | | | | ✔ (không đăng nhập) |
 
