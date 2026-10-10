@@ -1,0 +1,8 @@
+# Secret
+.env
+.env.*
+!.env.example
+
+# Cấu hình Claude Code riêng từng máy
+.claude/settings.local.json
+CLAUDE.local.md
