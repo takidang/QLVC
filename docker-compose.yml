@@ -1,0 +1,15 @@
+# Chỉ dùng lúc dev. Mật khẩu lấy từ .env (xem .env.example), không ghi thẳng ở đây.
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?Thiếu POSTGRES_USER trong .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Thiếu POSTGRES_PASSWORD trong .env}
+      POSTGRES_DB: ${POSTGRES_DB:?Thiếu POSTGRES_DB trong .env}
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

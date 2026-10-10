@@ -199,6 +199,7 @@ Chỉ khai tên trong `.env.example`; giá trị thật đặt ở `.env` (máy 
 | `JWT_SECRET` | Ký token; chuỗi ngẫu nhiên dài, khác nhau giữa dev và demo |
 | `LUU_TRU` | `local` hoặc `supabase` |
 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_BUCKET` | Lưu file ở demo; khóa chỉ backend dùng |
+| `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB` | PostgreSQL trong `docker-compose.yml` lúc dev |
 
 ---
 
@@ -211,4 +212,4 @@ Chỉ khai tên trong `.env.example`; giá trị thật đặt ở `.env` (máy 
 | E2E luồng chính | `webapp-testing` (Playwright) | Máy dev, trước khi đóng story |
 | Hiệu năng | Locust hoặc k6 với 10.000 đơn | Máy dev, tuần 9 |
 
-GitHub Actions khi push: lint (ruff, eslint), kiểm kiểu (`tsc`), pytest, quét bí mật (gitleaks). Mỗi use case làm theo `story-flow`.
+GitHub Actions khi push (`.github/workflows/ci.yml`): backend `ruff check`, `ruff format --check`, pytest; frontend oxlint (lint đi kèm bản mẫu Vite), prettier, `tsc -b` + build; quét bí mật bằng binary gitleaks ghim phiên bản và checksum. Action bên ngoài ghim theo commit SHA. Phiên bản package ghim chính xác: `backend/requirements*.txt` dùng `==`, frontend commit `package-lock.json` và CI chạy `npm ci`. Mỗi use case làm theo `story-flow`.

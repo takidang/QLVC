@@ -6,3 +6,14 @@
 # Cấu hình Claude Code riêng từng máy
 .claude/settings.local.json
 CLAUDE.local.md
+
+# Python
+__pycache__/
+.venv/
+.pytest_cache/
+.ruff_cache/
+backend/uploads/
+
+# Node
+node_modules/
+dist/

@@ -228,7 +228,7 @@ Ghi chú: UC-29 và UC-30 chỉ **gợi ý**; người dùng vẫn phải xác n
 | NFR-SEC-06 | Bảo mật | Ghi log lịch sử chuyển trạng thái, không sửa/xóa được (BR-30) | Test |
 | NFR-MAI-01 | Bảo trì | Quy tắc nghiệp vụ nằm ở tầng domain/service, không nằm trong router hay giao diện; mỗi BR là một hàm kiểm có tên chứa mã BR | Review mã |
 | NFR-MAI-02 | Bảo trì | Độ phủ test tầng domain ≥ 80%, toàn bộ ≥ 60% | pytest-cov |
-| NFR-MAI-03 | Bảo trì | Lint + format (ruff, eslint, prettier) chạy trong CI | CI |
+| NFR-MAI-03 | Bảo trì | Lint + format (ruff, oxlint, prettier) chạy trong CI | CI |
 | NFR-POR-01 | Khả chuyển | Chạy toàn bộ bằng `docker compose up` | Thử trên máy sạch |
 
 ---
