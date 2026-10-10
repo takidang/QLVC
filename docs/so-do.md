@@ -549,7 +549,7 @@ Liên quan: BR-01…10
 
 Luồng quan trọng nhất của đề tài. Kiểm cả lô trong một giao dịch: một đơn sai thì không ghép đơn nào.
 
-- Khóa dòng chuyến (SELECT … FOR UPDATE) để hai người ghép cùng lúc không làm vượt tải.
+- Khóa dòng chuyến và các dòng đơn (SELECT … FOR UPDATE) để hai người ghép cùng lúc không làm vượt tải hay ghép trùng một đơn.
 - Lỗi trả về danh sách mã BR bị vi phạm để giao diện hiện cho Điều phối (NFR-USA-02).
 
 ```mermaid
