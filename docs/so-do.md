@@ -594,7 +594,8 @@ Liên quan: BR-38…45
 
 Điện thoại chỉ gửi mã đơn, tọa độ và ảnh. Giờ quét, quyền và trạng thái đều do server quyết.
 
-- Đơn không thuộc chuyến của tài xế đang đăng nhập → 403, chống IDOR.
+- Đơn không thuộc chuyến của tài xế đang đăng nhập → 403, chống IDOR. Chuyến của mình nhưng sai trạng thái → 409.
+- Khóa chuyến trước, đơn sau (thứ tự khóa ở `kien-truc.md` mục 6), để tài xế không kết thúc chuyến khi một lượt quét đang chạy.
 - Giao thành công sinh khoản phải thu ngay trong cùng giao dịch.
 
 ```mermaid
@@ -602,7 +603,7 @@ sequenceDiagram
   autonumber
   actor TX as Tài xế
   participant APP as Web tài xế (điện thoại)
-  participant API as API /quet
+  participant API as API /api/toi/quet
   participant SV as Dịch vụ Quét
   participant DB as PostgreSQL
   TX->>APP: quét QR tại điểm GIAO
@@ -610,9 +611,12 @@ sequenceDiagram
   TX->>APP: chụp ảnh, nhập tên, người nhận ký
   APP->>API: POST ma_don, loai=GIAO, lat/lng?, ảnh, chữ ký
   API->>SV: quet(tai_xe hiện tại, ...)
-  SV->>DB: tìm GHEP hiệu lực của đơn
-  alt không thuộc chuyến của tài xế hoặc chuyến sai trạng thái
+  SV->>DB: BEGIN, tìm GHEP hiệu lực của đơn
+  SV->>DB: khóa dòng chuyến (FOR SHARE) rồi dòng đơn (FOR UPDATE)
+  alt không thuộc chuyến của tài xế
     SV-->>API: 403 [BR-38]
+  else chuyến của mình nhưng không ở DANG_BOC/DANG_CHAY
+    SV-->>API: 409 [BR-38]
   else đơn đã có kết quả (DA_GIAO hoặc GIAO_THAT_BAI)
     SV-->>API: 200 kèm trạng thái hiện tại [BR-45]
   else đơn đang DA_GHEP

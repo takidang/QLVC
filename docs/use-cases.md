@@ -154,7 +154,7 @@ Ghi chú: UC-29 và UC-30 chỉ **gợi ý**; người dùng vẫn phải xác n
 - **Luồng chính:**
   1. Tài xế chọn điểm dừng GIAO, quét QR.
   2. Hệ thống kiểm BR-38, BR-40.
-  3. Tài xế chụp ≥ 1 ảnh, nhập tên người nhận, người nhận ký trên màn hình.
+  3. Tài xế chụp ≥ 1 ảnh (trình duyệt tự nén theo NFR-PER-03), nhập tên người nhận, người nhận ký trên màn hình.
   4. Hệ thống kiểm BR-41, lưu ảnh + chữ ký + GPS + giờ máy chủ → đơn `DA_GIAO`; sinh khoản phải thu (BR-56).
 - **Luồng thay thế:**
   - 3a. **Giao thất bại:** chọn lý do (người nhận vắng, từ chối nhận, sai địa chỉ, hàng hư hỏng, khác), chụp ảnh (BR-42) → `GIAO_THAT_BAI`.
@@ -213,6 +213,7 @@ Ghi chú: UC-29 và UC-30 chỉ **gợi ý**; người dùng vẫn phải xác n
 | NFR-FUN-02 | Phù hợp chức năng | Tiền lưu kiểu số nguyên (đồng), kg/m³ kiểu decimal; không dùng float | Review mã, test làm tròn |
 | NFR-PER-01 | Hiệu năng | API đọc p95 < 500 ms, ghép đơn p95 < 1 s với 50 người dùng đồng thời, dữ liệu 10.000 đơn | Locust/k6 trên bản demo |
 | NFR-PER-02 | Hiệu năng | Trang tài xế tải xong < 3 s trên 4G | Lighthouse (mô phỏng mạng chậm) |
+| NFR-PER-03 | Hiệu năng | Ảnh nén trên trình duyệt trước khi gửi: cạnh dài ≤ 1280 px, JPEG chất lượng ~70%, mỗi ảnh ≤ 500 KB. Server từ chối file lớn hơn giới hạn | Test upload ảnh gốc từ điện thoại, kiểm kích thước file lưu trong Storage |
 | NFR-COM-01 | Tương thích | Web chạy trên Chrome, Edge bản mới; trang tài xế chạy Chrome Android và Safari iOS, màn hình từ 360 px | Test thủ công trên 2 điện thoại |
 | NFR-USA-01 | Khả dụng | Quét một đơn ≤ 3 thao tác từ màn hình chuyến | Kịch bản test |
 | NFR-USA-02 | Khả dụng | Lỗi nghiệp vụ hiển thị mã BR + câu tiếng Việt dễ hiểu | Test các luồng ngoại lệ |

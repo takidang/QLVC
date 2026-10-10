@@ -254,9 +254,21 @@ Thời điểm kiểm: G = khi ghép đơn, C = khi chốt chuyến, X = khi gá
 - Gợi ý ghép đơn vào chuyến và thứ tự điểm dừng: thuật toán tối ưu (OR-Tools). Chỉ gợi ý, mọi BR vẫn do lõi kiểm (UC-29).
 - AI dự đoán nguy cơ trễ của chuyến, train trên dataset công khai (Kaggle "Delivery Truck Trips Data" – cần kiểm tra), train lại bằng giờ thực tế từ các lần quét mã (UC-30).
 
-## 8. Nền tảng (đề xuất, chưa chốt)
-- Web cho điều phối, kế toán, quản lý; web responsive cho tài xế trên điện thoại (quét QR bằng camera, lấy GPS lúc quét). Không làm GPS theo dõi liên tục.
-- FastAPI (Python) + React + PostgreSQL; bản đồ Leaflet + OpenStreetMap.
+## 8. Nền tảng và triển khai (đã chốt 10/10/2026)
+- **Một web app duy nhất**, chia màn hình theo vai trò:
+  - Quản lý, Điều phối, Kế toán: dùng trên máy tính.
+  - Tài xế: mở **cùng web đó trên trình duyệt điện thoại** (giao diện responsive), đăng nhập tài khoản tài xế. Quét QR bằng camera, lấy GPS lúc quét, chụp ảnh, ký trên màn hình. Không cài app. Có thể "Thêm vào màn hình chính" cho tiện. Không làm GPS theo dõi liên tục, không làm chế độ offline.
+  - Khách hàng: trang **tra cứu công khai** trên cùng web, không cần tài khoản: nhập mã đơn + 4 số cuối SĐT (BR-59). Mã đơn có trên phiếu gửi hàng in kèm QR; Điều phối gửi mã cho khách (nhắn tay, ngoài hệ thống).
+- Công nghệ: **FastAPI (Python)** + **React với TypeScript** + **PostgreSQL**; bản đồ Leaflet + OpenStreetMap. Lý do chọn Python: module phụ (OR-Tools, mô hình dự đoán trễ) cùng ngôn ngữ; nhóm dùng AI hỗ trợ viết code nên chọn ngôn ngữ dễ đọc để tự giải thích được khi bảo vệ.
+- Camera và GPS trên trình duyệt chỉ chạy qua **HTTPS** (hoặc localhost), nên bản demo phải có HTTPS.
+- Triển khai (chi tiết kỹ thuật ở `docs/kien-truc.md`):
+  - Dev: chạy local, PostgreSQL bằng `docker compose`. Thử camera trên điện thoại qua Cloudflare Quick Tunnel.
+  - Demo: **Render** chạy một web service (FastAPI phục vụ luôn bản build React), tên miền miễn phí `*.onrender.com`, không mua domain. **Supabase** chứa PostgreSQL và Storage (bucket private) cho ảnh, chữ ký. Không dùng Postgres miễn phí của Render vì hết hạn sau 30 ngày.
+  - Ổ đĩa Render không giữ file, nên mọi file upload vào Supabase Storage; ảnh chỉ xem qua link có hạn (NFR-SEC-04).
+  - Chuỗi kết nối DB và khóa Supabase chỉ đặt trong Environment của Render; khóa `service_role` chỉ backend dùng.
+  - Gói miễn phí: Render ngủ sau 15 phút không có truy cập, mở lại mất khoảng 1 phút; Supabase tạm dừng project sau 1 tuần không hoạt động. Có thể trả $7/tháng cho Render trong tháng bảo vệ. **Kiểm tra lại hạn mức ở tuần 8–9.**
+  - Dữ liệu 10.000 đơn để test hiệu năng chỉ chạy local; bản demo seed vài trăm đơn.
+- Hướng phát triển: app tài xế riêng bằng Flutter (dùng lại API), thông báo trạng thái đơn cho khách qua SMS/Zalo.
 
 ---
 
