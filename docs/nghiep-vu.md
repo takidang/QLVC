@@ -80,7 +80,32 @@ Giả định khác:
 | **Tải trọng cho phép chở** | Khối lượng hàng tối đa xe được chở (khác *khối lượng toàn bộ theo thiết kế*, dùng để xét hạng bằng lái) |
 | **Tỷ lệ lấp đầy** | max(tổng kg / tải trọng, tổng m³ / thể tích) |
 
-**Mô hình thời gian:** ETA, kết thúc dự kiến, khoảng chiếm, giờ lái dự kiến tính theo BR-63…65 (nhóm H, mục 4). Vì ETA phụ thuộc số điểm dừng, mọi thao tác làm đổi danh sách đơn, xe hoặc tài xế đều kiểm lại cả chuyến (BR-67).
+### 2.1 Công thức
+
+Mọi con số hệ thống tính ra đều theo bảng này; code viết mỗi dòng thành một hàm (domain), test theo đúng công thức. Số liệu đầu vào (giá, phút chạy, định mức, tham số CFG) là dữ liệu, thay bằng số thật không phải sửa công thức. Thời gian tính theo phút, giờ Việt Nam; tiền là số nguyên đồng; kg, m³ là số thập phân (không dùng float).
+
+| Đại lượng | Công thức | Đơn vị, làm tròn | BR |
+|---|---|---|---|
+| KL quy đổi | m³ × `CFG-01` | kg | BR-46 |
+| KL tính cước | max(kg thực, KL quy đổi) | kg | BR-47 |
+| Cước | max(cước tối thiểu, đơn giá/kg × KL tính cước), làm tròn **lên** bội `CFG-06`; dùng bản sao giá chốt lúc tạo đơn | đồng | BR-32, 48 |
+| Phút dừng của điểm | Hiện bằng `CFG-08` cho mọi điểm. Viết thành hàm riêng để sau thay bằng số theo loại điểm hoặc theo dữ liệu thật | phút | BR-63 |
+| ETA điểm dừng i | giờ khởi hành + `phut_tu_diem_dau` của nút chứa i + Σ phút dừng của các điểm đứng trước i | phút | BR-63 |
+| Kết thúc dự kiến | ETA điểm cuối + phút dừng điểm cuối + `CFG-05`. Chạy rỗng: giờ khởi hành + `phut_tu_diem_dau` nút cuối + `CFG-05` | phút | BR-64 |
+| Khoảng chiếm | [giờ khởi hành, kết thúc dự kiến), **nửa mở**: chuyến kết thúc 14:00 không chồng chuyến bắt đầu 14:00 | — | BR-16, 17, 64 |
+| Giờ lái dự kiến | `phut_tu_diem_dau` nút cuối; qua nửa đêm chia theo phần giao với từng ngày | phút | BR-18, 19, 65 |
+| Tỷ lệ lấp đầy | max(Σ kg / tải trọng, Σ m³ / thể tích) | % | — |
+| Lãi dự kiến | Σ cước đơn hiệu lực − (định mức dầu + cầu đường + bốc xếp) − lương khoán; khi `LAP` lấy từ tuyến, từ khi chốt lấy số đã chốt | đồng | BR-52, 71 |
+| ETA kế hoạch | ETA của từng điểm tại lúc chốt chuyến, **lưu lại**, không tính lại khi chạy | phút | BR-71 |
+| Độ trễ của điểm | giờ quét thực tế (giờ máy chủ) − ETA kế hoạch của điểm đó; âm là sớm | phút | BR-73 |
+| Kết thúc dự kiến khi đang chạy | kết thúc dự kiến lúc chốt + max(0, độ trễ của lượt quét gần nhất) | phút | BR-73 |
+| Lãi chuyến | Σ doanh thu đơn giao thành công trên chuyến − Σ chi phí đã duyệt − lương (đã chốt, hoặc nhập tay theo BR-68) | đồng | BR-50, 51 |
+| Chênh lệch tạm ứng | Σ tạm ứng `HIEU_LUC` − Σ chi phí đã duyệt; dương: tài xế nộp lại, âm: công ty trả thêm | đồng | BR-55 |
+| Dầu tham khảo | (km kết thúc − km bắt đầu) × `dinh_muc_lit_100km` / 100; chỉ để xem | lít | UC-24, 34 |
+| Lãi xe theo tháng | Σ lãi các chuyến của xe khởi hành trong tháng − chi phí cố định tháng của xe | đồng | UC-26 |
+| Hiệu suất xe theo tháng | % lấp đầy trung bình các chuyến không hủy; số chuyến chạy rỗng; Σ km; Σ lít dầu thực tế so với Σ dầu tham khảo | — | UC-34 |
+
+Vì ETA phụ thuộc số điểm dừng, mọi thao tác làm đổi danh sách đơn, xe hoặc tài xế đều kiểm lại cả chuyến (BR-67).
 
 ---
 
@@ -122,6 +147,7 @@ Thời điểm kiểm: G = khi ghép/gỡ đơn, C = khi chốt chuyến, X = kh
 | BR-10 | Điểm dừng không lưu bảng riêng, không sắp tay: mỗi đơn hiệu lực sinh 2 điểm (LẤY, GIAO), thứ tự suy ra theo BR-63 (0.4: thêm/xóa bản ghi điểm dừng, sắp tay – bỏ) | — | Mỗi lần tính lịch trình |
 
 > Ghi chú BR-01: bản này kiểm **tổng** (bảo thủ, đơn giản). Kiểm tải theo từng đoạn (hàng lên xuống dọc đường) là chính xác hơn nhưng để ở hướng phát triển.
+> Ghi chú BR-05: xe đến sớm hơn đầu khung giờ lấy cũng bị chặn, vì mô hình chưa có việc đứng chờ. Đây là giới hạn đã biết, chọn để giữ ETA đơn giản; hướng phát triển: cho xe chờ và dịch ETA các điểm sau.
 
 ### Nhóm B – Xe và tài xế
 
@@ -212,17 +238,17 @@ Thời điểm kiểm: G = khi ghép/gỡ đơn, C = khi chốt chuyến, X = kh
 
 | Mã | Quy tắc | Mức | Kiểm khi |
 |---|---|---|---|
-| BR-63 | ETA điểm dừng = giờ khởi hành + `phut_tu_diem_dau` của nút + số điểm dừng phía trước × `CFG-08`. Thứ tự điểm dừng: theo thứ tự nút; trong cùng một nút, các điểm lấy trước, các điểm giao xếp theo hạn giao sớm trước; cùng hạn thì theo mã đơn | — | Mỗi lần tính lịch trình |
-| BR-64 | Kết thúc dự kiến = ETA điểm cuối + `CFG-08` + `CFG-05`. Chuyến 0 đơn (chạy rỗng): giờ khởi hành + thời gian toàn tuyến + `CFG-05`. Khoảng chiếm = [khởi hành, kết thúc dự kiến) | — | Mỗi lần tính lịch trình |
+| BR-63 | ETA điểm dừng = giờ khởi hành + `phut_tu_diem_dau` của nút + Σ phút dừng của các điểm đứng trước (phút dừng mỗi điểm hiện bằng `CFG-08`, mục 2.1). Thứ tự điểm dừng: theo thứ tự nút; trong cùng một nút, các điểm LẤY trước rồi tới các điểm GIAO. Điểm LẤY: đầu khung giờ lấy sớm trước, đơn không có khung xếp sau, cùng thì theo mã đơn. Điểm GIAO: hạn giao sớm trước, cùng hạn thì theo mã đơn | — | Mỗi lần tính lịch trình |
+| BR-64 | Kết thúc dự kiến = ETA điểm cuối + phút dừng điểm cuối + `CFG-05`. Chuyến 0 đơn (chạy rỗng): giờ khởi hành + thời gian toàn tuyến + `CFG-05`. Khoảng chiếm = [khởi hành, kết thúc dự kiến) | — | Mỗi lần tính lịch trình |
 | BR-65 | Giờ lái dự kiến = `phut_tu_diem_dau` của nút cuối, không tính phút dừng và `CFG-05`. Chuyến qua nửa đêm chia theo phần giao với từng ngày (làm rõ BR-18, 19) | — | X, C |
 | BR-66 | Tuyến có thời gian chạy (`phut_tu_diem_dau` nút cuối) ≤ 10 giờ | Chặn | Khi lưu tuyến |
 | BR-67 | Mỗi lần ghép, gỡ đơn, đổi xe hoặc đổi tài xế: kiểm lại cho cả chuyến BR-01, 02, 05, 06 (ETA dịch theo số điểm dừng), BR-12, 13, 15 (kết thúc dự kiến có thể lùi sang ngày sau), BR-16, 17 (khoảng chiếm dài ra); đổi tài xế thì kiểm thêm BR-14, 18, 19. Vi phạm ở bất kỳ đơn nào → không thực hiện thao tác, nêu đơn bị ảnh hưởng | Chặn | G, X |
-| BR-68 | Điều phối kết thúc chuyến `DANG_CHAY` do sự cố (lý do bắt buộc, gắn cờ `ket_thuc_bat_thuong`): đơn `DA_LAY` và `DA_GHEP` thành `THAT_BAI` với lý do "sự cố xe"; khoảng chiếm kết thúc ở giờ kết thúc thực tế (xe và tài xế được giải phóng). Kế toán nhập lương chuyến bằng tay, có lý do | Chặn | — |
+| BR-68 | Điều phối kết thúc chuyến `DANG_CHAY` do sự cố (lý do bắt buộc, gắn cờ `ket_thuc_bat_thuong`): đơn `DA_LAY` và `DA_GHEP` thành `THAT_BAI` với lý do "sự cố xe"; khoảng chiếm kết thúc ở giờ kết thúc thực tế (xe và tài xế được giải phóng). Điều phối nhập km cuối nếu biết (cập nhật `km_dong_ho`); không có thì để trống (xem BR-70). Xe cần sửa thì Điều phối chuyển `NGUNG` (BR-11 chặn xe ở chuyến sau). Kế toán nhập lương chuyến bằng tay, có lý do | Chặn | — |
 | BR-69 | Ghép lại đơn `THAT_BAI` đã lấy hàng: bắt buộc cập nhật nơi giữ hàng (thành điểm lấy mới); được đổi hạn giao theo thỏa thuận với khách; cước giữ nguyên | Chặn | — |
-| BR-70 | Bắt đầu và kết thúc chuyến phải nhập km đồng hồ kèm ảnh; km bắt đầu ≥ km kết thúc chuyến trước của cùng xe (chuyến đầu: ≥ `km_dong_ho` của xe); km kết thúc > km bắt đầu. Kết thúc chuyến cập nhật `km_dong_ho` | Chặn | B, khi kết thúc |
-| BR-71 | Định mức chi phí và lương khoán của tuyến được chốt vào chuyến lúc chốt chuyến; đổi định mức tuyến sau đó không ảnh hưởng | — | C |
+| BR-70 | Bắt đầu và kết thúc chuyến phải nhập km đồng hồ kèm ảnh; km bắt đầu ≥ km kết thúc chuyến trước của cùng xe (chuyến đầu: ≥ `km_dong_ho` của xe; chuyến trước kết thúc do sự cố không có km cuối: ≥ km bắt đầu của chuyến đó); km kết thúc > km bắt đầu. Kết thúc chuyến (có km) cập nhật `km_dong_ho` | Chặn | B, khi kết thúc |
+| BR-71 | Lúc chốt chuyến, lưu vào chuyến: định mức chi phí và lương khoán của tuyến, và **ETA kế hoạch** của từng điểm dừng (mục 2.1). Đổi định mức tuyến sau đó không ảnh hưởng; mở chốt rồi chốt lại thì lưu lại theo số mới | — | C |
 | BR-72 | Giao sau hạn vẫn cho giao, đánh dấu "giao trễ"; không giảm cước | Cảnh báo | Khi quét giao |
-| BR-73 | Cảnh báo Điều phối khi: chuyến đang trễ so với ETA (quá `CFG-09`) làm chồng lên chuyến kế tiếp của xe hoặc tài xế; đơn `CHO_GHEP` còn dưới `CFG-10` giờ tới hạn giao mà chưa được ghép. Hệ thống không tự đổi lịch | Cảnh báo | Liên tục, bảng cảnh báo |
+| BR-73 | Khi chuyến `DANG_CHAY`: độ trễ = giờ quét thực tế − ETA kế hoạch của điểm đó (mục 2.1); trễ quá `CFG-09` thì gắn cờ trễ. **Kết thúc dự kiến khi đang chạy** = kết thúc dự kiến lúc chốt + max(0, độ trễ của lượt quét gần nhất); nếu khoảng [khởi hành, kết thúc dự kiến khi đang chạy) chồng lên khoảng chiếm của chuyến kế tiếp của cùng xe hoặc tài xế → cảnh báo Điều phối. Ngoài ra cảnh báo đơn `CHO_GHEP` còn dưới `CFG-10` giờ tới hạn giao mà chưa được ghép. Hệ thống không tự đổi lịch | Cảnh báo | Mỗi lượt quét; bảng cảnh báo |
 
 > Ghi chú BR-67: gỡ đơn làm ETA các đơn phía sau sớm lên, có thể rơi trước đầu khung giờ lấy (BR-05) – khi đó gỡ bị chặn.
 
@@ -300,9 +326,17 @@ Thời điểm kiểm: G = khi ghép/gỡ đơn, C = khi chốt chuyến, X = kh
 | Hiệu suất xe | ✔ | | | xem | |
 | Tra cứu đơn | | | | | ✔ (không đăng nhập) |
 
-## 7. Module phụ trợ (làm sau cùng)
-- AI dự đoán nguy cơ trễ của chuyến, train trên dataset công khai (Kaggle "Delivery Truck Trips Data" – cần kiểm tra), train lại bằng giờ thực tế từ các lần quét mã và cờ giao trễ (UC-30). Chỉ gợi ý; mọi BR vẫn do lõi kiểm.
-- Gợi ý ghép đơn bằng OR-Tools (UC-29): bỏ ở 0.5, chuyển sang hướng phát triển.
+## 7. Module phụ trợ và dữ liệu cho AI (làm sau cùng)
+
+- **UC-30 dự đoán nguy cơ trễ** của chuyến. Gợi ý ghép đơn bằng OR-Tools (UC-29) đã bỏ ở 0.5, chuyển sang hướng phát triển.
+- **Ranh giới:** AI chỉ **gợi ý** cho Điều phối. Mọi quy tắc chặn (tải, tuyến, hạn giao, giấy tờ, giờ lái, tiền) dùng công thức cố định ở mục 2.1 để kết quả luôn như nhau, test được và giải thích được bằng mã BR. Kết quả AI không chặn thao tác, không đổi ETA kế hoạch.
+- **Nguồn dữ liệu train:**
+  1. Dataset công khai (Kaggle "Delivery Truck Trips Data" – cần kiểm tra nội dung và giấy phép). Cột khác hệ thống nên cần bước **chuyển đổi** sang khái niệm của đồ án: quãng đường, giờ khởi hành, số điểm dừng, thời gian dự kiến, thời gian thực tế, có trễ hay không.
+  2. Dữ liệu của chính hệ thống: train lại dần khi có lượt quét thật.
+  - Không train trên dữ liệu tự sinh bằng công thức của hệ thống (mô hình chỉ học lại công thức, không có giá trị).
+- **Dữ liệu hệ thống thu để học** (đã có trong ERD): ETA kế hoạch và giờ quét thực tế từng điểm (ra độ trễ), giờ khởi hành/kết thúc thực tế, tuyến, xe, tài xế, số điểm dừng, tải, cờ giao trễ, lý do thất bại kèm `phia`, km đầu/cuối, số lít dầu.
+- **Thay số giả định bằng số thật:** `CFG-08`, `phut_tu_diem_dau`, định mức là dữ liệu do Quản lý/Điều phối chỉnh; có dữ liệu thật thì cập nhật số, không sửa công thức. Phút dừng thật xấp xỉ bằng chênh lệch giữa các lượt quét liên tiếp; nút "đã đến điểm" cho tài xế là hướng phát triển.
+- **Số liệu kịch bản mục 11** là test case cố định, tính tay kiểm được (NFR-FUN-01), không thay bằng dataset.
 
 ## 8. Nền tảng và triển khai (đã chốt 10/10/2026)
 - **Một web app duy nhất**, chia màn hình theo vai trò:
@@ -364,7 +398,7 @@ Thời điểm kiểm: G = khi ghép/gỡ đơn, C = khi chốt chuyến, X = kh
 | Đổi xe hoặc tài xế | Chỉ khi `LAP` (mở chốt nếu cần); kiểm lại theo BR-67 |
 | Tài xế không đi được, lỡ ngày khởi hành | Mở chốt → đổi tài xế hoặc đổi giờ; không thì hủy chuyến, đơn về hàng chờ |
 | Chuyến đang trễ | Hệ thống gắn cờ; ảnh hưởng chuyến kế tiếp thì cảnh báo (BR-73). Điều phối quyết |
-| Xe gặp sự cố nhẹ | Tài xế báo sự cố, chuyến chạy tiếp; tiền sửa xe ghi thành chi phí |
+| Xe gặp sự cố nhẹ | Tài xế báo sự cố, chuyến chạy tiếp; tiền sửa xe ghi thành chi phí. Sửa lớn vượt tạm ứng: tài xế tự ứng, công ty trả lại khi quyết toán (chênh lệch âm, BR-55) |
 | Xe hỏng, không chạy tiếp được | Điều phối kết thúc do sự cố (BR-68) |
 | Giao thất bại | Sau khi chuyến xong: ghi nơi giữ hàng, đổi hạn nếu khách đồng ý → ghép chuyến sau (BR-69); hoặc trả hàng |
 
@@ -379,7 +413,7 @@ Thời điểm kiểm: G = khi ghép/gỡ đơn, C = khi chốt chuyến, X = kh
 
 ## 10. Hướng phát triển (ngoài phạm vi)
 
-Xe thuê ngoài (A2) · COD (A5) · yêu cầu gửi hàng do khách tự tạo (A4) · OR-Tools gợi ý ghép đơn (UC-29) · điều chỉnh cước tay (BR-61, UC-31) · luồng duyệt tạm ứng vượt định mức · sổ tạm ứng cộng dồn · bảng lương tháng · lịch bảo dưỡng · bảng kê công nợ · biên bản kiểm tra xe trước khi chạy · cảnh báo quét sai vị trí (BR-44) · kiểm tải theo từng đoạn · GPS liên tục, hành vi lái xe · xe lạnh · giờ cấm tải · tuyến dài nhiều tài xế (A7) · quét mã từng kiện, giao một phần, chia chặng/trung chuyển · rơ moóc · hóa đơn điện tử · chế độ offline cho tài xế · KPI nhân viên.
+Xe thuê ngoài (A2) · COD (A5) · yêu cầu gửi hàng do khách tự tạo (A4) · OR-Tools gợi ý ghép đơn (UC-29) · điều chỉnh cước tay (BR-61, UC-31) · luồng duyệt tạm ứng vượt định mức · sổ tạm ứng cộng dồn · bảng lương tháng · lịch bảo dưỡng · bảng kê công nợ · biên bản kiểm tra xe trước khi chạy · cảnh báo quét sai vị trí (BR-44) · xe đến sớm đứng chờ và dịch ETA (BR-05) · nút "đã đến điểm" để đo phút dừng thật · kiểm tải theo từng đoạn · GPS liên tục, hành vi lái xe · xe lạnh · giờ cấm tải · tuyến dài nhiều tài xế (A7) · quét mã từng kiện, giao một phần, chia chặng/trung chuyển · rơ moóc · hóa đơn điện tử · chế độ offline cho tài xế · KPI nhân viên.
 
 ---
 
@@ -404,8 +438,8 @@ Tuyến T01 TP.HCM → Cần Thơ. Định mức: dầu 550.000 + cầu đườn
 | X1 51C-111.11 | 5.000 kg | 20 m³ | 9.500 kg (cần C) | 30/11 | 15 l/100 km | 120.000 |
 | X2 51C-222.22 | 1.500 kg | 8 m³ | 3.400 kg (cần B) | 19/10 | | |
 
-Tài xế: An (hạng C, đã có chuyến C00 lúc 14:00 ngày 20/10, 4 giờ lái) · Bình (hạng B).
-Bảng giá (đ/kg): HCM→Cần Thơ 1.500 · Long An→Cần Thơ 1.200 · HCM→Vĩnh Long 1.300 · HCM→Tiền Giang 1.000.
+Tài xế: An (hạng C, đã có chuyến C00 lúc 13:45 ngày 20/10, 4 giờ lái) · Bình (hạng B).
+Bảng giá (đ/kg): HCM→Cần Thơ 1.500 · Long An→Cần Thơ 1.200 · HCM→Vĩnh Long 1.300 · HCM→Tiền Giang 1.000 · Vĩnh Long→Long An 1.200.
 
 **1. Tạo đơn (19/10).**
 
@@ -415,18 +449,23 @@ Bảng giá (đ/kg): HCM→Cần Thơ 1.500 · Long An→Cần Thơ 1.200 · HCM
 | Đ2 | Long An → Cần Thơ, lấy 06:30–09:00 | 1.200 kg, 3 m³ | 20/10 12:00 | 1.440.000 | ✔ |
 | Đ3 | HCM → Vĩnh Long | 1.500 kg, 5 m³ (1.665 kg) | 20/10 10:00 | 2.164.500 → 2.165.000 | ✔ (làm tròn CFG-06) |
 | Đ4 | HCM → Tiền Giang | 800 kg, 2 m³ | 20/10 18:00 | 800.000 | ✔ |
-| Đ5 | Vĩnh Long → Long An | 500 kg | | | ✔ tạo được, chặn lúc ghép |
-| Đ6 | HCM → Cần Thơ | 1.500 kg | | | ✔ tạo được, chặn lúc ghép |
+| Đ5 | Vĩnh Long → Long An | 500 kg, 1,5 m³ | 20/10 18:00 | 500 × 1.200 = 600.000 | ✔ tạo được, chặn lúc ghép |
+| Đ6 | HCM → Cần Thơ | 2.500 kg, 5 m³ | 20/10 18:00 | 2.500 × 1.500 = 3.750.000 | ✔ tạo được, chặn lúc ghép |
+| Đ8 | HCM → Tiền Giang | 300 kg, 1 m³ | 20/10 18:00 | 300 × 1.000 = 300.000 | ✔ (dùng cho ca BR-67) |
 | Đ7 | Cần Thơ → Cà Mau | | | Không có giá | ✖ không tạo được (BR-48) |
 
 **2. Lập chuyến C01** (T01, chạy ngày 20/10/2026, khởi hành 06:00).
 - X2 ✖ đăng kiểm hết 19/10, trước ngày chạy 20/10 (BR-12). X1 ✔.
 - Bình ✖ hạng B, xe 9.500 kg cần C (BR-14). An ✔: giờ lái 20/10 = 4,5 + 4 = 8,5 ≤ 10 (BR-18, 65).
-- Biến thể: nếu C00 của An bắt đầu 13:00 → khi ghép đủ đơn, C01 chiếm [06:00, 13:30) chồng C00 ✖ (BR-17 theo BR-67). Lúc lập (chưa có đơn) C01 chỉ chiếm tới 10:30 (BR-64, chạy rỗng) nên chưa bị chặn.
+- Biến thể: nếu C00 của An bắt đầu 13:00 → khi ghép đủ đơn, C01 chiếm [06:00, 13:30) chồng C00 ✖ (BR-17 theo BR-67). Lúc lập (chưa có đơn) C01 chỉ chiếm tới 11:30 (BR-64, chạy rỗng: 06:00 + 270′ + 60′) nên chưa bị chặn.
 
 **3. Ghép đơn.**
-- Ghép Đ1, Đ2, Đ4 ✔: 3.800 kg ≤ 5.000, 11 m³ ≤ 20, đúng tuyến, đúng chiều.
-- Đ5 ✖ sai chiều (BR-04). Đ6 ✖ 5.300 kg > 5.000 (BR-01). Đ3 ✖ ETA Vĩnh Long = 06:00 + 210′ + 5 × 20′ = 11:10 > 10:00 (BR-06).
+- Ghép Đ1, Đ4 ✔ (2.600 kg, 8 m³).
+- Thử trên chuyến đang có Đ1, Đ4; mỗi ca chỉ vi phạm đúng một quy tắc:
+  - Đ5 ✖ sai chiều (BR-04).
+  - Đ6 ✖ 1.800 + 800 + 2.500 = 5.100 kg > 5.000 (BR-01); thể tích 13 m³ và hạn giao vẫn đạt.
+  - Đ3 ✖ ETA Vĩnh Long = 06:00 + 210′ + 4 × 20′ = 10:50 > 10:00 (BR-06); tải 4.100 kg, thể tích 13 m³ vẫn đạt.
+- Ghép Đ2 ✔: 3.800 kg ≤ 5.000, 11 m³ ≤ 20, đúng tuyến, đúng chiều. Lịch trình:
 
 | # | Điểm | Việc | ETA | Hạn / khung | |
 |---|---|---|---|---|---|
@@ -438,26 +477,28 @@ Bảng giá (đ/kg): HCM→Cần Thơ 1.500 · Long An→Cần Thơ 1.200 · HCM
 | 6 | Cần Thơ | Giao Đ1 | 12:10 | 14:00 | ✔ |
 
 - Nếu xếp ngược thứ tự giao ở Cần Thơ: Đ2 12:10 > 12:00 ✖ → ca test của BR-63.
-- Lấp đầy = max(3.800/5.000, 11/20) = 76%. Kết thúc dự kiến = 12:10 + 20′ + 60′ = 13:30 (BR-64), không chồng C00 lúc 14:00 (BR-17). Lãi dự kiến = 5.237.000 − 1.000.000 − 600.000 = 3.637.000 (BR-52).
+- Thử ghép thêm Đ8 ✖ (ca test BR-67): bản thân Đ8 hợp lệ (tải 4.100 kg, kịp hạn), nhưng thêm một điểm lấy ở HCM và một điểm giao ở Tiền Giang trước Cần Thơ, nên ETA giao Đ2 = 06:00 + 270′ + 6 × 20′ = 12:30 > 12:00. Lỗi nằm ở **đơn đã ghép**, không phải đơn mới → không ghép.
+- Lấp đầy = max(3.800/5.000, 11/20) = 76%. Kết thúc dự kiến = 12:10 + 20′ + 60′ = 13:30 (BR-64), không chồng C00 lúc 13:45 (BR-17). Lãi dự kiến = 5.237.000 − 1.000.000 − 600.000 = 3.637.000 (BR-52).
 
-**4. Chốt và tạm ứng (19/10 16:00).** Kiểm lại toàn bộ ✔ → `DA_CHOT`, chốt định mức và lương (BR-71). Tạm ứng 1.000.000 ✔; nhập 1.200.000 ✖ vượt định mức (BR-53). Mở chốt khi còn tạm ứng `HIEU_LUC` ✖ (BR-24).
+**4. Chốt và tạm ứng (19/10 16:00).** Kiểm lại toàn bộ ✔ → `DA_CHOT`, lưu định mức, lương và ETA kế hoạch 6 điểm (BR-71). Tạm ứng 1.000.000 ✔; nhập 1.200.000 ✖ vượt định mức (BR-53). Mở chốt khi còn tạm ứng `HIEU_LUC` ✖ (BR-24).
 
 **5. Ngày chạy 20/10 (An).**
 
 | Giờ | Sự kiện | Hệ thống |
 |---|---|---|
 | 05:45 | Bắt đầu, km 120.000 + ảnh | Đúng ngày, giấy tờ ✔, km ≥ km cuối của X1 ✔ → `DANG_CHAY` (BR-26, 70) |
-| 06:05 | Quét lấy Đ1; mạng chập chờn, bấm lại | `DA_LAY`; lần sau không sinh bản ghi (BR-45) |
-| 06:30 | Quét lấy Đ4 | ✔ |
-| 08:10 | Quét lấy Đ2 ở Long An | Trễ 30′ so với ETA 07:40 > `CFG-09` → cờ trễ (UC-32) |
+| 06:05 | Quét lấy Đ1; mạng chập chờn, bấm lại | `DA_LAY`, trễ 5′; lần sau không sinh bản ghi (BR-45) |
+| 06:30 | Quét lấy Đ4 | Trễ 10′ so với ETA kế hoạch 06:20; dự kiến xong 13:30 + 10′ = 13:40, không chồng C00 13:45 → không cảnh báo (BR-73) |
+| 08:10 | Quét lấy Đ2 ở Long An | Trễ 30′ so với ETA kế hoạch 07:40 > `CFG-09` → cờ trễ; dự kiến xong 13:30 + 30′ = 14:00 chồng C00 13:45 → cảnh báo Điều phối (BR-73) |
 | 09:40 | Giao Đ4: ảnh, chữ ký, tên | `DA_GIAO`, sinh phải thu 800.000 `CHUA_THU` (BR-41, 56) |
 | 10:00 | Chi phí dầu 26 lít = 520.000 + ảnh | `CHO_DUYET` (BR-54) |
 | 10:30 | Chi phí cầu đường 230.000 + ảnh | ✔ |
 | 12:35 | Giao Đ2 (hạn 12:00) | `DA_GIAO`, đánh dấu giao trễ, cước giữ nguyên (BR-72) |
 | 12:40 | Đ1: người nhận vắng, lý do + ảnh | `THAT_BAI`, lần giao thất bại 1/3 (BR-42, 37) |
-| 12:45 | Cảnh báo Điều phối | Dự kiến xong 14:00, chồng chuyến C00 của An (BR-73) |
 | 12:50 | Chi phí bốc xếp 300.000 | ✔ |
 | 13:00 | Kết thúc, km 120.178 | Mọi đơn có kết quả ✔ → `HOAN_THANH` (BR-28, 70); 178 km so với 170 km tuyến (chỉ hiển thị) |
+
+Ca đối chứng BR-73: nếu C00 bắt đầu 14:00 thì [06:00, 14:00) không chồng [14:00, …) (khoảng nửa mở) → không cảnh báo.
 
 Khách Cty A tra cứu Đ1 bằng mã + 4 số cuối SĐT: "Giao không thành công – đang chờ giao lại", không thấy cước, GPS (BR-59).
 

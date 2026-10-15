@@ -40,13 +40,14 @@
 ## Kiệt
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|
-| Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Chờ review | – | Tài review PR; chốt chia việc UC-32, 33, 34; sửa endpoint `api.md` theo danh sách trong PR |
+| Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Chờ review | – | Đã sửa theo review của Tài (6 mục + 3 góp ý) và bổ sung công thức, ETA kế hoạch, dữ liệu cho AI; chờ Tài kiểm lại rồi merge |
 | Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Có Python 3.12; thiếu WSL 2, Docker Desktop, Node 24. Ca test BR và UML làm sau khi PR merge |
 | UC-04 Tài xế (chép mẫu) | 2 | Chưa bắt đầu | | |
 | UC-02, 05 + Quét tối thiểu (UC-17…20) | 3–4 | Chưa bắt đầu | | |
-| Quét đầy đủ, UC-21, 23 | 5–6 | Chưa bắt đầu | | |
+| Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Chưa bắt đầu | | |
 | UC-24, 25 | 7 | Chưa bắt đầu | | |
-| UC-26, 27, E2E | 8 | Chưa bắt đầu | | |
+| UC-26, 27, 34 (hiệu suất xe, ưu tiên S – thiếu giờ thì cắt trước), E2E | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Kiệt (mới nhất ở trên)
+- 15/10: Sửa nghiệp vụ 0.5 theo review của Tài: công thức BR-73, km khi kết thúc do sự cố, thứ tự điểm lấy, kịch bản mỗi ca ✖ chỉ một BR (thêm Đ8 cho BR-67); thêm mục Công thức, ETA kế hoạch lưu lúc chốt, dữ liệu cho AI; api, security-rules, kien-truc khớp 0.5. Nhận UC-33, UC-34.
 - 15/10: Nghiệp vụ 0.5: chuyến 6 trạng thái, đơn 7; ETA cộng phút dừng, kiểm lại cả chuyến khi ghép (BR-63…67); km, sự cố, kết thúc do sự cố, cảnh báo trễ (BR-68…73); bỏ UC-09, 14, 29, 31, thêm UC-32…34. Sửa nghiep-vu, use-cases, so-do; api, security-rules chỉ đổi tên trạng thái. Mở PR chờ Tài review.

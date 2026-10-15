@@ -115,7 +115,7 @@ Ghi chú: UC-30 chỉ **gợi ý**; module phụ hỏng thì lõi vẫn chạy.
   1. Điều phối bấm Chốt.
   2. Hệ thống kiểm lại toàn bộ nhóm A, B (BR-23). Chuyến 0 đơn → yêu cầu xác nhận "chạy rỗng".
   3. Hệ thống tính lãi dự kiến (BR-52); nếu âm → hiện cảnh báo, yêu cầu xác nhận.
-  4. Hệ thống chốt định mức chi phí và lương khoán vào chuyến (BR-71). Chuyến → `DA_CHOT`; tài xế thấy chuyến ở UC-17.
+  4. Hệ thống lưu định mức chi phí, lương khoán và ETA kế hoạch của từng điểm dừng vào chuyến (BR-71). Chuyến → `DA_CHOT`; tài xế thấy chuyến ở UC-17.
 - **Luồng thay thế (mở chốt):** Điều phối bấm Mở chốt → kiểm BR-24 (không còn tạm ứng `HIEU_LUC`) → chuyến về `LAP`.
 - **Ngoại lệ:** 2a. Vi phạm (ví dụ đăng kiểm vừa hết hạn) → liệt kê mã BR, không chốt. Mở chốt khi còn tạm ứng → báo "cần Kế toán thu hồi tạm ứng trước".
 
@@ -200,10 +200,10 @@ Ghi chú: UC-30 chỉ **gợi ý**; module phụ hỏng thì lõi vẫn chạy.
 - **Tác nhân:** Điều phối viên
 - **Luồng chính:**
   1. Điều phối mở **Bảng chuyến trong ngày**: mỗi dòng có xe, tài xế, tuyến, giờ, % đầy, tiến độ ("3/6 điểm") và cờ đỏ (trễ quá `CFG-09`, sự cố mở, đơn thất bại, chưa quyết toán).
-  2. Mở **Chi tiết chuyến** (5 thẻ: Tổng quan, Hàng, Lịch trình, Dòng thời gian, Tiền); thẻ Lịch trình so ETA với giờ quét thực tế.
-  3. Hệ thống cảnh báo khi độ trễ làm chồng chuyến kế tiếp của xe hoặc tài xế (BR-73); Điều phối tự quyết định đổi lịch.
+  2. Mở **Chi tiết chuyến** (5 thẻ: Tổng quan, Hàng, Lịch trình, Dòng thời gian, Tiền); thẻ Lịch trình so ETA kế hoạch với giờ quét thực tế, hiện độ trễ từng điểm.
+  3. Mỗi lượt quét, hệ thống tính kết thúc dự kiến khi đang chạy = kết thúc dự kiến lúc chốt + độ trễ lượt quét gần nhất; chồng chuyến kế tiếp của xe hoặc tài xế thì cảnh báo (BR-73). Điều phối tự quyết định đổi lịch.
   4. Điều phối xem sự cố tài xế báo (UC-33), ghi cách xử lý và đóng sự cố.
-- **Luồng thay thế:** 4a. **Kết thúc do sự cố:** chuyến `DANG_CHAY`, Điều phối nhập lý do → BR-68: đơn `DA_GHEP`, `DA_LAY` → `THAT_BAI` (lý do "sự cố xe"), chuyến → `HOAN_THANH` với cờ `ket_thuc_bat_thuong`.
+- **Luồng thay thế:** 4a. **Kết thúc do sự cố:** chuyến `DANG_CHAY`, Điều phối nhập lý do và km cuối nếu biết → BR-68: đơn `DA_GHEP`, `DA_LAY` → `THAT_BAI` (lý do "sự cố xe"), chuyến → `HOAN_THANH` với cờ `ket_thuc_bat_thuong`; có km thì cập nhật km đồng hồ xe (BR-70). Xe cần sửa thì chuyển `NGUNG` (UC-03).
 
 ### UC-33 Báo sự cố
 - **Tác nhân:** Tài xế · **Tiền điều kiện:** Chuyến của mình `DANG_CHAY` (BR-58).

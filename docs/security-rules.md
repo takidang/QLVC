@@ -10,11 +10,12 @@ Dùng khi viết code và khi chạy ponytail-review.
 
   | Khoản tiền | Ai tạo, lúc nào | Ai được sửa sau khi đã ghi | Khóa khi |
   |---|---|---|---|
-  | Cước đơn | **Hệ thống tính**, không ai gõ tay. Điều phối bấm Xác nhận đơn → chốt cước (BR-32). Điều phối sửa kg/m³/điểm trước `DA_LAY` → hệ thống tính lại theo đơn giá đã chốt (BR-33) | Kế toán, Quản lý: điều chỉnh tay (giảm giá, phụ phí), lưu thành khoản điều chỉnh riêng, bắt buộc lý do (BR-61, UC-31) | Khoản phải thu đã thu một phần trở lên, **hoặc** chuyến ghi nhận doanh thu đơn đã `DA_QUYET_TOAN`, hoặc đơn `HUY`/`TRA_HANG` (BR-61) |
+  | Cước đơn | **Hệ thống tính**, không ai gõ tay. Điều phối tạo đơn → hệ thống chốt cước ngay (BR-32). Điều phối sửa kg/m³/điểm/hạn khi hàng chưa lấy (`CHO_GHEP`, `DA_GHEP`) → hệ thống tính lại theo bản sao giá đã chốt (BR-33) | Không ai (điều chỉnh cước tay BR-61 đã bỏ ở 0.5) | Đơn đã lấy hàng (BR-33) |
   | Chi phí phát sinh | Tài xế của chuyến, kèm ảnh chứng từ (UC-21, BR-54) | Tài xế: sửa/xóa khoản **của mình** khi còn `CHO_DUYET`. Kế toán: duyệt, điều chỉnh (có lý do), từ chối | Chuyến `DA_QUYET_TOAN` (BR-29) |
-  | Tạm ứng | Kế toán (UC-23). Vượt định mức → Quản lý duyệt (BR-53) | Kế toán, khi chưa quyết toán. **Mỗi lần sửa kiểm lại BR-53**: tổng vượt định mức → khoản đó về chờ Quản lý duyệt. Hủy chuyến: hệ thống tự chuyển khoản `HIEU_LUC` sang `PHAI_HOAN`; chỉ Kế toán xác nhận tài xế đã nộp lại → `DA_HOAN` (BR-25) | Chuyến `DA_QUYET_TOAN`; khoản `DA_HOAN` |
-  | Quyết toán, lương tài xế | Kế toán (UC-24); lương lấy từ định mức tuyến | Kế toán, trước khi xác nhận quyết toán | Chuyến `DA_QUYET_TOAN` |
-  | Bảng giá, định mức tuyến | Quản lý (UC-07); Điều phối nhập định mức tuyến (UC-05) | Như người tạo. Đổi bảng giá không ảnh hưởng đơn đã chốt cước | — |
+  | Tạm ứng | Kế toán (UC-23), khi chuyến từ `DA_CHOT` tới trước `HOAN_THANH`; tổng không vượt định mức đã chốt của chuyến (BR-53, không có luồng Quản lý duyệt) | Kế toán, khi chưa quyết toán. **Mỗi lần sửa kiểm lại BR-53**: vượt định mức → từ chối. Trước khi mở chốt hoặc hủy chuyến, Kế toán ghi thu hồi: `HIEU_LUC → DA_THU_HOI` (BR-24, 25) | Chuyến `DA_QUYET_TOAN`; khoản `DA_THU_HOI` |
+  | Quyết toán, lương tài xế | Kế toán (UC-24); lương lấy từ số đã chốt vào chuyến lúc chốt (BR-71). Chuyến kết thúc do sự cố: Kế toán nhập lương tay, bắt buộc lý do (BR-68). Ghi cách xử lý chênh lệch tạm ứng (BR-55) | Kế toán, trước khi xác nhận quyết toán | Chuyến `DA_QUYET_TOAN` |
+  | Phải thu (công nợ) | Hệ thống sinh khi đơn `DA_GIAO`, bằng cước (BR-56) | Kế toán: đánh dấu đã thu cho một hoặc nhiều đơn | `DA_THU` |
+  | Bảng giá, định mức tuyến | Quản lý (UC-07); Điều phối nhập định mức tuyến (UC-05) | Như người tạo. Đổi bảng giá không ảnh hưởng đơn đã tạo; đổi định mức tuyến không ảnh hưởng chuyến đã chốt (BR-71) | — |
 
   Điều phối và Tài xế **không có endpoint** nào nhận số tiền cước. Endpoint sửa tiền của Kế toán/Quản lý phải có ca test bị từ chối với vai trò khác và với chuyến đã quyết toán.
 - Không log mật khẩu, token, số điện thoại, tọa độ GPS đầy đủ của khách.

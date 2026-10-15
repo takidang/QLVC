@@ -228,6 +228,7 @@ Phần trung tâm của đề tài. CHUYEN ở giữa; DON_HANG nối vào CHUYE
 - XE lưu hai số khối lượng: tai_trong_kg để kiểm ghép (BR-01), ktt_toan_bo_kg để kiểm hạng bằng lái (BR-14).
 - Các cột _chot của DON_HANG (đơn giá, cước tối thiểu, hệ số quy đổi, bước làm tròn) là bản sao lúc tạo đơn cho BR-32; BR-33 tính lại cước chỉ từ các cột này.
 - Các cột _chot của CHUYEN là định mức và lương chép từ TUYEN lúc chốt (BR-71).
+- GHEP.eta_lay_ke_hoach, eta_giao_ke_hoach: ETA kế hoạch lưu lúc chốt (BR-71); độ trễ = giờ quét − ETA kế hoạch (BR-73), cũng là dữ liệu cho AI (UC-30).
 - nut_giu_id, dia_chi_giu: nơi giữ hàng khi ghép lại đơn đã lấy (BR-69); khi có, thay điểm lấy trong BR-03, 04, 63.
 - lat/lng điểm lấy, điểm giao vẫn giữ (Điều phối chấm trên bản đồ) dù BR-44 đã bỏ, để làm lại cảnh báo vị trí sau này.
 
@@ -389,6 +390,8 @@ erDiagram
     bool hieu_luc "unique khi true, BR-07"
     string ket_qua "DA_GIAO|THAT_BAI"
     bool giao_tre "BR-72"
+    datetime eta_lay_ke_hoach "BR-71, lưu lúc chốt"
+    datetime eta_giao_ke_hoach "BR-71"
     datetime tao_luc
   }
 ```
