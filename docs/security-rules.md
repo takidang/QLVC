@@ -10,7 +10,7 @@ Dùng khi viết code và khi chạy ponytail-review.
 
   | Khoản tiền | Ai tạo, lúc nào | Ai được sửa sau khi đã ghi | Khóa khi |
   |---|---|---|---|
-  | Cước đơn | **Hệ thống tính**, không ai gõ tay. Điều phối bấm Xác nhận đơn → chốt cước (BR-32). Điều phối sửa kg/m³/điểm trước `DA_LAY_HANG` → hệ thống tính lại theo đơn giá đã chốt (BR-33) | Kế toán, Quản lý: điều chỉnh tay (giảm giá, phụ phí), lưu thành khoản điều chỉnh riêng, bắt buộc lý do (BR-61, UC-31) | Khoản phải thu đã thu một phần trở lên, **hoặc** chuyến ghi nhận doanh thu đơn đã `DA_QUYET_TOAN`, hoặc đơn `HUY`/`HOAN_HANG` (BR-61) |
+  | Cước đơn | **Hệ thống tính**, không ai gõ tay. Điều phối bấm Xác nhận đơn → chốt cước (BR-32). Điều phối sửa kg/m³/điểm trước `DA_LAY` → hệ thống tính lại theo đơn giá đã chốt (BR-33) | Kế toán, Quản lý: điều chỉnh tay (giảm giá, phụ phí), lưu thành khoản điều chỉnh riêng, bắt buộc lý do (BR-61, UC-31) | Khoản phải thu đã thu một phần trở lên, **hoặc** chuyến ghi nhận doanh thu đơn đã `DA_QUYET_TOAN`, hoặc đơn `HUY`/`TRA_HANG` (BR-61) |
   | Chi phí phát sinh | Tài xế của chuyến, kèm ảnh chứng từ (UC-21, BR-54) | Tài xế: sửa/xóa khoản **của mình** khi còn `CHO_DUYET`. Kế toán: duyệt, điều chỉnh (có lý do), từ chối | Chuyến `DA_QUYET_TOAN` (BR-29) |
   | Tạm ứng | Kế toán (UC-23). Vượt định mức → Quản lý duyệt (BR-53) | Kế toán, khi chưa quyết toán. **Mỗi lần sửa kiểm lại BR-53**: tổng vượt định mức → khoản đó về chờ Quản lý duyệt. Hủy chuyến: hệ thống tự chuyển khoản `HIEU_LUC` sang `PHAI_HOAN`; chỉ Kế toán xác nhận tài xế đã nộp lại → `DA_HOAN` (BR-25) | Chuyến `DA_QUYET_TOAN`; khoản `DA_HOAN` |
   | Quyết toán, lương tài xế | Kế toán (UC-24); lương lấy từ định mức tuyến | Kế toán, trước khi xác nhận quyết toán | Chuyến `DA_QUYET_TOAN` |

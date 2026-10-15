@@ -1,6 +1,6 @@
 # Đặc tả API
 
-> Phiên bản 0.1 · 10/10/2026 · Nhóm 10. Khớp `docs/use-cases.md` (UC-01…31), `docs/nghiep-vu.md` (BR, trạng thái), `docs/kien-truc.md` (lỗi, phân quyền).
+> Phiên bản 0.1 · 10/10/2026 · Nhóm 10 (tên trạng thái cập nhật theo nghiệp vụ 0.5 ngày 15/10; endpoint chưa đổi, xem PR nghiệp vụ 0.5). Khớp `docs/use-cases.md` (UC-01…31), `docs/nghiep-vu.md` (BR, trạng thái), `docs/kien-truc.md` (lỗi, phân quyền).
 > Tài liệu này là **hợp đồng** để chia việc frontend/backend. Khi code xong, chi tiết từng trường xem ở OpenAPI do FastAPI sinh tại `/docs`; nếu hai nơi lệch nhau thì sửa file này trong cùng commit.
 
 ---
@@ -57,19 +57,19 @@
 | POST | `/api/don` | DP | UC-08 | Tạo đơn `MOI` (BR-31); `?xac_nhan=true` để xác nhận luôn |
 | GET | `/api/don` | DP, KT | UC-08 | Lọc `trang_thai`, `khach_hang_id`, `tu`, `den` |
 | GET | `/api/don/{id}` | DP, KT | — | Kèm lịch sử trạng thái, các lần ghép |
-| PATCH | `/api/don/{id}` | DP | UC-10 | BR-33: chỉ trước `DA_LAY_HANG`; tính lại cước từ giá đã chốt |
+| PATCH | `/api/don/{id}` | DP | UC-10 | BR-33: chỉ trước `DA_LAY`; tính lại cước từ giá đã chốt |
 | POST | `/api/don/{id}/xac-nhan` | DP | UC-09 | `MOI → CHO_GHEP`, chốt cước (BR-32, 48) |
 | POST | `/api/don/{id}/huy` | DP | UC-10 | BR-34, cần `ly_do` |
 | GET | `/api/don/{id}/phieu` | DP | UC-08 | Phiếu gửi hàng có QR (PDF hoặc PNG) |
 | POST | `/api/don/{id}/ghep-lai` | DP | UC-22 | `→ CHO_GHEP` (BR-36, 37); có thể đổi `han_giao` |
-| POST | `/api/don/{id}/hoan-hang` | DP | UC-22 | `GIAO_THAT_BAI → HOAN_HANG` |
+| POST | `/api/don/{id}/hoan-hang` | DP | UC-22 | `THAT_BAI → TRA_HANG` |
 | POST | `/api/don/{id}/dieu-chinh-cuoc` | KT, QL | UC-31 | BR-61, 62 |
 
 ### 2.4 Chuyến (lõi)
 
 | Phương thức | Đường dẫn | Vai trò | UC | BR / ghi chú |
 |---|---|---|---|---|
-| POST | `/api/chuyen` | DP | UC-11 | Tuyến + giờ khởi hành → `LEN_KE_HOACH` |
+| POST | `/api/chuyen` | DP | UC-11 | Tuyến + giờ khởi hành → `LAP` |
 | GET | `/api/chuyen` | DP, KT | UC-11 | Lọc trạng thái, ngày, tuyến |
 | GET | `/api/chuyen/{id}` | DP, KT | — | Xe, tài xế, đơn, điểm dừng, tải/thể tích đã dùng, lãi dự kiến |
 | GET | `/api/chuyen/{id}/xe-kha-dung` | DP | UC-12 | Kèm lý do loại từng xe (BR-11…13, 16) |
@@ -159,7 +159,7 @@ Request:
 }
 ```
 
-409: chuyến không ở `GHEP_DON` (BR-09), hoặc đơn vừa bị ghép vào chuyến khác (BR-07) → giao diện tải lại danh sách.
+409: chuyến không ở `LAP` (BR-09), hoặc đơn vừa bị ghép vào chuyến khác (BR-07) → giao diện tải lại danh sách.
 
 ### 3.2 `POST /api/toi/quet` (UC-19, UC-20, sơ đồ 9)
 
@@ -183,7 +183,7 @@ Request:
 ```
 `lap_lai: true` khi đơn đã có kết quả từ trước (BR-45); khi đó không tạo bản ghi mới.
 
-Lỗi: 403 đơn không thuộc chuyến của tài xế đang đăng nhập (BR-38, chống IDOR); 409 chuyến của mình nhưng không ở `DANG_BOC`/`DANG_CHAY` (BR-38), hoặc sai trạng thái đơn (ví dụ giao khi chưa lấy, BR-40); 422 thiếu ảnh, chữ ký, lý do (BR-41, 42); 413 file quá lớn.
+Lỗi: 403 đơn không thuộc chuyến của tài xế đang đăng nhập (BR-38, chống IDOR); 409 chuyến của mình nhưng không ở `DANG_CHAY` (BR-38), hoặc sai trạng thái đơn (ví dụ giao khi chưa lấy, BR-40); 422 thiếu ảnh, chữ ký, lý do (BR-41, 42); 413 file quá lớn.
 
 ### 3.3 `POST /api/chuyen/{id}/quyet-toan` (UC-24, sơ đồ 10)
 
@@ -215,10 +215,10 @@ Request: `{ "ma_don": "DH-0012", "sdt_4_so_cuoi": "6789" }`
 ```json
 {
   "ma_don": "DH-0012",
-  "trang_thai": "DA_LAY_HANG",
+  "trang_thai": "DA_LAY",
   "moc": [
     { "trang_thai": "CHO_GHEP", "luc": "2026-10-14T08:10:00+07:00" },
-    { "trang_thai": "DA_LAY_HANG", "luc": "2026-10-15T07:42:00+07:00" }
+    { "trang_thai": "DA_LAY", "luc": "2026-10-15T07:42:00+07:00" }
   ]
 }
 ```

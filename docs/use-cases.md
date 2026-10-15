@@ -1,8 +1,9 @@
 # Đặc tả yêu cầu – Hệ thống quản lý vận tải
 
-> Phiên bản: 0.4 (đề xuất) · Cập nhật: 10/10/2026 · Nhóm 10
+> Phiên bản: 0.5 (Kiệt đề xuất, chờ Tài review) · Cập nhật: 15/10/2026 · Nhóm 10
 > Quy tắc nghiệp vụ, trạng thái, cấu hình: xem `docs/nghiep-vu.md` (`BR-xx`, `ST-xx`, `CFG-xx`).
 > Ưu tiên MoSCoW: **M** = phải có (bản demo), **S** = nên có, **C** = có thì tốt (làm nếu dư thời gian).
+> Giữ mã UC của 0.4; UC bỏ ghi "Bỏ ở 0.5", không dùng lại số; UC mới từ UC-32.
 
 ---
 
@@ -10,12 +11,12 @@
 
 | Tác nhân | Mô tả | Thiết bị |
 |---|---|---|
-| Quản lý | Chủ/giám đốc doanh nghiệp. Quản trị người dùng, bảng giá, cấu hình; xem báo cáo; duyệt tạm ứng vượt định mức | Web máy tính |
-| Điều phối viên | Nhận đơn từ khách, lập chuyến, ghép đơn, chốt chuyến, xử lý giao thất bại | Web máy tính |
-| Tài xế | Nhận chuyến, quét mã lấy/giao, chụp ảnh, lấy chữ ký, ghi chi phí phát sinh | Web responsive trên điện thoại |
-| Kế toán | Cấp tạm ứng, quyết toán chuyến, theo dõi công nợ | Web máy tính |
+| Quản lý | Chủ/giám đốc doanh nghiệp. Quản trị người dùng, bảng giá, cấu hình; xem báo cáo, hiệu suất xe | Web máy tính |
+| Điều phối viên | Nhận đơn từ khách, lập chuyến, ghép đơn, chốt chuyến, theo dõi chuyến, xử lý sự cố và đơn thất bại | Web máy tính |
+| Tài xế | Bắt đầu/kết thúc chuyến kèm km, quét mã lấy/giao, chụp ảnh, lấy chữ ký, ghi chi phí, báo sự cố | Web responsive trên điện thoại |
+| Kế toán | Cấp và thu hồi tạm ứng, quyết toán chuyến, theo dõi công nợ, nhập chi phí cố định xe | Web máy tính |
 | Khách hàng | Tra cứu trạng thái đơn, không cần tài khoản | Web điện thoại/máy tính |
-| Hệ thống (thời gian) | Tác nhân phụ: quét giấy tờ sắp hết hạn hằng ngày (BR-21) | — |
+| Hệ thống (thời gian) | Tác nhân phụ: quét giấy tờ sắp hết hạn, chuyến trễ, đơn chờ sắp quá hạn (BR-21, 73) | — |
 
 ---
 
@@ -25,37 +26,41 @@
 |---|---|---|---|---|---|
 | UC-01 | Đăng nhập / đăng xuất | Tất cả trừ Khách | Chung | M | BR-57 |
 | UC-02 | Quản lý người dùng và vai trò | Quản lý | Chung | M | BR-57 |
-| UC-03 | Quản lý xe (thông tin, tải trọng, thể tích, giấy tờ) | Điều phối | Xe/Tài xế | M | BR-11…13, 60 |
+| UC-03 | Quản lý xe (tải trọng, thể tích, giấy tờ, lít/100 km, km đồng hồ, chi phí cố định tháng) | Điều phối (chi phí cố định: Kế toán) | Xe/Tài xế | M | BR-11…13, 60 |
 | UC-04 | Quản lý tài xế (GPLX, hạng, hạn) | Điều phối | Xe/Tài xế | M | BR-14, 15, 60 |
-| UC-05 | Quản lý tuyến (nút, thời gian, định mức chi phí) | Điều phối | Chuyến | M | BR-20, 60 |
+| UC-05 | Quản lý tuyến (nút, phút, km, điểm nghỉ, định mức, lương khoán) | Điều phối | Chuyến | M | BR-20, 60, 66 |
 | UC-06 | Quản lý khách hàng | Điều phối | Đơn | M | BR-60 |
 | UC-07 | Quản lý bảng giá và cấu hình | Quản lý | Đơn | M | BR-48, CFG-xx |
-| UC-08 | Tạo đơn hàng | Điều phối | Đơn | M | BR-31, 46–48 |
-| UC-09 | Xác nhận đơn (chốt cước) | Điều phối | Đơn | M | BR-32, 48 |
-| UC-10 | Sửa / hủy đơn | Điều phối | Đơn | M | BR-33, 34 |
-| UC-11 | Lập kế hoạch chuyến | Điều phối | Chuyến | M | — |
-| UC-12 | Gán xe và tài xế cho chuyến | Điều phối | Chuyến | M | BR-11…19, 22 |
-| UC-13 | Ghép / gỡ đơn khỏi chuyến | Điều phối | Chuyến | M | BR-01…10 |
-| UC-14 | Sắp xếp thứ tự điểm dừng | Điều phối | Chuyến | S | BR-10 |
-| UC-15 | Chốt / mở chốt chuyến | Điều phối | Chuyến | M | BR-23, 24, 52 |
+| UC-08 | Tạo đơn hàng, chốt cước, in phiếu QR | Điều phối | Đơn | M | BR-31, 32, 46–48 |
+| UC-09 | ~~Xác nhận đơn~~ | | | | Bỏ ở 0.5 – gộp vào UC-08 vì cước chốt lúc tạo |
+| UC-10 | Sửa / hủy đơn | Điều phối | Đơn | M | BR-33, 34, 67 |
+| UC-11 | Lập chuyến (chọn tuyến, giờ, xe, tài xế đã lọc kèm lý do loại) | Điều phối | Chuyến | M | BR-11…19, 22, 64, 65 |
+| UC-12 | Gán / đổi xe và tài xế (khi chuyến `LAP`) | Điều phối | Chuyến | M | BR-11…19, 67 |
+| UC-13 | Ghép / gỡ đơn khỏi chuyến | Điều phối | Chuyến | M | BR-01…10, 52, 63, 67 |
+| UC-14 | ~~Sắp xếp thứ tự điểm dừng~~ | | | | Bỏ ở 0.5 – điểm dừng suy ra tự động (BR-63) |
+| UC-15 | Chốt / mở chốt chuyến | Điều phối | Chuyến | M | BR-23, 24, 52, 71 |
 | UC-16 | Hủy chuyến | Điều phối | Chuyến | M | BR-25 |
 | UC-17 | Xem chuyến được giao | Tài xế | Quét mã | M | BR-58 |
-| UC-18 | Bắt đầu bốc / xuất phát / kết thúc chuyến | Tài xế | Quét mã | M | BR-26–28 |
-| UC-19 | Quét mã lấy hàng | Tài xế | Quét mã | M | BR-38, 39, 42–45 |
-| UC-20 | Quét mã giao hàng | Tài xế | Quét mã | M | BR-35, 38, 40–45 |
-| UC-21 | Ghi chi phí phát sinh | Tài xế | Quyết toán | M | BR-54 |
-| UC-22 | Xử lý đơn giao thất bại / không lấy được | Điều phối | Đơn | M | BR-36, 37 |
-| UC-23 | Cấp / sửa tạm ứng chuyến | Kế toán | Quyết toán | M | BR-53, 62 |
-| UC-24 | Quyết toán chuyến | Kế toán | Quyết toán | M | BR-29, 50, 51, 55, 62 |
-| UC-25 | Theo dõi công nợ và ghi nhận thu tiền | Kế toán | Quyết toán | S | BR-56, 62 |
-| UC-31 | Điều chỉnh cước đơn | Kế toán | Quyết toán | S | BR-61, 62 |
-| UC-26 | Báo cáo lãi lỗ theo chuyến / xe / tuyến | Quản lý | Quyết toán | S | BR-51 |
-| UC-27 | Xem bảng cảnh báo (giấy tờ, quét sai vị trí, thiếu GPS) | Điều phối | Xe/Tài xế | S | BR-21, 43, 44 |
+| UC-18 | Bắt đầu / kết thúc chuyến kèm km | Tài xế | Quét mã | M | BR-11…15, 26, 28, 70 |
+| UC-19 | Quét mã lấy hàng / báo không lấy được | Tài xế | Quét mã | M | BR-38, 39, 42, 43, 45 |
+| UC-20 | Quét mã giao hàng / báo giao không được | Tài xế | Quét mã | M | BR-35, 38, 40–43, 45, 72 |
+| UC-21 | Ghi chi phí | Tài xế | Quyết toán | M | BR-54 |
+| UC-22 | Xử lý đơn thất bại (ghép lại, trả hàng, hủy) | Điều phối | Đơn | M | BR-34, 36, 37, 69 |
+| UC-23 | Cấp / sửa / thu hồi tạm ứng | Kế toán | Quyết toán | M | BR-53, 62 |
+| UC-24 | Quyết toán chuyến | Kế toán | Quyết toán | M | BR-29, 50, 51, 55, 62, 68 |
+| UC-25 | Công nợ: xem nợ theo khách, đánh dấu đã thu | Kế toán | Quyết toán | S | BR-56, 62 |
+| UC-26 | Báo cáo lãi lỗ theo chuyến / xe / tháng | Quản lý | Quyết toán | S | BR-51 |
+| UC-27 | Xem bảng cảnh báo (giấy tờ, trễ, sự cố, đơn chờ quá hạn, thiếu GPS) | Điều phối | Xe/Tài xế | S | BR-21, 43, 73 |
 | UC-28 | Tra cứu đơn | Khách | Tra cứu | M | BR-59 |
-| UC-29 | Gợi ý ghép đơn và thứ tự điểm dừng (OR-Tools) | Điều phối | Phụ trợ | C | BR-01…10 (ràng buộc) |
+| UC-29 | ~~Gợi ý ghép đơn (OR-Tools)~~ | | | | Bỏ ở 0.5 – hướng phát triển |
 | UC-30 | Dự đoán nguy cơ trễ chuyến | Điều phối | Phụ trợ | C | — |
+| UC-31 | ~~Điều chỉnh cước đơn~~ | | | | Bỏ ở 0.5 – hướng phát triển (BR-61) |
+| UC-32 | Theo dõi chuyến (bảng chuyến trong ngày, chi tiết chuyến, cờ trễ, đóng sự cố, kết thúc do sự cố) | Điều phối | Chuyến | M | BR-68, 73 |
+| UC-33 | Báo sự cố | Tài xế | Quét mã | M | BR-58 |
+| UC-34 | Hiệu suất xe theo tháng | Quản lý | Quyết toán | S | — |
 
-Ghi chú: UC-29 và UC-30 chỉ **gợi ý**; người dùng vẫn phải xác nhận qua UC-13/UC-14, nên mọi BR vẫn do lõi kiểm. Module phụ hỏng thì lõi vẫn chạy.
+Số UC còn hiệu lực: 31 − 4 (UC-09, 14, 29, 31) + 3 (UC-32, 33, 34) = **30**.
+Ghi chú: UC-30 chỉ **gợi ý**; module phụ hỏng thì lõi vẫn chạy.
 
 ---
 
@@ -66,139 +71,145 @@ Ghi chú: UC-29 và UC-30 chỉ **gợi ý**; người dùng vẫn phải xác n
 - **Tiền điều kiện:** Đã đăng nhập vai trò Điều phối/Quản lý; khách đã có trong hệ thống (hoặc tạo nhanh tại chỗ).
 - **Kích hoạt:** Khách gọi điện/nhắn yêu cầu gửi hàng.
 - **Luồng chính:**
-  1. Điều phối chọn khách, nhập hàng hóa (mô tả, kg thực, m³, số kiện), điểm lấy (địa chỉ, tỉnh, tọa độ chấm trên bản đồ Leaflet, người liên hệ, SĐT, khung giờ lấy), điểm giao (địa chỉ, tỉnh, tọa độ chấm trên bản đồ Leaflet, người nhận, SĐT, hạn giao).
+  1. Điều phối chọn khách, nhập hàng hóa (mô tả, kg thực, m³, số kiện), điểm lấy (địa chỉ, tỉnh, tọa độ chấm trên bản đồ Leaflet, người liên hệ, SĐT, khung giờ lấy nếu có), điểm giao (địa chỉ, tỉnh, tọa độ, người nhận, SĐT, hạn giao).
   2. Hệ thống kiểm BR-31.
-  3. Hệ thống tính KL quy đổi, KL tính cước, cước tạm tính (BR-46…48) và hiển thị.
-  4. Điều phối lưu. Hệ thống tạo đơn trạng thái `MOI`, sinh mã đơn duy nhất và mã QR.
-- **Luồng thay thế:**
-  - 4a. Điều phối chọn "Lưu và xác nhận" → thực hiện tiếp UC-09.
+  3. Hệ thống tính KL quy đổi, KL tính cước, cước (BR-46…48) và hiển thị.
+  4. Điều phối lưu. Hệ thống tạo đơn `CHO_GHEP`, chốt cước và lưu bản sao giá (BR-32), sinh mã đơn duy nhất và mã QR.
 - **Ngoại lệ:**
   - 2a. Vi phạm BR-31 → báo lỗi từng trường, không lưu.
-  - 3a. Không có đơn giá cho cặp tỉnh (BR-48) → vẫn lưu `MOI`, báo "chưa có bảng giá", không cho xác nhận.
-- **Hậu điều kiện:** Đơn `MOI` có mã QR in được.
+  - 3a. Không có đơn giá cho cặp tỉnh (BR-48) → báo "chưa có bảng giá", **không tạo được đơn**.
+- **Hậu điều kiện:** Đơn `CHO_GHEP`, cước đã chốt, phiếu QR in được.
 
-### UC-09 Xác nhận đơn
-- **Tác nhân:** Điều phối viên · **Tiền điều kiện:** Đơn `MOI`.
-- **Luồng chính:** 1. Điều phối mở đơn, bấm Xác nhận. 2. Hệ thống tính lại cước theo bảng giá hiện hành, lưu bản sao đơn giá + hệ số (BR-32). 3. Đơn → `CHO_GHEP`, ghi lịch sử (BR-30).
-- **Ngoại lệ:** 2a. Thiếu bảng giá (BR-48) → từ chối.
-
-### UC-12 Gán xe và tài xế cho chuyến
+### UC-11 Lập chuyến / UC-12 Gán, đổi xe và tài xế
 - **Tác nhân:** Điều phối viên
-- **Tiền điều kiện:** Chuyến `LEN_KE_HOACH` hoặc `GHEP_DON`.
+- **Tiền điều kiện:** UC-11: không có. UC-12: chuyến `LAP`.
 - **Luồng chính:**
-  1. Điều phối chọn chuyến, mở "Gán xe/tài xế".
-  2. Hệ thống chỉ liệt kê xe và tài xế **khả dụng** cho khoảng thời gian chuyến (đã lọc BR-11…19), kèm lý do loại với những xe/tài xế bị loại.
+  1. Điều phối chọn tuyến và giờ khởi hành (UC-11) hoặc mở chuyến `LAP`, bấm "Đổi xe/tài xế" (UC-12).
+  2. Hệ thống chỉ liệt kê xe và tài xế **khả dụng** cho khoảng chiếm của chuyến (BR-64; đã lọc BR-11…19), kèm lý do loại với xe/tài xế bị loại.
   3. Điều phối chọn xe và tài xế, bấm Lưu.
-  4. Hệ thống kiểm lại BR-11…19 (tránh hai người gán cùng lúc), và nếu chuyến đã có đơn thì kiểm BR-01, BR-02 với xe mới.
-  5. Lưu; nếu chuyến đang `LEN_KE_HOACH` thì chuyển `GHEP_DON` (BR-22).
-- **Ngoại lệ:**
-  - 4a. Vi phạm bất kỳ BR nào → báo mã BR và nội dung vi phạm, không lưu.
-- **Hậu điều kiện:** Chuyến có xe + tài xế hợp lệ, ở `GHEP_DON`.
+  4. Hệ thống kiểm lại BR-11…19 (tránh hai người gán cùng lúc); với UC-12 khi chuyến đã có đơn thì kiểm cả chuyến theo BR-67.
+  5. UC-11: tạo chuyến ở `LAP` (BR-22). UC-12: lưu xe/tài xế mới.
+- **Ngoại lệ:** 4a. Vi phạm bất kỳ BR nào → báo mã BR và nội dung vi phạm, không lưu.
+- **Hậu điều kiện:** Chuyến `LAP` có xe + tài xế hợp lệ.
 
 ### UC-13 Ghép / gỡ đơn khỏi chuyến
 - **Tác nhân:** Điều phối viên
-- **Tiền điều kiện:** Chuyến `GHEP_DON`.
+- **Tiền điều kiện:** Chuyến `LAP`.
 - **Luồng chính (ghép):**
-  1. Điều phối mở chuyến. Màn hình hiện: thanh tải (kg đã dùng / tải trọng), thanh thể tích, danh sách đơn đang ghép, danh sách đơn `CHO_GHEP` **phù hợp tuyến** (đã lọc BR-03, BR-04).
+  1. Điều phối mở chuyến (thẻ Hàng). Màn hình hiện: thanh tải (kg đã dùng / tải trọng), thanh thể tích, % đầy, lịch trình kèm ETA, lãi dự kiến (BR-52), danh sách đơn đang ghép, danh sách đơn `CHO_GHEP` **phù hợp tuyến** (đã lọc BR-03, BR-04).
   2. Điều phối chọn một hoặc nhiều đơn, bấm Ghép.
-  3. Hệ thống kiểm BR-01…BR-09 cho **toàn bộ** danh sách mới trong một giao dịch.
-  4. Hệ thống tạo bản ghi ghép hiệu lực, chuyển đơn → `DA_GHEP`, thêm điểm dừng LAY/GIAO theo BR-10, cập nhật lãi dự kiến.
+  3. Hệ thống tính lại lịch trình (BR-63, 64) và kiểm BR-01…09 cho đơn mới, rồi kiểm lại **cả chuyến** theo BR-67, trong một giao dịch.
+  4. Hệ thống tạo bản ghi ghép hiệu lực, chuyển đơn → `DA_GHEP`, cập nhật lịch trình, % đầy, lãi dự kiến.
 - **Luồng thay thế (gỡ):**
-  - 2b. Điều phối chọn đơn đang ghép, bấm Gỡ → bản ghi ghép `hiệu_lực = false`, đơn → `CHO_GHEP`, xóa 2 điểm dừng.
+  - 2b. Điều phối chọn đơn đang ghép, bấm Gỡ → kiểm lại cả chuyến theo BR-67 → bản ghi ghép `hieu_luc = false`, đơn → `CHO_GHEP`.
 - **Ngoại lệ:**
-  - 3a. Có đơn vi phạm → **không ghép đơn nào** trong lô; hiện bảng: đơn nào, vi phạm BR nào, vượt bao nhiêu.
+  - 3a. Có đơn vi phạm (kể cả đơn đã ghép trước đó bị dịch ETA) → **không ghép đơn nào** trong lô; hiện bảng: đơn nào, vi phạm BR nào, vượt bao nhiêu.
   - 3b. Đơn đã bị người khác ghép vào chuyến khác (BR-07) → báo xung đột, tải lại danh sách.
-- **Hậu điều kiện:** Tổng kg, m³ của chuyến ≤ giới hạn xe; mỗi đơn có đúng 1 ghép hiệu lực.
+  - 2b-a. Gỡ làm đơn khác vi phạm (ví dụ ETA lấy sớm hơn khung giờ lấy, BR-05) → không gỡ, nêu đơn bị ảnh hưởng.
+- **Hậu điều kiện:** Tổng kg, m³ của chuyến ≤ giới hạn xe; mọi đơn kịp khung giờ và hạn; mỗi đơn có đúng 1 ghép hiệu lực.
 
 ### UC-15 Chốt / mở chốt chuyến
 - **Tác nhân:** Điều phối viên
-- **Tiền điều kiện:** Chốt: chuyến `GHEP_DON`. Mở chốt: chuyến `DA_CHOT`.
+- **Tiền điều kiện:** Chốt: chuyến `LAP`. Mở chốt: chuyến `DA_CHOT`.
 - **Luồng chính (chốt):**
   1. Điều phối bấm Chốt.
-  2. Hệ thống kiểm lại toàn bộ BR-01…BR-19 và BR-23.
+  2. Hệ thống kiểm lại toàn bộ nhóm A, B (BR-23). Chuyến 0 đơn → yêu cầu xác nhận "chạy rỗng".
   3. Hệ thống tính lãi dự kiến (BR-52); nếu âm → hiện cảnh báo, yêu cầu xác nhận.
-  4. Chuyến → `DA_CHOT`; tài xế thấy chuyến ở UC-17.
-- **Luồng thay thế (mở chốt):** Điều phối bấm Mở chốt → kiểm BR-24 → chuyến về `GHEP_DON`.
-- **Ngoại lệ:** 2a. Vi phạm (ví dụ đăng kiểm vừa hết hạn) → liệt kê mã BR, không chốt.
+  4. Hệ thống chốt định mức chi phí và lương khoán vào chuyến (BR-71). Chuyến → `DA_CHOT`; tài xế thấy chuyến ở UC-17.
+- **Luồng thay thế (mở chốt):** Điều phối bấm Mở chốt → kiểm BR-24 (không còn tạm ứng `HIEU_LUC`) → chuyến về `LAP`.
+- **Ngoại lệ:** 2a. Vi phạm (ví dụ đăng kiểm vừa hết hạn) → liệt kê mã BR, không chốt. Mở chốt khi còn tạm ứng → báo "cần Kế toán thu hồi tạm ứng trước".
 
 ### UC-16 Hủy chuyến
-- **Tác nhân:** Điều phối viên · **Tiền điều kiện:** Chuyến ∈ {`LEN_KE_HOACH`, `GHEP_DON`, `DA_CHOT`}.
-- **Luồng chính:** 1. Nhập lý do (bắt buộc). 2. Hệ thống kiểm BR-25. 3. Mọi ghép → không hiệu lực, đơn → `CHO_GHEP`. 4. Nếu đã có tạm ứng → các khoản tạm ứng `HIEU_LUC` chuyển `PHAI_HOAN` (BR-25), báo Kế toán. 5. Chuyến → `HUY`.
+- **Tác nhân:** Điều phối viên · **Tiền điều kiện:** Chuyến ∈ {`LAP`, `DA_CHOT`}.
+- **Luồng chính:** 1. Nhập lý do (bắt buộc). 2. Hệ thống kiểm BR-25: còn tạm ứng `HIEU_LUC` → từ chối, báo Kế toán thu hồi trước (UC-23). 3. Mọi ghép → không hiệu lực, đơn → `CHO_GHEP`. 4. Chuyến → `HUY`.
 
-### UC-18 Bắt đầu bốc / xuất phát / kết thúc chuyến
+### UC-18 Bắt đầu / kết thúc chuyến
 - **Tác nhân:** Tài xế
 - **Luồng chính:**
-  1. Tài xế mở chuyến `DA_CHOT` trong ngày khởi hành, bấm **Bắt đầu** → kiểm BR-26 → `DANG_BOC`.
-  2. Sau khi quét lấy ở điểm đầu (UC-19), bấm **Xuất phát** → `DANG_CHAY`.
-  3. Sau khi xử lý hết đơn, bấm **Kết thúc** → kiểm BR-28 → `HOAN_THANH`; hệ thống xử lý BR-36 cho đơn thất bại/không lấy được.
-- **Ngoại lệ:** 3a. Còn đơn chưa xử lý → hiện danh sách đơn còn lại, không cho kết thúc.
+  1. Tài xế mở chuyến `DA_CHOT` trong ngày khởi hành, nhập km đồng hồ, chụp ảnh đồng hồ, bấm **Bắt đầu** → kiểm BR-26 (gồm BR-11…15) và BR-70 → `DANG_CHAY`.
+  2. Sau khi xử lý hết đơn (UC-19, UC-20), nhập km cuối kèm ảnh, bấm **Kết thúc** → kiểm BR-28, BR-70 → `HOAN_THANH`; cập nhật km đồng hồ của xe; các ghép của đơn `THAT_BAI` chuyển không hiệu lực (BR-36).
+- **Ngoại lệ:** 1a. Giấy tờ vừa hết hạn → không cho bắt đầu, báo Điều phối. 1b. Km nhỏ hơn km cuối của xe → từ chối. 2a. Còn đơn chưa xử lý → hiện danh sách đơn còn lại, không cho kết thúc.
 
 ### UC-19 Quét mã lấy hàng
 - **Tác nhân:** Tài xế
-- **Tiền điều kiện:** Chuyến của tài xế ở `DANG_BOC` hoặc `DANG_CHAY`; trình duyệt được cấp quyền camera.
+- **Tiền điều kiện:** Chuyến của tài xế ở `DANG_CHAY`; trình duyệt được cấp quyền camera.
 - **Luồng chính:**
-  1. Tài xế chọn điểm dừng LAY, bấm Quét.
+  1. Tài xế chọn điểm LẤY trong lịch trình, bấm Quét.
   2. Camera đọc QR; trình duyệt lấy GPS.
-  3. Hệ thống kiểm BR-38, BR-39 → đơn `DA_LAY_HANG`; lưu giờ máy chủ, GPS (BR-43), kiểm khoảng cách (BR-44).
+  3. Hệ thống kiểm BR-38, BR-39 → đơn `DA_LAY`; lưu giờ máy chủ, GPS (BR-43).
   4. Hiện xác nhận "Đã lấy: mã đơn, số kiện".
 - **Luồng thay thế:**
   - 2a. Camera không đọc được → nhập mã đơn bằng tay (vẫn ghi GPS).
-  - 1b. **Không lấy được:** tài xế chọn đơn, chọn lý do, chụp ảnh (BR-42) → `KHONG_LAY_DUOC`.
+  - 1b. **Không lấy được:** tài xế chọn đơn, chọn lý do, chụp ảnh (BR-42) → `THAT_BAI`.
 - **Ngoại lệ:**
   - 3a. Đơn không thuộc chuyến (BR-38) → báo "Đơn không thuộc chuyến của bạn".
   - 3b. Đơn đã lấy rồi → trả trạng thái hiện tại (BR-45).
-  - 2b. Từ chối quyền GPS → vẫn lưu, gắn cờ `thiếu_GPS`.
+  - 2b. Từ chối quyền GPS → vẫn lưu, gắn cờ `thieu_gps`.
 
 ### UC-20 Quét mã giao hàng
 - **Tác nhân:** Tài xế · **Tiền điều kiện:** như UC-19.
 - **Luồng chính:**
-  1. Tài xế chọn điểm dừng GIAO, quét QR.
+  1. Tài xế chọn điểm GIAO, quét QR.
   2. Hệ thống kiểm BR-38, BR-40.
   3. Tài xế chụp ≥ 1 ảnh (trình duyệt tự nén theo NFR-PER-03), nhập tên người nhận, người nhận ký trên màn hình.
-  4. Hệ thống kiểm BR-41, lưu ảnh + chữ ký + GPS + giờ máy chủ → đơn `DA_GIAO`; sinh khoản phải thu (BR-56).
+  4. Hệ thống kiểm BR-41, lưu ảnh + chữ ký + GPS + giờ máy chủ → đơn `DA_GIAO`; quá hạn giao thì đánh dấu giao trễ (BR-72); sinh khoản phải thu `CHUA_THU` (BR-56).
 - **Luồng thay thế:**
-  - 3a. **Giao thất bại:** chọn lý do (người nhận vắng, từ chối nhận, sai địa chỉ, hàng hư hỏng, khác), chụp ảnh (BR-42) → `GIAO_THAT_BAI`.
+  - 3a. **Giao không được:** chọn lý do (người nhận vắng, từ chối nhận, sai địa chỉ, hàng hư hỏng, khác; mỗi lý do có phía khách/sự cố xe), chụp ảnh (BR-42) → `THAT_BAI`.
 - **Ngoại lệ:** 2a. Đơn chưa lấy (`DA_GHEP`) → báo "Đơn chưa được quét lấy". 4a. Thiếu ảnh/chữ ký → không cho lưu.
 
-### UC-21 Ghi chi phí phát sinh
-- **Tác nhân:** Tài xế · **Tiền điều kiện:** Chuyến `DANG_BOC`…`HOAN_THANH`, chưa quyết toán.
-- **Luồng chính:** Chọn loại chi (dầu, cầu đường, bốc xếp, phát sinh), nhập số tiền, ghi chú, chụp ảnh chứng từ → kiểm BR-54 → lưu trạng thái `CHO_DUYET`.
+### UC-21 Ghi chi phí
+- **Tác nhân:** Tài xế · **Tiền điều kiện:** Chuyến `DANG_CHAY` hoặc `HOAN_THANH`, chưa quyết toán.
+- **Luồng chính:** Chọn loại chi (dầu, cầu đường, bốc xếp, phát sinh), nhập số tiền (dầu: thêm số lít), ghi chú, chụp ảnh chứng từ → kiểm BR-54 → lưu trạng thái `CHO_DUYET`.
 
-### UC-22 Xử lý đơn giao thất bại / không lấy được
+### UC-22 Xử lý đơn thất bại
 - **Tác nhân:** Điều phối viên
-- **Tiền điều kiện:** Đơn `GIAO_THAT_BAI` hoặc `KHONG_LAY_DUOC`, chuyến chứa đơn đã `HOAN_THANH`.
-- **Luồng chính:** 1. Điều phối xem danh sách đơn cần xử lý, kèm lý do, ảnh. 2. Chọn **Ghép lại** → kiểm BR-37 → `CHO_GHEP` (có thể đổi hạn giao theo thỏa thuận với khách); hoặc **Hoàn hàng** → `HOAN_HANG`.
-- **Ngoại lệ:** 2a. Đã đạt `CFG-04` lần thất bại → nút Ghép lại bị khóa.
+- **Tiền điều kiện:** Đơn `THAT_BAI`, chuyến chứa đơn đã `HOAN_THANH`.
+- **Luồng chính:**
+  1. Điều phối xem danh sách đơn cần xử lý, kèm lý do, ảnh, đã lấy hàng hay chưa, số lần giao thất bại.
+  2. Chọn một trong ba:
+     - **Ghép lại** → kiểm BR-37; nếu đơn đã lấy thì bắt buộc chọn nơi giữ hàng (BR-69); được đổi hạn giao → `CHO_GHEP`, cước giữ nguyên.
+     - **Trả hàng** (chỉ khi đã lấy) → `TRA_HANG`.
+     - **Hủy** (chỉ khi chưa lấy) → `HUY`.
+- **Ngoại lệ:** 2a. Đã đạt `CFG-04` lần giao thất bại vì lý do phía khách → nút Ghép lại bị khóa (BR-37).
 
-### UC-23 Cấp tạm ứng chuyến
-- **Tác nhân:** Kế toán (Quản lý duyệt khi vượt định mức)
-- **Tiền điều kiện:** Chuyến `DA_CHOT`, `DANG_BOC` hoặc `DANG_CHAY`.
-- **Luồng chính:** 1. Hệ thống gợi ý số tiền = định mức tuyến − tạm ứng đã cấp. 2. Kế toán nhập số tiền, hình thức (tiền mặt/chuyển khoản). 3. Kiểm BR-53 → lưu.
-- **Luồng thay thế:** 3a. Vượt định mức → trạng thái `CHO_QUAN_LY_DUYET`; Quản lý duyệt/từ chối. 3b. **Sửa** khoản tạm ứng (khi chuyến chưa quyết toán): nhập số mới + lý do → kiểm lại BR-53 → nếu tổng vượt định mức thì khoản đó về `CHO_QUAN_LY_DUYET`; ghi nhật ký BR-62.
+### UC-23 Cấp / sửa / thu hồi tạm ứng
+- **Tác nhân:** Kế toán
+- **Tiền điều kiện:** Chuyến `DA_CHOT` hoặc `DANG_CHAY`.
+- **Luồng chính:** 1. Hệ thống gợi ý số tiền = định mức chi phí đã chốt − tạm ứng `HIEU_LUC` đã cấp. 2. Kế toán nhập số tiền, hình thức (tiền mặt/chuyển khoản). 3. Kiểm BR-53 → lưu `HIEU_LUC`, ghi nhật ký BR-62.
+- **Luồng thay thế:** 3a. **Sửa** (khi chuyến chưa quyết toán): nhập số mới + lý do → kiểm lại BR-53. 3b. **Thu hồi** (trước khi mở chốt hoặc hủy chuyến): Kế toán xác nhận tài xế đã nộp lại → `DA_THU_HOI`, ghi nhật ký.
+- **Ngoại lệ:** 3c. Tổng vượt định mức đã chốt → từ chối (BR-53).
 
 ### UC-24 Quyết toán chuyến
 - **Tác nhân:** Kế toán
 - **Tiền điều kiện:** Chuyến `HOAN_THANH`.
 - **Luồng chính:**
-  1. Hệ thống hiện: doanh thu ghi nhận (BR-50), các khoản chi tài xế khai (UC-21), lương tài xế theo định mức tuyến, tạm ứng đã cấp.
-  2. Kế toán duyệt/điều chỉnh/từ chối từng khoản chi (ghi lý do khi điều chỉnh).
+  1. Hệ thống hiện: doanh thu ghi nhận (BR-50), các khoản chi tài xế khai (UC-21), bảng định mức – thực tế – chênh lệch theo loại chi, dầu tham khảo (km thực tế × lít/100 km), lương đã chốt, tạm ứng `HIEU_LUC`, lãi dự kiến và lý do lệch (đơn thất bại, chi vượt định mức).
+  2. Kế toán duyệt/điều chỉnh/từ chối từng khoản chi (ghi lý do khi điều chỉnh). Chuyến `ket_thuc_bat_thuong` → Kế toán nhập lương bằng tay kèm lý do (BR-68).
   3. Hệ thống tính lãi chuyến (BR-51) và chênh lệch tạm ứng (BR-55).
-  4. Kế toán xác nhận → chuyến `DA_QUYET_TOAN`, khóa (BR-29).
-- **Ngoại lệ:** 4a. Còn khoản chi `CHO_DUYET` hoặc còn tạm ứng `CHO_QUAN_LY_DUYET` → không cho quyết toán (BR-55). 4b. Chuyến không ở `HOAN_THANH` → từ chối.
-- **Hậu điều kiện:** Có số lãi/lỗ chuyến và số tiền tài xế phải nộp/được nhận.
-
-### UC-31 Điều chỉnh cước đơn
-- **Tác nhân:** Kế toán (hoặc Quản lý)
-- **Tiền điều kiện:** Đơn đã xác nhận cước; chưa bị khóa theo BR-61.
-- **Luồng chính:** 1. Mở đơn, xem cước hệ thống tính và các lần điều chỉnh trước. 2. Nhập khoản điều chỉnh (âm = giảm giá, dương = phụ phí) và lý do. 3. Hệ thống kiểm BR-61 → lưu điều chỉnh, cập nhật cước cuối và khoản phải thu `CHUA_THU` (nếu có), ghi nhật ký BR-62.
-- **Ngoại lệ:** 3a. Đơn đã khóa (đã thu một phần, chuyến đã quyết toán, đơn hủy/hoàn) → từ chối, nêu lý do khóa. 3b. Cước cuối < 0 → từ chối. 3c. Vai trò khác Kế toán/Quản lý → 403.
+  4. Chênh lệch khác 0 → Kế toán ghi cách xử lý (tài xế đã nộp / công ty đã trả, hình thức, thời điểm).
+  5. Kế toán xác nhận → chuyến `DA_QUYET_TOAN`, khóa (BR-29).
+- **Ngoại lệ:** 5a. Còn khoản chi `CHO_DUYET`, hoặc chưa ghi xử lý chênh lệch → không cho quyết toán (BR-55). 5b. Chuyến không ở `HOAN_THANH` → từ chối.
+- **Hậu điều kiện:** Có số lãi/lỗ chuyến và số tiền tài xế đã nộp/được trả.
 
 ### UC-28 Tra cứu đơn
 - **Tác nhân:** Khách hàng
-- **Luồng chính:** 1. Khách vào trang tra cứu, nhập mã đơn + 4 số cuối SĐT. 2. Hệ thống kiểm BR-59. 3. Hiện trạng thái và các mốc (đã xác nhận, đã lấy, đã giao/thất bại kèm thời gian).
+- **Luồng chính:** 1. Khách vào trang tra cứu, nhập mã đơn + 4 số cuối SĐT. 2. Hệ thống kiểm BR-59. 3. Hiện trạng thái và các mốc (đã tạo, đã lấy, đã giao/không thành công – đang chờ giao lại, kèm thời gian).
 - **Ngoại lệ:** 2a. Sai thông tin → thông báo chung "Không tìm thấy đơn" (không tiết lộ mã đơn có tồn tại hay không). 2b. Quá 10 lần sai/phút từ một IP → tạm chặn (NFR-SEC-05).
 
-> Các UC còn lại (UC-01…07, 10, 11, 14, 17, 25, 26, 27, 29, 30) là CRUD/xem báo cáo: đặc tả rút gọn khi làm story tương ứng.
+### UC-32 Theo dõi chuyến
+- **Tác nhân:** Điều phối viên
+- **Luồng chính:**
+  1. Điều phối mở **Bảng chuyến trong ngày**: mỗi dòng có xe, tài xế, tuyến, giờ, % đầy, tiến độ ("3/6 điểm") và cờ đỏ (trễ quá `CFG-09`, sự cố mở, đơn thất bại, chưa quyết toán).
+  2. Mở **Chi tiết chuyến** (5 thẻ: Tổng quan, Hàng, Lịch trình, Dòng thời gian, Tiền); thẻ Lịch trình so ETA với giờ quét thực tế.
+  3. Hệ thống cảnh báo khi độ trễ làm chồng chuyến kế tiếp của xe hoặc tài xế (BR-73); Điều phối tự quyết định đổi lịch.
+  4. Điều phối xem sự cố tài xế báo (UC-33), ghi cách xử lý và đóng sự cố.
+- **Luồng thay thế:** 4a. **Kết thúc do sự cố:** chuyến `DANG_CHAY`, Điều phối nhập lý do → BR-68: đơn `DA_GHEP`, `DA_LAY` → `THAT_BAI` (lý do "sự cố xe"), chuyến → `HOAN_THANH` với cờ `ket_thuc_bat_thuong`.
+
+### UC-33 Báo sự cố
+- **Tác nhân:** Tài xế · **Tiền điều kiện:** Chuyến của mình `DANG_CHAY` (BR-58).
+- **Luồng chính:** Chọn loại sự cố, ghi chú, chụp ảnh → lưu sự cố trạng thái mở, hiện cờ trên bảng chuyến của Điều phối. Không đổi trạng thái chuyến.
+
+> Các UC còn lại (UC-01…07, 10, 17, 25, 26, 27, 30, 34) là CRUD/xem báo cáo: đặc tả rút gọn khi làm story tương ứng.
 
 ---
 

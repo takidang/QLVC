@@ -17,9 +17,11 @@
 ## Đang chặn / cần người kia
 <!-- Ngày – Ai cần gì từ ai. Xong thì gạch ~~...~~ -->
 - 10/10 – Kiệt phân tích lại nghiệp vụ trên nhánh `kiet/nghiep-vu` (sửa `nghiep-vu.md`, `use-cases.md`, `so-do.md`), xong mở PR vào `main` để Tài review. Trong lúc chờ: không sửa ba file đó trên `main`; Tài làm UC-01 trước, models theo ERD chờ PR merge.
+- 15/10 – Kiệt cần Tài review PR nghiệp vụ 0.5 (`kiet/nghiep-vu` → `main`), chốt ai làm UC-32, 33, 34 (UC-14, 31 của Tài đã bỏ), và sửa endpoint `api.md` theo danh sách trong PR.
 
 ## Câu hỏi chờ thầy
 - A1–A6 (nghiep-vu.md mục 1): chưa gửi
+- A7 (tuyến ≤ 10 giờ), A8 (góc nhìn chủ xe) – thêm ở nghiệp vụ 0.5: chưa gửi
 
 ## Tài
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
@@ -38,7 +40,8 @@
 ## Kiệt
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|
-| Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Chưa bắt đầu | – | |
+| Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Chờ review | – | Tài review PR; chốt chia việc UC-32, 33, 34; sửa endpoint `api.md` theo danh sách trong PR |
+| Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Có Python 3.12; thiếu WSL 2, Docker Desktop, Node 24. Ca test BR và UML làm sau khi PR merge |
 | UC-04 Tài xế (chép mẫu) | 2 | Chưa bắt đầu | | |
 | UC-02, 05 + Quét tối thiểu (UC-17…20) | 3–4 | Chưa bắt đầu | | |
 | Quét đầy đủ, UC-21, 23 | 5–6 | Chưa bắt đầu | | |
@@ -46,3 +49,4 @@
 | UC-26, 27, E2E | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Kiệt (mới nhất ở trên)
+- 15/10: Nghiệp vụ 0.5: chuyến 6 trạng thái, đơn 7; ETA cộng phút dừng, kiểm lại cả chuyến khi ghép (BR-63…67); km, sự cố, kết thúc do sự cố, cảnh báo trễ (BR-68…73); bỏ UC-09, 14, 29, 31, thêm UC-32…34. Sửa nghiep-vu, use-cases, so-do; api, security-rules chỉ đổi tên trạng thái. Mở PR chờ Tài review.
