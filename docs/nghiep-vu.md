@@ -451,7 +451,7 @@ Bảng giá (đ/kg): HCM→Cần Thơ 1.500 · Long An→Cần Thơ 1.200 · HCM
 | Đ4 | HCM → Tiền Giang | 800 kg, 2 m³ | 20/10 18:00 | 800.000 | ✔ |
 | Đ5 | Vĩnh Long → Long An | 500 kg, 1,5 m³ | 20/10 18:00 | 500 × 1.200 = 600.000 | ✔ tạo được, chặn lúc ghép |
 | Đ6 | HCM → Cần Thơ | 2.500 kg, 5 m³ | 20/10 18:00 | 2.500 × 1.500 = 3.750.000 | ✔ tạo được, chặn lúc ghép |
-| Đ8 | HCM → Tiền Giang | 300 kg, 1 m³ | 20/10 18:00 | 300 × 1.000 = 300.000 | ✔ (dùng cho ca BR-67) |
+| Đ8 | HCM → Tiền Giang | 300 kg, 1 m³ (quy đổi 333 kg) | 20/10 18:00 | 333 × 1.000 = 333.000 (BR-47: lấy KL quy đổi vì lớn hơn kg thực) | ✔ (dùng cho ca BR-67) |
 | Đ7 | Cần Thơ → Cà Mau | | | Không có giá | ✖ không tạo được (BR-48) |
 
 **2. Lập chuyến C01** (T01, chạy ngày 20/10/2026, khởi hành 06:00).

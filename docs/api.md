@@ -16,6 +16,7 @@
 - Tiền là số nguyên đồng; thời gian ISO 8601 có múi giờ.
 - **Không có endpoint xóa** xe, tài xế, tuyến, khách, đơn: chuyển `NGUNG` hoặc `HUY` (BR-60, BR-34).
 - Chuyển trạng thái dùng `POST /.../<hanh-dong>` (ví dụ `/chot`, `/huy`), không cho `PATCH` trường `trang_thai`.
+- Khai báo route: đường dẫn cố định đặt **trước** đường dẫn có tham số cùng tiền tố, ví dụ `GET /api/chuyen/xe-kha-dung` trước `GET /api/chuyen/{id}`; nếu không FastAPI hiểu `xe-kha-dung` là `{id}`. Mỗi cặp như vậy có một test gọi đúng route cố định.
 
 ---
 
