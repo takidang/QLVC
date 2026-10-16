@@ -1,6 +1,6 @@
 # Kiến trúc hệ thống
 
-> Phiên bản 0.1 · 10/10/2026 · Nhóm 10. Khớp `docs/nghiep-vu.md` (mục 8 Nền tảng và triển khai), `docs/so-do.md` (ERD, sequence), `docs/security-rules.md`.
+> Phiên bản 0.2 · 15/10/2026 · Nhóm 10 (cập nhật theo nghiệp vụ 0.5). Khớp `docs/nghiep-vu.md` (mục 8 Nền tảng và triển khai), `docs/so-do.md` (ERD, sequence), `docs/security-rules.md`.
 > Đặc tả endpoint: `docs/api.md`. Code lệch tài liệu này thì sửa tài liệu trong cùng commit.
 
 ---
@@ -16,7 +16,7 @@
 | KT-05 | **Đăng nhập bằng JWT trong cookie httpOnly** | JavaScript không đọc được token nên bị XSS cũng khó lấy token | Token trong localStorage: lộ khi bị XSS |
 | KT-06 | **Kiểu TypeScript sinh từ OpenAPI của FastAPI** | Mã trạng thái và mã lỗi chỉ khai báo một lần ở backend (DRY), frontend gõ sai thì báo lỗi lúc build | Viết tay kiểu ở frontend: dễ lệch |
 | KT-07 | **Lưu file qua một lớp `LuuTru`**: dev ghi thư mục local, demo ghi Supabase Storage bucket private | Ổ đĩa Render không giữ file; đổi nơi lưu không đụng nghiệp vụ | Lưu ảnh trong DB: phình DB 500 MB |
-| KT-08 | **Module phụ (UC-29, UC-30) chạy chung process**, gọi qua service riêng, lỗi thì trả "không có gợi ý" | KISS; mô hình train sẵn, chỉ nạp file khi chạy | Service AI riêng: thêm triển khai |
+| KT-08 | **Module phụ (UC-30) chạy chung process**, gọi qua service riêng, lỗi thì trả "không có gợi ý" | KISS; mô hình train sẵn, chỉ nạp file khi chạy | Service AI riêng: thêm triển khai |
 
 Thư viện cụ thể (đọc QR, nén ảnh, sinh kiểu từ OpenAPI…) chọn khi làm story tương ứng, **hỏi trước khi cài** (CLAUDE.md) và kiểm tra bảo mật như với skill.
 
@@ -93,11 +93,11 @@ QLVC/
 │  │  └─ modules/             một thư mục mỗi phân hệ: router.py, service.py, schemas.py
 │  │     ├─ danh_muc/         người dùng, xe, tài xế, nút, tuyến, khách, bảng giá, cấu hình
 │  │     ├─ don/
-│  │     ├─ chuyen/
-│  │     ├─ quet/
-│  │     ├─ tien/             chi phí, tạm ứng, quyết toán, công nợ, báo cáo
+│  │     ├─ chuyen/           lập, ghép, chốt, theo dõi, sự cố (UC-11…16, 32)
+│  │     ├─ quet/             bắt đầu/kết thúc, quét, báo sự cố (UC-17…20, 33)
+│  │     ├─ tien/             chi phí, tạm ứng, quyết toán, công nợ, báo cáo, hiệu suất xe
 │  │     ├─ tra_cuu/
-│  │     └─ goi_y/            UC-29, UC-30
+│  │     └─ goi_y/            UC-30 dự đoán trễ
 │  ├─ alembic/                migration
 │  ├─ seed/                   dữ liệu mẫu (vài trăm đơn) và script sinh 10.000 đơn để test hiệu năng
 │  └─ tests/
@@ -131,9 +131,11 @@ QLVC/
 
 | Thao tác | Khóa | Ràng buộc ở DB |
 |---|---|---|
-| Ghép đơn (UC-13) | `FOR UPDATE` dòng chuyến và các dòng đơn | Unique index một phần `GHEP(don_hang_id) WHERE hieu_luc` (BR-07) |
-| Gán xe, tài xế (UC-12), chốt (UC-15) | `FOR UPDATE` dòng chuyến, dòng xe, dòng tài xế | — |
+| Ghép, gỡ đơn (UC-13) | `FOR UPDATE` dòng chuyến, các dòng đơn, dòng xe, dòng tài xế (BR-67 kiểm lại khoảng chiếm với chuyến khác của xe, tài xế) | Unique index một phần `GHEP(don_hang_id) WHERE hieu_luc` (BR-07) |
+| Lập chuyến (UC-11), đổi xe, tài xế (UC-12), chốt, mở chốt (UC-15) | `FOR UPDATE` dòng chuyến, dòng xe, dòng tài xế | — |
+| Bắt đầu chuyến (UC-18) | `FOR UPDATE` dòng chuyến, dòng xe (km BR-70) | — |
 | Quét mã (UC-19, UC-20) | `FOR SHARE` dòng chuyến, rồi `FOR UPDATE` dòng đơn. Kết thúc chuyến (`FOR UPDATE` dòng chuyến) phải đợi các lượt quét đang chạy | Quét lặp trả trạng thái hiện tại (BR-45) |
+| Kết thúc chuyến (UC-18), kết thúc do sự cố (UC-32, BR-68) | `FOR UPDATE` dòng chuyến (đợi lượt quét đang chạy), rồi các dòng đơn, dòng xe (cập nhật `km_dong_ho`) | — |
 | Tạm ứng (UC-23), quyết toán (UC-24) | `FOR UPDATE` dòng chuyến | Unique `QUYET_TOAN(chuyen_id)` |
 
 Mọi thao tác ghi chạy trong **một giao dịch**; lỗi ở bất kỳ bước nào thì rollback toàn bộ (NFR-REL-01). Thứ tự khóa luôn là chuyến → đơn → xe → tài xế để tránh deadlock.
@@ -182,7 +184,7 @@ Giao diện hiển thị `ma` kèm câu tiếng Việt (NFR-USA-02).
 
 ## 10. Module phụ (làm sau cùng)
 
-- UC-29 gợi ý ghép đơn: OR-Tools giải bài toán chọn đơn và thứ tự điểm dừng với ràng buộc BR-01…10. Kết quả chỉ là gợi ý; người dùng bấm áp dụng thì vẫn đi qua `POST /api/chuyen/{id}/ghep`, lõi kiểm lại toàn bộ.
+- UC-29 gợi ý ghép đơn (OR-Tools): bỏ ở nghiệp vụ 0.5, chuyển sang hướng phát triển. Thứ tự điểm dừng do lõi tự suy ra (BR-63).
 - UC-30 dự đoán trễ: train trong `ml/`, xuất file mô hình, backend nạp lúc khởi động. Dataset cần kiểm tra giấy phép trước khi dùng.
 - Module phụ lỗi, quá thời gian, hoặc chưa có mô hình → trả "chưa có gợi ý", lõi chạy bình thường.
 
