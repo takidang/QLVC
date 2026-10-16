@@ -13,14 +13,31 @@ jobs:
     defaults:
       run:
         working-directory: backend
+    # PostgreSQL chỉ sống trong job CI; mật khẩu không phải bí mật thật
+    services:
+      db:
+        image: postgres:16
+        env:
+          POSTGRES_USER: qlvc
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: qlvc
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql+psycopg://qlvc:postgres@127.0.0.1:5432/qlvc
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: "3.12"
       - run: pip install -r requirements-dev.txt
+      # Sinh khóa ngẫu nhiên mỗi lần chạy, không ghi khóa vào repo
+      - run: echo "JWT_SECRET=$(python -c 'import secrets; print(secrets.token_hex(32))')" >> "$GITHUB_ENV"
       - run: ruff check .
       - run: ruff format --check .
+      # Migration chạy được và khớp models (không quên tạo migration khi sửa models)
+      - run: alembic upgrade head && alembic check
       - run: pytest -q
 
   frontend:

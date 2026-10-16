@@ -4,6 +4,12 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 120
 target-version = "py312"
+# Migration do Alembic sinh, không sửa tay
+extend-exclude = ["alembic/versions"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.isort]
+# Thư mục backend/alembic trùng tên package alembic
+known-third-party = ["alembic"]

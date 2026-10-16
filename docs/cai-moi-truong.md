@@ -34,10 +34,12 @@ APP_ENV=dev
 POSTGRES_USER=qlvc
 POSTGRES_PASSWORD=<tự đặt>
 POSTGRES_DB=qlvc
-DATABASE_URL=postgresql+psycopg://qlvc:<mật khẩu ở trên>@localhost:5432/qlvc
+DATABASE_URL=postgresql+psycopg://qlvc:<mật khẩu ở trên>@127.0.0.1:5432/qlvc
 JWT_SECRET=<chuỗi ngẫu nhiên, xem dưới>
 LUU_TRU=local
 ```
+
+Ghi `127.0.0.1`, **không ghi `localhost`**: trên Windows `localhost` thử IPv6 trước nên mỗi lần kết nối CSDL bị treo vài giây tới cả phút.
 
 Sinh `JWT_SECRET`: `python -c "import secrets; print(secrets.token_urlsafe(48))"`. Ba biến `SUPABASE_*` để trống (chỉ dùng ở bản demo).
 

@@ -1,4 +1,79 @@
+/* Tối thiểu cho UC-01; giao diện thật làm theo mockup và skill impeccable */
 body {
   margin: 0;
   font-family: system-ui, sans-serif;
+  background: #f6f7f9;
+  color: #1c2024;
+}
+
+.dang-nhap {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.dang-nhap form {
+  width: 100%;
+  max-width: 340px;
+  display: grid;
+  gap: 14px;
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  border: 1px solid #dfe3e8;
+}
+
+.dang-nhap h1 {
+  margin: 0 0 4px;
+  font-size: 1.25rem;
+}
+
+.dang-nhap label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+}
+
+input,
+button {
+  font: inherit;
+  padding: 9px 11px;
+  border-radius: 6px;
+  border: 1px solid #c4cbd3;
+}
+
+button {
+  background: #1f5fbf;
+  color: #fff;
+  border-color: #1f5fbf;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.loi {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.9rem;
+}
+
+.trang header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid #dfe3e8;
+}
+
+.trang h1 {
+  padding: 0 16px;
+}
+
+.dang-tai {
+  padding: 16px;
 }

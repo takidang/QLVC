@@ -1,6 +1,6 @@
 # UC-01: Đăng nhập / đăng xuất
 
-- **Trạng thái:** Đã duyệt (16/10/2026)
+- **Trạng thái:** Đang làm (16/10/2026) – code + test đã viết; test API chưa chạy
 - **Tác nhân:** Quản lý, Điều phối viên, Tài xế, Kế toán (Khách không đăng nhập)
 - **Đặc tả:** `docs/use-cases.md` mục 2 (UC-01, đặc tả rút gọn ở dưới) · `docs/kien-truc.md` mục 5, 7, 11 · `docs/api.md` mục 2.1
 - **Quy tắc nghiệp vụ liên quan:** BR-57 (phân quyền kiểm ở máy chủ), BR-60 (tài khoản `NGUNG`) · NFR-SEC-01 (băm mật khẩu, token ≤ 8 giờ), NFR-SEC-02 (403 khi sai vai trò), NFR-SEC-05 (giới hạn đăng nhập sai)
@@ -34,10 +34,11 @@ Người dùng nội bộ nhập tên đăng nhập và mật khẩu; đúng th�
 | UC-01-AC12 | Giao diện: trang đăng nhập; đăng nhập đúng chuyển tới trang của vai trò (trang tạm cho 4 vai trò); vào trang nội bộ khi chưa đăng nhập → về trang đăng nhập; có nút đăng xuất; sai thông tin / bị khóa / khóa tạm hiện câu tiếng Việt | UI | NFR-USA-02 |
 
 ## Ghi chú triển khai
-- File đã đổi:
-- Test đã viết:
-- Lệnh chạy test:
-- Lệch đặc tả (nếu có) và đã sửa `docs/` chưa:
+- File đã đổi: `backend/app/{config,db,loi,main,tao_quan_ly}.py`, `backend/app/auth/*`, `backend/app/models/*` (24 bảng ERD 0.5), `backend/alembic/*` (migration đầu), `frontend/src/{App.tsx,api/auth.ts,pages/DangNhap.tsx,index.css}`, `.github/workflows/ci.yml` (PostgreSQL + `alembic check`).
+- Test đã viết: `backend/tests/unit/test_uc01_bao_mat.py` (AC1, AC2 – **6 passed** 16/10), `backend/tests/api/test_uc01_dang_nhap.py` (AC3–AC11 – **chưa chạy**: cần sửa `.env` dùng `127.0.0.1` thay `localhost`).
+- Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest` (cần Docker Desktop đang chạy, `docker compose up -d db`).
+- Lệch đặc tả: thêm cột `so_lan_sai`, `khoa_den` vào NGUOI_DUNG và ngưỡng 5 lần/15 phút – đã sửa `so-do.md`, `kien-truc.md` (commit 0dea2a3).
+- Việc còn lại: chạy test API, `alembic upgrade head` trên DB dev, tạo Quản lý bằng `python -m app.tao_quan_ly`, chụp ảnh AC12, `story done UC-01`.
 
 ## Truy vết và kết quả
 
