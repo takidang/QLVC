@@ -22,6 +22,7 @@ const duocVao = (nd: NguoiDung, trang: VaiTro) =>
 
 export default function App() {
   const [nd, setNd] = useState<NguoiDung | null | undefined>(undefined) // undefined = đang kiểm phiên
+  const [loiThoat, setLoiThoat] = useState('')
 
   useEffect(() => {
     toi()
@@ -32,8 +33,14 @@ export default function App() {
   if (nd === undefined) return <p className="dang-tai">Đang tải…</p>
 
   async function thoat() {
-    await dangXuat()
-    setNd(null)
+    setLoiThoat('')
+    try {
+      await dangXuat()
+      setNd(null)
+    } catch {
+      // Cookie chưa bị xóa: báo rõ để người dùng máy chung không tưởng đã thoát
+      setLoiThoat('Không đăng xuất được, kiểm tra mạng rồi thử lại')
+    }
   }
 
   return (
@@ -62,6 +69,11 @@ export default function App() {
                     </span>
                     <button onClick={thoat}>Đăng xuất</button>
                   </header>
+                  {loiThoat && (
+                    <p role="alert" className="loi trang-loi">
+                      {loiThoat}
+                    </p>
+                  )}
                   {/* Trang tạm của UC-01; nội dung thật làm ở các UC sau */}
                   <h1>Trang {TEN_VAI_TRO[trang]}</h1>
                 </main>

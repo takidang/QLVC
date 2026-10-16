@@ -28,7 +28,7 @@
 ## Tài
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|
-| Nền móng (gồm UC-01 Đăng nhập) | 1 | Xong | 12/12 | Còn chạy `ponytail-review` cho thay đổi UC-01 |
+| Nền móng (gồm UC-01 Đăng nhập) | 1 | Xong | 12/12 | |
 | UC-03 Xe (mẫu) | 2 | Chưa bắt đầu | | |
 | UC-06…09 Đơn tối thiểu | 3–4 | Chưa bắt đầu | | |
 | UC-11…13, 15 Chuyến tối thiểu | 3–4 | Chưa bắt đầu | | |
@@ -37,6 +37,7 @@
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 16/10: Review UC-01, sửa 3 mục (lỗi 400 lộ mật khẩu, test token chập chờn, đăng xuất khi mất mạng).
 - 16/10: UC-01 hoàn thành: 30 test đạt, CI xanh, thử giao diện đạt 4 bước. Nền móng xong trước hạn 18/10.
 - 16/10: Cài Docker, PostgreSQL. Models theo ERD 0.5 + migration đầu. UC-01: story duyệt, code backend + frontend + test (unit đạt, API chưa chạy). Chốt A1–A8; hướng dẫn cài môi trường, ca test BR, UML cho Kiệt.
 - 16/10: Review và merge PR #1 nghiệp vụ 0.5 của Kiệt (sửa thêm cước Đ8, quy ước thứ tự route). Nhận UC-32; bỏ UC-14, 31.

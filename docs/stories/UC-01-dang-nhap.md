@@ -25,7 +25,7 @@ Người dùng nội bộ nhập tên đăng nhập và mật khẩu; đúng th�
 | UC-01-AC3 | Đăng nhập đúng → 200, body `{id, ho_ten, vai_tro}` (không chứa token), cookie `access_token` có `HttpOnly`, `Secure`, `SameSite=Strict`, `Max-Age` = 8 giờ | API | NFR-SEC-01 |
 | UC-01-AC4 | Sai mật khẩu và tên đăng nhập không tồn tại → **cùng** 401, cùng `ma` và `thong_diep` "Sai tên đăng nhập hoặc mật khẩu" | API | security-rules |
 | UC-01-AC5 | Tài khoản `NGUNG`, mật khẩu đúng → 403 "Tài khoản đã bị khóa"; mật khẩu sai → 401 như AC4 | API | BR-60 |
-| UC-01-AC6 | `GET /api/auth/toi`: cookie hợp lệ → 200 thông tin người dùng; không cookie → 401; token hết hạn (ca biên: còn 1 giây → 200, quá 1 giây → 401) → 401; token sửa chữ ký, token `alg: none`, token ký bằng khóa khác → 401 | API | NFR-SEC-01 |
+| UC-01-AC6 | `GET /api/auth/toi`: cookie hợp lệ → 200 thông tin người dùng; không cookie → 401; token hết hạn (ca biên: còn hạn 30 giây → 200, quá hạn 1 giây → 401; đổi từ "còn 1 giây" ngày 16/10 sau review vì CI chậm có thể làm test chập chờn); token sửa chữ ký, token `alg: none`, token ký bằng khóa khác → 401 | API | NFR-SEC-01 |
 | UC-01-AC7 | Token còn hạn nhưng tài khoản vừa chuyển `NGUNG` → request kế tiếp 401 | API | BR-60 |
 | UC-01-AC8 | Đăng xuất → cookie bị xóa; gọi `/api/auth/toi` sau đó → 401 | API | — |
 | UC-01-AC9 | `can_vai_tro`: đúng vai trò → 200; sai vai trò → 403; `QUAN_LY` gọi endpoint yêu cầu `DIEU_PHOI` → 200; `QUAN_LY` gọi endpoint chỉ cho `KE_TOAN` → 403; chưa đăng nhập → 401 | API | BR-57, NFR-SEC-02 |
@@ -39,6 +39,7 @@ Người dùng nội bộ nhập tên đăng nhập và mật khẩu; đúng th�
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest` (cần Docker Desktop đang chạy, `docker compose up -d db`).
 - Lệch đặc tả: thêm cột `so_lan_sai`, `khoa_den` vào NGUOI_DUNG và ngưỡng 5 lần/15 phút – đã sửa `so-do.md`, `kien-truc.md` (commit 0dea2a3).
 - AC12 thử tay 16/10 trên trình duyệt (Tài): a) sai mật khẩu hiện thông báo chung; b) đăng nhập đúng vào Trang Quản lý; c) gõ `/ke-toan` (tải lại cả trang) bị đưa về `/quan-ly` – chứng tỏ cookie được lưu và Quản lý không vào trang Kế toán; d) đăng xuất về trang đăng nhập. Ảnh a, b, d trong `docs/test-evidence/UC-01/`; c giống hệt ảnh b nên không chụp riêng.
+- Review `ponytail-review` 16/10: sửa 3 mục – lỗi 400 không trả lại giá trị người dùng gửi (mật khẩu) và không thành 500 với validator tự viết (`test_loi_400_khong_tra_lai_gia_tri_nguoi_dung_gui`, fail trên code cũ); test AC6 "còn hạn" đổi 1 giây → 30 giây; nút Đăng xuất báo lỗi khi mất mạng (chưa có test tự động frontend, kiểm tay). Tổng 31 test đạt.
 - Lưu ý: trình duyệt nhúng trong VS Code có thể không giữ cookie `SameSite=Strict`; thử giao diện bằng Edge/Chrome. Dev dùng `127.0.0.1` thay `localhost` (Vite proxy, `DATABASE_URL`).
 
 ## Truy vết và kết quả

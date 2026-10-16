@@ -22,9 +22,11 @@ app.include_router(auth_router)
 # FastAPI mặc định trả 422 cho dữ liệu sai kiểu; 422 dành cho vi phạm BR (kien-truc.md mục 7).
 @app.exception_handler(RequestValidationError)
 async def loi_du_lieu(request: Request, exc: RequestValidationError) -> JSONResponse:
+    # Bỏ "input" (có thể là mật khẩu) và "ctx" (có thể chứa object không đổi sang JSON được)
+    chi_tiet = [{k: e[k] for k in ("loc", "msg", "type")} for e in exc.errors()]
     return JSONResponse(
         status_code=400,
-        content={"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": exc.errors()},
+        content={"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": chi_tiet},
     )
 
 

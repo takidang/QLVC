@@ -78,14 +78,14 @@ def test_uc01_ac6_toi_voi_cookie_hop_le_va_khong_cookie(client, tao_nguoi_dung):
 @pytest.mark.parametrize(
     ("tao", "mong_doi"),
     [
-        (lambda id_, now: ky({"sub": str(id_), "exp": now + timedelta(seconds=1)}), 200),  # còn 1 giây
+        (lambda id_, now: ky({"sub": str(id_), "exp": now + timedelta(seconds=30)}), 200),  # còn hạn, 30s cho CI chậm
         (lambda id_, now: ky({"sub": str(id_), "exp": now - timedelta(seconds=1)}), 401),  # quá 1 giây
         (lambda id_, now: tao_token(id_, now)[:-2] + "xx", 401),  # sửa chữ ký
         (lambda id_, now: ky({"sub": str(id_), "exp": now + timedelta(hours=1)}, khoa="k" * 40), 401),  # khóa khác
         (lambda id_, now: jwt.encode({"sub": str(id_), "exp": now + timedelta(hours=1)}, None, algorithm="none"), 401),
         (lambda id_, now: ky({"sub": str(id_)}), 401),  # thiếu exp
     ],
-    ids=["con_1_giay", "qua_1_giay", "sua_chu_ky", "khoa_khac", "alg_none", "thieu_exp"],
+    ids=["con_han_30_giay", "qua_1_giay", "sua_chu_ky", "khoa_khac", "alg_none", "thieu_exp"],
 )
 def test_uc01_ac6_token_het_han_hoac_gia_bi_tu_choi(client, tao_nguoi_dung, tao, mong_doi):
     nd = tao_nguoi_dung()
