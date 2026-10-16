@@ -301,7 +301,9 @@ erDiagram
     string mat_khau_bam
     string ho_ten
     string vai_tro "QUAN_LY|DIEU_PHOI|TAI_XE|KE_TOAN"
-    string trang_thai
+    string trang_thai "HOAT_DONG|NGUNG"
+    int so_lan_sai "NFR-SEC-05"
+    datetime khoa_den "khóa tạm tới lúc này"
   }
   KHACH_HANG {
     int id PK

@@ -123,7 +123,7 @@ QLVC/
 - **Quản lý kế thừa quyền Điều phối** (ma trận mục 6 của `nghiep-vu.md`): `can_vai_tro` tự cho `QUAN_LY` qua khi danh sách có `DIEU_PHOI`.
 - Quyền sở hữu kiểm trong service, không chỉ ở router: tài xế chỉ thao tác chuyến có `tai_xe_id` là mình (BR-58, chống IDOR). Không phải của mình → 403, khớp sơ đồ 9 (BR-38).
 - Khách không đăng nhập; trang tra cứu giới hạn tần suất theo IP (NFR-SEC-05).
-- Giới hạn tần suất đăng nhập: khóa tạm sau nhiều lần sai (NFR-SEC-05).
+- Giới hạn tần suất đăng nhập (NFR-SEC-05): sai mật khẩu **5 lần liên tiếp** cho cùng một tên đăng nhập → khóa tài khoản đó **15 phút** (lần thứ 6 trả 429 kể cả mật khẩu đúng); đăng nhập đúng thì đếm lại. Bộ đếm lưu trong bảng `NGUOI_DUNG` (`so_lan_sai`, `khoa_den`) để không mất khi khởi động lại. Chốt 16/10/2026 (UC-01).
 
 ---
 
