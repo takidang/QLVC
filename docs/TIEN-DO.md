@@ -7,7 +7,7 @@
 ## Mốc chung
 | Mốc | Hạn | Trạng thái |
 |---|---|---|
-| Nền móng: models, migration, đăng nhập, khung frontend | 18/10 | Chưa bắt đầu |
+| Nền móng: models, migration, đăng nhập, khung frontend | 18/10 | Xong 16/10 |
 | UC-03 mẫu + docs/mau-use-case.md | 25/10 | Chưa bắt đầu |
 | Vòng tối thiểu: tạo đơn → ghép → chốt → quét → giao | 08/11 | Chưa bắt đầu |
 | Quyết toán chạy được | 29/11 | Chưa bắt đầu |
@@ -28,7 +28,7 @@
 ## Tài
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|
-| Nền móng (gồm UC-01 Đăng nhập) | 1 | Đang làm | – | Khung repo + CI xong (e2b0701); Docker + PostgreSQL chạy được; models 24 bảng + migration đầu xong; UC-01: AC1–AC11 đạt (30 test), còn AC12 giao diện – xem story UC-01 |
+| Nền móng (gồm UC-01 Đăng nhập) | 1 | Xong | 12/12 | Còn chạy `ponytail-review` cho thay đổi UC-01 |
 | UC-03 Xe (mẫu) | 2 | Chưa bắt đầu | | |
 | UC-06…09 Đơn tối thiểu | 3–4 | Chưa bắt đầu | | |
 | UC-11…13, 15 Chuyến tối thiểu | 3–4 | Chưa bắt đầu | | |
@@ -37,6 +37,7 @@
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 16/10: UC-01 hoàn thành: 30 test đạt, CI xanh, thử giao diện đạt 4 bước. Nền móng xong trước hạn 18/10.
 - 16/10: Cài Docker, PostgreSQL. Models theo ERD 0.5 + migration đầu. UC-01: story duyệt, code backend + frontend + test (unit đạt, API chưa chạy). Chốt A1–A8; hướng dẫn cài môi trường, ca test BR, UML cho Kiệt.
 - 16/10: Review và merge PR #1 nghiệp vụ 0.5 của Kiệt (sửa thêm cước Đ8, quy ước thứ tự route). Nhận UC-32; bỏ UC-14, 31.
 - 10/10: Chốt nghiệp vụ 0.4, sơ đồ, kiến trúc, API; dựng khung repo, CI xanh lần đầu.

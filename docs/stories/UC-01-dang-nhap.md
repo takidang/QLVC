@@ -1,6 +1,6 @@
 # UC-01: Đăng nhập / đăng xuất
 
-- **Trạng thái:** Đang làm – AC1–AC11 đạt (30 test), còn AC12 (giao diện) chờ thử trên trình duyệt
+- **Trạng thái:** Hoàn thành (16/10/2026)
 - **Tác nhân:** Quản lý, Điều phối viên, Tài xế, Kế toán (Khách không đăng nhập)
 - **Đặc tả:** `docs/use-cases.md` mục 2 (UC-01, đặc tả rút gọn ở dưới) · `docs/kien-truc.md` mục 5, 7, 11 · `docs/api.md` mục 2.1
 - **Quy tắc nghiệp vụ liên quan:** BR-57 (phân quyền kiểm ở máy chủ), BR-60 (tài khoản `NGUNG`) · NFR-SEC-01 (băm mật khẩu, token ≤ 8 giờ), NFR-SEC-02 (403 khi sai vai trò), NFR-SEC-05 (giới hạn đăng nhập sai)
@@ -38,7 +38,8 @@ Người dùng nội bộ nhập tên đăng nhập và mật khẩu; đúng th�
 - Test đã viết: `backend/tests/unit/test_uc01_bao_mat.py` (AC1, AC2 – **6 passed** 16/10), `backend/tests/api/test_uc01_dang_nhap.py` (AC3–AC11 – **24 passed**; tổng 30 passed 16/10). Sửa lỗi in thông báo sau khi đóng session trong `tao_quan_ly.py` (test AC11 bắt được).
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest` (cần Docker Desktop đang chạy, `docker compose up -d db`).
 - Lệch đặc tả: thêm cột `so_lan_sai`, `khoa_den` vào NGUOI_DUNG và ngưỡng 5 lần/15 phút – đã sửa `so-do.md`, `kien-truc.md` (commit 0dea2a3).
-- Việc còn lại: tạo Quản lý bằng `python -m app.tao_quan_ly`, thử đăng nhập trên trình duyệt, chụp ảnh AC12, `story done UC-01`.
+- AC12 thử tay 16/10 trên trình duyệt (Tài): a) sai mật khẩu hiện thông báo chung; b) đăng nhập đúng vào Trang Quản lý; c) gõ `/ke-toan` (tải lại cả trang) bị đưa về `/quan-ly` – chứng tỏ cookie được lưu và Quản lý không vào trang Kế toán; d) đăng xuất về trang đăng nhập. Ảnh a, b, d trong `docs/test-evidence/UC-01/`; c giống hệt ảnh b nên không chụp riêng.
+- Lưu ý: trình duyệt nhúng trong VS Code có thể không giữ cookie `SameSite=Strict`; thử giao diện bằng Edge/Chrome. Dev dùng `127.0.0.1` thay `localhost` (Vite proxy, `DATABASE_URL`).
 
 ## Truy vết và kết quả
 
@@ -55,4 +56,4 @@ Người dùng nội bộ nhập tên đăng nhập và mật khẩu; đúng th�
 | UC-01-AC9 | API | `tests/api/test_uc01_dang_nhap.py::test_uc01_ac9_* (8 ca)` | Đạt | 16/10/2026 |
 | UC-01-AC10 | API | `tests/api/test_uc01_dang_nhap.py::test_uc01_ac10_* (2 ca)` | Đạt | 16/10/2026 |
 | UC-01-AC11 | Dữ liệu | `tests/api/test_uc01_dang_nhap.py::test_uc01_ac11_* (2 ca)` | Đạt | 16/10/2026 |
-| UC-01-AC12 | UI | `docs/test-evidence/UC-01/` | CHƯA KIỂM | |
+| UC-01-AC12 | UI | `docs/test-evidence/UC-01/` (3 ảnh) + Tài xác nhận a–d | Đạt | 16/10/2026 |
