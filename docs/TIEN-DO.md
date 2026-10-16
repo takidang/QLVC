@@ -16,8 +16,8 @@
 
 ## Đang chặn / cần người kia
 <!-- Ngày – Ai cần gì từ ai. Xong thì gạch ~~...~~ -->
-- 10/10 – Kiệt phân tích lại nghiệp vụ trên nhánh `kiet/nghiep-vu` (sửa `nghiep-vu.md`, `use-cases.md`, `so-do.md`), xong mở PR vào `main` để Tài review. Trong lúc chờ: không sửa ba file đó trên `main`; Tài làm UC-01 trước, models theo ERD chờ PR merge.
-- 15/10 – Kiệt cần Tài review PR nghiệp vụ 0.5 (`kiet/nghiep-vu` → `main`), chốt ai làm UC-32, 33, 34 (UC-14, 31 của Tài đã bỏ), và sửa endpoint `api.md` theo danh sách trong PR.
+- ~~10/10 – Kiệt phân tích lại nghiệp vụ trên nhánh `kiet/nghiep-vu` (sửa `nghiep-vu.md`, `use-cases.md`, `so-do.md`), xong mở PR vào `main` để Tài review. Trong lúc chờ: không sửa ba file đó trên `main`; Tài làm UC-01 trước, models theo ERD chờ PR merge.~~ Xong 16/10: PR #1 đã merge, nghiệp vụ 0.5 lên `main`.
+- ~~15/10 – Kiệt cần Tài review PR nghiệp vụ 0.5 (`kiet/nghiep-vu` → `main`), chốt ai làm UC-32, 33, 34 (UC-14, 31 của Tài đã bỏ), và sửa endpoint `api.md` theo danh sách trong PR.~~ Xong 16/10: đã review, Kiệt làm UC-33, 34; Tài làm UC-32.
 
 ## Câu hỏi chờ thầy
 - A1–A6 (nghiep-vu.md mục 1): chưa gửi
@@ -26,15 +26,16 @@
 ## Tài
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|
-| Nền móng (gồm UC-01 Đăng nhập) | 1 | Đang làm | – | Khung repo + CI xong (e2b0701); còn models, migration, UC-01 – chờ cài Docker Desktop |
+| Nền móng (gồm UC-01 Đăng nhập) | 1 | Đang làm | – | Khung repo + CI xong (e2b0701); nghiệp vụ 0.5 đã merge; còn models theo ERD mới, migration, UC-01 – máy chưa cài Docker Desktop |
 | UC-03 Xe (mẫu) | 2 | Chưa bắt đầu | | |
 | UC-06…09 Đơn tối thiểu | 3–4 | Chưa bắt đầu | | |
 | UC-11…13, 15 Chuyến tối thiểu | 3–4 | Chưa bắt đầu | | |
-| UC-10, 14, 16, 22 + làm dày UC-13, 15 | 5–6 | Chưa bắt đầu | | |
-| UC-28, 31, triển khai demo | 7 | Chưa bắt đầu | | |
+| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Chưa bắt đầu | | |
+| UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 16/10: Review và merge PR #1 nghiệp vụ 0.5 của Kiệt (sửa thêm cước Đ8, quy ước thứ tự route). Nhận UC-32; bỏ UC-14, 31.
 - 10/10: Chốt nghiệp vụ 0.4, sơ đồ, kiến trúc, API; dựng khung repo, CI xanh lần đầu.
 
 ## Kiệt
