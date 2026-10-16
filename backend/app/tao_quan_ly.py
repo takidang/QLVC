@@ -18,11 +18,11 @@ def main() -> int:
         return 1
     with sessionmaker(get_engine())() as db:
         try:
-            nd = tao_quan_ly(db, ten, ho_ten, mat_khau)
+            tao_quan_ly(db, ten, ho_ten, mat_khau)
         except ValueError as e:
             print(e, file=sys.stderr)
             return 1
-    print(f"Đã tạo tài khoản Quản lý {nd.ten_dang_nhap!r}")
+    print(f"Đã tạo tài khoản Quản lý {ten!r}")
     return 0
 
 

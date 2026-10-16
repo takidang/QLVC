@@ -1,6 +1,6 @@
 # UC-01: Đăng nhập / đăng xuất
 
-- **Trạng thái:** Đang làm (16/10/2026) – code + test đã viết; test API chưa chạy
+- **Trạng thái:** Đang làm – AC1–AC11 đạt (30 test), còn AC12 (giao diện) chờ thử trên trình duyệt
 - **Tác nhân:** Quản lý, Điều phối viên, Tài xế, Kế toán (Khách không đăng nhập)
 - **Đặc tả:** `docs/use-cases.md` mục 2 (UC-01, đặc tả rút gọn ở dưới) · `docs/kien-truc.md` mục 5, 7, 11 · `docs/api.md` mục 2.1
 - **Quy tắc nghiệp vụ liên quan:** BR-57 (phân quyền kiểm ở máy chủ), BR-60 (tài khoản `NGUNG`) · NFR-SEC-01 (băm mật khẩu, token ≤ 8 giờ), NFR-SEC-02 (403 khi sai vai trò), NFR-SEC-05 (giới hạn đăng nhập sai)
@@ -35,24 +35,24 @@ Người dùng nội bộ nhập tên đăng nhập và mật khẩu; đúng th�
 
 ## Ghi chú triển khai
 - File đã đổi: `backend/app/{config,db,loi,main,tao_quan_ly}.py`, `backend/app/auth/*`, `backend/app/models/*` (24 bảng ERD 0.5), `backend/alembic/*` (migration đầu), `frontend/src/{App.tsx,api/auth.ts,pages/DangNhap.tsx,index.css}`, `.github/workflows/ci.yml` (PostgreSQL + `alembic check`).
-- Test đã viết: `backend/tests/unit/test_uc01_bao_mat.py` (AC1, AC2 – **6 passed** 16/10), `backend/tests/api/test_uc01_dang_nhap.py` (AC3–AC11 – **chưa chạy**: cần sửa `.env` dùng `127.0.0.1` thay `localhost`).
+- Test đã viết: `backend/tests/unit/test_uc01_bao_mat.py` (AC1, AC2 – **6 passed** 16/10), `backend/tests/api/test_uc01_dang_nhap.py` (AC3–AC11 – **24 passed**; tổng 30 passed 16/10). Sửa lỗi in thông báo sau khi đóng session trong `tao_quan_ly.py` (test AC11 bắt được).
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest` (cần Docker Desktop đang chạy, `docker compose up -d db`).
 - Lệch đặc tả: thêm cột `so_lan_sai`, `khoa_den` vào NGUOI_DUNG và ngưỡng 5 lần/15 phút – đã sửa `so-do.md`, `kien-truc.md` (commit 0dea2a3).
-- Việc còn lại: chạy test API, `alembic upgrade head` trên DB dev, tạo Quản lý bằng `python -m app.tao_quan_ly`, chụp ảnh AC12, `story done UC-01`.
+- Việc còn lại: tạo Quản lý bằng `python -m app.tao_quan_ly`, thử đăng nhập trên trình duyệt, chụp ảnh AC12, `story done UC-01`.
 
 ## Truy vết và kết quả
 
 | AC | Loại | Test / Bằng chứng | Kết quả | Ngày |
 |---|---|---|---|---|
-| UC-01-AC1 | Logic | | CHƯA KIỂM | |
-| UC-01-AC2 | Logic | | CHƯA KIỂM | |
-| UC-01-AC3 | API | | CHƯA KIỂM | |
-| UC-01-AC4 | API | | CHƯA KIỂM | |
-| UC-01-AC5 | API | | CHƯA KIỂM | |
-| UC-01-AC6 | API | | CHƯA KIỂM | |
-| UC-01-AC7 | API | | CHƯA KIỂM | |
-| UC-01-AC8 | API | | CHƯA KIỂM | |
-| UC-01-AC9 | API | | CHƯA KIỂM | |
-| UC-01-AC10 | API | | CHƯA KIỂM | |
-| UC-01-AC11 | Dữ liệu | | CHƯA KIỂM | |
+| UC-01-AC1 | Logic | `tests/unit/test_uc01_bao_mat.py::test_uc01_ac1_mat_khau_luu_dang_bam_argon2` | Đạt | 16/10/2026 |
+| UC-01-AC2 | Logic | `tests/unit/test_uc01_bao_mat.py::test_uc01_ac2_*` | Đạt | 16/10/2026 |
+| UC-01-AC3 | API | `tests/api/test_uc01_dang_nhap.py::test_uc01_ac3_dang_nhap_dung_dat_cookie_httponly` | Đạt | 16/10/2026 |
+| UC-01-AC4 | API | `tests/api/test_uc01_dang_nhap.py::test_uc01_ac4_sai_mat_khau_va_sai_ten_tra_cung_mot_loi` | Đạt | 16/10/2026 |
+| UC-01-AC5 | API | `tests/api/test_uc01_dang_nhap.py::test_uc01_ac5_tai_khoan_ngung` | Đạt | 16/10/2026 |
+| UC-01-AC6 | API | `tests/api/test_uc01_dang_nhap.py::test_uc01_ac6_* (7 ca)` | Đạt | 16/10/2026 |
+| UC-01-AC7 | API | `tests/api/test_uc01_dang_nhap.py::test_uc01_ac7_khoa_tai_khoan_co_hieu_luc_ngay` | Đạt | 16/10/2026 |
+| UC-01-AC8 | API | `tests/api/test_uc01_dang_nhap.py::test_uc01_ac8_dang_xuat_xoa_cookie` | Đạt | 16/10/2026 |
+| UC-01-AC9 | API | `tests/api/test_uc01_dang_nhap.py::test_uc01_ac9_* (8 ca)` | Đạt | 16/10/2026 |
+| UC-01-AC10 | API | `tests/api/test_uc01_dang_nhap.py::test_uc01_ac10_* (2 ca)` | Đạt | 16/10/2026 |
+| UC-01-AC11 | Dữ liệu | `tests/api/test_uc01_dang_nhap.py::test_uc01_ac11_* (2 ca)` | Đạt | 16/10/2026 |
 | UC-01-AC12 | UI | `docs/test-evidence/UC-01/` | CHƯA KIỂM | |
