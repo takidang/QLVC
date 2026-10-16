@@ -18,10 +18,11 @@
 <!-- Ngày – Ai cần gì từ ai. Xong thì gạch ~~...~~ -->
 - ~~10/10 – Kiệt phân tích lại nghiệp vụ trên nhánh `kiet/nghiep-vu` (sửa `nghiep-vu.md`, `use-cases.md`, `so-do.md`), xong mở PR vào `main` để Tài review. Trong lúc chờ: không sửa ba file đó trên `main`; Tài làm UC-01 trước, models theo ERD chờ PR merge.~~ Xong 16/10: PR #1 đã merge, nghiệp vụ 0.5 lên `main`.
 - ~~15/10 – Kiệt cần Tài review PR nghiệp vụ 0.5 (`kiet/nghiep-vu` → `main`), chốt ai làm UC-32, 33, 34 (UC-14, 31 của Tài đã bỏ), và sửa endpoint `api.md` theo danh sách trong PR.~~ Xong 16/10: đã review, Kiệt làm UC-33, 34; Tài làm UC-32.
+- 16/10 – Tài → Kiệt: nghiệp vụ 0.5 đã merge. Việc tuần 1 của Kiệt có hướng dẫn: cài môi trường `docs/cai-moi-truong.md`, ca test BR `docs/ca-test-br.md` (khung + ví dụ + BR còn thiếu ca), UML `docs/uml/README.md`.
 
 ## Câu hỏi chờ thầy
-- A1–A6 (nghiep-vu.md mục 1): chưa gửi
-- A7 (tuyến ≤ 10 giờ), A8 (góc nhìn chủ xe) – thêm ở nghiệp vụ 0.5: chưa gửi
+- ~~A1–A6 (nghiep-vu.md mục 1): chưa gửi~~ Nhóm tự chốt 16/10 (nghiep-vu.md mục 1).
+- ~~A7 (tuyến ≤ 10 giờ), A8 (góc nhìn chủ xe): chưa gửi~~ Nhóm tự chốt 16/10.
 
 ## Tài
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |

@@ -1,6 +1,6 @@
 # Nghiệp vụ – Hệ thống quản lý vận tải (chuyến là trung tâm)
 
-> Phiên bản: 0.5 (Kiệt đề xuất, chờ Tài review và thầy góp ý) · Cập nhật: 15/10/2026 · Nhóm 10
+> Phiên bản: 0.5 (Kiệt đề xuất, Tài đã review, merge 16/10/2026) · Cập nhật: 16/10/2026 · Nhóm 10
 > Nguyên tắc: **Chuyến xe là trung tâm, đơn hàng là thứ được ghép vào chuyến.**
 > Mọi use case, user story và test case trỏ về mã `BR-xx`, `ST-xx`, `CFG-xx` trong file này.
 > Nguồn sự thật về nghiệp vụ cho code và tài liệu. Sửa ở đây trước, rồi chép sang Project instructions trên claude.ai để hai nơi không lệch nhau.
@@ -38,11 +38,11 @@ Nhận xét: các TMS lớn đều có định tuyến tối ưu + theo dõi GPS
 
 ---
 
-## 1. Bài toán và giả định phạm vi (chờ thầy trả lời)
+## 1. Bài toán và giả định phạm vi (nhóm đã chốt 16/10/2026)
 
 Doanh nghiệp vận tải nhỏ, khoảng 10 xe tải, chạy tuyến liên tỉnh cố định. **Chuyến xe là trung tâm; đơn là thứ được ghép vào chuyến.** Mỗi chuyến phải: **chạy đầy** (không quá tải, biết trước lời/lỗ), **đúng luật** (giấy tờ còn hạn, bằng lái đúng hạng, không lái quá giờ), **có bằng chứng** (mỗi lần lấy, giao có giờ, vị trí, ảnh, chữ ký), **rõ tiền** (tạm ứng, chi phí, doanh thu, lãi của chuyến). Năm vai trò: Quản lý, Điều phối, Tài xế, Kế toán, Khách.
 
-| Mã | Câu hỏi | Giả định 0.5 | Nếu thầy trả lời khác |
+| Mã | Câu hỏi | Quyết định của nhóm | Nếu sau này thầy yêu cầu khác |
 |---|---|---|---|
 | A1 | Lấy tận nơi hay khách mang tới kho? | **Cả hai** – kho là một điểm lấy | Không ảnh hưởng mô hình |
 | A2 | Có xe thuê ngoài? | **Không** | Thêm thực thể Nhà xe, chi phí thuê thay cho dầu + lương → hướng phát triển |
@@ -520,7 +520,7 @@ Khách Cty A tra cứu Đ1 bằng mã + 4 số cuối SĐT: "Giao không thành 
 **8. Cuối tháng.** Cty B nợ 2.240.000 (Đ2 + Đ4); khách trả thì Kế toán đánh dấu đã thu cả hai đơn một lần (BR-56, UC-25). X1 tháng 10: Σ lãi các chuyến − chi phí cố định 9.000.000 = lãi thật của xe; kèm % lấp đầy trung bình, số chuyến chạy rỗng, dầu so với định mức (UC-26, 34).
 
 ## 12. Câu hỏi còn mở
-- Thầy: A1–A8.
+- ~~Thầy: A1–A8.~~ Nhóm tự chốt A1–A8 ngày 16/10/2026 (thầy để nhóm tự quyết). Cột "Nếu sau này thầy yêu cầu khác" ở mục 1 giữ hướng xử lý.
 - Nhà xe (nếu phỏng vấn được): mỗi điểm dừng mất bao lâu (`CFG-08`); ai trả cước; hàng giao hỏng xử lý thế nào.
 
 ---
