@@ -1,6 +1,6 @@
 # Đặc tả API
 
-> Phiên bản 0.2 · 15/10/2026 · Nhóm 10 (cập nhật theo nghiệp vụ 0.5). Khớp `docs/use-cases.md` (UC-01…34), `docs/nghiep-vu.md` (BR, trạng thái), `docs/kien-truc.md` (lỗi, phân quyền).
+> Phiên bản 0.2 · 15/10/2026 · Nhóm 8 (cập nhật theo nghiệp vụ 0.5). Khớp `docs/use-cases.md` (UC-01…34), `docs/nghiep-vu.md` (BR, trạng thái), `docs/kien-truc.md` (lỗi, phân quyền).
 > Tài liệu này là **hợp đồng** để chia việc frontend/backend. Khi code xong, chi tiết từng trường xem ở OpenAPI do FastAPI sinh tại `/docs`; nếu hai nơi lệch nhau thì sửa file này trong cùng commit.
 > Bỏ ở 0.2 (theo nghiệp vụ 0.5): `POST /api/don/{id}/xac-nhan` và `?xac_nhan=true` (UC-09), `PUT /api/chuyen/{id}/diem-dung` (UC-14), `POST /api/toi/chuyen/{id}/xuat-phat` (BR-27), `POST /api/don/{id}/dieu-chinh-cuoc` (UC-31), `POST /api/chuyen/{id}/goi-y-ghep` (UC-29), `POST /api/tam-ung/{id}/duyet`, `/tu-choi`.
 

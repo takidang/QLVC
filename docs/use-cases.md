@@ -1,6 +1,6 @@
 # Đặc tả yêu cầu – Hệ thống quản lý vận tải
 
-> Phiên bản: 0.5 (Kiệt đề xuất, chờ Tài review) · Cập nhật: 15/10/2026 · Nhóm 10
+> Phiên bản: 0.5 (Kiệt đề xuất, chờ Tài review) · Cập nhật: 15/10/2026 · Nhóm 8
 > Quy tắc nghiệp vụ, trạng thái, cấu hình: xem `docs/nghiep-vu.md` (`BR-xx`, `ST-xx`, `CFG-xx`).
 > Ưu tiên MoSCoW: **M** = phải có (bản demo), **S** = nên có, **C** = có thì tốt (làm nếu dư thời gian).
 > Giữ mã UC của 0.4; UC bỏ ghi "Bỏ ở 0.5", không dùng lại số; UC mới từ UC-32.

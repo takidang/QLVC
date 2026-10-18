@@ -5,7 +5,7 @@ description: "Dùng khi Tai làm đồ án chuyên ngành CNPM (hệ thống qu�
 
 # Đồ án chuyên ngành CNPM – Hệ thống quản lý vận tải
 
-Nhóm 10: Đặng Lê Tấn Tài, Nguyễn Đỗ Tuấn Kiệt (cả hai code). Thực hiện 12/10–20/12/2026, nộp LMS 21–27/12, bảo vệ 28/12/2026–10/01/2027.
+Nhóm 8: Đặng Lê Tấn Tài, Nguyễn Đỗ Tuấn Kiệt (cả hai code). Thực hiện 12/10–20/12/2026, nộp LMS 21–27/12, bảo vệ 28/12/2026–10/01/2027.
 
 **Nguồn sự thật về nghiệp vụ:** trong repo là `docs/nghiep-vu.md`; trong chat claude.ai là bản sao của file đó trong mục tài liệu (knowledge) của Project "Đồ án chuyên ngành CNPM – Hệ thống quản lý vận tải". Repo là bản gốc: sửa `docs/nghiep-vu.md` trước, rồi tải lại file lên Project. Mọi thứ phải nhất quán với: **CHUYẾN XE LÀ TRUNG TÂM, ĐƠN HÀNG ĐƯỢC GHÉP VÀO CHUYẾN**.
 
@@ -46,7 +46,7 @@ Chia việc theo phân hệ: Chuyến, Đơn, Xe/Tài xế, Quét mã giao nhậ
 
 Mẫu (~nửa trang):
 
-**Báo cáo tuần X (dd/mm – dd/mm) – Nhóm 10**
+**Báo cáo tuần X (dd/mm – dd/mm) – Nhóm 8**
 1. **Đã hoàn thành**: tính năng/tài liệu xong, người làm, minh chứng (link PR/commit, ảnh màn hình, sơ đồ). VD: "API tạo chuyến + kiểm tra tải trọng (Tài) – PR #12, 8/8 test pass".
 2. **Trạng thái chức năng**: bảng các phân hệ, mỗi cái *Chưa làm / Đang làm / Xong / Đã test* (bảng dùng cả kỳ, mỗi tuần chỉ cập nhật).
 3. **Vướng mắc / cần thầy góp ý**: lỗi chưa giải quyết, câu hỏi nghiệp vụ.

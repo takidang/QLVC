@@ -1,4 +1,4 @@
-# Hệ thống quản lý vận tải – Nhóm 10 (Tài, Kiệt)
+# Hệ thống quản lý vận tải – Nhóm 8 (Tài, Kiệt)
 
 Nghiệp vụ ở `docs/nghiep-vu.md`; thiết kế và quyết định nằm trong `docs/`. Đọc file liên quan trước khi code; code làm đổi thiết kế thì sửa `docs/` trong cùng commit.
 

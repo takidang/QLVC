@@ -1,4 +1,4 @@
-# Tiến độ đồ án – Nhóm 10
+# Tiến độ đồ án – Nhóm 8
 
 > Mỗi người CHỈ sửa phần của mình. Mục chung chỉ thêm dòng, không sửa dòng người khác.
 > Chi tiết từng UC: `docs/stories/`. Cập nhật sau mỗi `story done` hoặc cuối buổi, commit cùng code.

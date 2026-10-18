@@ -1,6 +1,6 @@
 # Kiến trúc hệ thống
 
-> Phiên bản 0.2 · 15/10/2026 · Nhóm 10 (cập nhật theo nghiệp vụ 0.5). Khớp `docs/nghiep-vu.md` (mục 8 Nền tảng và triển khai), `docs/so-do.md` (ERD, sequence), `docs/security-rules.md`.
+> Phiên bản 0.2 · 15/10/2026 · Nhóm 8 (cập nhật theo nghiệp vụ 0.5). Khớp `docs/nghiep-vu.md` (mục 8 Nền tảng và triển khai), `docs/so-do.md` (ERD, sequence), `docs/security-rules.md`.
 > Đặc tả endpoint: `docs/api.md`. Code lệch tài liệu này thì sửa tài liệu trong cùng commit.
 
 ---

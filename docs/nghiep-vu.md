@@ -1,6 +1,6 @@
 # Nghiệp vụ – Hệ thống quản lý vận tải (chuyến là trung tâm)
 
-> Phiên bản: 0.5 (Kiệt đề xuất, Tài đã review, merge 16/10/2026) · Cập nhật: 16/10/2026 · Nhóm 10
+> Phiên bản: 0.5 (Kiệt đề xuất, Tài đã review, merge 16/10/2026) · Cập nhật: 16/10/2026 · Nhóm 8
 > Nguyên tắc: **Chuyến xe là trung tâm, đơn hàng là thứ được ghép vào chuyến.**
 > Mọi use case, user story và test case trỏ về mã `BR-xx`, `ST-xx`, `CFG-xx` trong file này.
 > Nguồn sự thật về nghiệp vụ cho code và tài liệu. Repo là bản gốc: sửa ở đây trước (chỉ phiên Claude Code sửa và commit), rồi tải lại file này lên mục tài liệu (knowledge) của Project trên claude.ai để chat không dùng bản cũ.

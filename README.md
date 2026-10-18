@@ -1,6 +1,6 @@
 # Hệ thống quản lý vận tải cho doanh nghiệp vận tải hàng hóa nhỏ
 
-Đồ án chuyên ngành CNPM – Nhóm 10
+Đồ án chuyên ngành CNPM – Nhóm 8
 
 - Đặng Lê Tấn Tài
 - Nguyễn Đỗ Tuấn Kiệt

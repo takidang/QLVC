@@ -1,6 +1,6 @@
 # Sơ đồ nghiệp vụ và dữ liệu
 
-> Phiên bản 0.5 · 15/10/2026 · Nhóm 10 (Kiệt đề xuất, chờ Tài review). Khớp `docs/nghiep-vu.md` (BR-01…73) và `docs/use-cases.md` (UC-01…34).
+> Phiên bản 0.5 · 15/10/2026 · Nhóm 8 (Kiệt đề xuất, chờ Tài review). Khớp `docs/nghiep-vu.md` (BR-01…73) và `docs/use-cases.md` (UC-01…34).
 > Viết bằng Mermaid: GitHub và VS Code (extension Markdown Preview Mermaid) hiển thị trực tiếp. Sửa nghiệp vụ thì sửa sơ đồ trong cùng commit.
 > ERD là bản logic để hiểu nghiệp vụ; kiểu dữ liệu và index chi tiết chốt ở bước thiết kế CSDL.
 
