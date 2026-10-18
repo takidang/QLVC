@@ -3,7 +3,7 @@
 > Phiên bản: 0.5 (Kiệt đề xuất, Tài đã review, merge 16/10/2026) · Cập nhật: 16/10/2026 · Nhóm 10
 > Nguyên tắc: **Chuyến xe là trung tâm, đơn hàng là thứ được ghép vào chuyến.**
 > Mọi use case, user story và test case trỏ về mã `BR-xx`, `ST-xx`, `CFG-xx` trong file này.
-> Nguồn sự thật về nghiệp vụ cho code và tài liệu. Sửa ở đây trước, rồi chép sang Project instructions trên claude.ai để hai nơi không lệch nhau.
+> Nguồn sự thật về nghiệp vụ cho code và tài liệu. Repo là bản gốc: sửa ở đây trước (chỉ phiên Claude Code sửa và commit), rồi tải lại file này lên mục tài liệu (knowledge) của Project trên claude.ai để chat không dùng bản cũ.
 > Đề tài (thầy giao): "Hệ thống quản lý vận tải cho một doanh nghiệp vận tải hàng hóa nhỏ: CHUYẾN XE LÀ TRUNG TÂM, ĐƠN HÀNG LÀ THỨ ĐƯỢC GHÉP VÀO CHUYẾN."
 > Đánh số: BR, UC, CFG bị bỏ thì ghi "Bỏ ở 0.5 – lý do", **không xóa và không dùng lại số**. Quy tắc mới từ BR-63, UC mới từ UC-32, tham số mới từ CFG-08. Bản 0.4 xem lịch sử git.
 

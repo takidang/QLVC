@@ -7,7 +7,7 @@ description: "Dùng khi Tai làm đồ án chuyên ngành CNPM (hệ thống qu�
 
 Nhóm 10: Đặng Lê Tấn Tài, Nguyễn Đỗ Tuấn Kiệt (cả hai code). Thực hiện 12/10–20/12/2026, nộp LMS 21–27/12, bảo vệ 28/12/2026–10/01/2027.
 
-**Nguồn sự thật về nghiệp vụ:** trong repo là `docs/nghiep-vu.md`; trong chat claude.ai là Project instructions của Project "Đồ án chuyên ngành CNPM – Hệ thống quản lý vận tải". Hai nơi phải giống nhau; sửa `docs/nghiep-vu.md` trước rồi chép sang. Mọi thứ phải nhất quán với: **CHUYẾN XE LÀ TRUNG TÂM, ĐƠN HÀNG ĐƯỢC GHÉP VÀO CHUYẾN**.
+**Nguồn sự thật về nghiệp vụ:** trong repo là `docs/nghiep-vu.md`; trong chat claude.ai là bản sao của file đó trong mục tài liệu (knowledge) của Project "Đồ án chuyên ngành CNPM – Hệ thống quản lý vận tải". Repo là bản gốc: sửa `docs/nghiep-vu.md` trước, rồi tải lại file lên Project. Mọi thứ phải nhất quán với: **CHUYẾN XE LÀ TRUNG TÂM, ĐƠN HÀNG ĐƯỢC GHÉP VÀO CHUYẾN**.
 
 Không dùng skill này cho môn Quản lý Dự án CNTT (QLDACNTT) – môn đó có skill riêng.
 
