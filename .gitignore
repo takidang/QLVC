@@ -17,3 +17,6 @@ backend/uploads/
 # Node
 node_modules/
 dist/
+
+# Báo cáo Word nộp thầy, giữ trên máy, không đưa lên repo
+baocao/
