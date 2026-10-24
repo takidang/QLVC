@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState, type FormEvent, type InputHTMLAttributes } from 'react'
+import { useEffect, useState, type FormEvent, type InputHTMLAttributes } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachXe, suaXe, themXe, type Xe } from '../../api/xe'
 
 const SO_DONG = 20
-const homNay = () => new Date().toISOString().slice(0, 10)
+// Ngày theo giờ máy người dùng (Việt Nam), không theo UTC: 'sv-SE' cho dạng YYYY-MM-DD
+const homNay = () => new Date().toLocaleDateString('sv-SE')
 const ngayVN = (d: string) => d.split('-').reverse().join('/')
 
 type Form = Record<keyof Omit<Xe, 'id' | 'trang_thai'>, string>
@@ -35,17 +36,24 @@ export default function XeDanhSach() {
   const [ds, setDs] = useState<{ du_lieu: Xe[]; tong: number }>({ du_lieu: [], tong: 0 })
   const [loiTai, setLoiTai] = useState('')
   const [dangSua, setDangSua] = useState<Xe | 'moi' | null>(null)
+  const [lanTai, setLanTai] = useState(0) // tăng lên để tải lại sau khi thêm/sửa
+  const tai = () => setLanTai((n) => n + 1)
 
-  const tai = useCallback(() => {
+  useEffect(() => {
+    let bo = false // yêu cầu cũ về muộn (gõ tìm nhanh, mạng chậm) thì bỏ, không ghi đè kết quả mới
     danhSachXe({ tim, trang_thai: trangThai, trang, so_dong: SO_DONG })
       .then((r) => {
+        if (bo) return
         setDs(r)
         setLoiTai('')
       })
-      .catch((e) => setLoiTai(e instanceof LoiApi ? e.message : 'Không tải được danh sách xe'))
-  }, [tim, trangThai, trang])
-
-  useEffect(tai, [tai])
+      .catch((e) => {
+        if (!bo) setLoiTai(e instanceof LoiApi ? e.message : 'Không tải được danh sách xe')
+      })
+    return () => {
+      bo = true
+    }
+  }, [tim, trangThai, trang, lanTai])
 
   async function doiTrangThai(xe: Xe) {
     try {

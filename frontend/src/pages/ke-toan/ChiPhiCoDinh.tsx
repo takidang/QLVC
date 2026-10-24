@@ -2,7 +2,8 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachXe, datChiPhiCoDinh, xemChiPhiCoDinh, type Xe } from '../../api/xe'
 
-const thangNay = () => new Date().toISOString().slice(0, 7) // YYYY-MM
+// Tháng theo giờ máy người dùng (Việt Nam), không theo UTC: đầu tháng không bị chọn nhầm tháng trước
+const thangNay = () => new Date().toLocaleDateString('sv-SE').slice(0, 7) // YYYY-MM
 
 export default function ChiPhiCoDinh() {
   const [dsXe, setDsXe] = useState<Xe[]>([])
@@ -22,12 +23,19 @@ export default function ChiPhiCoDinh() {
 
   useEffect(() => {
     if (!xeId || !thang) return
+    let bo = false // đổi xe/tháng nhanh: số của lựa chọn cũ về muộn thì bỏ, không hiện nhầm dưới xe khác
     xemChiPhiCoDinh(Number(xeId), thang)
       .then((r) => {
+        if (bo) return
         setDaLuu(r.so_tien)
         setSoTien(r.so_tien === null ? '' : String(r.so_tien))
       })
-      .catch((e) => setLoi(e instanceof LoiApi ? e.message : 'Không tải được chi phí'))
+      .catch((e) => {
+        if (!bo) setLoi(e instanceof LoiApi ? e.message : 'Không tải được chi phí')
+      })
+    return () => {
+      bo = true
+    }
   }, [xeId, thang])
 
   async function luu(e: FormEvent) {
@@ -61,6 +69,7 @@ export default function ChiPhiCoDinh() {
             onChange={(e) => {
               setXeId(e.target.value)
               setThongBao('')
+              setLoi('')
             }}
             required
           >
@@ -81,6 +90,7 @@ export default function ChiPhiCoDinh() {
             onChange={(e) => {
               setThang(e.target.value)
               setThongBao('')
+              setLoi('')
             }}
             required
           />

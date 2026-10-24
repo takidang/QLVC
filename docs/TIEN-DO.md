@@ -38,6 +38,7 @@
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 24/10: Review UC-03, sửa 3 mục frontend (ngày theo giờ máy, bỏ kết quả về muộn, xóa lỗi cũ).
 - 24/10: UC-03 Quản lý xe hoàn thành (13/13 AC, 68 test đạt, thử giao diện đạt); viết docs/mau-use-case.md cho UC-04…06.
 - 16/10: Review UC-01, sửa 3 mục (lỗi 400 lộ mật khẩu, test token chập chờn, đăng xuất khi mất mạng).
 - 16/10: UC-01 hoàn thành: 30 test đạt, CI xanh, thử giao diện đạt 4 bước. Nền móng xong trước hạn 18/10.

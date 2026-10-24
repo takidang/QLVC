@@ -41,6 +41,7 @@
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest` (Docker Desktop đang chạy).
 - Lệch đặc tả: 4 quyết định chốt 24/10 (khối lượng toàn bộ ≥ tải trọng; km chỉ nhập lúc tạo; Kế toán xem xe; chỉ Kế toán sửa chi phí cố định) – đã sửa `api.md`. Thêm cấu trúc thư mục con mỗi danh mục – đã sửa `kien-truc.md`.
 - AC11, AC12 thử tay 24/10 (Tài, Edge/Chrome): thêm xe chuẩn hóa biển số, hạn đã qua tô đỏ, báo lỗi khối lượng và biển số trùng, tìm/lọc/ngừng, Kế toán lưu chi phí cố định. Sau khi chụp ảnh sửa thêm: biển số không xuống dòng; lỗi biển số trùng và BR-14 hiện ngay dưới ô.
+- Review `ponytail-review` 24/10: sửa 3 mục ở frontend – ngày "hôm nay"/"tháng này" lấy theo giờ máy thay vì UTC (đầu tháng không chọn nhầm tháng trước, xe hết hạn tô đỏ đúng lúc); bỏ kết quả về muộn khi gõ tìm nhanh hoặc đổi xe/tháng nhanh (không hiện số tiền của xe khác); xóa lỗi cũ khi đổi lựa chọn. Chưa có test tự động frontend, kiểm tay.
 - Tài khoản thử `ketoan` (Kế toán) tạo tay trong DB dev, không có trong repo; UC-02 sẽ thay.
 
 ## Truy vết và kết quả
