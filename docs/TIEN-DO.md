@@ -22,6 +22,7 @@
 - ~~16/10 – Tài đang tạo **toàn bộ models theo ERD 0.5 + migration đầu tiên** (`backend/app/models/`, `backend/alembic/`). Kiệt chưa sửa hai thư mục này tới khi dòng này được gạch; cần thêm cột/bảng thì nhắn Tài.~~ Xong 16/10: 24 bảng + migration đầu đã lên `main`. Sửa models thì tạo migration mới (`alembic revision --autogenerate`), CI chạy `alembic check`.
 - 24/10 – Tài → Kiệt: UC-03 xong, làm UC-04 theo `docs/mau-use-case.md` (chép cấu trúc `backend/app/modules/danh_muc/xe/`, fixture `dang_nhap_voi`, trang `XeDanhSach.tsx`). Tuần 2 Kiệt chưa có commit nào: nhắn Tài nếu vướng cài môi trường.
 - ~~24/10 – Tài đang sửa `backend/app/models/danh_muc.py` (bảng giá) và thêm migration thứ 2 (UC-07: unique cặp tỉnh + ngày hiệu lực, nạp CFG mặc định). Kiệt chưa thêm migration tới khi dòng này được gạch.~~ Xong 24/10: migration `177fdcb334df`. Kiệt `git pull` rồi `alembic upgrade head`.
+- 24/10 – **Tài nhận UC-05 Tuyến và nút** (trước là của Kiệt) vì UC-05 chặn giao diện tạo đơn và toàn bộ phần chuyến. Kiệt **không làm UC-05**; Kiệt sửa dòng "UC-02, 05 + Quét tối thiểu" trong phần mình thành "UC-02 + Quét tối thiểu". Kiệt vẫn làm UC-04 Tài xế (UC-11 cần tài xế).
 
 ## Câu hỏi chờ thầy
 - ~~A1–A6 (nghiep-vu.md mục 1): chưa gửi~~ Nhóm tự chốt 16/10 (nghiep-vu.md mục 1).
@@ -33,6 +34,7 @@
 | Nền móng (gồm UC-01 Đăng nhập) | 1 | Xong | 12/12 | |
 | UC-03 Xe (mẫu) | 2 | Xong | 13/13 | |
 | UC-06…09 Đơn tối thiểu | 3–4 | Đang làm | UC-06 6/6, UC-07 9/9 | UC-08 Tạo đơn chờ API nút (UC-05); UC-09 bỏ ở 0.5 |
+| UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Chưa bắt đầu | | Làm sau backend UC-08 |
 | UC-11…13, 15 Chuyến tối thiểu | 3–4 | Chưa bắt đầu | | |
 | UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Chưa bắt đầu | | |
 | UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
