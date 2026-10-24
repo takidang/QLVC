@@ -48,9 +48,10 @@
 | GET, PUT | `/api/xe/{id}/chi-phi-co-dinh/{thang}` | KT | UC-03 | `{so_tien}`; tháng dạng `YYYY-MM`; ghi `NHAT_KY_TIEN` |
 | GET, POST | `/api/tai-xe` | DP | UC-04 | Tạo kèm tài khoản vai trò TX |
 | GET, PATCH | `/api/tai-xe/{id}` | DP | UC-04 | BR-60 |
-| GET, POST | `/api/nut` | DP | UC-05 | Tỉnh hoặc kho, có tọa độ |
+| GET, POST | `/api/nut` | DP | UC-05 | Tỉnh hoặc kho, có tọa độ; tìm theo tên hoặc tỉnh |
+| PATCH | `/api/nut/{id}` | DP | UC-05 | Sửa tên, tọa độ; nút đã có đơn thì không đổi tỉnh (422) |
 | GET, POST | `/api/tuyen` | DP | UC-05 | Body gồm danh sách nút có thứ tự (phút, km, điểm nghỉ), định mức, lương khoán; BR-66 chặn > 10 giờ; trả kèm cảnh báo BR-20 |
-| GET, PATCH | `/api/tuyen/{id}` | DP | UC-05 | BR-60, BR-66 |
+| GET, PATCH | `/api/tuyen/{id}` | DP | UC-05 | BR-60, BR-66; thay danh sách nút chỉ khi tuyến chưa có chuyến (khác `HUY`), không thì 409 |
 | GET | `/api/khach-hang` | DP, KT | UC-06 | `?trang_thai=&tim=&trang=&so_dong=`; tìm theo tên hoặc SĐT; KT chỉ xem (công nợ UC-25) |
 | POST | `/api/khach-hang` | DP | UC-06 | SĐT chuẩn hóa về `0` + 9–10 số (BR-59) |
 | GET | `/api/khach-hang/{id}` | DP, KT | UC-06 | |

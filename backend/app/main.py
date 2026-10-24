@@ -10,6 +10,8 @@ from app.loi import LoiNghiepVu
 from app.modules.danh_muc.bang_gia.router import router as bang_gia_router
 from app.modules.danh_muc.cau_hinh.router import router as cau_hinh_router
 from app.modules.danh_muc.khach_hang.router import router as khach_hang_router
+from app.modules.danh_muc.nut.router import router as nut_router
+from app.modules.danh_muc.tuyen.router import router as tuyen_router
 from app.modules.danh_muc.xe.router import router as xe_router
 from app.modules.don.router import router as don_router
 
@@ -27,6 +29,8 @@ app.include_router(khach_hang_router)
 app.include_router(bang_gia_router)
 app.include_router(cau_hinh_router)
 app.include_router(don_router)
+app.include_router(nut_router)
+app.include_router(tuyen_router)
 
 
 # FastAPI mặc định trả 422 cho dữ liệu sai kiểu; 422 dành cho vi phạm BR (kien-truc.md mục 7).
