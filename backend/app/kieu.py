@@ -1,6 +1,7 @@
 """Kiểu dữ liệu dùng chung cho schema: dùng lại ở khách hàng, đơn hàng, tài xế."""
 
 import re
+import unicodedata
 from typing import Annotated
 
 from pydantic import AfterValidator
@@ -19,10 +20,14 @@ def chuan_hoa_sdt(v: str | None) -> str | None:
 
 
 def chuan_hoa_chu(v: str | None) -> str | None:
-    """Bỏ khoảng trắng đầu cuối; chuỗi rỗng sau khi bỏ thì báo lỗi."""
+    """Bỏ khoảng trắng đầu cuối; đưa về Unicode dựng sẵn (NFC); chuỗi rỗng sau khi bỏ thì báo lỗi.
+
+    NFC: "Cần Thơ" gõ kiểu tổ hợp (Unikey tổ hợp, macOS) và kiểu dựng sẵn thành cùng một chuỗi,
+    để tra giá theo tỉnh (BR-48), chặn trùng và so địa chỉ (BR-31) không lọt.
+    """
     if v is None:
         return v
-    v = v.strip()
+    v = unicodedata.normalize("NFC", v).strip()
     if not v:
         raise ValueError("Không được để trống")
     return v

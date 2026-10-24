@@ -10,7 +10,8 @@ SoKg = Annotated[Decimal, Field(gt=0, max_digits=10, decimal_places=2)]
 SoKhoi = Annotated[Decimal, Field(gt=0, max_digits=8, decimal_places=2)]
 DiaChi = Annotated[ChuBatBuoc, Field(max_length=300)]
 Ten = Annotated[ChuBatBuoc, Field(max_length=100)]
-ToaDo = Annotated[Decimal, Field(ge=-180, le=180, max_digits=9, decimal_places=6)]
+ViDo = Annotated[Decimal, Field(ge=-90, le=90, max_digits=9, decimal_places=6)]
+KinhDo = Annotated[Decimal, Field(ge=-180, le=180, max_digits=9, decimal_places=6)]
 TrangThaiDon = Literal["CHO_GHEP", "DA_GHEP", "DA_LAY", "DA_GIAO", "THAT_BAI", "TRA_HANG", "HUY"]  # ST-O
 
 
@@ -41,8 +42,8 @@ class DonVao(BaseModel):
 
     nut_lay_id: int
     dia_chi_lay: DiaChi
-    lat_lay: ToaDo | None = None
-    lng_lay: ToaDo | None = None
+    lat_lay: ViDo | None = None
+    lng_lay: KinhDo | None = None
     nguoi_lien_he_lay: Ten | None = None
     sdt_lay: SoDienThoai
     lay_tu: AwareDatetime | None = None
@@ -50,8 +51,8 @@ class DonVao(BaseModel):
 
     nut_giao_id: int
     dia_chi_giao: DiaChi
-    lat_giao: ToaDo | None = None
-    lng_giao: ToaDo | None = None
+    lat_giao: ViDo | None = None
+    lng_giao: KinhDo | None = None
     nguoi_nhan: Ten
     sdt_nhan: SoDienThoai
     han_giao: AwareDatetime

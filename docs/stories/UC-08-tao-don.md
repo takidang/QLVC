@@ -39,6 +39,7 @@
 - File đã đổi: `backend/app/domain/cuoc.py` (BR-31, 46–48), `backend/app/modules/don/{schemas,service,router}.py`, `backend/app/main.py`.
 - Test đã viết: `backend/tests/unit/test_uc08_cuoc.py` (14 ca, kịch bản Đ1, Đ2, Đ3, Đ8), `backend/tests/api/test_uc08_tao_don.py` (27 ca). Toàn bộ **164 passed** (24/10).
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest`.
+- Review `ponytail-review` 24/10 (UC-06, 07, 08): (1) chữ tiếng Việt đưa về Unicode dựng sẵn NFC trong `ChuBatBuoc` và `tra_gia` – gõ kiểu tổ hợp (Unikey tổ hợp, macOS) vẫn khớp giá, chặn trùng, so địa chỉ BR-31; (2) vĩ độ giới hạn −90…90, kinh độ −180…180. Thêm 3 test (`test_uc07_ac3_tinh_go_kieu_to_hop_van_khop`, `test_uc08_review_*`). Tổng 167 passed.
 - Lệch đặc tả: 4 quyết định ở mục Quyết định. `bao_gia()` dùng chung cho tính thử và tạo đơn; UC-10 sửa đơn sẽ tính lại từ bản sao `_chot` (BR-33).
 
 ## Truy vết và kết quả

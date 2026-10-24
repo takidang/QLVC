@@ -1,4 +1,5 @@
 import re
+import unicodedata
 from datetime import date, timedelta
 from decimal import Decimal
 
@@ -233,3 +234,15 @@ def test_uc08_ac10_phan_quyen(client, dang_nhap_voi, kich_ban, vai_tro, tao_ma, 
 def test_uc08_ac10_chua_dang_nhap(client):
     assert client.get("/api/don").status_code == 401
     assert client.post("/api/don", json={}).status_code in (400, 401)
+
+
+def test_uc08_review_vi_do_ngoai_khoang_bi_chan(client, dang_nhap_voi, kich_ban):
+    dang_nhap_voi("DIEU_PHOI")
+    assert tao(client, don_d1(kich_ban, lat_lay="120", lng_lay="105")).status_code == 400
+    assert tao(client, don_d1(kich_ban, lat_lay="10.03", lng_lay="105.78")).status_code == 201
+
+
+def test_uc08_review_dia_chi_khac_kieu_unicode_van_la_trung(client, dang_nhap_voi, kich_ban):
+    dang_nhap_voi("DIEU_PHOI")
+    vao = don_d1(kich_ban, dia_chi_giao=unicodedata.normalize("NFD", "12 Nguyễn Huệ, Q.1"))
+    assert tao(client, vao).json()["ma"] == "BR-31"

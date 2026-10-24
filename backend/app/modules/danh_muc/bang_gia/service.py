@@ -1,3 +1,4 @@
+import unicodedata
 from datetime import date
 
 from sqlalchemy import func, or_, select
@@ -13,13 +14,17 @@ from app.thoi_gian import hom_nay_vn
 CAP = (func.lower(BangGia.tinh_lay), func.lower(BangGia.tinh_giao))
 
 
+def _chuan(tinh: str) -> str:
+    return unicodedata.normalize("NFC", tinh).strip().lower()
+
+
 def tra_gia(db: Session, tinh_lay: str, tinh_giao: str, ngay: date) -> BangGia | None:
     """BR-48: mức giá của cặp tỉnh đang có hiệu lực tại ngày đó (hiệu lực mới nhất ≤ ngày). Không có → None."""
     return db.scalar(
         select(BangGia)
         .where(
-            func.lower(BangGia.tinh_lay) == tinh_lay.strip().lower(),
-            func.lower(BangGia.tinh_giao) == tinh_giao.strip().lower(),
+            func.lower(BangGia.tinh_lay) == _chuan(tinh_lay),
+            func.lower(BangGia.tinh_giao) == _chuan(tinh_giao),
             BangGia.hieu_luc_tu <= ngay,
         )
         .order_by(BangGia.hieu_luc_tu.desc())

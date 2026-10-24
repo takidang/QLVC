@@ -1,3 +1,4 @@
+import unicodedata
 from datetime import date
 
 import pytest
@@ -179,3 +180,13 @@ def test_uc07_ac8_chi_quan_ly(client, dang_nhap_voi, db, vai_tro):
 def test_uc07_ac8_chua_dang_nhap(client):
     assert client.get("/api/bang-gia").status_code == 401
     assert client.get("/api/cau-hinh").status_code == 401
+
+
+# Review UC-08 mục 1: cùng chữ, hai kiểu Unicode (tổ hợp NFD và dựng sẵn NFC) phải là một
+def test_uc07_ac3_tinh_go_kieu_to_hop_van_khop(client, dang_nhap_voi, db):
+    to_hop = unicodedata.normalize("NFD", "Cần Thơ")
+    assert to_hop != "Cần Thơ"  # khác nhau từng byte dù nhìn giống hệt
+    dang_nhap_voi("QUAN_LY")
+    assert them(client, tinh_giao=to_hop).status_code == 201
+    assert tra_gia(db, "TP.HCM", "Cần Thơ", date(2026, 10, 15)).don_gia_kg == 1500
+    assert them(client, tinh_giao="Cần Thơ").status_code == 409  # trùng sau khi chuẩn hóa

@@ -38,3 +38,6 @@ Mỗi danh mục một thư mục con trong `backend/app/modules/danh_muc/` (`xe
 - Đường dẫn cố định đặt trước đường dẫn có `{id}` cùng tiền tố (`api.md` mục 1).
 - Số thập phân (m³, lít) máy chủ trả dạng chuỗi; giao diện đổi bằng `Number(...)` khi hiển thị.
 - Trên Windows dùng `127.0.0.1`, không dùng `localhost` (CSDL và proxy Vite chậm).
+- Trường chữ dùng kiểu chung trong `backend/app/kieu.py`: `ChuBatBuoc` (bỏ khoảng trắng, đưa về Unicode NFC – "Cần Thơ" gõ kiểu tổ hợp và dựng sẵn thành một), `SoDienThoai` (chuẩn hóa về `0` + 9–10 số). Đừng tự viết lại.
+- "Hôm nay" theo giờ Việt Nam: `app/thoi_gian.py` (`hom_nay_vn()`, `bay_gio()`); frontend dùng `toLocaleDateString('sv-SE')`, không dùng `toISOString()`.
+- Chạy backend lúc dev **không dùng `--reload`** (kẹt trên Windows, tiến trình cũ trả 404 cho route mới); sửa code thì tắt rồi chạy lại.
