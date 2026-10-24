@@ -1,6 +1,6 @@
 # UC-06: Quản lý khách hàng
 
-- **Trạng thái:** Đang làm – AC1–AC5 đạt, AC6 chờ thử giao diện (Đã duyệt 24/10/2026 – Tài giao "làm được việc nào thì làm luôn"; 2 quyết định mới ghi ở mục Quyết định, Tài xem lại)
+- **Trạng thái:** Hoàn thành 24/10/2026 (Đã duyệt 24/10/2026 – Tài giao "làm được việc nào thì làm luôn"; 2 quyết định mới ghi ở mục Quyết định, Tài xem lại)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa); Kế toán chỉ xem
 - **Đặc tả:** `docs/use-cases.md` mục 2 (UC-06, đặc tả rút gọn ở dưới) · `docs/api.md` mục 2.2 · ERD `docs/so-do.md` mục 5 (KHACH_HANG)
 - **Quy tắc nghiệp vụ liên quan:** BR-60 (không xóa, chỉ `NGUNG`), BR-59 (4 số cuối SĐT người gửi dùng để tra cứu), BR-57 (phân quyền)
@@ -36,6 +36,7 @@
 - Test đã viết: `backend/tests/api/test_uc06_khach_hang.py` (22 ca). Toàn bộ **90 passed** (24/10).
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest`.
 - Lệch đặc tả: 3 quyết định ở mục Quyết định; `api.md` đã sửa.
+- AC6 thử tay 24/10 (Tài): chuẩn hóa SĐT, tìm, báo lỗi SĐT dưới ô, ngừng khách. Tài hỏi về hai khách trùng SĐT → giữ quyết định 3 (không chặn): mã đơn duy nhất nên tra cứu BR-59 không lẫn.
 
 ## Truy vết và kết quả
 
@@ -46,4 +47,4 @@
 | UC-06-AC3 | API | `test_uc06_ac3_tim_loc_phan_trang` | Đạt | 24/10/2026 |
 | UC-06-AC4 | API | `test_uc06_ac4_sua_va_trang_thai` | Đạt | 24/10/2026 |
 | UC-06-AC5 | API | `test_uc06_ac5_* (5 ca)` | Đạt | 24/10/2026 |
-| UC-06-AC6 | UI | `docs/test-evidence/UC-06/` | CHƯA KIỂM | |
+| UC-06-AC6 | UI | `docs/test-evidence/UC-06/` (3 ảnh) + Tài xác nhận | Đạt | 24/10/2026 |

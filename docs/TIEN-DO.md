@@ -32,13 +32,14 @@
 |---|---|---|---|---|
 | Nền móng (gồm UC-01 Đăng nhập) | 1 | Xong | 12/12 | |
 | UC-03 Xe (mẫu) | 2 | Xong | 13/13 | |
-| UC-06…09 Đơn tối thiểu | 3–4 | Chưa bắt đầu | | |
+| UC-06…09 Đơn tối thiểu | 3–4 | Đang làm | UC-06 6/6, UC-07 9/9 | UC-08 Tạo đơn chờ API nút (UC-05); UC-09 bỏ ở 0.5 |
 | UC-11…13, 15 Chuyến tối thiểu | 3–4 | Chưa bắt đầu | | |
 | UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Chưa bắt đầu | | |
 | UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 24/10: UC-06 Khách hàng (6/6 AC) và UC-07 Bảng giá + cấu hình (9/9 AC) hoàn thành; 123 test đạt. Làm trước việc tuần 3 vì Kiệt chưa có UC-04, 05.
 - 24/10: Review UC-03, sửa 3 mục frontend (ngày theo giờ máy, bỏ kết quả về muộn, xóa lỗi cũ).
 - 24/10: UC-03 Quản lý xe hoàn thành (13/13 AC, 68 test đạt, thử giao diện đạt); viết docs/mau-use-case.md cho UC-04…06.
 - 16/10: Review UC-01, sửa 3 mục (lỗi 400 lộ mật khẩu, test token chập chờn, đăng xuất khi mất mạng).

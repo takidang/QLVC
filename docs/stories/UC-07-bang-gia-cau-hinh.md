@@ -1,6 +1,6 @@
 # UC-07: Quản lý bảng giá và cấu hình
 
-- **Trạng thái:** Đang làm – AC1–AC8 đạt, AC9 chờ thử giao diện (Đã duyệt 24/10/2026 – Tài chọn: tỉnh gõ tự do, giá có ngày hiệu lực)
+- **Trạng thái:** Hoàn thành 24/10/2026 (Đã duyệt 24/10/2026 – Tài chọn: tỉnh gõ tự do, giá có ngày hiệu lực)
 - **Tác nhân:** Quản lý
 - **Đặc tả:** `docs/use-cases.md` mục 2 (UC-07, đặc tả rút gọn ở dưới) · `docs/api.md` mục 2.1 · `docs/nghiep-vu.md` mục 3 (CFG), BR-48 · ERD `docs/so-do.md` mục 5 (BANG_GIA, CAU_HINH)
 - **Quy tắc nghiệp vụ liên quan:** BR-48 (cước theo đơn giá của cặp tỉnh; không có giá thì không tạo được đơn), BR-32 (đổi bảng giá không ảnh hưởng đơn đã tạo – kiểm ở UC-08), CFG-01…10, BR-57
@@ -38,6 +38,7 @@ Quản lý nhập đơn giá/kg và cước tối thiểu cho từng cặp (tỉ
 - Test đã viết: `backend/tests/api/test_uc07_bang_gia_cau_hinh.py` (33 ca). Toàn bộ **123 passed** (24/10). `alembic upgrade`/`downgrade`/`check` chạy được.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest`.
 - Lệch đặc tả: thêm `GET /api/bang-gia/ten-tinh` (gợi ý tên tỉnh) – đã ghi `api.md`. Hàm `tra_gia` (BR-48) và `cau_hinh.service.lay` để UC-08 và các UC sau dùng.
+- AC9 thử tay 24/10 (Tài): hai mức giá, cờ đang áp dụng chuyển sang mức hôm nay, trùng tỉnh viết thường bị chặn, sửa CFG-08 ghi người sửa và giờ, CFG-01 sai báo lỗi. Lần thử đầu báo "Có lỗi" do uvicorn `--reload` kẹt trên Windows (tiến trình cũ chưa có route mới → 404): chạy backend không `--reload`; thông báo lỗi chung giờ kèm mã HTTP. Gợi ý tên tỉnh (`datalist`) hiện sai chỗ trong trình duyệt nhúng VS Code – thử bằng Edge/Chrome.
 
 ## Truy vết và kết quả
 
@@ -51,4 +52,4 @@ Quản lý nhập đơn giá/kg và cước tối thiểu cho từng cặp (tỉ
 | UC-07-AC6 | API | `test_uc07_ac6_cau_hinh_mac_dinh` | Đạt | 24/10/2026 |
 | UC-07-AC7 | API | `test_uc07_ac7_* (15 ca)` | Đạt | 24/10/2026 |
 | UC-07-AC8 | API | `test_uc07_ac8_* (4 ca)` | Đạt | 24/10/2026 |
-| UC-07-AC9 | UI | `docs/test-evidence/UC-07/` | CHƯA KIỂM | |
+| UC-07-AC9 | UI | `docs/test-evidence/UC-07/` (4 ảnh) + Tài xác nhận | Đạt | 24/10/2026 |

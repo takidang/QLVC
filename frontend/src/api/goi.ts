@@ -21,7 +21,8 @@ export async function goi<T>(url: string, init?: RequestInit): Promise<T> {
     throw new LoiApi(
       r.status,
       body.ma ?? 'LOI',
-      body.thong_diep ?? 'Có lỗi, vui lòng thử lại',
+      // Máy chủ không trả lỗi theo mẫu (404 đường dẫn sai, 502 backend tắt…): kèm mã HTTP để dễ dò
+      body.thong_diep ?? `Có lỗi (mã ${r.status}), vui lòng thử lại`,
       body.chi_tiet ?? [],
     )
   return body as T
