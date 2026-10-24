@@ -2,6 +2,8 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { BrowserRouter, Navigate, NavLink, Outlet, Route, Routes } from 'react-router-dom'
 import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
 import DangNhap from './pages/DangNhap'
+import BangGiaDanhSach from './pages/quan-ly/BangGiaDanhSach'
+import CauHinh from './pages/quan-ly/CauHinh'
 import KhachHangDanhSach from './pages/dieu-phoi/KhachHangDanhSach'
 import XeDanhSach from './pages/dieu-phoi/XeDanhSach'
 import ChiPhiCoDinh from './pages/ke-toan/ChiPhiCoDinh'
@@ -26,6 +28,10 @@ const TRANG_CON: Partial<Record<VaiTro, { duong_dan: string; ten: string; trang:
     { duong_dan: 'khach-hang', ten: 'Khách hàng', trang: <KhachHangDanhSach /> },
   ],
   KE_TOAN: [{ duong_dan: 'chi-phi-xe', ten: 'Chi phí cố định xe', trang: <ChiPhiCoDinh /> }],
+  QUAN_LY: [
+    { duong_dan: 'bang-gia', ten: 'Bảng giá', trang: <BangGiaDanhSach /> },
+    { duong_dan: 'cau-hinh', ten: 'Cấu hình', trang: <CauHinh /> },
+  ],
 }
 
 // Chỉ để điều hướng; quyền thật do máy chủ kiểm (BR-57). Quản lý vào được trang Điều phối.

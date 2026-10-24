@@ -7,6 +7,8 @@ from fastapi.responses import JSONResponse
 from app.auth.router import router as auth_router
 from app.config import get_settings
 from app.loi import LoiNghiepVu
+from app.modules.danh_muc.bang_gia.router import router as bang_gia_router
+from app.modules.danh_muc.cau_hinh.router import router as cau_hinh_router
 from app.modules.danh_muc.khach_hang.router import router as khach_hang_router
 from app.modules.danh_muc.xe.router import router as xe_router
 
@@ -21,6 +23,8 @@ app = FastAPI(title="QLVC", lifespan=lifespan)
 app.include_router(auth_router)
 app.include_router(xe_router)
 app.include_router(khach_hang_router)
+app.include_router(bang_gia_router)
+app.include_router(cau_hinh_router)
 
 
 # FastAPI mặc định trả 422 cho dữ liệu sai kiểu; 422 dành cho vi phạm BR (kien-truc.md mục 7).

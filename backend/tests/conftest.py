@@ -18,6 +18,7 @@ os.environ["DATABASE_URL"] = TEST_URL.render_as_string(hide_password=False)
 
 from app.auth.bao_mat import bam_mat_khau  # noqa: E402
 from app.db import get_engine  # noqa: E402
+from app.domain.cau_hinh import THAM_SO  # noqa: E402
 from app.main import app  # noqa: E402
 from app.models import Base, NguoiDung  # noqa: E402
 
@@ -36,6 +37,10 @@ def _csdl_test():
         c.execute(text("DROP TABLE IF EXISTS alembic_version"))
     # Dựng bảng bằng migration thật, để test cũng kiểm migration khớp models
     command.upgrade(Config(str(Path(__file__).parents[1] / "alembic.ini")), "head")
+    # Giá trị CFG migration nạp phải khớp THAM_SO trong code (hai nơi ghi cùng một danh sách)
+    with engine.connect() as c:
+        da_nap = dict(c.execute(text("SELECT ma, gia_tri FROM cau_hinh")).all())
+    assert da_nap == {ma: ts.mac_dinh for ma, ts in THAM_SO.items()}, "Migration CFG lệch app/domain/cau_hinh.py"
     return engine
 
 
@@ -46,6 +51,9 @@ def db(_csdl_test):
     with _csdl_test.begin() as c:
         bang = ", ".join(t.name for t in Base.metadata.sorted_tables)
         c.execute(text(f"TRUNCATE {bang} RESTART IDENTITY CASCADE"))
+        # Migration nạp sẵn CFG mặc định; xóa bảng xong thì nạp lại để test sau vẫn có
+        for ma, ts in THAM_SO.items():
+            c.execute(text("INSERT INTO cau_hinh (ma, gia_tri) VALUES (:ma, :gt)"), {"ma": ma, "gt": ts.mac_dinh})
 
 
 @pytest.fixture

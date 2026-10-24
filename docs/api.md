@@ -33,7 +33,8 @@
 | PATCH | `/api/nguoi-dung/{id}` | QL | UC-02 | Đổi vai trò, khóa tài khoản |
 | GET | `/api/cau-hinh` | QL | UC-07 | Danh sách CFG-xx (gồm CFG-08…10) |
 | PUT | `/api/cau-hinh/{ma}` | QL | UC-07 | Ghi người sửa, thời điểm |
-| GET, POST | `/api/bang-gia` | QL | UC-07 | BR-48 |
+| GET, POST | `/api/bang-gia` | QL | UC-07 | BR-48; mỗi mức có `hieu_luc_tu`, danh sách kèm cờ `dang_ap_dung`; trùng cặp tỉnh (không phân biệt hoa thường) + ngày → 409 |
+| GET | `/api/bang-gia/ten-tinh` | QL | UC-07 | Tên tỉnh đã dùng, để gợi ý khi nhập (tránh gõ lệch) |
 | PATCH | `/api/bang-gia/{id}` | QL | UC-07 | Không ảnh hưởng đơn đã tạo (BR-32) |
 
 ### 2.2 Danh mục: xe, tài xế, nút, tuyến, khách

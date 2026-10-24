@@ -3,7 +3,7 @@
 from datetime import date, datetime
 from decimal import Decimal
 
-from sqlalchemy import ForeignKey, Numeric, String
+from sqlalchemy import ForeignKey, Index, Numeric, String, func
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.models.base import Base
@@ -106,6 +106,16 @@ class BangGia(Base):
     don_gia_kg: Mapped[int]
     cuoc_toi_thieu: Mapped[int]
     hieu_luc_tu: Mapped[date]
+
+
+# Một cặp tỉnh (không phân biệt hoa thường) chỉ có một mức giá mỗi ngày hiệu lực (UC-07-AC2)
+Index(
+    "uq_bang_gia_cap_tinh_ngay",
+    func.lower(BangGia.tinh_lay),
+    func.lower(BangGia.tinh_giao),
+    BangGia.hieu_luc_tu,
+    unique=True,
+)
 
 
 class CauHinh(Base):

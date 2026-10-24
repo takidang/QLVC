@@ -250,3 +250,12 @@ tr.mo td {
   white-space: nowrap;
   font-weight: 600;
 }
+
+.nhan {
+  background: #e6f4ea;
+  color: #1a7f37;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
