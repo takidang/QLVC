@@ -50,8 +50,10 @@
 | GET, POST | `/api/nut` | DP | UC-05 | Tỉnh hoặc kho, có tọa độ |
 | GET, POST | `/api/tuyen` | DP | UC-05 | Body gồm danh sách nút có thứ tự (phút, km, điểm nghỉ), định mức, lương khoán; BR-66 chặn > 10 giờ; trả kèm cảnh báo BR-20 |
 | GET, PATCH | `/api/tuyen/{id}` | DP | UC-05 | BR-60, BR-66 |
-| GET, POST | `/api/khach-hang` | DP | UC-06 | |
-| GET, PATCH | `/api/khach-hang/{id}` | DP | UC-06 | BR-60 |
+| GET | `/api/khach-hang` | DP, KT | UC-06 | `?trang_thai=&tim=&trang=&so_dong=`; tìm theo tên hoặc SĐT; KT chỉ xem (công nợ UC-25) |
+| POST | `/api/khach-hang` | DP | UC-06 | SĐT chuẩn hóa về `0` + 9–10 số (BR-59) |
+| GET | `/api/khach-hang/{id}` | DP, KT | UC-06 | |
+| PATCH | `/api/khach-hang/{id}` | DP | UC-06 | `trang_thai` `HOAT_DONG`/`NGUNG`; không xóa (BR-60) |
 | GET | `/api/canh-bao` | DP | UC-27 | Giấy tờ sắp hết hạn (BR-21), lượt quét thiếu GPS (BR-43), chuyến trễ làm chồng chuyến kế tiếp, đơn chờ sắp quá hạn (BR-73), sự cố đang mở |
 
 ### 2.3 Đơn hàng

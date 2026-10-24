@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { BrowserRouter, Navigate, NavLink, Outlet, Route, Routes } from 'react-router-dom'
 import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
 import DangNhap from './pages/DangNhap'
+import KhachHangDanhSach from './pages/dieu-phoi/KhachHangDanhSach'
 import XeDanhSach from './pages/dieu-phoi/XeDanhSach'
 import ChiPhiCoDinh from './pages/ke-toan/ChiPhiCoDinh'
 
@@ -20,7 +21,10 @@ const TEN_VAI_TRO: Record<VaiTro, string> = {
 
 // Trang con của từng vai trò. Thêm UC mới: thêm một dòng ở đây (docs/mau-use-case.md)
 const TRANG_CON: Partial<Record<VaiTro, { duong_dan: string; ten: string; trang: ReactNode }[]>> = {
-  DIEU_PHOI: [{ duong_dan: 'xe', ten: 'Xe', trang: <XeDanhSach /> }],
+  DIEU_PHOI: [
+    { duong_dan: 'xe', ten: 'Xe', trang: <XeDanhSach /> },
+    { duong_dan: 'khach-hang', ten: 'Khách hàng', trang: <KhachHangDanhSach /> },
+  ],
   KE_TOAN: [{ duong_dan: 'chi-phi-xe', ten: 'Chi phí cố định xe', trang: <ChiPhiCoDinh /> }],
 }
 
