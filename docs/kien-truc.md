@@ -90,8 +90,9 @@ QLVC/
 │  │  ├─ models/              bảng SQLAlchemy theo ERD
 │  │  ├─ domain/              trang_thai.py, cuoc.py, ghep.py, xe_tai_xe.py, quet.py, tien.py
 │  │  ├─ luu_tru.py           LuuTruLocal, LuuTruSupabase
+│  │  ├─ phan_trang.py        phân trang dùng chung (?trang=&so_dong= → {du_lieu, tong})
 │  │  └─ modules/             một thư mục mỗi phân hệ: router.py, service.py, schemas.py
-│  │     ├─ danh_muc/         người dùng, xe, tài xế, nút, tuyến, khách, bảng giá, cấu hình
+│  │     ├─ danh_muc/         mỗi danh mục một thư mục con (xe/, tai_xe/, tuyen/…) chứa router.py, service.py, schemas.py – hai người làm hai danh mục không sửa chung file (docs/mau-use-case.md)
 │  │     ├─ don/
 │  │     ├─ chuyen/           lập, ghép, chốt, theo dõi, sự cố (UC-11…16, 32)
 │  │     ├─ quet/             bắt đầu/kết thúc, quét, báo sự cố (UC-17…20, 33)

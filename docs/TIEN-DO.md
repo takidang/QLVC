@@ -8,7 +8,7 @@
 | Mốc | Hạn | Trạng thái |
 |---|---|---|
 | Nền móng: models, migration, đăng nhập, khung frontend | 18/10 | Xong 16/10 |
-| UC-03 mẫu + docs/mau-use-case.md | 25/10 | Chưa bắt đầu |
+| UC-03 mẫu + docs/mau-use-case.md | 25/10 | Xong 24/10 |
 | Vòng tối thiểu: tạo đơn → ghép → chốt → quét → giao | 08/11 | Chưa bắt đầu |
 | Quyết toán chạy được | 29/11 | Chưa bắt đầu |
 | UC-30 dự đoán trễ (phần AI) | 06/12 | Chưa bắt đầu |
@@ -20,6 +20,7 @@
 - ~~15/10 – Kiệt cần Tài review PR nghiệp vụ 0.5 (`kiet/nghiep-vu` → `main`), chốt ai làm UC-32, 33, 34 (UC-14, 31 của Tài đã bỏ), và sửa endpoint `api.md` theo danh sách trong PR.~~ Xong 16/10: đã review, Kiệt làm UC-33, 34; Tài làm UC-32.
 - 16/10 – Tài → Kiệt: nghiệp vụ 0.5 đã merge. Việc tuần 1 của Kiệt có hướng dẫn: cài môi trường `docs/cai-moi-truong.md`, ca test BR `docs/ca-test-br.md` (khung + ví dụ + BR còn thiếu ca), UML `docs/uml/README.md`.
 - ~~16/10 – Tài đang tạo **toàn bộ models theo ERD 0.5 + migration đầu tiên** (`backend/app/models/`, `backend/alembic/`). Kiệt chưa sửa hai thư mục này tới khi dòng này được gạch; cần thêm cột/bảng thì nhắn Tài.~~ Xong 16/10: 24 bảng + migration đầu đã lên `main`. Sửa models thì tạo migration mới (`alembic revision --autogenerate`), CI chạy `alembic check`.
+- 24/10 – Tài → Kiệt: UC-03 xong, làm UC-04 theo `docs/mau-use-case.md` (chép cấu trúc `backend/app/modules/danh_muc/xe/`, fixture `dang_nhap_voi`, trang `XeDanhSach.tsx`). Tuần 2 Kiệt chưa có commit nào: nhắn Tài nếu vướng cài môi trường.
 
 ## Câu hỏi chờ thầy
 - ~~A1–A6 (nghiep-vu.md mục 1): chưa gửi~~ Nhóm tự chốt 16/10 (nghiep-vu.md mục 1).
@@ -29,7 +30,7 @@
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|
 | Nền móng (gồm UC-01 Đăng nhập) | 1 | Xong | 12/12 | |
-| UC-03 Xe (mẫu) | 2 | Chưa bắt đầu | | |
+| UC-03 Xe (mẫu) | 2 | Xong | 13/13 | |
 | UC-06…09 Đơn tối thiểu | 3–4 | Chưa bắt đầu | | |
 | UC-11…13, 15 Chuyến tối thiểu | 3–4 | Chưa bắt đầu | | |
 | UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Chưa bắt đầu | | |
@@ -37,6 +38,7 @@
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 24/10: UC-03 Quản lý xe hoàn thành (13/13 AC, 68 test đạt, thử giao diện đạt); viết docs/mau-use-case.md cho UC-04…06.
 - 16/10: Review UC-01, sửa 3 mục (lỗi 400 lộ mật khẩu, test token chập chờn, đăng xuất khi mất mạng).
 - 16/10: UC-01 hoàn thành: 30 test đạt, CI xanh, thử giao diện đạt 4 bước. Nền móng xong trước hạn 18/10.
 - 16/10: Cài Docker, PostgreSQL. Models theo ERD 0.5 + migration đầu. UC-01: story duyệt, code backend + frontend + test (unit đạt, API chưa chạy). Chốt A1–A8; hướng dẫn cài môi trường, ca test BR, UML cho Kiệt.

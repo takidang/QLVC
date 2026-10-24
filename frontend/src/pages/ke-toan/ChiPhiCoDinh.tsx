@@ -1,0 +1,116 @@
+import { useEffect, useState, type FormEvent } from 'react'
+import { LoiApi, loiTheoTruong } from '../../api/goi'
+import { danhSachXe, datChiPhiCoDinh, xemChiPhiCoDinh, type Xe } from '../../api/xe'
+
+const thangNay = () => new Date().toISOString().slice(0, 7) // YYYY-MM
+
+export default function ChiPhiCoDinh() {
+  const [dsXe, setDsXe] = useState<Xe[]>([])
+  const [xeId, setXeId] = useState('')
+  const [thang, setThang] = useState(thangNay())
+  const [daLuu, setDaLuu] = useState<number | null>(null)
+  const [soTien, setSoTien] = useState('')
+  const [thongBao, setThongBao] = useState('')
+  const [loi, setLoi] = useState('')
+
+  useEffect(() => {
+    // shortcut: lấy tối đa 100 xe một lần, đủ cho nhà xe khoảng 10 xe; nhiều hơn thì thêm ô tìm
+    danhSachXe({ so_dong: 100 })
+      .then((ds) => setDsXe(ds.du_lieu))
+      .catch(() => setLoi('Không tải được danh sách xe'))
+  }, [])
+
+  useEffect(() => {
+    if (!xeId || !thang) return
+    xemChiPhiCoDinh(Number(xeId), thang)
+      .then((r) => {
+        setDaLuu(r.so_tien)
+        setSoTien(r.so_tien === null ? '' : String(r.so_tien))
+      })
+      .catch((e) => setLoi(e instanceof LoiApi ? e.message : 'Không tải được chi phí'))
+  }, [xeId, thang])
+
+  async function luu(e: FormEvent) {
+    e.preventDefault()
+    setLoi('')
+    setThongBao('')
+    try {
+      const r = await datChiPhiCoDinh(Number(xeId), thang, Number(soTien))
+      setDaLuu(r.so_tien)
+      setThongBao('Đã lưu')
+    } catch (err) {
+      setLoi(
+        loiTheoTruong(err).so_tien ??
+          (err instanceof LoiApi ? err.message : 'Không lưu được, vui lòng thử lại'),
+      )
+    }
+  }
+
+  return (
+    <section className="noi-dung">
+      <h1>Chi phí cố định tháng của xe</h1>
+      <p className="ghi-chu">
+        Khấu hao, bảo hiểm, phí đường bộ… tính theo tháng; dùng cho lãi theo xe (không vào lãi
+        chuyến).
+      </p>
+      <form className="o-nhap" onSubmit={luu}>
+        <label>
+          Xe
+          <select
+            value={xeId}
+            onChange={(e) => {
+              setXeId(e.target.value)
+              setThongBao('')
+            }}
+            required
+          >
+            <option value="">– Chọn xe –</option>
+            {dsXe.map((x) => (
+              <option key={x.id} value={x.id}>
+                {x.bien_so}
+                {x.trang_thai === 'NGUNG' ? ' (ngừng)' : ''}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label>
+          Tháng
+          <input
+            type="month"
+            value={thang}
+            onChange={(e) => {
+              setThang(e.target.value)
+              setThongBao('')
+            }}
+            required
+          />
+        </label>
+        <label>
+          Số tiền (đồng)
+          <input
+            type="number"
+            min={0}
+            step={1000}
+            value={soTien}
+            onChange={(e) => setSoTien(e.target.value)}
+            required
+            disabled={!xeId}
+          />
+        </label>
+        <button disabled={!xeId}>Lưu</button>
+      </form>
+      {xeId && (
+        <p className="ghi-chu">
+          Đã lưu cho tháng này:{' '}
+          {daLuu === null ? 'chưa nhập' : `${daLuu.toLocaleString('vi-VN')} đ`}
+        </p>
+      )}
+      {thongBao && <p className="thanh-cong">{thongBao}</p>}
+      {loi && (
+        <p role="alert" className="loi">
+          {loi}
+        </p>
+      )}
+    </section>
+  )
+}

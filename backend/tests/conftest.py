@@ -70,3 +70,18 @@ def tao_nguoi_dung(db):
         return nd
 
     return tao
+
+
+@pytest.fixture
+def dang_nhap_voi(client, tao_nguoi_dung):
+    """Đăng nhập client bằng một vai trò, mỗi vai trò tạo một tài khoản. Dùng: dang_nhap_voi("KE_TOAN")."""
+    da_tao: dict[str, NguoiDung] = {}
+
+    def dang_nhap(vai_tro: str) -> NguoiDung:
+        if vai_tro not in da_tao:
+            da_tao[vai_tro] = tao_nguoi_dung(ten=vai_tro.lower(), vai_tro=vai_tro)
+        r = client.post("/api/auth/dang-nhap", json={"ten_dang_nhap": vai_tro.lower(), "mat_khau": "matkhau123"})
+        assert r.status_code == 200
+        return da_tao[vai_tro]
+
+    return dang_nhap

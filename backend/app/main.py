@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from app.auth.router import router as auth_router
 from app.config import get_settings
 from app.loi import LoiNghiepVu
+from app.modules.danh_muc.xe.router import router as xe_router
 
 
 @asynccontextmanager
@@ -17,6 +18,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="QLVC", lifespan=lifespan)
 app.include_router(auth_router)
+app.include_router(xe_router)
 
 
 # FastAPI mặc định trả 422 cho dữ liệu sai kiểu; 422 dành cho vi phạm BR (kien-truc.md mục 7).

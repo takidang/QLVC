@@ -40,8 +40,10 @@
 
 | Phương thức | Đường dẫn | Vai trò | UC | BR / ghi chú |
 |---|---|---|---|---|
-| GET, POST | `/api/xe` | DP | UC-03 | Gồm `dinh_muc_lit_100km`, `km_dong_ho`; trạng thái `HOAT_DONG`/`NGUNG` |
-| GET, PATCH | `/api/xe/{id}` | DP | UC-03 | BR-60: ngừng thay vì xóa |
+| GET | `/api/xe` | DP, KT | UC-03 | `?trang_thai=&tim=&trang=&so_dong=`; KT chỉ xem (chọn xe nhập chi phí cố định) |
+| POST | `/api/xe` | DP | UC-03 | Gồm `dinh_muc_lit_100km`, `km_dong_ho` (km chỉ nhập lúc tạo); xe mới `HOAT_DONG`; biển số trùng → 409; khối lượng toàn bộ < tải trọng → 422 |
+| GET | `/api/xe/{id}` | DP, KT | UC-03 | |
+| PATCH | `/api/xe/{id}` | DP | UC-03 | Mọi trường trừ `km_dong_ho` (gửi lên → 400, BR-70); `trang_thai` `HOAT_DONG`/`NGUNG` (BR-11); không xóa (BR-60) |
 | GET, PUT | `/api/xe/{id}/chi-phi-co-dinh/{thang}` | KT | UC-03 | `{so_tien}`; tháng dạng `YYYY-MM`; ghi `NHAT_KY_TIEN` |
 | GET, POST | `/api/tai-xe` | DP | UC-04 | Tạo kèm tài khoản vai trò TX |
 | GET, PATCH | `/api/tai-xe/{id}` | DP | UC-04 | BR-60 |

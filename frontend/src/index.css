@@ -36,6 +36,7 @@ body {
 }
 
 input,
+select,
 button {
   font: inherit;
   padding: 9px 11px;
@@ -70,14 +71,182 @@ button:disabled {
   border-bottom: 1px solid #dfe3e8;
 }
 
-.trang h1 {
-  padding: 0 16px;
-}
-
 .dang-tai {
   padding: 16px;
 }
 
 .trang-loi {
   padding: 8px 16px 0;
+}
+
+.trang header nav {
+  display: flex;
+  gap: 16px;
+  margin-right: auto;
+}
+
+.trang header nav a {
+  color: #1f5fbf;
+  text-decoration: none;
+}
+
+.trang header nav a.active {
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.trang header span {
+  margin-right: 12px;
+}
+
+.noi-dung {
+  padding: 16px;
+  max-width: 1100px;
+}
+
+.noi-dung h1 {
+  margin: 0 0 12px;
+  font-size: 1.3rem;
+}
+
+.thanh-cong-cu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.thanh-cong-cu h1 {
+  margin: 0 auto 0 0;
+}
+
+button.phu {
+  background: #fff;
+  color: #1f5fbf;
+  border-color: #c4cbd3;
+  padding: 5px 9px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  font-size: 0.92rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px 10px;
+  border-bottom: 1px solid #e5e8ec;
+}
+
+th {
+  background: #f0f2f5;
+  font-weight: 600;
+}
+
+.so {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+tr.mo td {
+  color: #8a929b;
+}
+
+.het-han {
+  color: #b42318;
+  font-weight: 600;
+}
+
+.hanh-dong {
+  white-space: nowrap;
+  display: flex;
+  gap: 6px;
+}
+
+.trong {
+  text-align: center;
+  color: #8a929b;
+}
+
+.phan-trang {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.nen-mo {
+  position: fixed;
+  inset: 0;
+  background: rgb(0 0 0 / 35%);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+
+.hop-thoai {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: grid;
+  gap: 12px;
+}
+
+.hop-thoai h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.hop-thoai label,
+.o-nhap label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+.hai-cot {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+@media (max-width: 520px) {
+  .hai-cot {
+    grid-template-columns: 1fr;
+  }
+}
+
+.nut {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.ghi-chu {
+  color: #5a636d;
+  font-size: 0.9rem;
+}
+
+.o-nhap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+}
+
+.thanh-cong {
+  color: #1a7f37;
+}
+
+.bien-so {
+  white-space: nowrap;
+  font-weight: 600;
 }

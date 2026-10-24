@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { useEffect, useState, type ReactNode } from 'react'
+import { BrowserRouter, Navigate, NavLink, Outlet, Route, Routes } from 'react-router-dom'
 import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
 import DangNhap from './pages/DangNhap'
+import XeDanhSach from './pages/dieu-phoi/XeDanhSach'
+import ChiPhiCoDinh from './pages/ke-toan/ChiPhiCoDinh'
 
 const TRANG_CHU: Record<VaiTro, string> = {
   QUAN_LY: '/quan-ly',
@@ -16,9 +18,23 @@ const TEN_VAI_TRO: Record<VaiTro, string> = {
   KE_TOAN: 'Kế toán',
 }
 
+// Trang con của từng vai trò. Thêm UC mới: thêm một dòng ở đây (docs/mau-use-case.md)
+const TRANG_CON: Partial<Record<VaiTro, { duong_dan: string; ten: string; trang: ReactNode }[]>> = {
+  DIEU_PHOI: [{ duong_dan: 'xe', ten: 'Xe', trang: <XeDanhSach /> }],
+  KE_TOAN: [{ duong_dan: 'chi-phi-xe', ten: 'Chi phí cố định xe', trang: <ChiPhiCoDinh /> }],
+}
+
 // Chỉ để điều hướng; quyền thật do máy chủ kiểm (BR-57). Quản lý vào được trang Điều phối.
 const duocVao = (nd: NguoiDung, trang: VaiTro) =>
   nd.vai_tro === trang || (trang === 'DIEU_PHOI' && nd.vai_tro === 'QUAN_LY')
+
+// Menu của người dùng: trang của vai trò mình, Quản lý thấy thêm trang Điều phối
+const menu = (nd: NguoiDung) =>
+  (Object.keys(TRANG_CHU) as VaiTro[])
+    .filter((vt) => duocVao(nd, vt))
+    .flatMap((vt) =>
+      (TRANG_CON[vt] ?? []).map((t) => ({ ...t, den: `${TRANG_CHU[vt]}/${t.duong_dan}` })),
+    )
 
 export default function App() {
   const [nd, setNd] = useState<NguoiDung | null | undefined>(undefined) // undefined = đang kiểm phiên
@@ -52,18 +68,25 @@ export default function App() {
             nd ? <Navigate to={TRANG_CHU[nd.vai_tro]} replace /> : <DangNhap onXong={setNd} />
           }
         />
-        {(Object.keys(TRANG_CHU) as VaiTro[]).map((trang) => (
+        {(Object.keys(TRANG_CHU) as VaiTro[]).map((vt) => (
           <Route
-            key={trang}
-            path={TRANG_CHU[trang]}
+            key={vt}
+            path={TRANG_CHU[vt]}
             element={
               !nd ? (
                 <Navigate to="/dang-nhap" replace />
-              ) : !duocVao(nd, trang) ? (
+              ) : !duocVao(nd, vt) ? (
                 <Navigate to={TRANG_CHU[nd.vai_tro]} replace />
               ) : (
                 <main className="trang">
                   <header>
+                    <nav>
+                      {menu(nd).map((m) => (
+                        <NavLink key={m.den} to={m.den}>
+                          {m.ten}
+                        </NavLink>
+                      ))}
+                    </nav>
                     <span>
                       {nd.ho_ten} · {TEN_VAI_TRO[nd.vai_tro]}
                     </span>
@@ -74,12 +97,24 @@ export default function App() {
                       {loiThoat}
                     </p>
                   )}
-                  {/* Trang tạm của UC-01; nội dung thật làm ở các UC sau */}
-                  <h1>Trang {TEN_VAI_TRO[trang]}</h1>
+                  <Outlet />
                 </main>
               )
             }
-          />
+          >
+            <Route
+              index
+              element={
+                <section className="noi-dung">
+                  <h1>Trang {TEN_VAI_TRO[vt]}</h1>
+                  <p className="ghi-chu">Chọn chức năng trên thanh menu.</p>
+                </section>
+              }
+            />
+            {(TRANG_CON[vt] ?? []).map((t) => (
+              <Route key={t.duong_dan} path={t.duong_dan} element={t.trang} />
+            ))}
+          </Route>
         ))}
         <Route
           path="*"
