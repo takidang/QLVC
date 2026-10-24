@@ -24,6 +24,7 @@
 - ~~24/10 – Tài đang sửa `backend/app/models/danh_muc.py` (bảng giá) và thêm migration thứ 2 (UC-07: unique cặp tỉnh + ngày hiệu lực, nạp CFG mặc định). Kiệt chưa thêm migration tới khi dòng này được gạch.~~ Xong 24/10: migration `177fdcb334df`. Kiệt `git pull` rồi `alembic upgrade head`.
 - 24/10 – **Tài nhận UC-05 Tuyến và nút** (trước là của Kiệt) vì UC-05 chặn giao diện tạo đơn và toàn bộ phần chuyến. Kiệt **không làm UC-05**; Kiệt sửa dòng "UC-02, 05 + Quét tối thiểu" trong phần mình thành "UC-02 + Quét tối thiểu". Kiệt vẫn làm UC-04 Tài xế (UC-11 cần tài xế).
 - 24/10 – Tài → Kiệt: trên `main` đã có UC-01, 03, 06, 07 xong và UC-08 backend (167 test). Kiệt `git pull`, `alembic upgrade head` (có migration mới), đọc `docs/mau-use-case.md` (đã thêm lưu ý `app/kieu.py`, giờ Việt Nam) rồi làm **UC-04 Tài xế** – UC-11 Lập chuyến đang chờ UC-04.
+- 24/10 – Tài → Kiệt: **thử giao diện UC-05 và UC-08** thay Tài (bước 3 trong khối "Việc của Kiệt ngay bây giờ"). Code đã xong, chờ Kiệt chụp ảnh và xác nhận để đóng 2 story.
 
 ## Câu hỏi chờ thầy
 - ~~A1–A6 (nghiep-vu.md mục 1): chưa gửi~~ Nhóm tự chốt 16/10 (nghiep-vu.md mục 1).
@@ -34,14 +35,15 @@
 |---|---|---|---|---|
 | Nền móng (gồm UC-01 Đăng nhập) | 1 | Xong | 12/12 | |
 | UC-03 Xe (mẫu) | 2 | Xong | 13/13 | |
-| UC-06…09 Đơn tối thiểu | 3–4 | Đang làm | UC-06 6/6, UC-07 9/9, UC-08 10/11 | UC-08 còn giao diện (sau UC-05); UC-09 bỏ ở 0.5 |
-| UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Chưa bắt đầu | | Làm sau backend UC-08 |
+| UC-06…09 Đơn tối thiểu | 3–4 | Chờ thử giao diện | UC-06 6/6, UC-07 9/9, UC-08 10/11 | UC-08-AC11 giao diện đã làm, Kiệt thử; UC-09 bỏ ở 0.5 |
+| UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Chờ thử giao diện | 8/9 | AC9 giao diện: Kiệt thử |
 | UC-11…13, 15 Chuyến tối thiểu | 3–4 | Chưa bắt đầu | | |
 | UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Chưa bắt đầu | | |
 | UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 24/10: UC-05 Tuyến và nút xong backend + giao diện (199 test); giao diện tạo đơn UC-08. Giao Kiệt thử giao diện UC-05, UC-08.
 - 24/10: Review UC-06, 07, 08: sửa chuẩn hóa Unicode NFC cho chữ tiếng Việt, giới hạn vĩ độ/kinh độ (167 test).
 - 24/10: UC-08 Tạo đơn backend: tính cước theo kịch bản mục 11, chốt cước, mã đơn ngẫu nhiên (10/11 AC, 164 test). Nhận UC-05 từ Kiệt.
 - 24/10: UC-06 Khách hàng (6/6 AC) và UC-07 Bảng giá + cấu hình (9/9 AC) hoàn thành; 123 test đạt. Làm trước việc tuần 3 vì Kiệt chưa có UC-04, 05.
@@ -66,8 +68,13 @@
 >    - SĐT dùng kiểu `SoDienThoai`, chữ dùng `ChuBatBuoc` trong `backend/app/kieu.py`. Số GPLX trùng → 409.
 >    - Phân quyền như UC-03: Điều phối, Quản lý thêm/sửa; Kế toán xem (để cấp tạm ứng theo tài xế); Tài xế 403.
 >    - Giao diện: trang "Tài xế" cho Điều phối, chép từ `frontend/src/pages/dieu-phoi/XeDanhSach.tsx`, thêm một dòng vào `TRANG_CON` trong `frontend/src/App.tsx`.
-> 3. **Sau UC-04:** danh sách ca test BR (`docs/ca-test-br.md`) và UML (`docs/uml/README.md`), rồi UC-02 Người dùng.
-> 4. Không làm **UC-05** (Tài đã nhận). Đụng `backend/app/models/` hoặc thêm migration thì ghi vào "Đang chặn" và commit trước.
+> 3. **Thử giao diện UC-05 và UC-08 thay Tài** (Tài giao 24/10; làm được ngay sau bước 1, không cần đợi UC-04). Backend đã xong, 199 test đạt; chỉ còn AC giao diện `UC-05-AC9`, `UC-08-AC11`. Dùng **Edge/Chrome**, không dùng trình duyệt trong VS Code.
+>    - **Chuẩn bị (DB máy Kiệt đang trống):** chạy backend `cd backend; .venv\Scripts\uvicorn app.main:app --host 127.0.0.1 --port 8000` (không `--reload`) và frontend `cd frontend; npm run dev`; tạo tài khoản Quản lý `cd backend; .venv\Scripts\python -m app.tao_quan_ly`; đăng nhập `http://127.0.0.1:5173`. Vào **Bảng giá** thêm `TP.HCM → Cần Thơ`, 1.500 đ/kg, tối thiểu 50.000, hiệu lực 01/10/2026; vào **Khách hàng** thêm `Cty A`, SĐT `0909123456`.
+>    - **UC-05 (menu Nút, Tuyến):** (a) thêm 5 nút loại Tỉnh/thành, tên = tỉnh: `TP.HCM`, `Long An`, `Tiền Giang`, `Vĩnh Long`, `Cần Thơ`; (b) thêm tuyến `T01` (dầu 550.000, cầu đường 200.000, bốc xếp 250.000, lương 600.000) với 5 nút: TP.HCM 0 phút/0 km, Long An 60/50, Tiền Giang 120/75 **tick điểm nghỉ**, Vĩnh Long 210/135, Cần Thơ 270/170 → bảng hiện lộ trình có "Tiền Giang (nghỉ)", 4 giờ 30 phút; (c) tuyến `T02` chỉ TP.HCM 0/0 và Cần Thơ 300/170, không tick nghỉ → khung vàng "thiếu điểm nghỉ (BR-20)" nhưng vẫn lưu; (d) tuyến có nút cuối 601 phút → bị chặn BR-66.
+>    - **UC-08 (menu Đơn hàng):** (e) Tạo đơn: Cty A, 1.800 kg, 6 m³, nút lấy TP.HCM, nút giao Cần Thơ → khung vàng tự hiện **cước 2.997.000 đ**; nhập địa chỉ, SĐT, người nhận, hạn giao ngày mai → Lưu → hiện "Đã tạo đơn DH-XXXXXX"; (f) đơn có địa chỉ giao trùng địa chỉ lấy → báo lỗi BR-31; (g) chọn chiều ngược Cần Thơ → TP.HCM → báo "Chưa có bảng giá", nút Lưu bị khóa.
+>    - **Ghi kết quả:** chụp ảnh (b), (c), (d), (e), (f) lưu vào `docs/test-evidence/UC-05/` và `docs/test-evidence/UC-08/`; điền dòng AC9/AC11 trong `docs/stories/UC-05-quan-ly-tuyen.md` và `docs/stories/UC-08-tao-don.md` (Đạt/Không đạt, ngày, "Kiệt thử"); bước nào sai thì ghi vào "Đang chặn" cho Tài, không tự sửa code của Tài. Commit, push.
+> 4. **Sau đó:** danh sách ca test BR (`docs/ca-test-br.md`) và UML (`docs/uml/README.md`), rồi UC-02 Người dùng.
+> 5. Không làm **UC-05** (Tài đã nhận). Đụng `backend/app/models/` hoặc thêm migration thì ghi vào "Đang chặn" và commit trước.
 
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|

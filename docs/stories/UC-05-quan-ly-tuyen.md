@@ -1,6 +1,6 @@
 # UC-05: Quản lý tuyến và nút
 
-- **Trạng thái:** Đang làm – AC1–AC8 đạt, AC9 giao diện đang làm (Đã duyệt 24/10/2026 – Tài nhận UC-05 từ Kiệt, giao "làm luôn"; 5 quyết định ở mục Quyết định, Tài xem lại)
+- **Trạng thái:** Đang làm – AC1–AC8 đạt, AC9 giao diện đã làm, chờ Kiệt thử (TIEN-DO bước 3) (Đã duyệt 24/10/2026 – Tài nhận UC-05 từ Kiệt, giao "làm luôn"; 5 quyết định ở mục Quyết định, Tài xem lại)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa)
 - **Đặc tả:** `docs/use-cases.md` mục 2 (UC-05) · `docs/api.md` mục 2.2 · `docs/nghiep-vu.md` mục 2 (Tuyến), 2.1, mục 11 (tuyến T01) · ERD `docs/so-do.md` mục 5 (NUT, TUYEN, TUYEN_NUT)
 - **Quy tắc nghiệp vụ liên quan:** BR-20 (cảnh báo thiếu điểm nghỉ), BR-66 (tuyến ≤ 10 giờ chạy), BR-60 (không xóa, chỉ `NGUNG`), BR-63 (ETA dùng `phut_tu_diem_dau`), BR-71 (định mức chốt vào chuyến lúc chốt), BR-57

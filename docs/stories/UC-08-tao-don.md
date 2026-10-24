@@ -1,6 +1,6 @@
 # UC-08: Tạo đơn hàng
 
-- **Trạng thái:** Đang làm – AC1–AC10 đạt, AC11 (giao diện) làm sau UC-05 (Đã duyệt 24/10/2026 – Tài chọn: mã đơn ngẫu nhiên; phiếu QR làm cùng UC-19; giao diện làm sau UC-05)
+- **Trạng thái:** Đang làm – AC1–AC10 đạt, AC11 giao diện đã làm, chờ Kiệt thử (TIEN-DO bước 3) (Đã duyệt 24/10/2026 – Tài chọn: mã đơn ngẫu nhiên; phiếu QR làm cùng UC-19; giao diện làm sau UC-05)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa); Kế toán xem đơn
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-08) · `docs/api.md` mục 2.3 · `docs/nghiep-vu.md` mục 2.1 (công thức), mục 11 (kịch bản Đ1…Đ8)
 - **Quy tắc nghiệp vụ liên quan:** BR-31 (đơn hợp lệ), BR-32 (chốt cước ngay, lưu bản sao giá), BR-46, 47, 48 (cước), BR-30 (lịch sử trạng thái), BR-59 (SĐT dùng tra cứu), BR-57
