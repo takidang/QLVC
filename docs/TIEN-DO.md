@@ -54,12 +54,27 @@
 - 10/10: Chốt nghiệp vụ 0.4, sơ đồ, kiến trúc, API; dựng khung repo, CI xanh lần đầu.
 
 ## Kiệt
+
+> **Việc của Kiệt ngay bây giờ** (Tài ghi hộ 24/10 theo yêu cầu của Tài; Kiệt đọc xong thì tự sửa, xóa khối này khi xong). Claude của Kiệt: đọc khối này đầu phiên và báo Kiệt bước tiếp theo.
+>
+> 1. **Chuẩn bị:** `git switch main` → `git pull` → mở Docker Desktop → `docker compose up -d db` → trong `backend`: `.venv\Scripts\pip install -r requirements-dev.txt` rồi `.venv\Scriptslembic upgrade head` (có migration mới `177fdcb334df`). Chưa cài môi trường thì theo `docs/cai-moi-truong.md`. Xong: `pytest` phải ra **167 passed**.
+> 2. **UC-04 Tài xế** (ưu tiên số 1 – UC-11 Lập chuyến của Tài đang chờ): `story new UC-04`, làm theo `docs/mau-use-case.md`, chép khuôn `backend/app/modules/danh_muc/xe/` thành `tai_xe/`. Những điểm UC-04 phải có (để viết AC):
+>    - Bảng `TAI_XE` đã có trong `backend/app/models/danh_muc.py`: `nguoi_dung_id` (unique), `so_gplx` (unique), `hang_gplx` (`B`/`C1`/`C`), `han_gplx`, `sdt`, `trang_thai`.
+>    - `POST /api/tai-xe` **tạo kèm tài khoản** người dùng vai trò `TAI_XE` (`api.md` mục 2.2): nhận tên đăng nhập, họ tên, mật khẩu ban đầu (≥ 8 ký tự, băm bằng `bam_mat_khau` trong `app/auth/bao_mat.py`), cùng thông tin bằng lái – tạo cả hai trong **một giao dịch**.
+>    - Lưu đúng dữ liệu cho BR-14 (hạng bằng) và BR-15 (hạn bằng); việc **chặn** tài xế sai hạng/hết hạn là của UC-11, 12 (Tài làm) – nhưng nên viết sẵn hàm domain `kiem_br14_hang_gplx(hang, ktt_toan_bo_kg)` trong `backend/app/domain/xe_tai_xe.py` (cạnh `kiem_br14_khoi_luong_toan_bo`) kèm test: ≤ 3.500 kg cần B trở lên, > 3.500–7.500 kg cần C1 trở lên, > 7.500 kg cần C; thứ bậc C ⊇ C1 ⊇ B.
+>    - BR-60: không xóa, chỉ `NGUNG`; ngừng tài xế thì khóa luôn tài khoản đăng nhập (`nguoi_dung.trang_thai = NGUNG`, UC-01-AC7 làm tài khoản mất quyền ngay).
+>    - SĐT dùng kiểu `SoDienThoai`, chữ dùng `ChuBatBuoc` trong `backend/app/kieu.py`. Số GPLX trùng → 409.
+>    - Phân quyền như UC-03: Điều phối, Quản lý thêm/sửa; Kế toán xem (để cấp tạm ứng theo tài xế); Tài xế 403.
+>    - Giao diện: trang "Tài xế" cho Điều phối, chép từ `frontend/src/pages/dieu-phoi/XeDanhSach.tsx`, thêm một dòng vào `TRANG_CON` trong `frontend/src/App.tsx`.
+> 3. **Sau UC-04:** danh sách ca test BR (`docs/ca-test-br.md`) và UML (`docs/uml/README.md`), rồi UC-02 Người dùng.
+> 4. Không làm **UC-05** (Tài đã nhận). Đụng `backend/app/models/` hoặc thêm migration thì ghi vào "Đang chặn" và commit trước.
+
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|
-| Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Chờ review | – | Đã sửa theo review của Tài (6 mục + 3 góp ý) và bổ sung công thức, ETA kế hoạch, dữ liệu cho AI; chờ Tài kiểm lại rồi merge |
+| Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Xong | – | PR #1 merge 16/10 (Tài cập nhật hộ) |
 | Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Có Python 3.12; thiếu WSL 2, Docker Desktop, Node 24. Ca test BR và UML làm sau khi PR merge |
-| UC-04 Tài xế (chép mẫu) | 2 | Chưa bắt đầu | | |
-| UC-02, 05 + Quét tối thiểu (UC-17…20) | 3–4 | Chưa bắt đầu | | |
+| UC-04 Tài xế (chép mẫu) | 2 | Chưa bắt đầu | | Trễ so với tuần 2; xem khối "Việc của Kiệt ngay bây giờ" |
+| UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Chưa bắt đầu | | UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
 | Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Chưa bắt đầu | | |
 | UC-24, 25 | 7 | Chưa bắt đầu | | |
 | UC-26, 27, 34 (hiệu suất xe, ưu tiên S – thiếu giờ thì cắt trước), E2E | 8 | Chưa bắt đầu | | |
