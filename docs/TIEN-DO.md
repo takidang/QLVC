@@ -58,7 +58,7 @@
 
 ## Kiệt
 
-> **Cập nhật 25/10 (Kiệt):** bước 1, 2, 3 xong – môi trường chạy được; UC-04 xong, chờ Tài review PR `kiet/uc-04`; đã thử UC-05-AC9, UC-08-AC11 (đạt, ảnh trong `docs/test-evidence/`). Còn bước 4.
+> **Cập nhật 25/10 (Kiệt):** bước 2, 3 xong – UC-04 xong, chờ Tài review PR `kiet/uc-04`; đã thử UC-05-AC9, UC-08-AC11 (đạt, ảnh trong `docs/test-evidence/`). Còn bước 4.
 >
 > **Việc của Kiệt ngay bây giờ** (Tài ghi hộ 24/10 theo yêu cầu của Tài; Kiệt đọc xong thì tự sửa, xóa khối này khi xong). Claude của Kiệt: đọc khối này đầu phiên và báo Kiệt bước tiếp theo.
 >
@@ -82,7 +82,7 @@
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|
 | Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Xong | – | PR #1 merge 16/10 (Tài cập nhật hộ) |
-| Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Môi trường xong 25/10 (WSL 2, Docker, Node 24; pytest 199 passed). Còn ca test BR và UML |
+| Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Có Python 3.12; thiếu WSL 2, Docker Desktop, Node 24. Ca test BR và UML làm sau khi PR merge |
 | UC-04 Tài xế (chép mẫu) | 2 | Chờ review | 10/10 | Code + 67 test + thử giao diện xong 25/10, nhánh `kiet/uc-04` chờ Tài review PR rồi merge |
 | UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Chưa bắt đầu | | UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
 | Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Chưa bắt đầu | | |
@@ -90,6 +90,6 @@
 | UC-26, 27, 34 (hiệu suất xe, ưu tiên S – thiếu giờ thì cắt trước), E2E | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Kiệt (mới nhất ở trên)
-- 25/10: Cài xong môi trường. UC-04 Tài xế: backend (thêm kèm tài khoản, sửa, ngừng khóa tài khoản), hàm BR-14 hạng GPLX cho UC-11, giao diện; 67 test, toàn bộ 266 passed; thử giao diện 10/10 AC đạt; ponytail-review sửa 2 mục. Thử giao diện UC-05, UC-08 cho Tài: đạt. Mở PR `kiet/uc-04`.
+- 25/10: UC-04 Tài xế: backend (thêm kèm tài khoản, sửa, ngừng khóa tài khoản), hàm BR-14 hạng GPLX cho UC-11, giao diện; 67 test, toàn bộ 266 passed; thử giao diện 10/10 AC đạt; ponytail-review sửa 2 mục. Thử giao diện UC-05, UC-08 cho Tài: đạt. Mở PR `kiet/uc-04`.
 - 15/10: Sửa nghiệp vụ 0.5 theo review của Tài: công thức BR-73, km khi kết thúc do sự cố, thứ tự điểm lấy, kịch bản mỗi ca ✖ chỉ một BR (thêm Đ8 cho BR-67); thêm mục Công thức, ETA kế hoạch lưu lúc chốt, dữ liệu cho AI; api, security-rules, kien-truc khớp 0.5. Nhận UC-33, UC-34.
 - 15/10: Nghiệp vụ 0.5: chuyến 6 trạng thái, đơn 7; ETA cộng phút dừng, kiểm lại cả chuyến khi ghép (BR-63…67); km, sự cố, kết thúc do sự cố, cảnh báo trễ (BR-68…73); bỏ UC-09, 14, 29, 31, thêm UC-32…34. Sửa nghiep-vu, use-cases, so-do; api, security-rules chỉ đổi tên trạng thái. Mở PR chờ Tài review.
