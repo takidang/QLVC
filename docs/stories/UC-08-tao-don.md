@@ -56,4 +56,4 @@
 | UC-08-AC8 | API | `test_uc08_ac8_sdt_va_mui_gio` | Đạt | 24/10/2026 |
 | UC-08-AC9 | API | `test_uc08_ac9_danh_sach_va_chi_tiet` | Đạt | 24/10/2026 |
 | UC-08-AC10 | API | `test_uc08_ac10_* (5 ca)` | Đạt | 24/10/2026 |
-| UC-08-AC11 | UI | `docs/test-evidence/UC-08/` | CHƯA KIỂM | |
+| UC-08-AC11 | UI | `docs/test-evidence/UC-08/e-tao-don.png` (cước 2.997.000 đ; đơn lưu được – 201 trong log), `f-trung-dia-chi.png` (BR-31), `e-chua-co-tuyen.png`, `e-chua-co-tuyen-nguoc-lai.png` (chưa có bảng giá, nút Lưu khóa) – Kiệt thử, chờ Tài xác nhận | Đạt (Kiệt thử) | 25/10/2026 |

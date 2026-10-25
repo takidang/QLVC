@@ -8,6 +8,7 @@ import DonDanhSach from './pages/dieu-phoi/DonDanhSach'
 import KhachHangDanhSach from './pages/dieu-phoi/KhachHangDanhSach'
 import NutDanhSach from './pages/dieu-phoi/NutDanhSach'
 import TuyenDanhSach from './pages/dieu-phoi/TuyenDanhSach'
+import TaiXeDanhSach from './pages/dieu-phoi/TaiXeDanhSach'
 import XeDanhSach from './pages/dieu-phoi/XeDanhSach'
 import ChiPhiCoDinh from './pages/ke-toan/ChiPhiCoDinh'
 
@@ -29,6 +30,7 @@ const TRANG_CON: Partial<Record<VaiTro, { duong_dan: string; ten: string; trang:
   DIEU_PHOI: [
     { duong_dan: 'don', ten: 'Đơn hàng', trang: <DonDanhSach /> },
     { duong_dan: 'xe', ten: 'Xe', trang: <XeDanhSach /> },
+    { duong_dan: 'tai-xe', ten: 'Tài xế', trang: <TaiXeDanhSach /> },
     { duong_dan: 'khach-hang', ten: 'Khách hàng', trang: <KhachHangDanhSach /> },
     { duong_dan: 'nut', ten: 'Nút', trang: <NutDanhSach /> },
     { duong_dan: 'tuyen', ten: 'Tuyến', trang: <TuyenDanhSach /> },

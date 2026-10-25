@@ -48,4 +48,4 @@
 | UC-05-AC6 | API | `test_uc05_ac6_* (6 ca)` | Đạt | 24/10/2026 |
 | UC-05-AC7 | API | `test_uc05_ac7_* (3 ca)` | Đạt | 24/10/2026 |
 | UC-05-AC8 | API | `test_uc05_ac8_* (5 ca)` | Đạt | 24/10/2026 |
-| UC-05-AC9 | UI | `docs/test-evidence/UC-05/` | CHƯA KIỂM | |
+| UC-05-AC9 | UI | `docs/test-evidence/UC-05/b-tuyen-t01.png` (T01 "tiengiang1 (nghỉ)", 4 giờ 30 phút; T02 "Thiếu điểm nghỉ" vẫn lưu), `d-qua-10-gio.png` (601 phút bị chặn; 600 phút lưu được) – Kiệt thử, chờ Tài xác nhận | Đạt (Kiệt thử) | 25/10/2026 |

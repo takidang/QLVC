@@ -25,6 +25,7 @@
 - 24/10 – **Tài nhận UC-05 Tuyến và nút** (trước là của Kiệt) vì UC-05 chặn giao diện tạo đơn và toàn bộ phần chuyến. Kiệt **không làm UC-05**; Kiệt sửa dòng "UC-02, 05 + Quét tối thiểu" trong phần mình thành "UC-02 + Quét tối thiểu". Kiệt vẫn làm UC-04 Tài xế (UC-11 cần tài xế).
 - 24/10 – Tài → Kiệt: trên `main` đã có UC-01, 03, 06, 07 xong và UC-08 backend (167 test). Kiệt `git pull`, `alembic upgrade head` (có migration mới), đọc `docs/mau-use-case.md` (đã thêm lưu ý `app/kieu.py`, giờ Việt Nam) rồi làm **UC-04 Tài xế** – UC-11 Lập chuyến đang chờ UC-04.
 - 24/10 – Tài → Kiệt: **thử giao diện UC-05 và UC-08** thay Tài (bước 3 trong khối "Việc của Kiệt ngay bây giờ"). Code đã xong, chờ Kiệt chụp ảnh và xác nhận để đóng 2 story.
+- 25/10 – Kiệt → Tài: (1) review PR UC-04 (`kiet/uc-04` → `main`); hàm `kiem_br14_hang_gplx` trong `domain/xe_tai_xe.py` dùng cho UC-11, 12; UC-11, 12 cần lọc bỏ tài xế `NGUNG`. (2) Đã thử UC-05-AC9, UC-08-AC11: đạt, Tài xác nhận và đóng story. (3) Hai điểm nhỏ khi thử: `http://127.0.0.1:5173` không mở được trên máy Kiệt (Vite chỉ nghe `localhost`), phải dùng `http://localhost:5173`; thông báo lỗi BR-66 (tuyến) và BR-31 (đơn) trên giao diện chưa hiện mã BR như NFR-USA-02 – Tài quyết có sửa không.
 
 ## Câu hỏi chờ thầy
 - ~~A1–A6 (nghiep-vu.md mục 1): chưa gửi~~ Nhóm tự chốt 16/10 (nghiep-vu.md mục 1).
@@ -57,6 +58,8 @@
 
 ## Kiệt
 
+> **Cập nhật 25/10 (Kiệt):** bước 1, 2, 3 xong – môi trường chạy được; UC-04 xong, chờ Tài review PR `kiet/uc-04`; đã thử UC-05-AC9, UC-08-AC11 (đạt, ảnh trong `docs/test-evidence/`). Còn bước 4.
+>
 > **Việc của Kiệt ngay bây giờ** (Tài ghi hộ 24/10 theo yêu cầu của Tài; Kiệt đọc xong thì tự sửa, xóa khối này khi xong). Claude của Kiệt: đọc khối này đầu phiên và báo Kiệt bước tiếp theo.
 >
 > 1. **Chuẩn bị:** `git switch main` → `git pull` → mở Docker Desktop → `docker compose up -d db` → trong `backend`: `.venv\Scripts\pip install -r requirements-dev.txt` rồi `.venv\Scriptslembic upgrade head` (có migration mới `177fdcb334df`). Chưa cài môi trường thì theo `docs/cai-moi-truong.md`. Xong: `pytest` phải ra **167 passed**.
@@ -79,13 +82,14 @@
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|
 | Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Xong | – | PR #1 merge 16/10 (Tài cập nhật hộ) |
-| Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Có Python 3.12; thiếu WSL 2, Docker Desktop, Node 24. Ca test BR và UML làm sau khi PR merge |
-| UC-04 Tài xế (chép mẫu) | 2 | Chưa bắt đầu | | Trễ so với tuần 2; xem khối "Việc của Kiệt ngay bây giờ" |
+| Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Môi trường xong 25/10 (WSL 2, Docker, Node 24; pytest 199 passed). Còn ca test BR và UML |
+| UC-04 Tài xế (chép mẫu) | 2 | Chờ review | 10/10 | Code + 67 test + thử giao diện xong 25/10, nhánh `kiet/uc-04` chờ Tài review PR rồi merge |
 | UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Chưa bắt đầu | | UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
 | Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Chưa bắt đầu | | |
 | UC-24, 25 | 7 | Chưa bắt đầu | | |
 | UC-26, 27, 34 (hiệu suất xe, ưu tiên S – thiếu giờ thì cắt trước), E2E | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Kiệt (mới nhất ở trên)
+- 25/10: Cài xong môi trường. UC-04 Tài xế: backend (thêm kèm tài khoản, sửa, ngừng khóa tài khoản), hàm BR-14 hạng GPLX cho UC-11, giao diện; 67 test, toàn bộ 266 passed; thử giao diện 10/10 AC đạt; ponytail-review sửa 2 mục. Thử giao diện UC-05, UC-08 cho Tài: đạt. Mở PR `kiet/uc-04`.
 - 15/10: Sửa nghiệp vụ 0.5 theo review của Tài: công thức BR-73, km khi kết thúc do sự cố, thứ tự điểm lấy, kịch bản mỗi ca ✖ chỉ một BR (thêm Đ8 cho BR-67); thêm mục Công thức, ETA kế hoạch lưu lúc chốt, dữ liệu cho AI; api, security-rules, kien-truc khớp 0.5. Nhận UC-33, UC-34.
 - 15/10: Nghiệp vụ 0.5: chuyến 6 trạng thái, đơn 7; ETA cộng phút dừng, kiểm lại cả chuyến khi ghép (BR-63…67); km, sự cố, kết thúc do sự cố, cảnh báo trễ (BR-68…73); bỏ UC-09, 14, 29, 31, thêm UC-32…34. Sửa nghiep-vu, use-cases, so-do; api, security-rules chỉ đổi tên trạng thái. Mở PR chờ Tài review.
