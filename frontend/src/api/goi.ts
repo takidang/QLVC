@@ -22,11 +22,17 @@ export async function goi<T>(url: string, init?: RequestInit): Promise<T> {
       r.status,
       body.ma ?? 'LOI',
       // Máy chủ không trả lỗi theo mẫu (404 đường dẫn sai, 502 backend tắt…): kèm mã HTTP để dễ dò
-      body.thong_diep ?? `Có lỗi (mã ${r.status}), vui lòng thử lại`,
+      body.thong_diep
+        ? kemMaBr(body.thong_diep, body.ma)
+        : `Có lỗi (mã ${r.status}), vui lòng thử lại`,
       body.chi_tiet ?? [],
     )
   return body as T
 }
+
+// Lỗi quy tắc nghiệp vụ hiện kèm mã để đối chiếu tài liệu (NFR-USA-02): "… (BR-66)"
+export const kemMaBr = (thongDiep: string, ma?: string) =>
+  ma && /^BR-\d+$/.test(ma) ? `${thongDiep} (${ma})` : thongDiep
 
 export const guiJson = <T>(url: string, method: string, du_lieu: unknown) =>
   goi<T>(url, {

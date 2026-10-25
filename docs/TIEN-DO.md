@@ -26,6 +26,7 @@
 - 24/10 – Tài → Kiệt: trên `main` đã có UC-01, 03, 06, 07 xong và UC-08 backend (167 test). Kiệt `git pull`, `alembic upgrade head` (có migration mới), đọc `docs/mau-use-case.md` (đã thêm lưu ý `app/kieu.py`, giờ Việt Nam) rồi làm **UC-04 Tài xế** – UC-11 Lập chuyến đang chờ UC-04.
 - 24/10 – Tài → Kiệt: **thử giao diện UC-05 và UC-08** thay Tài (bước 3 trong khối "Việc của Kiệt ngay bây giờ"). Code đã xong, chờ Kiệt chụp ảnh và xác nhận để đóng 2 story.
 - 25/10 – Kiệt → Tài: (1) review PR UC-04 (`kiet/uc-04` → `main`); hàm `kiem_br14_hang_gplx` trong `domain/xe_tai_xe.py` dùng cho UC-11, 12; UC-11, 12 cần lọc bỏ tài xế `NGUNG`. (2) Đã thử UC-05-AC9, UC-08-AC11: đạt, Tài xác nhận và đóng story. (3) Hai điểm nhỏ khi thử: `http://127.0.0.1:5173` không mở được trên máy Kiệt (Vite chỉ nghe `localhost`), phải dùng `http://localhost:5173`; thông báo lỗi BR-66 (tuyến) và BR-31 (đơn) trên giao diện chưa hiện mã BR như NFR-USA-02 – Tài quyết có sửa không.
+- 25/10 – Tài → Kiệt: UC-04 đã review và merge vào `main` (sửa nhỏ: gộp validator GPLX, bỏ ảnh `5-tai-xe-bi-khoa-tk.png` trùng ảnh 4). UC-05, UC-08 đóng theo ảnh Kiệt thử. Đã sửa 2 điểm Kiệt báo: lỗi nghiệp vụ hiện kèm mã BR; Vite nghe `127.0.0.1` nên `http://127.0.0.1:5173` mở được trên mọi máy. Kiệt `git switch main`, `git pull`. Nhánh `dev` đã tạo; cách chia nhánh Tài và Kiệt bàn sau.
 
 ## Câu hỏi chờ thầy
 - ~~A1–A6 (nghiep-vu.md mục 1): chưa gửi~~ Nhóm tự chốt 16/10 (nghiep-vu.md mục 1).
@@ -36,14 +37,15 @@
 |---|---|---|---|---|
 | Nền móng (gồm UC-01 Đăng nhập) | 1 | Xong | 12/12 | |
 | UC-03 Xe (mẫu) | 2 | Xong | 13/13 | |
-| UC-06…09 Đơn tối thiểu | 3–4 | Chờ thử giao diện | UC-06 6/6, UC-07 9/9, UC-08 10/11 | UC-08-AC11 giao diện đã làm, Kiệt thử; UC-09 bỏ ở 0.5 |
-| UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Chờ thử giao diện | 8/9 | AC9 giao diện: Kiệt thử |
+| UC-06…09 Đơn tối thiểu | 3–4 | Xong | UC-06 6/6, UC-07 9/9, UC-08 11/11 | UC-08-AC11 Kiệt thử 25/10; UC-09 bỏ ở 0.5; phiếu QR làm cùng UC-19 |
+| UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Xong | 9/9 | AC9 Kiệt thử 25/10 |
 | UC-11…13, 15 Chuyến tối thiểu | 3–4 | Chưa bắt đầu | | |
 | UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Chưa bắt đầu | | |
 | UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 25/10: Review và merge UC-04 của Kiệt vào `main` (gộp validator GPLX, bỏ ảnh trùng). Đóng UC-05, UC-08 theo ảnh Kiệt thử. Giao diện hiện mã BR kèm lỗi nghiệp vụ (NFR-USA-02); Vite nghe 127.0.0.1.
 - 24/10: UC-05 Tuyến và nút xong backend + giao diện (199 test); giao diện tạo đơn UC-08. Giao Kiệt thử giao diện UC-05, UC-08.
 - 24/10: Review UC-06, 07, 08: sửa chuẩn hóa Unicode NFC cho chữ tiếng Việt, giới hạn vĩ độ/kinh độ (167 test).
 - 24/10: UC-08 Tạo đơn backend: tính cước theo kịch bản mục 11, chốt cước, mã đơn ngẫu nhiên (10/11 AC, 164 test). Nhận UC-05 từ Kiệt.
@@ -82,8 +84,8 @@
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|
 | Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Xong | – | PR #1 merge 16/10 (Tài cập nhật hộ) |
-| Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Có Python 3.12; thiếu WSL 2, Docker Desktop, Node 24. Ca test BR và UML làm sau khi PR merge |
-| UC-04 Tài xế (chép mẫu) | 2 | Chờ review | 10/10 | Code + 67 test + thử giao diện xong 25/10, nhánh `kiet/uc-04` chờ Tài review PR rồi merge |
+| Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Cài môi trường xong 19/10 (theo báo cáo tuần 2; Tài sửa hộ 25/10). Còn ca test BR và UML |
+| UC-04 Tài xế (chép mẫu) | 2 | Xong | 10/10 | Tài review, merge vào `main` 25/10 (Tài cập nhật hộ) |
 | UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Chưa bắt đầu | | UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
 | Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Chưa bắt đầu | | |
 | UC-24, 25 | 7 | Chưa bắt đầu | | |

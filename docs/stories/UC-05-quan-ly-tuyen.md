@@ -1,6 +1,6 @@
 # UC-05: Quản lý tuyến và nút
 
-- **Trạng thái:** Đang làm – AC1–AC8 đạt, AC9 giao diện đã làm, chờ Kiệt thử (TIEN-DO bước 3) (Đã duyệt 24/10/2026 – Tài nhận UC-05 từ Kiệt, giao "làm luôn"; 5 quyết định ở mục Quyết định, Tài xem lại)
+- **Trạng thái:** Hoàn thành (25/10/2026, giao diện Kiệt thử) (Đã duyệt 24/10/2026 – Tài nhận UC-05 từ Kiệt, giao "làm luôn"; 5 quyết định ở mục Quyết định, Tài xem lại)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa)
 - **Đặc tả:** `docs/use-cases.md` mục 2 (UC-05) · `docs/api.md` mục 2.2 · `docs/nghiep-vu.md` mục 2 (Tuyến), 2.1, mục 11 (tuyến T01) · ERD `docs/so-do.md` mục 5 (NUT, TUYEN, TUYEN_NUT)
 - **Quy tắc nghiệp vụ liên quan:** BR-20 (cảnh báo thiếu điểm nghỉ), BR-66 (tuyến ≤ 10 giờ chạy), BR-60 (không xóa, chỉ `NGUNG`), BR-63 (ETA dùng `phut_tu_diem_dau`), BR-71 (định mức chốt vào chuyến lúc chốt), BR-57
@@ -34,6 +34,7 @@
 - File đã đổi: `backend/app/domain/tuyen.py` (cấu trúc tuyến, BR-66, BR-20), `backend/app/modules/danh_muc/nut/router.py`, `backend/app/modules/danh_muc/tuyen/{schemas,service,router}.py`, `backend/app/main.py`; `docs/api.md`.
 - Test đã viết: `backend/tests/unit/test_uc05_tuyen.py` (15 ca), `backend/tests/api/test_uc05_tuyen_nut.py` (17 ca). Toàn bộ **199 passed** (24/10).
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest`.
+- Sau khi Kiệt thử (25/10): lỗi quy tắc nghiệp vụ trên giao diện hiện kèm mã, ví dụ "… (BR-66)" (`kemMaBr` trong `frontend/src/api/goi.ts`, NFR-USA-02).
 - Lệch đặc tả: 5 quyết định ở mục Quyết định; thêm `PATCH /api/nut/{id}` – đã sửa `api.md`.
 
 ## Truy vết và kết quả
@@ -48,4 +49,4 @@
 | UC-05-AC6 | API | `test_uc05_ac6_* (6 ca)` | Đạt | 24/10/2026 |
 | UC-05-AC7 | API | `test_uc05_ac7_* (3 ca)` | Đạt | 24/10/2026 |
 | UC-05-AC8 | API | `test_uc05_ac8_* (5 ca)` | Đạt | 24/10/2026 |
-| UC-05-AC9 | UI | `docs/test-evidence/UC-05/b-tuyen-t01.png` (T01 "tiengiang1 (nghỉ)", 4 giờ 30 phút; T02 "Thiếu điểm nghỉ" vẫn lưu), `d-qua-10-gio.png` (601 phút bị chặn; 600 phút lưu được) – Kiệt thử, chờ Tài xác nhận | Đạt (Kiệt thử) | 25/10/2026 |
+| UC-05-AC9 | UI | `docs/test-evidence/UC-05/b-tuyen-t01.png` (T01 "tiengiang1 (nghỉ)", 4 giờ 30 phút; T02 "Thiếu điểm nghỉ" vẫn lưu), `d-qua-10-gio.png` (601 phút bị chặn; 600 phút lưu được) – Kiệt thử, Tài xác nhận 25/10 | Đạt | 25/10/2026 |

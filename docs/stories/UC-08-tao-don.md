@@ -1,6 +1,6 @@
 # UC-08: Tạo đơn hàng
 
-- **Trạng thái:** Đang làm – AC1–AC10 đạt, AC11 giao diện đã làm, chờ Kiệt thử (TIEN-DO bước 3) (Đã duyệt 24/10/2026 – Tài chọn: mã đơn ngẫu nhiên; phiếu QR làm cùng UC-19; giao diện làm sau UC-05)
+- **Trạng thái:** Hoàn thành (25/10/2026, giao diện Kiệt thử) (Đã duyệt 24/10/2026 – Tài chọn: mã đơn ngẫu nhiên; phiếu QR làm cùng UC-19; giao diện làm sau UC-05)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa); Kế toán xem đơn
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-08) · `docs/api.md` mục 2.3 · `docs/nghiep-vu.md` mục 2.1 (công thức), mục 11 (kịch bản Đ1…Đ8)
 - **Quy tắc nghiệp vụ liên quan:** BR-31 (đơn hợp lệ), BR-32 (chốt cước ngay, lưu bản sao giá), BR-46, 47, 48 (cước), BR-30 (lịch sử trạng thái), BR-59 (SĐT dùng tra cứu), BR-57
@@ -40,6 +40,7 @@
 - Test đã viết: `backend/tests/unit/test_uc08_cuoc.py` (14 ca, kịch bản Đ1, Đ2, Đ3, Đ8), `backend/tests/api/test_uc08_tao_don.py` (27 ca). Toàn bộ **164 passed** (24/10).
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest`.
 - Review `ponytail-review` 24/10 (UC-06, 07, 08): (1) chữ tiếng Việt đưa về Unicode dựng sẵn NFC trong `ChuBatBuoc` và `tra_gia` – gõ kiểu tổ hợp (Unikey tổ hợp, macOS) vẫn khớp giá, chặn trùng, so địa chỉ BR-31; (2) vĩ độ giới hạn −90…90, kinh độ −180…180. Thêm 3 test (`test_uc07_ac3_tinh_go_kieu_to_hop_van_khop`, `test_uc08_review_*`). Tổng 167 passed.
+- Sau khi Kiệt thử (25/10): từng vi phạm BR-31 trên giao diện hiện kèm mã "(BR-31)" (`kemMaBr`, NFR-USA-02).
 - Lệch đặc tả: 4 quyết định ở mục Quyết định. `bao_gia()` dùng chung cho tính thử và tạo đơn; UC-10 sửa đơn sẽ tính lại từ bản sao `_chot` (BR-33).
 
 ## Truy vết và kết quả
@@ -56,4 +57,4 @@
 | UC-08-AC8 | API | `test_uc08_ac8_sdt_va_mui_gio` | Đạt | 24/10/2026 |
 | UC-08-AC9 | API | `test_uc08_ac9_danh_sach_va_chi_tiet` | Đạt | 24/10/2026 |
 | UC-08-AC10 | API | `test_uc08_ac10_* (5 ca)` | Đạt | 24/10/2026 |
-| UC-08-AC11 | UI | `docs/test-evidence/UC-08/e-tao-don.png` (cước 2.997.000 đ; đơn lưu được – 201 trong log), `f-trung-dia-chi.png` (BR-31), `e-chua-co-tuyen.png`, `e-chua-co-tuyen-nguoc-lai.png` (chưa có bảng giá, nút Lưu khóa) – Kiệt thử, chờ Tài xác nhận | Đạt (Kiệt thử) | 25/10/2026 |
+| UC-08-AC11 | UI | `docs/test-evidence/UC-08/e-tao-don.png` (cước 2.997.000 đ; đơn lưu được – 201 trong log), `f-trung-dia-chi.png` (BR-31), `e-chua-co-tuyen.png`, `e-chua-co-tuyen-nguoc-lai.png` (chưa có bảng giá, nút Lưu khóa) – Kiệt thử, Tài xác nhận 25/10 | Đạt | 25/10/2026 |

@@ -2,20 +2,17 @@ import re
 from datetime import date
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import AfterValidator, BaseModel, BeforeValidator, ConfigDict, Field, model_validator
 
 from app.kieu import ChuBatBuoc, SoDienThoai
 
-HangGplx = Literal["B", "C1", "C"]  # BR-14
 TenDangNhap = Annotated[ChuBatBuoc, Field(max_length=50)]
 HoTen = Annotated[ChuBatBuoc, Field(max_length=100)]
 MatKhau = Annotated[str, Field(min_length=8, max_length=200)]  # UC-04-AC2: 7 ký tự bị chặn, 8 được
 
 
-def chuan_hoa_so_gplx(v: str | None) -> str | None:
+def chuan_hoa_so_gplx(v: str) -> str:
     """Bỏ mọi khoảng trắng, viết hoa; 6–20 chữ/số để nhập được cả bằng mẫu cũ (chốt 25/10, UC-04)."""
-    if v is None:  # TaiXeSua gửi null: để khong_xoa_truong_bat_buoc báo lỗi
-        return v
     v = re.sub(r"\s", "", v).upper()
     if not re.fullmatch(r"[A-Z0-9]{6,20}", v):
         raise ValueError("Số GPLX gồm 6–20 chữ cái hoặc chữ số")
@@ -27,19 +24,20 @@ def chuan_hoa_hang(v: object) -> object:
     return v.strip().upper() if isinstance(v, str) else v
 
 
+SoGplx = Annotated[str, AfterValidator(chuan_hoa_so_gplx)]
+HangGplx = Annotated[Literal["B", "C1", "C"], BeforeValidator(chuan_hoa_hang)]  # BR-14
+
+
 class TaiXeVao(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     ten_dang_nhap: TenDangNhap
     ho_ten: HoTen
     mat_khau: MatKhau
-    so_gplx: str
+    so_gplx: SoGplx
     hang_gplx: HangGplx
     han_gplx: date
     sdt: SoDienThoai
-
-    chuan_hoa_gplx = field_validator("so_gplx")(chuan_hoa_so_gplx)
-    chuan_hoa_hang_gplx = field_validator("hang_gplx", mode="before")(chuan_hoa_hang)
 
 
 class TaiXeSua(BaseModel):
@@ -48,14 +46,11 @@ class TaiXeSua(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     ho_ten: HoTen | None = None
-    so_gplx: str | None = None
+    so_gplx: SoGplx | None = None
     hang_gplx: HangGplx | None = None
     han_gplx: date | None = None
     sdt: SoDienThoai | None = None
     trang_thai: Literal["HOAT_DONG", "NGUNG"] | None = None  # BR-60
-
-    chuan_hoa_gplx = field_validator("so_gplx")(chuan_hoa_so_gplx)
-    chuan_hoa_hang_gplx = field_validator("hang_gplx", mode="before")(chuan_hoa_hang)
 
     @model_validator(mode="after")
     def khong_xoa_truong_bat_buoc(self):

@@ -40,12 +40,13 @@
 5. **Ngừng tài xế khóa luôn tài khoản** (theo yêu cầu của Tài trong `TIEN-DO.md`): tài xế nghỉ việc/đình chỉ không được xem chuyến, quét mã, khai chi phí; hoạt động lại thì mở lại tài khoản, lịch sử giữ nguyên.
 
 ## Ghi chú triển khai
-- AC10 thử tay 25/10 (Kiệt, Edge/Chrome, `http://localhost:5173`): 9 ca trong `du-lieu-test.md` đạt hết. Ảnh `5-tai-xe-bi-khoa-tk.png` chụp trùng ảnh ngừng; bằng chứng khóa tài khoản lấy từ log backend.
+- AC10 thử tay 25/10 (Kiệt, Edge/Chrome, `http://localhost:5173`): 9 ca trong `du-lieu-test.md` đạt hết. Ảnh khóa tài khoản chụp trùng ảnh ngừng nên đã bỏ (Tài review 25/10); khóa tài khoản chứng minh bằng `test_uc04_ac8_ngung_khoa_tai_khoan_va_mo_lai` và log backend.
 - File đã đổi: `backend/app/domain/xe_tai_xe.py` (thêm `hang_gplx_toi_thieu`, `kiem_br14_hang_gplx`), `backend/app/modules/danh_muc/tai_xe/{schemas,service,router}.py` (mới), `backend/app/main.py` (gắn router); `frontend/src/api/taiXe.ts` (mới), `frontend/src/pages/dieu-phoi/TaiXeDanhSach.tsx` (mới), `frontend/src/App.tsx` (menu "Tài xế"). Không đụng `models/`, không thêm migration.
 - Test đã viết: `backend/tests/unit/test_uc04_domain.py` (AC4, 16 ca), `backend/tests/api/test_uc04_tai_xe.py` (AC1–AC3, AC5–AC9, 51 ca). UC-04: **67 passed**; toàn bộ backend **266 passed** (25/10). `ruff check`, `ruff format --check`, `npm run lint`, `npm run build` sạch.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/unit/test_uc04_domain.py tests/api/test_uc04_tai_xe.py` (Docker Desktop đang chạy)
 - Cách làm đáng chú ý: thêm tài xế `flush` tài khoản trước để lấy id, rồi commit cả hai; trùng số GPLX thì rollback cả giao dịch nên không để lại tài khoản thừa. Phân biệt trùng tên đăng nhập / số GPLX theo tên ràng buộc unique của PostgreSQL. Ngừng tài xế khóa tài khoản qua `nguoi_dung.trang_thai`; `nguoi_dung_hien_tai` (UC-01) đã chặn tài khoản khác `HOAT_DONG` nên token cũ mất hiệu lực ngay. Giao diện hỏi xác nhận trước khi ngừng.
 - Review `ponytail-review` 25/10: Ship, 2 mục nhỏ đã sửa – `_luu` chỉ xử lý trùng số GPLX (bỏ nhánh báo "trùng tên đăng nhập" không bao giờ chạy tới); tìm SĐT có dấu cách/chấm/gạch ("0909 111") vẫn ra, gõ riêng "." không khớp mọi SĐT (thêm test `test_uc04_ac6_tim_sdt_co_dau_cach_hoac_cham`).
+- Review Tài 25/10 (merge vào `main`): gộp hai validator GPLX lặp ở `TaiXeVao`/`TaiXeSua` thành kiểu `SoGplx`, `HangGplx`; bỏ ảnh trùng.
 - Lệch đặc tả: không. `api.md` mục 2.2 đã có `/api/tai-xe` đúng như làm.
 
 ## Truy vết và kết quả
@@ -61,4 +62,4 @@
 | UC-04-AC7 | API | `test_uc04_ac7_* (11 ca)` | Đạt | 25/10/2026 |
 | UC-04-AC8 | API | `test_uc04_ac8_* (2 ca)` | Đạt | 25/10/2026 |
 | UC-04-AC9 | API | `test_uc04_ac9_* (5 ca)` | Đạt | 25/10/2026 |
-| UC-04-AC10 | UI | `docs/test-evidence/UC-04/` (6 ảnh: thêm, trùng GPLX báo dưới ô, hạn hết tô đỏ, ngừng, form sửa) + Kiệt xác nhận; khóa tài khoản xác nhận qua log (đăng nhập tài xế ngừng → 403 "Tài khoản đã bị khóa") | Đạt | 25/10/2026 |
+| UC-04-AC10 | UI | `docs/test-evidence/UC-04/` (5 ảnh: thêm, trùng GPLX báo dưới ô, hạn hết tô đỏ, ngừng, form sửa) + Kiệt xác nhận; khóa tài khoản xác nhận qua log (đăng nhập tài xế ngừng → 403 "Tài khoản đã bị khóa") | Đạt | 25/10/2026 |

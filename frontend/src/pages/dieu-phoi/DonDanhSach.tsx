@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent, type InputHTMLAttributes } from 'react'
 import { danhSachDon, taoDon, tinhCuoc, type BaoGia, type Don } from '../../api/don'
-import { LoiApi, loiTheoTruong } from '../../api/goi'
+import { kemMaBr, LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachKhachHang, type KhachHang } from '../../api/khachHang'
 import { danhSachNut, type Nut } from '../../api/tuyen'
 
@@ -243,7 +243,9 @@ function FormTaoDon({ onDong, onLuu }: { onDong: () => void; onLuu: (d: Don) => 
       const theoTruong = loiTheoTruong(err)
       setLoiTruong(theoTruong)
       if (err instanceof LoiApi && err.ma === 'BR-31')
-        setLoiChung(err.chiTiet.map((c) => (c as { thong_diep?: string }).thong_diep ?? ''))
+        setLoiChung(
+          err.chiTiet.map((c) => kemMaBr((c as { thong_diep?: string }).thong_diep ?? '', err.ma)),
+        )
       else if (Object.keys(theoTruong).length === 0)
         setLoiChung([err instanceof LoiApi ? err.message : 'Không lưu được, vui lòng thử lại'])
     } finally {

@@ -72,7 +72,7 @@ npm ci                                  # dùng npm ci, không dùng npm install
 npm run dev
 ```
 
-Mở http://localhost:5173 thấy dòng "QLVC – Hệ thống quản lý vận tải".
+Mở http://127.0.0.1:5173 thấy dòng "QLVC – Hệ thống quản lý vận tải".
 
 ## 7. Kiểm tra lần cuối
 
