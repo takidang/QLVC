@@ -27,6 +27,7 @@
 - 24/10 – Tài → Kiệt: **thử giao diện UC-05 và UC-08** thay Tài (bước 3 trong khối "Việc của Kiệt ngay bây giờ"). Code đã xong, chờ Kiệt chụp ảnh và xác nhận để đóng 2 story.
 - 25/10 – Kiệt → Tài: (1) review PR UC-04 (`kiet/uc-04` → `main`); hàm `kiem_br14_hang_gplx` trong `domain/xe_tai_xe.py` dùng cho UC-11, 12; UC-11, 12 cần lọc bỏ tài xế `NGUNG`. (2) Đã thử UC-05-AC9, UC-08-AC11: đạt, Tài xác nhận và đóng story. (3) Hai điểm nhỏ khi thử: `http://127.0.0.1:5173` không mở được trên máy Kiệt (Vite chỉ nghe `localhost`), phải dùng `http://localhost:5173`; thông báo lỗi BR-66 (tuyến) và BR-31 (đơn) trên giao diện chưa hiện mã BR như NFR-USA-02 – Tài quyết có sửa không.
 - 25/10 – Tài → Kiệt: UC-04 đã review và merge vào `main` (sửa nhỏ: gộp validator GPLX, bỏ ảnh `5-tai-xe-bi-khoa-tk.png` trùng ảnh 4). UC-05, UC-08 đóng theo ảnh Kiệt thử. Đã sửa 2 điểm Kiệt báo: lỗi nghiệp vụ hiện kèm mã BR; Vite nghe `127.0.0.1` nên `http://127.0.0.1:5173` mở được trên mọi máy. Kiệt `git switch main`, `git pull`. Nhánh `dev` đã tạo; cách chia nhánh Tài và Kiệt bàn sau.
+- 29/10 – Kiệt → Tài: đọc lại `docs/ca-test-br.md` và chốt 5 câu ở mục 5 (khung giờ lấy đóng hai đầu; tuần tính giờ lái Thứ Hai–Chủ Nhật; "hết hạn trong 30 ngày" gồm ngày thứ 30; cước tối thiểu 50.000 cho kịch bản mục 11; mã 422 khi hủy/trả hàng đơn `THAT_BAI` sai điều kiện lượt quét).
 
 ## Câu hỏi chờ thầy
 - ~~A1–A6 (nghiep-vu.md mục 1): chưa gửi~~ Nhóm tự chốt 16/10 (nghiep-vu.md mục 1).
@@ -84,7 +85,7 @@
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|
 | Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Xong | – | PR #1 merge 16/10 (Tài cập nhật hộ) |
-| Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Cài môi trường xong 19/10 (theo báo cáo tuần 2; Tài sửa hộ 25/10). Còn ca test BR và UML |
+| Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Cài môi trường xong 19/10 (theo báo cáo tuần 2; Tài sửa hộ 25/10). Ca test BR xong 29/10 (`docs/ca-test-br.md`: 70 BR, 180 ca), chờ Tài đọc lại và trả lời 5 câu ở mục 5. Còn UML |
 | UC-04 Tài xế (chép mẫu) | 2 | Xong | 10/10 | Tài review, merge vào `main` 25/10 (Tài cập nhật hộ) |
 | UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Chưa bắt đầu | | UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
 | Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Chưa bắt đầu | | |
@@ -92,6 +93,7 @@
 | UC-26, 27, 34 (hiệu suất xe, ưu tiên S – thiếu giờ thì cắt trước), E2E | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Kiệt (mới nhất ở trên)
+- 29/10: Danh sách ca test BR (`docs/ca-test-br.md`): 70 BR còn hiệu lực, 180 ca theo nhóm A…H, mỗi ca ✖ chỉ vi phạm một BR, có ca biên; thêm dữ liệu X3…X8, Cường, Dũng, Đ9…Đ15. Commit dữ liệu và kết quả thử giao diện UC-04, 05, 08 (`docs/test-evidence/du-lieu-thu-giao-dien.md`).
 - 25/10: UC-04 Tài xế: backend (thêm kèm tài khoản, sửa, ngừng khóa tài khoản), hàm BR-14 hạng GPLX cho UC-11, giao diện; 67 test, toàn bộ 266 passed; thử giao diện 10/10 AC đạt; ponytail-review sửa 2 mục. Thử giao diện UC-05, UC-08 cho Tài: đạt. Mở PR `kiet/uc-04`.
 - 15/10: Sửa nghiệp vụ 0.5 theo review của Tài: công thức BR-73, km khi kết thúc do sự cố, thứ tự điểm lấy, kịch bản mỗi ca ✖ chỉ một BR (thêm Đ8 cho BR-67); thêm mục Công thức, ETA kế hoạch lưu lúc chốt, dữ liệu cho AI; api, security-rules, kien-truc khớp 0.5. Nhận UC-33, UC-34.
 - 15/10: Nghiệp vụ 0.5: chuyến 6 trạng thái, đơn 7; ETA cộng phút dừng, kiểm lại cả chuyến khi ghép (BR-63…67); km, sự cố, kết thúc do sự cố, cảnh báo trễ (BR-68…73); bỏ UC-09, 14, 29, 31, thêm UC-32…34. Sửa nghiep-vu, use-cases, so-do; api, security-rules chỉ đổi tên trạng thái. Mở PR chờ Tài review.
