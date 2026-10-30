@@ -13,6 +13,8 @@ export type Don = {
   so_kien: number
   tinh_lay: string
   dia_chi_lay: string
+  lay_tu: string | null
+  lay_den: string | null
   tinh_giao: string
   dia_chi_giao: string
   nguoi_nhan: string

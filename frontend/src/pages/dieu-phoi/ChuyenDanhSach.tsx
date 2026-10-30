@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import {
   danhSachChuyen,
   lapChuyen,
@@ -112,7 +113,9 @@ export default function ChuyenDanhSach() {
         <tbody>
           {ds.du_lieu.map((c) => (
             <tr key={c.id}>
-              <td className="bien-so">{c.ma_chuyen}</td>
+              <td className="bien-so">
+                <Link to={String(c.id)}>{c.ma_chuyen}</Link>
+              </td>
               <td>
                 {c.ma_tuyen} – {c.ten_tuyen}
               </td>

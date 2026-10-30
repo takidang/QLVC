@@ -4,6 +4,7 @@ import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
 import DangNhap from './pages/DangNhap'
 import BangGiaDanhSach from './pages/quan-ly/BangGiaDanhSach'
 import CauHinh from './pages/quan-ly/CauHinh'
+import ChuyenChiTiet from './pages/dieu-phoi/ChuyenChiTiet'
 import ChuyenDanhSach from './pages/dieu-phoi/ChuyenDanhSach'
 import DonDanhSach from './pages/dieu-phoi/DonDanhSach'
 import KhachHangDanhSach from './pages/dieu-phoi/KhachHangDanhSach'
@@ -26,10 +27,13 @@ const TEN_VAI_TRO: Record<VaiTro, string> = {
   KE_TOAN: 'Kế toán',
 }
 
-// Trang con của từng vai trò. Thêm UC mới: thêm một dòng ở đây (docs/mau-use-case.md)
-const TRANG_CON: Partial<Record<VaiTro, { duong_dan: string; ten: string; trang: ReactNode }[]>> = {
+// Trang con của từng vai trò. Thêm UC mới: thêm một dòng ở đây (docs/mau-use-case.md). `an`: không hiện trên menu
+const TRANG_CON: Partial<
+  Record<VaiTro, { duong_dan: string; ten: string; trang: ReactNode; an?: boolean }[]>
+> = {
   DIEU_PHOI: [
     { duong_dan: 'chuyen', ten: 'Chuyến', trang: <ChuyenDanhSach /> },
+    { duong_dan: 'chuyen/:id', ten: 'Chi tiết chuyến', trang: <ChuyenChiTiet />, an: true },
     { duong_dan: 'don', ten: 'Đơn hàng', trang: <DonDanhSach /> },
     { duong_dan: 'xe', ten: 'Xe', trang: <XeDanhSach /> },
     { duong_dan: 'tai-xe', ten: 'Tài xế', trang: <TaiXeDanhSach /> },
@@ -53,7 +57,9 @@ const menu = (nd: NguoiDung) =>
   (Object.keys(TRANG_CHU) as VaiTro[])
     .filter((vt) => duocVao(nd, vt))
     .flatMap((vt) =>
-      (TRANG_CON[vt] ?? []).map((t) => ({ ...t, den: `${TRANG_CHU[vt]}/${t.duong_dan}` })),
+      (TRANG_CON[vt] ?? [])
+        .filter((t) => !t.an)
+        .map((t) => ({ ...t, den: `${TRANG_CHU[vt]}/${t.duong_dan}` })),
     )
 
 export default function App() {

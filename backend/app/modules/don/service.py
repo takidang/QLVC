@@ -98,7 +98,7 @@ NutLay, NutGiao = aliased(Nut), aliased(Nut)
 _CHON = (DonHang, KhachHang.ten, NutLay.tinh, NutGiao.tinh)
 
 
-def _ra(dong) -> dict:
+def ra_don(dong) -> dict:
     don, ten_khach, tinh_lay, tinh_giao = dong
     return {
         **{c: getattr(don, c) for c in DonHang.__mapper__.columns.keys()},
@@ -108,7 +108,7 @@ def _ra(dong) -> dict:
     }
 
 
-def _truy_van():
+def truy_van_don():
     return (
         select(*_CHON)
         .join(KhachHang, KhachHang.id == DonHang.khach_hang_id)
@@ -118,16 +118,16 @@ def _truy_van():
 
 
 def lay(db: Session, don_id: int) -> dict:
-    dong = db.execute(_truy_van().where(DonHang.id == don_id)).first()
+    dong = db.execute(truy_van_don().where(DonHang.id == don_id)).first()
     if dong is None:
         raise LoiNghiepVu("KHONG_TIM_THAY", "Không tìm thấy đơn hàng", 404)
-    return _ra(dong)
+    return ra_don(dong)
 
 
 def danh_sach(
     db: Session, pt: PhanTrang, trang_thai: str | None, khach_hang_id: int | None, tim: str | None
 ) -> tuple[list[dict], int]:
-    loc = _truy_van()
+    loc = truy_van_don()
     if trang_thai:
         loc = loc.where(DonHang.trang_thai == trang_thai)
     if khach_hang_id:
@@ -136,4 +136,4 @@ def danh_sach(
         loc = loc.where(DonHang.ma_don.icontains(tim, autoescape=True))
     tong = db.scalar(select(func.count()).select_from(loc.subquery()))
     dong = db.execute(loc.order_by(DonHang.tao_luc.desc(), DonHang.id.desc()).offset(pt.bo_qua).limit(pt.so_dong))
-    return [_ra(d) for d in dong], tong
+    return [ra_don(d) for d in dong], tong

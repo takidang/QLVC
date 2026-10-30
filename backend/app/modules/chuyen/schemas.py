@@ -2,7 +2,9 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import Literal
 
-from pydantic import AwareDatetime, BaseModel, ConfigDict
+from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
+
+from app.modules.don.schemas import DonRa
 
 TrangThaiChuyen = Literal["LAP", "DA_CHOT", "DANG_CHAY", "HOAN_THANH", "DA_QUYET_TOAN", "HUY"]  # ST-T
 
@@ -54,3 +56,41 @@ class TaiXeKhaDung(BaseModel):
     han_gplx: date
     kha_dung: bool
     ly_do: list[LyDo]
+
+
+class GhepVao(BaseModel):
+    # Chỉ nhận danh sách đơn: không có cách ghép một phần đơn (BR-08), trường lạ → 400
+    model_config = ConfigDict(extra="forbid")
+
+    don_ids: list[int] = Field(min_length=1)
+
+
+class TaiTrong(BaseModel):
+    da_dung_kg: Decimal
+    toi_da_kg: int
+
+
+class TheTich(BaseModel):
+    da_dung_m3: Decimal
+    toi_da_m3: Decimal
+
+
+class DiemRa(BaseModel):
+    thu_tu: int
+    nut: str
+    viec: Literal["LAY", "GIAO"]
+    don_id: int
+    ma_don: str
+    eta: datetime
+
+
+class ChuyenChiTiet(ChuyenRa):
+    """Tổng quan + thẻ Hàng (UC-13); cũng là kết quả của ghép, gỡ (api.md mục 3.1)."""
+
+    tai_trong: TaiTrong
+    the_tich: TheTich
+    ty_le_lap_day: Decimal
+    lich_trinh: list[DiemRa]
+    lai_du_kien: int
+    canh_bao_lai_am: bool
+    don: list[DonRa]

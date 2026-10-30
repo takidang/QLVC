@@ -9,7 +9,16 @@ from app.auth.phu_thuoc import can_vai_tro
 from app.db import get_db
 from app.models import NguoiDung
 from app.modules.chuyen import service
-from app.modules.chuyen.schemas import ChuyenRa, ChuyenVao, TaiXeKhaDung, TrangThaiChuyen, XeKhaDung
+from app.modules.chuyen.schemas import (
+    ChuyenChiTiet,
+    ChuyenRa,
+    ChuyenVao,
+    GhepVao,
+    TaiXeKhaDung,
+    TrangThaiChuyen,
+    XeKhaDung,
+)
+from app.modules.don.schemas import DonRa
 from app.phan_trang import DanhSach, PhanTrang, phan_trang
 
 router = APIRouter(prefix="/api/chuyen", tags=["chuyen"])
@@ -48,6 +57,21 @@ def danh_sach(
     return {"du_lieu": du_lieu, "tong": tong}
 
 
-@router.get("/{chuyen_id}", response_model=ChuyenRa, dependencies=[XEM])
+@router.get("/{chuyen_id}", response_model=ChuyenChiTiet, dependencies=[XEM])
 def chi_tiet(chuyen_id: int, db: Db):
-    return service.lay(db, chuyen_id)
+    return service.chi_tiet(db, chuyen_id)
+
+
+@router.get("/{chuyen_id}/don-phu-hop", response_model=list[DonRa], dependencies=[Depends(DIEU_PHOI)])
+def don_phu_hop(chuyen_id: int, db: Db):
+    return service.don_phu_hop(db, chuyen_id)
+
+
+@router.post("/{chuyen_id}/ghep", response_model=ChuyenChiTiet)
+def ghep(chuyen_id: int, vao: GhepVao, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)]):
+    return service.ghep(db, chuyen_id, vao.don_ids, nd)
+
+
+@router.post("/{chuyen_id}/go", response_model=ChuyenChiTiet)
+def go(chuyen_id: int, vao: GhepVao, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)]):
+    return service.go(db, chuyen_id, vao.don_ids, nd)

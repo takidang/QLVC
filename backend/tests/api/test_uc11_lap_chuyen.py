@@ -236,7 +236,8 @@ def test_uc11_ac10_danh_sach_va_chi_tiet(client, dang_nhap_voi, kb):
     assert trang2["tong"] == 2 and len(trang2["du_lieu"]) == 1
     assert client.get("/api/chuyen", params={"trang_thai": "XOA"}).status_code == 400
 
-    assert client.get(f"/api/chuyen/{c1['id']}").json() == c1
+    chi_tiet = client.get(f"/api/chuyen/{c1['id']}").json()
+    assert {k: chi_tiet[k] for k in c1} == c1  # chi tiết = tổng quan + thẻ Hàng (UC-13)
     assert client.get("/api/chuyen/999").status_code == 404
 
 

@@ -79,12 +79,12 @@
 | GET | `/api/chuyen/xe-kha-dung`, `/api/chuyen/tai-xe-kha-dung` | DP | UC-11 | `?tuyen_id=&khoi_hanh=` (có múi giờ), tài xế thêm `&xe_id=` không bắt buộc để lọc BR-14. Trả **mọi** xe / tài xế kèm `kha_dung` và `ly_do: [{ma, thong_diep}]` (xe: BR-11…13, 16; tài xế: `TAI_XE_NGUNG`, BR-14, 15, 17…19), khả dụng xếp trước |
 | POST | `/api/chuyen` | DP | UC-11 | `{tuyen_id, khoi_hanh_du_kien, xe_id, tai_xe_id}` → `LAP` (BR-22), mã `CH-yyMMdd-NN` theo ngày khởi hành. Vi phạm → 422, `ma` là BR đầu tiên, `chi_tiet` đủ mọi vi phạm; tuyến `NGUNG` → 422 `TUYEN_NGUNG`; giờ đã qua → 422 `KHOI_HANH_DA_QUA` |
 | GET | `/api/chuyen` | DP, KT | UC-11, UC-32 | Lọc trạng thái, ngày, tuyến. `?ngay=` trả **bảng chuyến trong ngày**: % đầy, tiến độ "đã xong/tổng điểm", cờ trễ (CFG-09), sự cố mở, đơn thất bại, chưa quyết toán |
-| GET | `/api/chuyen/{id}` | DP, KT | UC-32 | Chi tiết chuyến 5 thẻ: tổng quan, hàng (tải, thể tích, % đầy), lịch trình (điểm dừng suy ra theo BR-63; ETA kế hoạch từ khi chốt, giờ quét thực tế, độ trễ; kết thúc dự kiến khi đang chạy theo BR-73), dòng thời gian (km, lượt quét, chi phí, sự cố), tiền |
+| GET | `/api/chuyen/{id}` | DP, KT | UC-13, UC-32 | UC-13 đã làm tổng quan + thẻ Hàng (cùng dạng với kết quả ghép ở mục 3.1). Đủ 5 thẻ ở UC-32: tổng quan, hàng (tải, thể tích, % đầy), lịch trình (điểm dừng suy ra theo BR-63; ETA kế hoạch từ khi chốt, giờ quét thực tế, độ trễ; kết thúc dự kiến khi đang chạy theo BR-73), dòng thời gian (km, lượt quét, chi phí, sự cố), tiền |
 | GET | `/api/chuyen/{id}/xe-kha-dung`, `/tai-xe-kha-dung` | DP | UC-12 | Như trên, cho chuyến đã có |
 | PUT | `/api/chuyen/{id}/phan-cong` | DP | UC-12 | `{xe_id, tai_xe_id}`; chỉ khi `LAP`; kiểm BR-11…19 và BR-67 |
-| GET | `/api/chuyen/{id}/don-phu-hop` | DP | UC-13 | Đơn `CHO_GHEP` đã lọc BR-03, 04 |
+| GET | `/api/chuyen/{id}/don-phu-hop` | DP | UC-13 | Đơn `CHO_GHEP` đã lọc BR-03, 04 (nút lấy = nơi giữ hàng nếu có, BR-69), hạn giao gần trước, tối đa 200 |
 | POST | `/api/chuyen/{id}/ghep` | DP | UC-13 | **Chi tiết ở mục 3.1** |
-| POST | `/api/chuyen/{id}/go` | DP | UC-13 | `{don_ids}`; kiểm lại cả chuyến (BR-67); ghép hết hiệu lực, đơn `→ CHO_GHEP` |
+| POST | `/api/chuyen/{id}/go` | DP | UC-13 | `{don_ids}`; kiểm lại cả chuyến (BR-67); ghép hết hiệu lực, đơn `→ CHO_GHEP`. Trả như 3.1. Gỡ làm đơn khác vi phạm → 422 `VI_PHAM_GO` (`chi_tiet` như 3.1); đơn không đang ghép trong chuyến → 422 `DON_KHONG_THUOC_CHUYEN`; chuyến không `LAP` → 409 `BR-09` |
 | POST | `/api/chuyen/{id}/chot` | DP | UC-15 | BR-23, 71; trả cảnh báo lãi âm (BR-52), cần `xac_nhan_lai_am=true`; chuyến 0 đơn cần `xac_nhan_chay_rong=true` |
 | POST | `/api/chuyen/{id}/mo-chot` | DP | UC-15 | BR-24: còn tạm ứng `HIEU_LUC` → 409 |
 | POST | `/api/chuyen/{id}/huy` | DP | UC-16 | BR-25, cần `ly_do`; còn tạm ứng `HIEU_LUC` → 409 |
@@ -143,23 +143,25 @@ Request:
 { "don_ids": [12, 15, 18] }
 ```
 
-200:
+200: chi tiết chuyến sau khi ghép (cùng dạng `GET /api/chuyen/{id}`: tổng quan + các trường dưới, `don` là các đơn đang ghép). Số thập phân trả dạng chuỗi:
 ```json
 {
-  "chuyen_id": 7,
-  "da_ghep": [12, 15, 18],
-  "tai_trong": { "da_dung_kg": 3800, "toi_da_kg": 5000 },
+  "id": 7,
+  "ma_chuyen": "CH-261020-01",
+  "tai_trong": { "da_dung_kg": "3800.00", "toi_da_kg": 5000 },
   "the_tich": { "da_dung_m3": 11.0, "toi_da_m3": 20.0 },
   "ty_le_lap_day": 0.76,
   "ket_thuc_du_kien": "2026-10-20T13:30:00+07:00",
   "lich_trinh": [
-    { "thu_tu": 1, "nut": "TP.HCM", "viec": "LAY", "ma_don": "DH-0012", "eta": "2026-10-20T06:00:00+07:00" }
+    { "thu_tu": 1, "nut": "TP.HCM", "viec": "LAY", "don_id": 12, "ma_don": "DH-0012", "eta": "2026-10-20T06:00:00+07:00" }
   ],
-  "lai_du_kien": 3637000
+  "lai_du_kien": 3637000,
+  "canh_bao_lai_am": false,
+  "don": [ ]
 }
 ```
 
-422, không ghép đơn nào trong lô. Vi phạm có thể nằm ở đơn đã ghép trước đó do ETA dịch (BR-67):
+422, không ghép đơn nào trong lô. Vi phạm có thể nằm ở đơn đã ghép trước đó do ETA dịch (BR-67); vi phạm của cả chuyến (BR-01, 02 tải; BR-12, 13, 15 giấy tờ theo ngày kết thúc mới; BR-16, 17 trùng lịch theo khoảng chiếm mới) có `don_id: null`. Lãi dự kiến âm không chặn, chỉ `canh_bao_lai_am: true` (xác nhận ở lúc chốt, UC-15):
 ```json
 {
   "ma": "VI_PHAM_GHEP",
@@ -171,7 +173,7 @@ Request:
 }
 ```
 
-409: chuyến không ở `LAP` (BR-09), hoặc đơn vừa bị ghép vào chuyến khác (BR-07) → giao diện tải lại danh sách.
+409: chuyến không ở `LAP` hoặc đơn không ở `CHO_GHEP` (BR-09), hoặc đơn vừa bị ghép vào chuyến khác (BR-07) → giao diện tải lại danh sách. 404: chuyến hoặc đơn không tồn tại. 400: `don_ids` rỗng hoặc có trường lạ (BR-08).
 
 ### 3.2 `POST /api/toi/quet` (UC-19, UC-20, sơ đồ 9)
 
