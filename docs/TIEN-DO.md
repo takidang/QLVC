@@ -29,6 +29,7 @@
 - 25/10 – Tài → Kiệt: UC-04 đã review và merge vào `main` (sửa nhỏ: gộp validator GPLX, bỏ ảnh `5-tai-xe-bi-khoa-tk.png` trùng ảnh 4). UC-05, UC-08 đóng theo ảnh Kiệt thử. Đã sửa 2 điểm Kiệt báo: lỗi nghiệp vụ hiện kèm mã BR; Vite nghe `127.0.0.1` nên `http://127.0.0.1:5173` mở được trên mọi máy. Kiệt `git switch main`, `git pull`. Nhánh `dev` đã tạo; cách chia nhánh Tài và Kiệt bàn sau.
 - 29/10 – Kiệt → Tài: đọc lại `docs/ca-test-br.md` và chốt 5 câu ở mục 5 (khung giờ lấy đóng hai đầu; tuần tính giờ lái Thứ Hai–Chủ Nhật; "hết hạn trong 30 ngày" gồm ngày thứ 30; cước tối thiểu 50.000 cho kịch bản mục 11; mã 422 khi hủy/trả hàng đơn `THAT_BAI` sai điều kiện lượt quét).
 - 30/10 – Tài → Kiệt: đồng ý cả 5 đề xuất ở `ca-test-br.md` mục 5, đã ghi vào `nghiep-vu.md` (BR-05 khung đóng hai đầu, BR-19 tuần Thứ Hai–Chủ Nhật, BR-21 gồm ngày thứ 30, cước tối thiểu 50.000 ở mục 11, ghi chú 422 cho BR-34/36). Ca test BR đã chốt.
+- 30/10 – Tài → Kiệt: **thử giao diện UC-11 Lập chuyến** (`UC-11-AC12`; backend xong, 315 test). `git pull`, chạy backend + frontend như lần thử UC-05. Dùng dữ liệu đã có trên máy Kiệt (tuyến T01, xe, tài xế An hạng C, Bình hạng B); cần thêm 1 xe khối lượng toàn bộ 9.500 kg và 1 xe trạng thái Ngừng nếu chưa có. Menu **Chuyến** → Lập chuyến: (a) T01, ngày mai 06:00 → hiện danh sách xe và tài xế; xe Ngừng hiện "không dùng được" kèm lý do (BR-11); (b) chọn xe 9.500 kg → Bình mờ, lý do hạng GPLX (BR-14); (c) chọn An → Lập chuyến → "Đã lập chuyến CH-yyMMdd-01", kết thúc dự kiến 11:30; (d) lập chuyến khác cùng xe lúc 10:00 → xe đó mờ, lý do trùng lịch chuyến vừa lập (BR-16); (e) chọn giờ hôm qua → Lập chuyến báo "Giờ khởi hành đã qua". Chụp (a)…(e) vào `docs/test-evidence/UC-11/`, điền dòng AC12 trong `docs/stories/UC-11-lap-chuyen.md` (Đạt/Không đạt, ngày, "Kiệt thử"); sai chỗ nào ghi vào "Đang chặn", không tự sửa code của Tài.
 
 ## Câu hỏi chờ thầy
 - ~~A1–A6 (nghiep-vu.md mục 1): chưa gửi~~ Nhóm tự chốt 16/10 (nghiep-vu.md mục 1).
@@ -41,13 +42,14 @@
 | UC-03 Xe (mẫu) | 2 | Xong | 13/13 | |
 | UC-06…09 Đơn tối thiểu | 3–4 | Xong | UC-06 6/6, UC-07 9/9, UC-08 11/11 | UC-08-AC11 Kiệt thử 25/10; UC-09 bỏ ở 0.5; phiếu QR làm cùng UC-19 |
 | UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Xong | 9/9 | AC9 Kiệt thử 25/10 |
-| UC-11…13, 15 Chuyến tối thiểu | 3–4 | Chưa bắt đầu | | |
+| UC-11…13, 15 Chuyến tối thiểu | 3–4 | Đang làm | UC-11 11/12 | UC-11-AC12 giao diện chờ Kiệt thử; tiếp UC-13 ghép đơn, UC-12, UC-15 |
 | UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Chưa bắt đầu | | |
 | UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
-- 30/10: Chốt 5 câu trong ca test BR của Kiệt, ghi vào nghiep-vu.md. Bắt đầu UC-11.
+- 30/10: UC-11 Lập chuyến: backend + giao diện, BR-11…19, 64, 65 (khóa dòng chống hai người lập trùng xe), 49 test mới, toàn bộ 315 passed; 11/12 AC, giao diện chờ Kiệt thử.
+- 30/10: Chốt 5 câu trong ca test BR của Kiệt, ghi vào nghiep-vu.md.
 - 25/10: Review và merge UC-04 của Kiệt vào `main` (gộp validator GPLX, bỏ ảnh trùng). Đóng UC-05, UC-08 theo ảnh Kiệt thử. Giao diện hiện mã BR kèm lỗi nghiệp vụ (NFR-USA-02); Vite nghe 127.0.0.1.
 - 24/10: UC-05 Tuyến và nút xong backend + giao diện (199 test); giao diện tạo đơn UC-08. Giao Kiệt thử giao diện UC-05, UC-08.
 - 24/10: Review UC-06, 07, 08: sửa chuẩn hóa Unicode NFC cho chữ tiếng Việt, giới hạn vĩ độ/kinh độ (167 test).

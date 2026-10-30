@@ -76,8 +76,8 @@
 
 | Phương thức | Đường dẫn | Vai trò | UC | BR / ghi chú |
 |---|---|---|---|---|
-| GET | `/api/chuyen/xe-kha-dung`, `/api/chuyen/tai-xe-kha-dung` | DP | UC-11 | `?tuyen_id=&khoi_hanh=`; kèm lý do loại từng xe (BR-11…13, 16) / tài xế (BR-14, 15, 17…19) |
-| POST | `/api/chuyen` | DP | UC-11 | `{tuyen_id, khoi_hanh_du_kien, xe_id, tai_xe_id}` → `LAP` (BR-22) |
+| GET | `/api/chuyen/xe-kha-dung`, `/api/chuyen/tai-xe-kha-dung` | DP | UC-11 | `?tuyen_id=&khoi_hanh=` (có múi giờ), tài xế thêm `&xe_id=` không bắt buộc để lọc BR-14. Trả **mọi** xe / tài xế kèm `kha_dung` và `ly_do: [{ma, thong_diep}]` (xe: BR-11…13, 16; tài xế: `TAI_XE_NGUNG`, BR-14, 15, 17…19), khả dụng xếp trước |
+| POST | `/api/chuyen` | DP | UC-11 | `{tuyen_id, khoi_hanh_du_kien, xe_id, tai_xe_id}` → `LAP` (BR-22), mã `CH-yyMMdd-NN` theo ngày khởi hành. Vi phạm → 422, `ma` là BR đầu tiên, `chi_tiet` đủ mọi vi phạm; tuyến `NGUNG` → 422 `TUYEN_NGUNG`; giờ đã qua → 422 `KHOI_HANH_DA_QUA` |
 | GET | `/api/chuyen` | DP, KT | UC-11, UC-32 | Lọc trạng thái, ngày, tuyến. `?ngay=` trả **bảng chuyến trong ngày**: % đầy, tiến độ "đã xong/tổng điểm", cờ trễ (CFG-09), sự cố mở, đơn thất bại, chưa quyết toán |
 | GET | `/api/chuyen/{id}` | DP, KT | UC-32 | Chi tiết chuyến 5 thẻ: tổng quan, hàng (tải, thể tích, % đầy), lịch trình (điểm dừng suy ra theo BR-63; ETA kế hoạch từ khi chốt, giờ quét thực tế, độ trễ; kết thúc dự kiến khi đang chạy theo BR-73), dòng thời gian (km, lượt quét, chi phí, sự cố), tiền |
 | GET | `/api/chuyen/{id}/xe-kha-dung`, `/tai-xe-kha-dung` | DP | UC-12 | Như trên, cho chuyến đã có |

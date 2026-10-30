@@ -4,6 +4,7 @@ import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
 import DangNhap from './pages/DangNhap'
 import BangGiaDanhSach from './pages/quan-ly/BangGiaDanhSach'
 import CauHinh from './pages/quan-ly/CauHinh'
+import ChuyenDanhSach from './pages/dieu-phoi/ChuyenDanhSach'
 import DonDanhSach from './pages/dieu-phoi/DonDanhSach'
 import KhachHangDanhSach from './pages/dieu-phoi/KhachHangDanhSach'
 import NutDanhSach from './pages/dieu-phoi/NutDanhSach'
@@ -28,6 +29,7 @@ const TEN_VAI_TRO: Record<VaiTro, string> = {
 // Trang con của từng vai trò. Thêm UC mới: thêm một dòng ở đây (docs/mau-use-case.md)
 const TRANG_CON: Partial<Record<VaiTro, { duong_dan: string; ten: string; trang: ReactNode }[]>> = {
   DIEU_PHOI: [
+    { duong_dan: 'chuyen', ten: 'Chuyến', trang: <ChuyenDanhSach /> },
     { duong_dan: 'don', ten: 'Đơn hàng', trang: <DonDanhSach /> },
     { duong_dan: 'xe', ten: 'Xe', trang: <XeDanhSach /> },
     { duong_dan: 'tai-xe', ten: 'Tài xế', trang: <TaiXeDanhSach /> },
