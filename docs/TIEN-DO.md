@@ -28,6 +28,7 @@
 - 25/10 – Kiệt → Tài: (1) review PR UC-04 (`kiet/uc-04` → `main`); hàm `kiem_br14_hang_gplx` trong `domain/xe_tai_xe.py` dùng cho UC-11, 12; UC-11, 12 cần lọc bỏ tài xế `NGUNG`. (2) Đã thử UC-05-AC9, UC-08-AC11: đạt, Tài xác nhận và đóng story. (3) Hai điểm nhỏ khi thử: `http://127.0.0.1:5173` không mở được trên máy Kiệt (Vite chỉ nghe `localhost`), phải dùng `http://localhost:5173`; thông báo lỗi BR-66 (tuyến) và BR-31 (đơn) trên giao diện chưa hiện mã BR như NFR-USA-02 – Tài quyết có sửa không.
 - 25/10 – Tài → Kiệt: UC-04 đã review và merge vào `main` (sửa nhỏ: gộp validator GPLX, bỏ ảnh `5-tai-xe-bi-khoa-tk.png` trùng ảnh 4). UC-05, UC-08 đóng theo ảnh Kiệt thử. Đã sửa 2 điểm Kiệt báo: lỗi nghiệp vụ hiện kèm mã BR; Vite nghe `127.0.0.1` nên `http://127.0.0.1:5173` mở được trên mọi máy. Kiệt `git switch main`, `git pull`. Nhánh `dev` đã tạo; cách chia nhánh Tài và Kiệt bàn sau.
 - 29/10 – Kiệt → Tài: đọc lại `docs/ca-test-br.md` và chốt 5 câu ở mục 5 (khung giờ lấy đóng hai đầu; tuần tính giờ lái Thứ Hai–Chủ Nhật; "hết hạn trong 30 ngày" gồm ngày thứ 30; cước tối thiểu 50.000 cho kịch bản mục 11; mã 422 khi hủy/trả hàng đơn `THAT_BAI` sai điều kiện lượt quét).
+- 30/10 – Tài → Kiệt: đồng ý cả 5 đề xuất ở `ca-test-br.md` mục 5, đã ghi vào `nghiep-vu.md` (BR-05 khung đóng hai đầu, BR-19 tuần Thứ Hai–Chủ Nhật, BR-21 gồm ngày thứ 30, cước tối thiểu 50.000 ở mục 11, ghi chú 422 cho BR-34/36). Ca test BR đã chốt.
 
 ## Câu hỏi chờ thầy
 - ~~A1–A6 (nghiep-vu.md mục 1): chưa gửi~~ Nhóm tự chốt 16/10 (nghiep-vu.md mục 1).
@@ -46,6 +47,7 @@
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 30/10: Chốt 5 câu trong ca test BR của Kiệt, ghi vào nghiep-vu.md. Bắt đầu UC-11.
 - 25/10: Review và merge UC-04 của Kiệt vào `main` (gộp validator GPLX, bỏ ảnh trùng). Đóng UC-05, UC-08 theo ảnh Kiệt thử. Giao diện hiện mã BR kèm lỗi nghiệp vụ (NFR-USA-02); Vite nghe 127.0.0.1.
 - 24/10: UC-05 Tuyến và nút xong backend + giao diện (199 test); giao diện tạo đơn UC-08. Giao Kiệt thử giao diện UC-05, UC-08.
 - 24/10: Review UC-06, 07, 08: sửa chuẩn hóa Unicode NFC cho chữ tiếng Việt, giới hạn vĩ độ/kinh độ (167 test).
@@ -85,7 +87,7 @@
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|
 | Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Xong | – | PR #1 merge 16/10 (Tài cập nhật hộ) |
-| Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Cài môi trường xong 19/10 (theo báo cáo tuần 2; Tài sửa hộ 25/10). Ca test BR xong 29/10 (`docs/ca-test-br.md`: 70 BR, 180 ca), chờ Tài đọc lại và trả lời 5 câu ở mục 5. Còn UML |
+| Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Cài môi trường xong 19/10 (theo báo cáo tuần 2; Tài sửa hộ 25/10). Ca test BR xong 29/10, Tài chốt 30/10 (Tài cập nhật hộ). Còn UML |
 | UC-04 Tài xế (chép mẫu) | 2 | Xong | 10/10 | Tài review, merge vào `main` 25/10 (Tài cập nhật hộ) |
 | UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Chưa bắt đầu | | UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
 | Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Chưa bắt đầu | | |

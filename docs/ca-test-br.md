@@ -1,6 +1,6 @@
 # Danh sách ca test theo quy tắc nghiệp vụ (BR)
 
-> Người làm: **Kiệt** · Nguồn: `docs/nghiep-vu.md` bản 0.5 (mục 4 quy tắc, mục 2.1 công thức, mục 11 kịch bản) · Trạng thái: **Kiệt điền đủ 29/10, chờ Tài đọc lại** (câu hỏi cần chốt ở mục 5).
+> Người làm: **Kiệt** · Nguồn: `docs/nghiep-vu.md` bản 0.5 (mục 4 quy tắc, mục 2.1 công thức, mục 11 kịch bản) · Trạng thái: **đã chốt 30/10** (Kiệt điền đủ 29/10; Tài đồng ý cả 5 đề xuất ở mục 5, đã ghi vào `nghiep-vu.md`).
 > Dùng cho: viết test khi làm từng story (`story-flow`), và bảng truy vết trong báo cáo kiểm thử (`story report`).
 
 ## 1. Yêu cầu
@@ -92,7 +92,7 @@ Nhắc lại lịch trình gốc của C01 có Đ1, Đ2, Đ4 (BR-63): lấy Đ1 
 | TC-BR05-01 | BR-05 | ✔ | C01 có Đ1, Đ4 | Ghép Đ2 (khung 06:30–09:00) | ETA lấy 07:40 trong khung → ghép được | U | UC-13 |
 | TC-BR05-02 | BR-05 | ✖ trễ | C01 có Đ1, Đ4 | Ghép Đ2a (khung 06:30–07:30) | 422 `BR-05`: ETA lấy 07:40 > 07:30; giao 11:50 vẫn kịp hạn | U | UC-13 |
 | TC-BR05-03 | BR-05 | ✖ sớm | C01 có Đ1, Đ4 | Ghép Đ2b (khung 08:00–09:00) | 422 `BR-05`: ETA lấy 07:40 < 08:00 (xe không đứng chờ – giới hạn đã biết ở ghi chú BR-05) | U | UC-13 |
-| TC-BR05-04 | BR-05 | ✔ biên | C01 có Đ1, Đ4 | Ghép Đ2c (khung 07:40–09:00) | Ghép được: ETA lấy đúng 07:40 = đầu khung (coi khung là đóng hai đầu – **cần chốt**, mục 5) | U | UC-13 |
+| TC-BR05-04 | BR-05 | ✔ biên | C01 có Đ1, Đ4 | Ghép Đ2c (khung 07:40–09:00) | Ghép được: ETA lấy đúng 07:40 = đầu khung (khung đóng hai đầu, chốt 30/10) | U | UC-13 |
 | TC-BR05-05 | BR-05 | ✔ | C01 rỗng | Ghép Đ1 (không có khung lấy) | Ghép được: không khung coi là cả ngày | U | UC-13 |
 | TC-BR06-01 | BR-06 | ✔ | C01 có Đ2, Đ4 | Ghép Đ1 | Giao Đ1 12:10 ≤ hạn 14:00 → ghép được | U | UC-13 |
 | TC-BR06-02 | BR-06 | ✖ | C01 có Đ1, Đ4 | Ghép Đ3 (giao Vĩnh Long, hạn 10:00) | 422 `BR-06`: ETA giao = 06:00 + 210′ + 4 × 20′ = 10:50 > 10:00; tải 4.100 kg, 13 m³ vẫn đạt | U | UC-13 |
@@ -127,14 +127,14 @@ Các ca "lập chuyến" dùng C01 rỗng (chưa ghép đơn): khoảng chiếm 
 | TC-BR17-02 | BR-17 | ✔ biên | C00 lúc 20/10 11:30 | Lập C01 với X1, An | Lập được | U | UC-11 |
 | TC-BR18-01 | BR-18 | ✖ | An đã có chuyến 20/10 14:00 dài **6 giờ** lái (xe X6, không chồng giờ) | Lập C01 với X1, An | 422 `BR-18`: 4,5 + 6 = 10,5 > 10 giờ trong ngày 20/10 | U | UC-11 |
 | TC-BR18-02 | BR-18 | ✔ biên | Như trên nhưng chuyến kia dài **5,5 giờ** | Lập C01 | Lập được: đúng 10 giờ (≤) | U | UC-11 |
-| TC-BR19-01 | BR-19 | ✖ | An đã có **44 giờ** lái dự kiến trong tuần 19–25/10 (các ngày khác 20/10) | Lập C01 | 422 `BR-19`: 44 + 4,5 = 48,5 > 48 (tuần tính Thứ Hai–Chủ Nhật – **cần chốt**) | U | UC-11 |
+| TC-BR19-01 | BR-19 | ✖ | An đã có **44 giờ** lái dự kiến trong tuần 19–25/10 (các ngày khác 20/10) | Lập C01 | 422 `BR-19`: 44 + 4,5 = 48,5 > 48 (tuần tính Thứ Hai–Chủ Nhật, chốt 30/10) | U | UC-11 |
 | TC-BR19-02 | BR-19 | ✔ biên | An đã có 43,5 giờ trong tuần | Lập C01 | Lập được: đúng 48 giờ | U | UC-11 |
 | TC-BR20-01 | BR-20 | ⚠ | T02: HCM 0′ → Cần Thơ 300′, không có điểm nghỉ | Lưu tuyến | 201 kèm cảnh báo `BR-20` (chạy liền 300′ > 240′), vẫn lưu | U | UC-05 |
 | TC-BR20-02 | BR-20 | không ⚠ | T01 (đoạn 0→120′ và 120→270′) | Lưu tuyến | Không cảnh báo | U | UC-05 |
 | TC-BR20-03 | BR-20 | không ⚠ biên | HCM 0′ → Tiền Giang 240′ (nghỉ) → Cần Thơ 300′ | Lưu tuyến | Không cảnh báo: đoạn đúng 240′ (chỉ cảnh báo khi > 4 giờ) | U | UC-05 |
 | TC-BR21-01 | BR-21 | ⚠ | Ngày kiểm 25/10/2026, X8 đăng kiểm 20/11/2026 (còn 26 ngày) | Mở bảng cảnh báo | X8 có trong danh sách "giấy tờ sắp hết hạn" | A | UC-27 |
 | TC-BR21-02 | BR-21 | không ⚠ | Ngày kiểm 25/10/2026, X1 đăng kiểm 30/11/2026 (còn 36 ngày) | Mở bảng cảnh báo | X1 không có trong danh sách | A | UC-27 |
-| TC-BR21-03 | BR-21 | ⚠ biên | X8 sửa đăng kiểm thành 24/11/2026 (còn đúng 30 ngày) | Mở bảng cảnh báo | Có cảnh báo (coi "trong 30 ngày" gồm ngày thứ 30 – **cần chốt**) | U | UC-27 |
+| TC-BR21-03 | BR-21 | ⚠ biên | X8 sửa đăng kiểm thành 24/11/2026 (còn đúng 30 ngày) | Mở bảng cảnh báo | Có cảnh báo ("trong 30 ngày" gồm ngày thứ 30, chốt 30/10) | U | UC-27 |
 
 ### Nhóm C – Vòng đời chuyến (BR-22…30)
 
@@ -176,7 +176,7 @@ Các ca "lập chuyến" dùng C01 rỗng (chưa ghép đơn): khoảng chiếm 
 | TC-BR34-01 | BR-34 | ✔ | Đ8 `CHO_GHEP` | Hủy Đ8, lý do "khách hủy" | `HUY` | A | UC-10 |
 | TC-BR34-02 | BR-34 | ✔ | Đ4 `THAT_BAI`, **chưa có** lượt quét lấy (không lấy được) | Hủy Đ4 | `HUY` | A | UC-22 |
 | TC-BR34-03 | BR-34 | ✖ | Đ1 `DA_LAY` | Hủy Đ1 | 409, không hủy | A | UC-10 |
-| TC-BR34-04 | BR-34 | ✖ | Đ1 `THAT_BAI`, **đã có** lượt quét lấy | Hủy Đ1 | 422 `BR-34`, không hủy (chỉ được ghép lại hoặc trả hàng; mã HTTP xem mục 5 câu 5) | A | UC-22 |
+| TC-BR34-04 | BR-34 | ✖ | Đ1 `THAT_BAI`, **đã có** lượt quét lấy | Hủy Đ1 | 422 `BR-34`, không hủy (chỉ được ghép lại hoặc trả hàng; 422 theo chốt 30/10) | A | UC-22 |
 | TC-BR35-01 | BR-35 | ✖ | Đ1 `DA_LAY` | Quét giao gửi thêm trường số kiện giao (20/40) | 400 (không có trường giao một phần); Đ1 vẫn `DA_LAY` | A | UC-20 |
 | TC-BR35-02 | BR-35 | review | — | Xem thiết kế: kết quả giao chỉ có `DA_GIAO` hoặc `THAT_BAI`, cho toàn bộ đơn | Không có trạng thái "giao một phần" | — | UC-20 |
 | TC-BR36-01 | BR-36 | = | C01 vừa `HOAN_THANH`, Đ1 `THAT_BAI` | Kết thúc chuyến | Bản ghi ghép của Đ1 chuyển `hieu_luc = false` | A | UC-18 |
@@ -297,11 +297,11 @@ Các ca "lập chuyến" dùng C01 rỗng (chưa ghép đơn): khoảng chiếm 
 | TC-BR73-04 | BR-73 | ⚠ đơn chờ | Đ8 `CHO_GHEP`, hạn 20/10 18:00; bây giờ 19/10 20:00 (còn 22 giờ) | Mở bảng cảnh báo | Đ8 có trong "đơn chờ sắp quá hạn" | A | UC-27 |
 | TC-BR73-05 | BR-73 | không ⚠ biên | Như trên, bây giờ 19/10 18:00 (còn **đúng 24 giờ**) | Mở bảng cảnh báo | Không có Đ8 ("còn **dưới** 24 giờ" mới cảnh báo) | U | UC-27 |
 
-## 5. Độ phủ và câu hỏi cần chốt (Kiệt, 29/10)
+## 5. Độ phủ và câu hỏi đã chốt (Kiệt 29/10, Tài chốt 30/10)
 
 **Độ phủ:** mọi BR còn hiệu lực trong `nghiep-vu.md` 0.5 đã có ca theo mục 1 – **70 BR, 180 ca** (BR-27, 44, 61 đã bỏ, không viết). Các BR Tài rà ngày 16/10 là "chưa có ca" hoặc "thiếu ca ✖" đều đã có ca ở mục 4. BR-08, 10 và một ca của BR-35 là ca **review thiết kế**, không cần test chạy.
 
-**Cần Tài chốt** (ghi vào `nghiep-vu.md` nếu đồng ý):
+**Đã chốt 30/10** – Tài đồng ý cả 5 đề xuất, đã ghi vào `nghiep-vu.md` (BR-05, BR-19, BR-21, mục 11 bảng giá, ghi chú BR-34/36):
 
 1. **BR-05 khung giờ lấy đóng hay mở ở hai đầu?** Đề xuất: đóng – ETA đúng bằng giờ đầu hoặc giờ cuối khung vẫn đạt (TC-BR05-04).
 2. **BR-19 tuần tính thế nào?** Đề xuất: Thứ Hai 00:00 → Chủ Nhật 24:00 theo giờ Việt Nam (TC-BR19-01).

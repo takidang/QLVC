@@ -1,6 +1,6 @@
 # Nghiệp vụ – Hệ thống quản lý vận tải (chuyến là trung tâm)
 
-> Phiên bản: 0.5 (Kiệt đề xuất, Tài đã review, merge 16/10/2026) · Cập nhật: 16/10/2026 · Nhóm 8
+> Phiên bản: 0.5 (Kiệt đề xuất, Tài đã review, merge 16/10/2026) · Cập nhật: 30/10/2026 (chốt 5 câu từ ca test BR) · Nhóm 8
 > Nguyên tắc: **Chuyến xe là trung tâm, đơn hàng là thứ được ghép vào chuyến.**
 > Mọi use case, user story và test case trỏ về mã `BR-xx`, `ST-xx`, `CFG-xx` trong file này.
 > Nguồn sự thật về nghiệp vụ cho code và tài liệu. Repo là bản gốc: sửa ở đây trước (chỉ phiên Claude Code sửa và commit), rồi tải lại file này lên mục tài liệu (knowledge) của Project trên claude.ai để chat không dùng bản cũ.
@@ -139,7 +139,7 @@ Thời điểm kiểm: G = khi ghép/gỡ đơn, C = khi chốt chuyến, X = kh
 | BR-02 | Tổng **m³** của các đơn hiệu lực trong chuyến ≤ thể tích thùng xe | Chặn | G, C, X |
 | BR-03 | Điểm lấy (hoặc nơi giữ hàng, nếu có) và điểm giao của đơn đều thuộc một nút của tuyến chuyến | Chặn | G |
 | BR-04 | Đúng chiều tuyến: thứ tự nút lấy (hoặc nút giữ hàng) ≤ thứ tự nút giao | Chặn | G |
-| BR-05 | Nếu đơn có khung giờ lấy: ETA điểm LẤY nằm trong khung. Khung giờ lấy **không bắt buộc**, không nhập thì coi là cả ngày | Chặn | G, C (theo BR-67) |
+| BR-05 | Nếu đơn có khung giờ lấy: ETA điểm LẤY nằm trong khung, **tính cả hai đầu** (ETA đúng bằng giờ đầu hoặc giờ cuối khung vẫn đạt; chốt 30/10). Khung giờ lấy **không bắt buộc**, không nhập thì coi là cả ngày | Chặn | G, C (theo BR-67) |
 | BR-06 | ETA điểm GIAO ≤ hạn giao của đơn | Chặn | G, C (theo BR-67) |
 | BR-07 | Một đơn có tối đa **một** bản ghi ghép `hieu_luc = true` | Chặn | G (ràng buộc unique ở CSDL) |
 | BR-08 | Không tách đơn: toàn bộ kg, m³, số kiện của đơn đi cùng một chuyến | Chặn | Theo mô hình (đơn không có số lượng con) |
@@ -161,9 +161,9 @@ Thời điểm kiểm: G = khi ghép/gỡ đơn, C = khi chốt chuyến, X = kh
 | BR-16 | Xe không có hai chuyến (khác `HUY`) có khoảng chiếm (BR-64) giao nhau | Chặn | X, C, G (theo BR-67) |
 | BR-17 | Tài xế không có hai chuyến (khác `HUY`) có khoảng chiếm (BR-64) giao nhau | Chặn | X, C, G (theo BR-67) |
 | BR-18 | Tổng giờ lái dự kiến (BR-65) của tài xế trong một ngày (00:00–24:00) ≤ 10 giờ | Chặn | X, C |
-| BR-19 | Tổng giờ lái dự kiến của tài xế trong một tuần ≤ 48 giờ | Chặn | X, C |
+| BR-19 | Tổng giờ lái dự kiến của tài xế trong một tuần (Thứ Hai 00:00 → hết Chủ Nhật, giờ Việt Nam; chốt 30/10) ≤ 48 giờ | Chặn | X, C |
 | BR-20 | Giữa hai nút liên tiếp có `la_diem_nghi` cách nhau > 4 giờ chạy → cảnh báo tuyến thiếu điểm nghỉ | Cảnh báo | Khi lưu tuyến |
-| BR-21 | Xe/tài xế có giấy tờ hết hạn trong `CFG-02` ngày → hiện trên bảng cảnh báo | Cảnh báo | Hằng ngày, trang chủ |
+| BR-21 | Xe/tài xế có giấy tờ hết hạn trong `CFG-02` ngày (tính cả ngày thứ `CFG-02`; chốt 30/10) → hiện trên bảng cảnh báo | Cảnh báo | Hằng ngày, trang chủ |
 
 > Ghi chú BR-18/19/20: hệ thống chỉ kiểm **giờ lái dự kiến** theo lịch. Giờ lái thực tế cần thiết bị giám sát hành trình – ngoài phạm vi.
 > Ghi chú BR-14: không xét rơ moóc (ngoài phạm vi).
@@ -193,6 +193,8 @@ Thời điểm kiểm: G = khi ghép/gỡ đơn, C = khi chốt chuyến, X = kh
 | BR-35 | Không giao một phần: một đơn hoặc giao thành công toàn bộ, hoặc thất bại | Chặn |
 | BR-36 | Đơn `THAT_BAI`: khi chuyến hoàn thành, bản ghi ghép chuyển `hieu_luc = false`; Điều phối chọn **ghép lại** (→ `CHO_GHEP`, theo BR-69 nếu đã lấy), **trả hàng** (→ `TRA_HANG`, chỉ khi đã có lượt quét lấy; xử lý ngoài hệ thống, không doanh thu) hoặc **hủy** (→ `HUY`, chỉ khi chưa có lượt quét lấy) | Chặn |
 | BR-37 | `CFG-04` chỉ đếm thất bại **khi giao** vì lý do phía khách; lý do "sự cố xe" và thất bại khi lấy không tính. Đạt ngưỡng → không được ghép lại, chỉ còn trả hàng | Chặn |
+
+> Ghi chú BR-34, 36 (chốt 30/10): đơn đúng trạng thái `THAT_BAI` nhưng sai điều kiện lượt quét lấy (hủy khi đã lấy, trả hàng khi chưa lấy) → **422** kèm mã BR; sai trạng thái (ví dụ hủy đơn `DA_LAY`) → 409.
 
 ### Nhóm E – Quét mã (tài xế)
 
@@ -439,7 +441,7 @@ Tuyến T01 TP.HCM → Cần Thơ. Định mức: dầu 550.000 + cầu đườn
 | X2 51C-222.22 | 1.500 kg | 8 m³ | 3.400 kg (cần B) | 19/10 | | |
 
 Tài xế: An (hạng C, đã có chuyến C00 lúc 13:45 ngày 20/10, 4 giờ lái) · Bình (hạng B).
-Bảng giá (đ/kg): HCM→Cần Thơ 1.500 · Long An→Cần Thơ 1.200 · HCM→Vĩnh Long 1.300 · HCM→Tiền Giang 1.000 · Vĩnh Long→Long An 1.200.
+Bảng giá (đ/kg): HCM→Cần Thơ 1.500 · Long An→Cần Thơ 1.200 · HCM→Vĩnh Long 1.300 · HCM→Tiền Giang 1.000 · Vĩnh Long→Long An 1.200. Cước tối thiểu mọi cặp: 50.000 đ.
 
 **1. Tạo đơn (19/10).**
 
