@@ -49,4 +49,4 @@ gh pr create --base main --head hotfix
 - File dùng chung (`backend/app/models/`, migration, `domain/trang_thai.py`): vẫn ghi "Đang chặn" trong `TIEN-DO.md` và commit **lên `dev` qua PR nhỏ** trước khi sửa.
 - `TIEN-DO.md`: mỗi người sửa phần mình trong nhánh của mình; mục chung chỉ thêm dòng – git gộp được, ít xung đột.
 - Không `push --force` lên `main`, `dev`, `test`. Không sửa lịch sử đã push.
-- Nhánh cũ `kiet/nghiep-vu`, `kiet/uc-04` đã gộp hết, có thể xóa.
+- Nhánh cũ `kiet/nghiep-vu` giữ lại (nhóm chốt 30/10); `kiet/uc-04` đã gộp hết, có thể xóa.
