@@ -67,26 +67,19 @@
 
 ## Kiệt
 
-> **Cập nhật 25/10 (Kiệt):** bước 2, 3 xong – UC-04 xong, chờ Tài review PR `kiet/uc-04`; đã thử UC-05-AC9, UC-08-AC11 (đạt, ảnh trong `docs/test-evidence/`). Còn bước 4.
+> **Việc của Kiệt ngay bây giờ** (Tài ghi hộ 30/10, thay khối 24/10 đã xong: UC-04, thử UC-05/08, ca test BR). Claude của Kiệt: đọc khối này đầu phiên và báo Kiệt bước tiếp theo; Kiệt xong bước nào thì tự đánh dấu.
 >
-> **Việc của Kiệt ngay bây giờ** (Tài ghi hộ 24/10 theo yêu cầu của Tài; Kiệt đọc xong thì tự sửa, xóa khối này khi xong). Claude của Kiệt: đọc khối này đầu phiên và báo Kiệt bước tiếp theo.
->
-> 1. **Chuẩn bị:** `git switch main` → `git pull` → mở Docker Desktop → `docker compose up -d db` → trong `backend`: `.venv\Scripts\pip install -r requirements-dev.txt` rồi `.venv\Scriptslembic upgrade head` (có migration mới `177fdcb334df`). Chưa cài môi trường thì theo `docs/cai-moi-truong.md`. Xong: `pytest` phải ra **167 passed**.
-> 2. **UC-04 Tài xế** (ưu tiên số 1 – UC-11 Lập chuyến của Tài đang chờ): `story new UC-04`, làm theo `docs/mau-use-case.md`, chép khuôn `backend/app/modules/danh_muc/xe/` thành `tai_xe/`. Những điểm UC-04 phải có (để viết AC):
->    - Bảng `TAI_XE` đã có trong `backend/app/models/danh_muc.py`: `nguoi_dung_id` (unique), `so_gplx` (unique), `hang_gplx` (`B`/`C1`/`C`), `han_gplx`, `sdt`, `trang_thai`.
->    - `POST /api/tai-xe` **tạo kèm tài khoản** người dùng vai trò `TAI_XE` (`api.md` mục 2.2): nhận tên đăng nhập, họ tên, mật khẩu ban đầu (≥ 8 ký tự, băm bằng `bam_mat_khau` trong `app/auth/bao_mat.py`), cùng thông tin bằng lái – tạo cả hai trong **một giao dịch**.
->    - Lưu đúng dữ liệu cho BR-14 (hạng bằng) và BR-15 (hạn bằng); việc **chặn** tài xế sai hạng/hết hạn là của UC-11, 12 (Tài làm) – nhưng nên viết sẵn hàm domain `kiem_br14_hang_gplx(hang, ktt_toan_bo_kg)` trong `backend/app/domain/xe_tai_xe.py` (cạnh `kiem_br14_khoi_luong_toan_bo`) kèm test: ≤ 3.500 kg cần B trở lên, > 3.500–7.500 kg cần C1 trở lên, > 7.500 kg cần C; thứ bậc C ⊇ C1 ⊇ B.
->    - BR-60: không xóa, chỉ `NGUNG`; ngừng tài xế thì khóa luôn tài khoản đăng nhập (`nguoi_dung.trang_thai = NGUNG`, UC-01-AC7 làm tài khoản mất quyền ngay).
->    - SĐT dùng kiểu `SoDienThoai`, chữ dùng `ChuBatBuoc` trong `backend/app/kieu.py`. Số GPLX trùng → 409.
->    - Phân quyền như UC-03: Điều phối, Quản lý thêm/sửa; Kế toán xem (để cấp tạm ứng theo tài xế); Tài xế 403.
->    - Giao diện: trang "Tài xế" cho Điều phối, chép từ `frontend/src/pages/dieu-phoi/XeDanhSach.tsx`, thêm một dòng vào `TRANG_CON` trong `frontend/src/App.tsx`.
-> 3. **Thử giao diện UC-05 và UC-08 thay Tài** (Tài giao 24/10; làm được ngay sau bước 1, không cần đợi UC-04). Backend đã xong, 199 test đạt; chỉ còn AC giao diện `UC-05-AC9`, `UC-08-AC11`. Dùng **Edge/Chrome**, không dùng trình duyệt trong VS Code.
->    - **Chuẩn bị (DB máy Kiệt đang trống):** chạy backend `cd backend; .venv\Scripts\uvicorn app.main:app --host 127.0.0.1 --port 8000` (không `--reload`) và frontend `cd frontend; npm run dev`; tạo tài khoản Quản lý `cd backend; .venv\Scripts\python -m app.tao_quan_ly`; đăng nhập `http://127.0.0.1:5173`. Vào **Bảng giá** thêm `TP.HCM → Cần Thơ`, 1.500 đ/kg, tối thiểu 50.000, hiệu lực 01/10/2026; vào **Khách hàng** thêm `Cty A`, SĐT `0909123456`.
->    - **UC-05 (menu Nút, Tuyến):** (a) thêm 5 nút loại Tỉnh/thành, tên = tỉnh: `TP.HCM`, `Long An`, `Tiền Giang`, `Vĩnh Long`, `Cần Thơ`; (b) thêm tuyến `T01` (dầu 550.000, cầu đường 200.000, bốc xếp 250.000, lương 600.000) với 5 nút: TP.HCM 0 phút/0 km, Long An 60/50, Tiền Giang 120/75 **tick điểm nghỉ**, Vĩnh Long 210/135, Cần Thơ 270/170 → bảng hiện lộ trình có "Tiền Giang (nghỉ)", 4 giờ 30 phút; (c) tuyến `T02` chỉ TP.HCM 0/0 và Cần Thơ 300/170, không tick nghỉ → khung vàng "thiếu điểm nghỉ (BR-20)" nhưng vẫn lưu; (d) tuyến có nút cuối 601 phút → bị chặn BR-66.
->    - **UC-08 (menu Đơn hàng):** (e) Tạo đơn: Cty A, 1.800 kg, 6 m³, nút lấy TP.HCM, nút giao Cần Thơ → khung vàng tự hiện **cước 2.997.000 đ**; nhập địa chỉ, SĐT, người nhận, hạn giao ngày mai → Lưu → hiện "Đã tạo đơn DH-XXXXXX"; (f) đơn có địa chỉ giao trùng địa chỉ lấy → báo lỗi BR-31; (g) chọn chiều ngược Cần Thơ → TP.HCM → báo "Chưa có bảng giá", nút Lưu bị khóa.
->    - **Ghi kết quả:** chụp ảnh (b), (c), (d), (e), (f) lưu vào `docs/test-evidence/UC-05/` và `docs/test-evidence/UC-08/`; điền dòng AC9/AC11 trong `docs/stories/UC-05-quan-ly-tuyen.md` và `docs/stories/UC-08-tao-don.md` (Đạt/Không đạt, ngày, "Kiệt thử"); bước nào sai thì ghi vào "Đang chặn" cho Tài, không tự sửa code của Tài. Commit, push.
-> 4. **Sau đó:** danh sách ca test BR (`docs/ca-test-br.md`) và UML (`docs/uml/README.md`), rồi UC-02 Người dùng.
-> 5. Không làm **UC-05** (Tài đã nhận). Đụng `backend/app/models/` hoặc thêm migration thì ghi vào "Đang chặn" và commit trước.
+> 1. **Cập nhật:** `git switch main` → `git pull` → mở Docker Desktop → `docker compose up -d db` → `cd backend; .venv\Scripts\python -m pytest` phải ra **354 passed** (không có migration mới).
+> 2. **Thử giao diện UC-11 Lập chuyến** (`UC-11-AC12`): 5 bước (a)…(e) ở dòng "30/10 – Tài → Kiệt: thử giao diện UC-11" trong mục chung phía trên. Ảnh vào `docs/test-evidence/UC-11/`, điền dòng AC12 trong `docs/stories/UC-11-lap-chuyen.md`.
+> 3. **Thử giao diện UC-13 Ghép đơn** (`UC-13-AC13`): dữ liệu cần tạo và 5 bước (a)…(e) ở dòng "30/10 – Tài → Kiệt: thử giao diện UC-13". Ảnh vào `docs/test-evidence/UC-13/`, điền dòng AC13 trong `docs/stories/UC-13-ghep-don.md`. Sai chỗ nào ghi vào "Đang chặn", không tự sửa code của Tài.
+> 4. **UML** (`docs/uml/README.md`, còn từ tuần 1).
+> 5. **UC-02 Người dùng** (`story new UC-02`, khuôn `docs/mau-use-case.md`): Quản lý xem danh sách, thêm tài khoản (Quản lý / Điều phối / Kế toán; tài xế tạo ở UC-04), đổi vai trò, khóa/mở (khóa có hiệu lực ngay như UC-01-AC7), đặt lại mật khẩu; đổi tên đăng nhập, mật khẩu của tài xế chuyển từ UC-04 sang đây (quyết định UC-04 số 4). Không cho Quản lý tự khóa hoặc tự hạ quyền chính mình (đề xuất – ghi vào story để Tài duyệt).
+> 6. **Quét tối thiểu UC-17…20** (tuần 3–4, phía tài xế, trang điện thoại 360 px): UC-17 xem chuyến được giao (BR-58: chỉ chuyến của mình), UC-18 bắt đầu/kết thúc chuyến kèm km và ảnh đồng hồ (BR-26, 28, 70), UC-19 quét mã lấy hàng / báo không lấy được, UC-20 quét mã giao / báo giao không được (BR-35, 38…43, 45, 72). Ca test sẵn ở `docs/ca-test-br.md` nhóm C, E, H. Lưu ý:
+>    - Tài xế chỉ thấy chuyến từ `DA_CHOT`; chốt chuyến là UC-15 Tài đang làm. Trong test đặt `trang_thai = "DA_CHOT"` trực tiếp vào CSDL như `test_uc13_ac9_*`, không cần đợi.
+>    - Lịch trình, ETA dùng lại `app/domain/lich_trinh.py` và `chi_tiet` trong `app/modules/chuyen/service.py` (UC-13), không viết lại.
+>    - Upload ảnh theo `docs/security-rules.md`. Thư viện quét QR, thư viện in QR (phiếu đơn): **hỏi Tài trước khi cài package** (CLAUDE.md).
+> 7. **Sau đó theo kế hoạch:** UC-21 chi phí, UC-23 tạm ứng, UC-33 báo sự cố (tuần 5–6); UC-24 quyết toán, UC-25 công nợ (tuần 7); UC-26, 27, 34 và E2E (tuần 8).
+> 8. Không làm UC-11, 12, 13, 15 (Tài). Đụng `backend/app/models/` hoặc thêm migration thì ghi vào "Đang chặn" và commit trước.
 
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|
