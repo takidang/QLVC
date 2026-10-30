@@ -251,14 +251,17 @@ def test_uc11_ac10_danh_sach_va_chi_tiet(client, dang_nhap_voi, kb):
     ],
 )
 def test_uc11_ac11_phan_quyen(client, dang_nhap_voi, db, kb, vai_tro, lap_ma, kha_dung_ma, xem_ma):
+    dang_nhap_voi("DIEU_PHOI")
+    co_san = lap(client, kb).json()["id"]  # chuyến có sẵn để thử xem chi tiết
     dang_nhap_voi(vai_tro)
-    assert lap(client, kb).status_code == lap_ma
+    assert lap(client, kb, khoi_hanh_du_kien="2030-10-23T06:00:00+07:00").status_code == lap_ma
     p = {"tuyen_id": kb["t01"], "khoi_hanh": KH}
     assert client.get("/api/chuyen/xe-kha-dung", params=p).status_code == kha_dung_ma
     assert client.get("/api/chuyen/tai-xe-kha-dung", params=p).status_code == kha_dung_ma
     assert client.get("/api/chuyen").status_code == xem_ma
+    assert client.get(f"/api/chuyen/{co_san}").status_code == xem_ma
     if lap_ma == 403:
-        assert dem(db) == 0
+        assert dem(db) == 1
 
 
 def test_uc11_ac11_chua_dang_nhap(client, kb):

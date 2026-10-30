@@ -1,4 +1,4 @@
-import { goi, guiJson } from './goi'
+import { goi, guiJson, query } from './goi'
 
 // shortcut: kiểu viết tay, thay bằng kiểu sinh từ OpenAPI (kien-truc.md KT-06) khi nhóm chọn công cụ sinh
 export type TrangThaiXe = 'HOAT_DONG' | 'NGUNG'
@@ -24,9 +24,7 @@ export function danhSachXe(loc: {
   trang?: number
   so_dong?: number
 }) {
-  const q = new URLSearchParams()
-  for (const [k, v] of Object.entries(loc)) if (v !== undefined && v !== '') q.set(k, String(v))
-  return goi<DanhSach<Xe>>(`/api/xe?${q}`)
+  return goi<DanhSach<Xe>>(`/api/xe?${query(loc)}`)
 }
 
 export const themXe = (vao: XeVao) => guiJson<Xe>('/api/xe', 'POST', vao)

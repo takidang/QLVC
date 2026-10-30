@@ -1,4 +1,4 @@
-import { goi, guiJson } from './goi'
+import { goi, guiJson, query } from './goi'
 import type { DanhSach } from './xe'
 
 // shortcut: kiểu viết tay, thay bằng kiểu sinh từ OpenAPI (kien-truc.md KT-06) khi nhóm chọn công cụ sinh
@@ -37,12 +37,6 @@ export type TaiXeKhaDung = {
   hang_gplx: string
   kha_dung: boolean
   ly_do: LyDo[]
-}
-
-const query = (loc: Record<string, string | number | undefined>) => {
-  const q = new URLSearchParams()
-  for (const [k, v] of Object.entries(loc)) if (v !== undefined && v !== '') q.set(k, String(v))
-  return q
 }
 
 export const danhSachChuyen = (loc: {

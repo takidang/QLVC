@@ -44,6 +44,7 @@
 - Test chạy đồng thời (AC8) đã kiểm ngược: tạm bỏ khóa dòng thì test hỏng 3/3 lần; có khóa thì đạt.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/unit/test_uc11_chuyen.py tests/api/test_uc11_lap_chuyen.py`
 - Cách tính: kết thúc dự kiến lúc lập theo công thức chạy rỗng (BR-64) vì chưa có đơn; UC-13 ghép đơn sẽ tính lại theo lịch trình BR-63 và kiểm cả chuyến (BR-67). Lấy lịch các chuyến khác bằng một truy vấn cho mọi xe (hoặc mọi tài xế), trong các tuần mà chuyến mới chạm tới.
+- Review `ponytail-review` 30/10: Ship, sửa 2 mục – test phân quyền thêm xem chi tiết chuyến (Kế toán 200, Tài xế 403); gom hàm dựng tham số URL lặp ở 7 file `frontend/src/api/*.ts` thành `query` trong `api/goi.ts`.
 - Lệch đặc tả: thêm `xe_id` cho `tai-xe-kha-dung`, mã lỗi `TUYEN_NGUNG`, `KHOI_HANH_DA_QUA`, `TAI_XE_NGUNG` – đã sửa `api.md`.
 
 ## Truy vết và kết quả

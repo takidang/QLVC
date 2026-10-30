@@ -1,4 +1,4 @@
-import { goi, guiJson } from './goi'
+import { goi, guiJson, query } from './goi'
 import type { DanhSach } from './xe'
 
 // shortcut: kiểu viết tay, thay bằng kiểu sinh từ OpenAPI (kien-truc.md KT-06) khi nhóm chọn công cụ sinh
@@ -36,12 +36,6 @@ export type TuyenVao = Pick<
   Tuyen,
   'ma' | 'ten' | 'dm_dau' | 'dm_cau_duong' | 'dm_boc_xep' | 'dm_luong_tai_xe'
 > & { nut: NutTuyenVao[] }
-
-const query = (loc: Record<string, string | number | undefined>) => {
-  const q = new URLSearchParams()
-  for (const [k, v] of Object.entries(loc)) if (v !== undefined && v !== '') q.set(k, String(v))
-  return q
-}
 
 export const danhSachNut = (loc: { tim?: string; trang?: number; so_dong?: number }) =>
   goi<DanhSach<Nut>>(`/api/nut?${query(loc)}`)

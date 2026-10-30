@@ -34,6 +34,13 @@ export async function goi<T>(url: string, init?: RequestInit): Promise<T> {
 export const kemMaBr = (thongDiep: string, ma?: string) =>
   ma && /^BR-\d+$/.test(ma) ? `${thongDiep} (${ma})` : thongDiep
 
+// Bộ lọc → chuỗi tham số URL, bỏ ô trống
+export const query = (loc: Record<string, string | number | undefined>) => {
+  const q = new URLSearchParams()
+  for (const [k, v] of Object.entries(loc)) if (v !== undefined && v !== '') q.set(k, String(v))
+  return q
+}
+
 export const guiJson = <T>(url: string, method: string, du_lieu: unknown) =>
   goi<T>(url, {
     method,
