@@ -14,7 +14,12 @@ Danh sách, lúc nào dùng cái nào: `docs/SKILLS.md`.
 
 ## Làm việc hai người
 - Người đang dùng máy ghi trong `CLAUDE.local.md`. Không có file đó thì hỏi trước khi sửa tiến độ.
-- Đầu phiên: `git pull`, đọc `docs/TIEN-DO.md` (mục "Đang chặn" và phần của người dùng máy này), báo ngắn việc tiếp theo.
+- Đầu phiên: `git switch dev` → `git pull`, đọc `docs/TIEN-DO.md` (mục "Đang chặn" và phần của người dùng máy này), báo ngắn việc tiếp theo.
 - Chỉ sửa phần của người dùng máy này trong `TIEN-DO.md`; mục chung chỉ thêm dòng.
 - Sau `story done` hoặc trước khi kết thúc phiên: cập nhật dòng việc (trạng thái, AC đạt/tổng, còn thiếu), thêm 1 dòng nhật ký, commit cùng code.
 - Trước khi sửa file dùng chung (`models/`, migration, `domain/trang_thai.py`): ghi vào "Đang chặn" và commit trước.
+
+## Nhánh git (chi tiết: `docs/nhanh-git.md`)
+- 4 nhánh dài hạn: `main` (bản ổn định, vai trò master), `dev` (tích hợp), `test` (thử trước khi lên `main`), `hotfix` (sửa gấp trên `main`).
+- Mỗi use case một nhánh tách từ `dev`: `tai/uc-xx-...` hoặc `kiet/uc-xx-...`; xong mở PR vào `dev`, CI xanh và người kia review rồi mới gộp.
+- Không push thẳng lên `main`, `dev`; `main` chỉ nhận PR từ `test` hoặc `hotfix`. Không `push --force` lên nhánh dài hạn.
