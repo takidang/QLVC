@@ -80,7 +80,7 @@
 | POST | `/api/chuyen` | DP | UC-11 | `{tuyen_id, khoi_hanh_du_kien, xe_id, tai_xe_id}` → `LAP` (BR-22), mã `CH-yyMMdd-NN` theo ngày khởi hành. Vi phạm → 422, `ma` là BR đầu tiên, `chi_tiet` đủ mọi vi phạm; tuyến `NGUNG` → 422 `TUYEN_NGUNG`; giờ đã qua → 422 `KHOI_HANH_DA_QUA` |
 | GET | `/api/chuyen` | DP, KT | UC-11, UC-32 | Lọc trạng thái, ngày, tuyến. `?ngay=` trả **bảng chuyến trong ngày**: % đầy, tiến độ "đã xong/tổng điểm", cờ trễ (CFG-09), sự cố mở, đơn thất bại, chưa quyết toán |
 | GET | `/api/chuyen/{id}` | DP, KT | UC-13, UC-32 | UC-13 đã làm tổng quan + thẻ Hàng (cùng dạng với kết quả ghép ở mục 3.1). Đủ 5 thẻ ở UC-32: tổng quan, hàng (tải, thể tích, % đầy), lịch trình (điểm dừng suy ra theo BR-63; ETA kế hoạch từ khi chốt, giờ quét thực tế, độ trễ; kết thúc dự kiến khi đang chạy theo BR-73), dòng thời gian (km, lượt quét, chi phí, sự cố), tiền |
-| GET | `/api/chuyen/{id}/xe-kha-dung`, `/tai-xe-kha-dung` | DP | UC-12 | Như trên, cho chuyến đã có |
+| GET | `/api/chuyen/{id}/xe-kha-dung`, `/tai-xe-kha-dung` | DP | UC-12 | Như trên, cho chuyến đã có: không trùng lịch với chính nó, xe phải chở đủ đơn đang ghép (BR-01, 02); tài xế mặc định xét hạng theo xe hiện tại, `?xe_id=` để xét theo xe sắp đổi |
 | PUT | `/api/chuyen/{id}/phan-cong` | DP | UC-12 | `{xe_id, tai_xe_id}`; chỉ khi `LAP`; kiểm BR-11…19 và BR-67 |
 | GET | `/api/chuyen/{id}/don-phu-hop` | DP | UC-13 | Đơn `CHO_GHEP` đã lọc BR-03, 04 (nút lấy = nơi giữ hàng nếu có, BR-69), hạn giao gần trước, tối đa 200 |
 | POST | `/api/chuyen/{id}/ghep` | DP | UC-13 | **Chi tiết ở mục 3.1** |

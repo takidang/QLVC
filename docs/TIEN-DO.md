@@ -32,6 +32,7 @@
 - 30/10 – Tài → Kiệt: **thử giao diện UC-11 Lập chuyến** (`UC-11-AC12`; backend xong, 315 test). `git pull`, chạy backend + frontend như lần thử UC-05. Dùng dữ liệu đã có trên máy Kiệt (tuyến T01, xe, tài xế An hạng C, Bình hạng B); cần thêm 1 xe khối lượng toàn bộ 9.500 kg và 1 xe trạng thái Ngừng nếu chưa có. Menu **Chuyến** → Lập chuyến: (a) T01, ngày mai 06:00 → hiện danh sách xe và tài xế; xe Ngừng hiện "không dùng được" kèm lý do (BR-11); (b) chọn xe 9.500 kg → Bình mờ, lý do hạng GPLX (BR-14); (c) chọn An → Lập chuyến → "Đã lập chuyến CH-yyMMdd-01", kết thúc dự kiến 11:30; (d) lập chuyến khác cùng xe lúc 10:00 → xe đó mờ, lý do trùng lịch chuyến vừa lập (BR-16); (e) chọn giờ hôm qua → Lập chuyến báo "Giờ khởi hành đã qua". Chụp (a)…(e) vào `docs/test-evidence/UC-11/`, điền dòng AC12 trong `docs/stories/UC-11-lap-chuyen.md` (Đạt/Không đạt, ngày, "Kiệt thử"); sai chỗ nào ghi vào "Đang chặn", không tự sửa code của Tài.
 - 30/10 – Tài → Kiệt: **thử giao diện UC-13 Ghép đơn** (`UC-13-AC13`), làm sau khi thử UC-11. Cần thêm dữ liệu: bảng giá `Long An → Cần Thơ` 1.200 và `TP.HCM → Tiền Giang` 1.000 (tối thiểu 50.000); xe tải 5.000 kg, thể tích 20 m³; 4 đơn cho **ngày mai**: Đ1 TP.HCM → Cần Thơ 1.800 kg 6 m³ hạn 14:00; Đ2 Long An → Cần Thơ 1.200 kg 3 m³, lấy 06:30–09:00, hạn 12:00; Đ4 TP.HCM → Tiền Giang 800 kg 2 m³ hạn 18:00; Đ8 TP.HCM → Tiền Giang 300 kg 1 m³ hạn 18:00. Lập chuyến T01 ngày mai 06:00 với xe đó, bấm **mã chuyến** để mở trang chi tiết: (a) chưa có đơn: lịch trình trống, lãi dự kiến âm tô đỏ; (b) chọn Đ1, Đ4 → Ghép → lịch trình 4 điểm; (c) ghép Đ2 → 6 điểm, ETA 06:00 / 06:20 / 07:40 / 09:00 / 11:50 (giao Đ2) / 12:10 (giao Đ1), tải 3.800 / 5.000 kg, lấp đầy 76%, lãi 3.637.000 đ; (d) ghép Đ8 → bảng vi phạm: đơn Đ2, BR-06, ETA giao 12:30 sau hạn 12:00, Đ8 không được ghép; (e) chọn Đ4 ở bảng đơn đang ghép → Gỡ → lịch trình còn 4 điểm, Đ4 về danh sách chờ ghép. Chụp (a)…(e) vào `docs/test-evidence/UC-13/`, điền dòng AC13 trong `docs/stories/UC-13-ghep-don.md`.
 - 30/10 – **Nhóm chốt quy trình nhánh** (`docs/nhanh-git.md`): `main` bản ổn định (vai trò master, giữ tên), `dev` tích hợp, `test` thử trước khi lên `main`, `hotfix` sửa gấp. Mỗi use case một nhánh `tai/uc-xx-...` / `kiet/uc-xx-...` tách từ `dev`, PR vào `dev`, CI xanh + người kia review mới gộp. Không push thẳng `main`, `dev`. Commit này là lần cuối ghi thẳng lên `main` để cả hai máy đọc được quy trình.
+- 30/10 – Tài → Kiệt: **review 2 PR vào `dev`**: #3 (sửa sau review UC-13) và PR UC-12 Đổi xe/tài xế. Khi thử UC-13 thì thử thêm UC-12 (`UC-12-AC5`): trên trang chi tiết chuyến đang lập có đơn Đ1, Đ4 → "Đổi xe / tài xế" → xe nhỏ (tải 1.500 kg) hiện lý do BR-01; chọn xe khác đủ tải + tài xế khác → Lưu → biển số, tên tài xế đổi. Ảnh vào `docs/test-evidence/UC-12/`.
 
 ## Câu hỏi chờ thầy
 - ~~A1–A6 (nghiep-vu.md mục 1): chưa gửi~~ Nhóm tự chốt 16/10 (nghiep-vu.md mục 1).
@@ -44,12 +45,13 @@
 | UC-03 Xe (mẫu) | 2 | Xong | 13/13 | |
 | UC-06…09 Đơn tối thiểu | 3–4 | Xong | UC-06 6/6, UC-07 9/9, UC-08 11/11 | UC-08-AC11 Kiệt thử 25/10; UC-09 bỏ ở 0.5; phiếu QR làm cùng UC-19 |
 | UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Xong | 9/9 | AC9 Kiệt thử 25/10 |
-| UC-11…13, 15 Chuyến tối thiểu | 3–4 | Đang làm | UC-11 11/12, UC-13 12/13 | Giao diện UC-11, UC-13 chờ Kiệt thử; tiếp UC-12, UC-15 |
+| UC-11…13, 15 Chuyến tối thiểu | 3–4 | Đang làm | UC-11 11/12, UC-12 4/5, UC-13 12/13 | Giao diện UC-11, 12, 13 chờ Kiệt thử; PR #3 (review UC-13), PR UC-12 chờ Kiệt review; tiếp UC-15 |
 | UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Chưa bắt đầu | | |
 | UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 30/10: UC-12 Đổi xe/tài xế (nhánh `tai/uc-12-doi-xe-tai-xe`): kiểm lại BR-11…19 và tải theo đơn đang ghép, danh sách khả dụng cho chuyến đã có, khối đổi trên trang chi tiết; 9 test mới, toàn bộ 363 passed; 4/5 AC.
 - 30/10: Chốt quy trình 4 nhánh `main` / `dev` / `test` / `hotfix` + nhánh use case (`docs/nhanh-git.md`, `CLAUDE.md`); tạo `test`, `hotfix`, đưa `dev` về đúng `main`.
 - 30/10: UC-13 Ghép/gỡ đơn: lịch trình ETA (BR-63, 64), kiểm lại cả chuyến (BR-01…06, 12, 13, 15…17, 67), lãi dự kiến, trang chi tiết chuyến; 39 test mới, toàn bộ 354 passed; 12/13 AC, giao diện chờ Kiệt thử. Review UC-11 sửa 2 mục.
 - 30/10: UC-11 Lập chuyến: backend + giao diện, BR-11…19, 64, 65 (khóa dòng chống hai người lập trùng xe), 49 test mới, toàn bộ 315 passed; 11/12 AC, giao diện chờ Kiệt thử.
