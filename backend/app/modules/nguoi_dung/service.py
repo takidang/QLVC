@@ -77,7 +77,9 @@ def sua(db: Session, nd_id: int, vao: NguoiDungSua, nguoi_lam: NguoiDung) -> Ngu
     vai_tro, trang_thai = doi.get("vai_tro", nd.vai_tro), doi.get("trang_thai", nd.trang_thai)
     if (vai_tro, trang_thai) != (nd.vai_tro, nd.trang_thai):
         if nd.vai_tro == "TAI_XE":
-            raise LoiNghiepVu("TAI_KHOAN_TAI_XE", "Tài khoản tài xế đổi trạng thái ở trang Tài xế (UC-04)", 409)
+            raise LoiNghiepVu(
+                "TAI_KHOAN_TAI_XE", "Tài khoản tài xế không đổi vai trò; khóa/mở ở trang Tài xế (UC-04)", 409
+            )
         if nd.id == nguoi_lam.id:
             raise LoiNghiepVu("KHONG_TU_DOI_QUYEN", "Không tự đổi vai trò hoặc khóa tài khoản của chính mình", 409)
         if nd.id in quan_ly and len(quan_ly) == 1 and (vai_tro, trang_thai) != ("QUAN_LY", "HOAT_DONG"):

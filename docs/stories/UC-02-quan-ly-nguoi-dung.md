@@ -1,6 +1,6 @@
 # UC-02: Quản lý người dùng và vai trò
 
-- **Trạng thái:** Đang làm · duyệt 30/10/2026, Kiệt · backend + giao diện xong, chờ thử giao diện (AC11)
+- **Trạng thái:** Hoàn thành (30/10/2026) · duyệt 30/10/2026, Kiệt · chờ Tài review PR vào `dev`
 - **Tác nhân:** Quản lý (chỉ Quản lý; Điều phối **không** kế thừa ngược)
 - **Đặc tả:** `docs/use-cases.md` mục 2 (UC-02, đặc tả rút gọn ở dưới) · `docs/api.md` mục 2.1 · ERD `docs/so-do.md` mục 5 (NGUOI_DUNG) · khuôn `docs/mau-use-case.md`
 - **Quy tắc nghiệp vụ liên quan:** BR-57 (phân quyền ở máy chủ), BR-60 (không xóa, chỉ `NGUNG`) · NFR-SEC-01 (băm mật khẩu), NFR-SEC-05 (khóa tạm khi sai mật khẩu)
@@ -48,6 +48,8 @@ Quản lý xem danh sách tài khoản, thêm tài khoản Quản lý / Điều 
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/api/test_uc02_nguoi_dung.py` (Docker Desktop đang chạy)
 - Lệch đặc tả: thêm endpoint `PUT /api/nguoi-dung/{id}/mat-khau` và ghi rõ các ca 409 → đã sửa `docs/api.md` mục 2.1 cùng commit.
 - Cách làm đáng chú ý: tên đăng nhập, họ tên, mật khẩu dùng lại kiểu `TenDangNhap`, `HoTen`, `MatKhau` của UC-04. Đổi vai trò/trạng thái thì khóa (`FOR UPDATE`) mọi Quản lý đang hoạt động theo thứ tự id **trước** khi khóa dòng cần sửa: hai Quản lý khóa nhau cùng lúc thì xếp hàng, không deadlock, người sau bị chặn. Đã thử bỏ khóa dòng: test `test_uc02_ac9_hai_quan_ly_khoa_nhau_cung_luc` hỏng 5/5 lần, có khóa thì đạt.
+- AC11 thử tay 30/10 (Kiệt, Edge/Chrome, `http://127.0.0.1:5173`): 6 ca a–f đạt, ảnh trong `docs/test-evidence/UC-02/`. Ca e bước 7 ký tự bị trình duyệt chặn (Kiệt xác nhận, không chụp).
+- `ponytail-review` 30/10 (Kiệt tự review): không có mục phải sửa; sửa câu báo lỗi `TAI_KHOAN_TAI_XE` cho đúng cả khi đổi vai trò. Để Tài quyết: gộp `client_rieng` (lặp ở test UC-02 và UC-04) vào `tests/conftest.py`.
 - Giao diện ẩn nút Khóa ở dòng của chính mình và dòng tài xế, khóa ô vai trò khi sửa tài xế hoặc chính mình; máy chủ vẫn chặn (409) nếu gọi thẳng API.
 
 ## Truy vết và kết quả
@@ -64,4 +66,4 @@ Quản lý xem danh sách tài khoản, thêm tài khoản Quản lý / Điều 
 | UC-02-AC8 | API | `tests/api/test_uc02_nguoi_dung.py::test_uc02_ac8_tai_khoan_tai_xe` | Đạt | 30/10/2026 |
 | UC-02-AC9 | API | `tests/api/test_uc02_nguoi_dung.py::test_uc02_ac9_* (5 ca, có ca đồng thời)` | Đạt | 30/10/2026 |
 | UC-02-AC10 | API | `tests/api/test_uc02_nguoi_dung.py::test_uc02_ac10_* (4 ca)` | Đạt | 30/10/2026 |
-| UC-02-AC11 | UI | Chờ Kiệt thử trên Edge/Chrome, ảnh vào `docs/test-evidence/UC-02/` | CHƯA KIỂM | |
+| UC-02-AC11 | UI | `docs/test-evidence/UC-02/` (6 ảnh, ca a–f trong `docs/test-evidence/du-lieu-thu-giao-dien.md` Phần 4) + Kiệt xác nhận | Đạt | 30/10/2026 |
