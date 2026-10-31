@@ -1,6 +1,6 @@
 # UC-18: Bắt đầu / kết thúc chuyến
 
-- **Trạng thái:** Đang làm · duyệt 31/10/2026, Kiệt · backend + giao diện xong, chờ thử giao diện (AC11)
+- **Trạng thái:** Hoàn thành (31/10/2026) · duyệt 31/10/2026, Kiệt · chờ Tài review PR vào `dev` (sau UC-17)
 - **Tác nhân:** Tài xế (điện thoại)
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-18) · `docs/api.md` mục 2 (`/api/toi/chuyen/{id}/bat-dau`, `/ket-thuc`) · `docs/kien-truc.md` mục 9 (lưu file) · `docs/security-rules.md` (upload)
 - **Quy tắc nghiệp vụ liên quan:** BR-26 (bắt đầu: đúng tài xế, đúng ngày, kiểm lại BR-11…15), BR-28 (kết thúc khi mọi đơn có kết quả), BR-70 (km + ảnh), BR-36 (đơn thất bại gỡ hiệu lực khi kết thúc), BR-58 · NFR-PER-03 (ảnh ≤ 500 KB, nén trên trình duyệt), NFR-SEC-04
@@ -58,6 +58,9 @@ Trên trang lịch trình (UC-17), tài xế nhập km đồng hồ, chụp ản
 - Test đã viết: `backend/tests/api/test_uc18_bat_dau_ket_thuc.py` – **32 passed**; toàn bộ backend **400 passed** (31/10, nhánh nối sau UC-17). `ruff check`, `ruff format`, `npm run lint`, `npm run build` sạch. Test ghi ảnh vào thư mục tạm (`tmp_path`), không để file trong `backend/uploads/`.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/api/test_uc18_bat_dau_ket_thuc.py` (máy khác cần `pip install -r requirements-dev.txt` để có `python-multipart`)
 - Lệch đặc tả: thêm `python-multipart`; `api.md` ghi rõ mã lỗi và giới hạn ảnh; thư mục lưu dev là `backend/uploads/` (đã có trong `.gitignore`) thay cho `backend/tep/` ghi lúc nháp.
+- AC11 thử tay 31/10 (Kiệt, DevTools 360 px): ca a–d đạt; ảnh nén còn ~60 KB. Ca e (kết thúc thành công) không thử tay, đã có test AC6.
+- **Chưa kiểm, để sau:** Quản lý / Điều phối xem km và ảnh đồng hồ – chưa có màn hình, kiểm khi UC-32 Theo dõi chuyến (Tài) xong.
+- `ponytail-review` 31/10 (Kiệt tự review): không có mục phải sửa. Nice to have: câu lỗi BR-70 in số kiểu `49,999` (dấu phẩy) – đổi sang `49.999` cho đúng kiểu Việt Nam khi nào sửa lại giao diện. Ghi file trước khi commit: máy chủ sập đúng giữa hai bước có thể để lại 1 file thừa trong `uploads/` (không có bản ghi) – chấp nhận.
 - Test dựa vào "hôm nay" theo giờ Việt Nam (chuyến 23:00 hôm nay): chạy test đúng lúc qua nửa đêm có thể lệch ngày – xác suất rất nhỏ, chấp nhận.
 
 ## Truy vết và kết quả
@@ -74,4 +77,4 @@ Trên trang lịch trình (UC-17), tài xế nhập km đồng hồ, chụp ản
 | UC-18-AC8 | API | `tests/api/test_uc18_bat_dau_ket_thuc.py::test_uc18_ac8_km_ket_thuc` | Đạt | 31/10/2026 |
 | UC-18-AC9 | API | `tests/api/test_uc18_bat_dau_ket_thuc.py::test_uc18_ac9_* (3 ca)` | Đạt | 31/10/2026 |
 | UC-18-AC10 | API | `tests/api/test_uc18_bat_dau_ket_thuc.py::test_uc18_ac10_* (5 ca)` | Đạt | 31/10/2026 |
-| UC-18-AC11 | UI | Chờ Kiệt thử (DevTools 360 px), ảnh vào `docs/test-evidence/UC-18/` | CHƯA KIỂM | |
+| UC-18-AC11 | UI | `docs/test-evidence/UC-18/` (4 ảnh, ca a–d ở `docs/test-evidence/du-lieu-thu-giao-dien.md` Phần 8) – Kiệt thử | Đạt | 31/10/2026 |

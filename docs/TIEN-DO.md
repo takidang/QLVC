@@ -89,12 +89,13 @@
 | Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Xong | – | PR #1 merge 16/10 (Tài cập nhật hộ) |
 | Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Cài môi trường xong 19/10 (theo báo cáo tuần 2; Tài sửa hộ 25/10). Ca test BR xong 29/10, Tài chốt 30/10 (Tài cập nhật hộ). Còn UML |
 | UC-04 Tài xế (chép mẫu) | 2 | Xong | 10/10 | Tài review, merge vào `main` 25/10 (Tài cập nhật hộ) |
-| UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Đang làm | UC-17 10/10 | UC-02 xong 30/10, PR `kiet/uc-02-nguoi-dung` → `dev` chờ review. UC-17 xong 31/10 (14 test, toàn bộ 368 passed trên nhánh từ `dev`, thử giao diện đạt), PR `kiet/uc-17-xem-chuyen` → `dev`. Còn UC-18, 19, 20. UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
+| UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Đang làm | UC-17 10/10, UC-18 11/11 | UC-02 xong 30/10, PR `kiet/uc-02-nguoi-dung` → `dev` chờ review. UC-17 xong 31/10 (14 test, toàn bộ 368 passed trên nhánh từ `dev`, thử giao diện đạt), PR `kiet/uc-17-xem-chuyen` → `dev`. UC-18 xong 31/10 (32 test, toàn bộ 400 passed, thử giao diện đạt; thêm `python-multipart`), nhánh `kiet/uc-18-bat-dau-ket-thuc` nối sau UC-17. Còn UC-19, 20. UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
 | Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Chưa bắt đầu | | |
 | UC-24, 25 | 7 | Chưa bắt đầu | | |
 | UC-26, 27, 34 (hiệu suất xe, ưu tiên S – thiếu giờ thì cắt trước), E2E | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Kiệt (mới nhất ở trên)
+- 31/10: UC-18 Bắt đầu / kết thúc chuyến: km + ảnh đồng hồ (BR-26, 70), kiểm lại giấy tờ BR-11…15 bằng hàm UC-11, kết thúc khi mọi đơn có kết quả (BR-28), gỡ đơn thất bại (BR-36); `app/luu_tru.py` kiểm/lưu ảnh dùng chung; thêm `python-multipart`; 32 test; thử giao diện đạt.
 - 31/10: UC-17 Xem chuyến được giao: danh sách cần làm / đã xong, lịch trình từng điểm cho tài xế (BR-58, 63, 71), chỉ hiện lương chuyến, chuyến người khác → 404; trang điện thoại; 14 test; thử giao diện đạt (sửa 1 lỗi kẹt "Đang tải…").
 - 29/10: Danh sách ca test BR (`docs/ca-test-br.md`): 70 BR còn hiệu lực, 180 ca theo nhóm A…H, mỗi ca ✖ chỉ vi phạm một BR, có ca biên; thêm dữ liệu X3…X8, Cường, Dũng, Đ9…Đ15. Commit dữ liệu và kết quả thử giao diện UC-04, 05, 08 (`docs/test-evidence/du-lieu-thu-giao-dien.md`).
 - 25/10: UC-04 Tài xế: backend (thêm kèm tài khoản, sửa, ngừng khóa tài khoản), hàm BR-14 hạng GPLX cho UC-11, giao diện; 67 test, toàn bộ 266 passed; thử giao diện 10/10 AC đạt; ponytail-review sửa 2 mục. Thử giao diện UC-05, UC-08 cho Tài: đạt. Mở PR `kiet/uc-04`.
