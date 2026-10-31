@@ -96,8 +96,8 @@
 
 | Phương thức | Đường dẫn | Vai trò | UC | BR / ghi chú |
 |---|---|---|---|---|
-| GET | `/api/toi/chuyen` | TX | UC-17 | Chỉ chuyến của mình (BR-58) |
-| GET | `/api/toi/chuyen/{id}` | TX | UC-17 | Lịch trình theo BR-63, đơn ở từng điểm |
+| GET | `/api/toi/chuyen` | TX | UC-17 | Chỉ chuyến của mình (BR-58). `?nhom=can_lam` (mặc định: `DA_CHOT`, `DANG_CHAY`, đang chạy lên đầu) \| `da_xong` (`HOAN_THANH`, `DA_QUYET_TOAN`, mới nhất trước); không bao giờ có `LAP`, `HUY`; mỗi dòng có `so_don`, không có tiền |
+| GET | `/api/toi/chuyen/{id}` | TX | UC-17 | Lịch trình theo BR-63, đơn ở từng điểm (địa chỉ, người liên hệ, SĐT, hàng, khung/hạn, trạng thái đơn); giờ là ETA kế hoạch lưu lúc chốt (BR-71), chưa lưu thì tính lại; có `luong_tai_xe_chot`, không có cước/lãi/định mức. Chuyến người khác, `LAP`, `HUY`, id không có → cùng 404 |
 | POST | `/api/toi/chuyen/{id}/bat-dau` | TX | UC-18 | multipart: `km_bat_dau`, `anh_dong_ho`; BR-26 (gồm BR-11…15), BR-70 |
 | POST | `/api/toi/chuyen/{id}/ket-thuc` | TX | UC-18 | multipart: `km_ket_thuc`, `anh_dong_ho`; BR-28, BR-70, rồi xử lý BR-36 |
 | POST | `/api/toi/quet` | TX | UC-19, UC-20 | **Chi tiết ở mục 3.2** |
