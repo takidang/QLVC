@@ -48,7 +48,7 @@ Tài xế mở điện thoại, thấy danh sách chuyến được giao cho mì
 ## Ghi chú triển khai
 - File đã đổi: `backend/app/modules/toi/{schemas,service,router}.py` (mới), `backend/app/main.py` (gắn router); `frontend/src/api/toi.ts` (mới), `frontend/src/pages/tai-xe/{ChuyenCuaToi,ChuyenCuaToiChiTiet}.tsx` (mới), `frontend/src/App.tsx` (menu tài xế, vào thẳng "Chuyến của tôi"), `frontend/src/index.css` (thẻ cho điện thoại); `docs/api.md`. Không đụng `models/`, không thêm migration, không sửa code UC-11/13 của Tài.
 - Dùng lại từ `app/modules/chuyen/service.py` (UC-13): `_truy_van`, `_ra`, `_ngu_canh`, `_don_ghep` và `lich_trinh` trong `app/domain/lich_trinh.py` – chỉ gọi, không sửa. Tài đổi các hàm này thì test UC-17 báo ngay.
-- Test đã viết: `backend/tests/api/test_uc17_xem_chuyen.py` – **14 passed**; toàn bộ backend **368 passed** (31/10, nhánh tách từ `dev` chưa có UC-02). `ruff check`, `ruff format`, `npm run lint`, `npm run build` sạch.
+- Test đã viết: `backend/tests/api/test_uc17_xem_chuyen.py` – **14 passed**; toàn bộ backend **368 passed** (31/10, nhánh tách từ `dev`, không chứa code UC-02). File `docs/test-evidence/du-lieu-thu-giao-dien.md` dùng chung với PR UC-02 (có sẵn Phần 4–6 giống hệt bên đó, thêm Phần 7): gộp UC-02 trước thì khi gộp UC-17 git có thể báo xung đột ở file này – giữ bản có Phần 7. `ruff check`, `ruff format`, `npm run lint`, `npm run build` sạch.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/api/test_uc17_xem_chuyen.py`
 - Lệch đặc tả: thêm tham số `nhom`, mô tả rõ trường trả về và 404 → đã sửa `docs/api.md` cùng commit.
 - Máy chủ trả giờ dạng UTC (như UC-13); giao diện đổi sang giờ Việt Nam khi hiện.
@@ -67,4 +67,4 @@ Tài xế mở điện thoại, thấy danh sách chuyến được giao cho mì
 | UC-17-AC7 | API | `tests/api/test_uc17_xem_chuyen.py::test_uc17_ac7_* (2 ca)` | Đạt | 31/10/2026 |
 | UC-17-AC8 | API | `tests/api/test_uc17_xem_chuyen.py::test_uc17_ac8_cung_mot_404` | Đạt | 31/10/2026 |
 | UC-17-AC9 | API | `tests/api/test_uc17_xem_chuyen.py::test_uc17_ac9_* (4 ca)` | Đạt | 31/10/2026 |
-| UC-17-AC10 | UI | Chờ Kiệt thử trên điện thoại (hoặc DevTools 360 px), ảnh vào `docs/test-evidence/UC-17/` | CHƯA KIỂM | |
+| UC-17-AC10 | UI | Chờ Kiệt thử (DevTools 360 px), các ca ở `docs/test-evidence/du-lieu-thu-giao-dien.md` Phần 7, ảnh vào `docs/test-evidence/UC-17/` | CHƯA KIỂM | |
