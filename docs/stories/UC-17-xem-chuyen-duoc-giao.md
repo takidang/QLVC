@@ -1,6 +1,6 @@
 # UC-17: Xem chuyến được giao
 
-- **Trạng thái:** Đang làm · duyệt 31/10/2026, Kiệt · backend + giao diện xong, chờ thử giao diện (AC10)
+- **Trạng thái:** Hoàn thành (31/10/2026) · duyệt 31/10/2026, Kiệt · chờ Tài review PR vào `dev`
 - **Tác nhân:** Tài xế (trên điện thoại, web responsive 360 px)
 - **Đặc tả:** `docs/use-cases.md` mục 2 (UC-17, đặc tả rút gọn ở dưới) · `docs/api.md` mục 2 (`/api/toi/chuyen`) · `docs/nghiep-vu.md` mục 9.2 · `docs/security-rules.md` (IDOR)
 - **Quy tắc nghiệp vụ liên quan:** BR-58 (tài xế chỉ xem chuyến của mình), BR-63 (thứ tự lịch trình), BR-71 (ETA kế hoạch, lương lưu lúc chốt), BR-57 (phân quyền)
@@ -51,6 +51,8 @@ Tài xế mở điện thoại, thấy danh sách chuyến được giao cho mì
 - Test đã viết: `backend/tests/api/test_uc17_xem_chuyen.py` – **14 passed**; toàn bộ backend **368 passed** (31/10, nhánh tách từ `dev`, không chứa code UC-02). File `docs/test-evidence/du-lieu-thu-giao-dien.md` dùng chung với PR UC-02 (có sẵn Phần 4–6 giống hệt bên đó, thêm Phần 7): gộp UC-02 trước thì khi gộp UC-17 git có thể báo xung đột ở file này – giữ bản có Phần 7. `ruff check`, `ruff format`, `npm run lint`, `npm run build` sạch.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/api/test_uc17_xem_chuyen.py`
 - Lệch đặc tả: thêm tham số `nhom`, mô tả rõ trường trả về và 404 → đã sửa `docs/api.md` cùng commit.
+- AC10 thử tay 31/10 (Kiệt, DevTools 360 px): 4 ca đạt. Lỗi bắt được khi thử: bấm lại thẻ đang chọn thì kẹt "Đang tải…" → sửa trong `ChuyenCuaToi.tsx`, thử lại đạt (lỗi giao diện, test backend không bắt được).
+- `ponytail-review` 31/10 (Kiệt tự review): không có mục phải sửa. Lưu ý cho Tài: `toi/service.py` gọi các hàm có dấu `_` của `chuyen/service.py` (`_truy_van`, `_ra`, `_ngu_canh`, `_don_ghep`) để không chép lại code UC-13; Tài muốn thì đổi tên bỏ dấu `_` cho rõ là hàm dùng chung.
 - Máy chủ trả giờ dạng UTC (như UC-13); giao diện đổi sang giờ Việt Nam khi hiện.
 - Ghi chú: hai đơn lấy cùng nút, không có khung giờ, xếp theo mã đơn (BR-63 trong `lich_trinh.py`), nên thứ tự lấy trên máy thật có thể khác kịch bản mục 11 (đã báo Tài ở lần thử UC-13).
 
@@ -67,4 +69,4 @@ Tài xế mở điện thoại, thấy danh sách chuyến được giao cho mì
 | UC-17-AC7 | API | `tests/api/test_uc17_xem_chuyen.py::test_uc17_ac7_* (2 ca)` | Đạt | 31/10/2026 |
 | UC-17-AC8 | API | `tests/api/test_uc17_xem_chuyen.py::test_uc17_ac8_cung_mot_404` | Đạt | 31/10/2026 |
 | UC-17-AC9 | API | `tests/api/test_uc17_xem_chuyen.py::test_uc17_ac9_* (4 ca)` | Đạt | 31/10/2026 |
-| UC-17-AC10 | UI | Chờ Kiệt thử (DevTools 360 px), các ca ở `docs/test-evidence/du-lieu-thu-giao-dien.md` Phần 7, ảnh vào `docs/test-evidence/UC-17/` | CHƯA KIỂM | |
+| UC-17-AC10 | UI | `docs/test-evidence/UC-17/` (3 ảnh, ca a–d ở `docs/test-evidence/du-lieu-thu-giao-dien.md` Phần 7) + Kiệt xác nhận khổ 360 không cuộn ngang | Đạt | 31/10/2026 |

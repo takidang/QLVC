@@ -280,10 +280,12 @@ Xong ghi kết quả vào dòng **AC13** của `docs/stories/UC-13-ghep-don.md`.
 
 | Ca | Làm gì | Kết quả đúng | Ảnh | Kết quả |
 |---|---|---|---|---|
-| a | Đăng nhập `an` | Vào thẳng **Chuyến của tôi**, thẻ **Cần làm** có CH-261031-01 ("Chờ chạy", T01, xe 51C-111.11, 3 đơn); **không** có thanh cuộn ngang | `a-can-lam.png` | |
-| b | Bấm thẻ **Đã xong** | Báo "Chưa có chuyến đã xong" | `b-da-xong.png` | |
-| c | Quay lại **Cần làm**, bấm vào CH-261031-01 | Lịch trình **6 điểm** (06:00 … 12:10); mỗi điểm có mã đơn, khách, kg/m³/kiện, địa chỉ, người liên hệ, SĐT **gạch chân bấm gọi được**, khung lấy hoặc hạn giao; có **"Lương chuyến 600.000 đ"**; **không** thấy cước, lãi | `c-lich-trinh.png` | |
-| d | Bấm **← Chuyến của tôi** | Về lại danh sách | – | |
+| a | Đăng nhập `an` | Vào thẳng **Chuyến của tôi**, thẻ **Cần làm** có CH-261031-01 ("Chờ chạy", T01, xe 51C-111.11, 3 đơn); **không** có thanh cuộn ngang | `a-can-lam.png` | Đạt (ảnh; Kiệt xác nhận xem ở khổ 360 không cuộn ngang, ảnh chụp khổ rộng) |
+| b | Bấm thẻ **Đã xong** | Báo "Chưa có chuyến đã xong" | `b-da-xong.png` | Đạt (ảnh) |
+| c | Quay lại **Cần làm**, bấm vào CH-261031-01 | Lịch trình **6 điểm** (06:00 … 12:10); mỗi điểm có mã đơn, khách, kg/m³/kiện, địa chỉ, người liên hệ, SĐT **gạch chân bấm gọi được**, khung lấy hoặc hạn giao; có **"Lương chuyến 600.000 đ"**; **không** thấy cước, lãi | `c-lich-trinh.png` | Đạt (ảnh: 6 điểm 06:00…12:10, SĐT là link gọi, "Lương chuyến 600.000 đ", không có cước) |
+| d | Bấm **← Chuyến của tôi** | Về lại danh sách | – | Đạt (Kiệt xác nhận) |
+
+Lỗi bắt được khi thử: bấm lại thẻ **Cần làm** đang chọn thì kẹt "Đang tải…" (danh sách bị xóa mà không tải lại). Đã sửa 31/10 (`ChuyenCuaToi.tsx`: bấm lại thẻ đang chọn thì không làm gì), Kiệt thử lại đạt.
 
 Xong ghi kết quả vào dòng **AC10** của `docs/stories/UC-17-xem-chuyen-duoc-giao.md`.
 

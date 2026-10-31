@@ -45,6 +45,7 @@ export default function ChuyenCuaToi() {
             aria-selected={nhom === n}
             className={nhom === n ? undefined : 'phu'}
             onClick={() => {
+              if (n === nhom) return // bấm lại thẻ đang chọn: không tải lại, không xóa danh sách
               setNhom(n)
               setTrang(1)
               setDs(null)
