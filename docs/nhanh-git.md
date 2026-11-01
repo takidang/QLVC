@@ -47,6 +47,11 @@ gh pr create --base main --head hotfix
 
 ## 4. Lưu ý
 - File dùng chung (`backend/app/models/`, migration, `domain/trang_thai.py`): vẫn ghi "Đang chặn" trong `TIEN-DO.md` và commit **lên `dev` qua PR nhỏ** trước khi sửa.
-- `TIEN-DO.md`: mỗi người sửa phần mình trong nhánh của mình; mục chung chỉ thêm dòng – git gộp được, ít xung đột.
+- **Tránh xung đột (chốt 31/10, sau lần PR #5 và #6 đụng nhau):**
+  - `TIEN-DO.md`: mỗi người **chỉ sửa phần của mình**. Nhắn nhau (nhờ review, nhờ thử giao diện, báo xong việc) ghi vào **mô tả PR hoặc comment trên PR**, không thêm dòng vào mục chung nữa (hai người cùng chèn vào một chỗ là xung đột).
+  - Dữ liệu và kết quả thử giao diện: mỗi use case một file `docs/test-evidence/UC-xx/du-lieu.md`, không nối vào file chung.
+  - Danh sách cố định trong code (router ở `backend/app/main.py`, menu `TRANG_CON` ở `frontend/src/App.tsx`): chèn theo thứ tự chữ cái, không thêm vào cuối.
+  - PR nhỏ, review và gộp trong ngày. **Trước khi mở PR** chạy `git merge origin/dev` trên nhánh mình, sửa xung đột ngay.
+  - Không làm nhánh mới chồng lên nhánh chưa gộp (ví dụ UC-18 trên UC-17), trừ khi bắt buộc; nếu chồng thì gộp nhánh dưới trước.
 - Không `push --force` lên `main`, `dev`, `test`. Không sửa lịch sử đã push.
 - Nhánh cũ `kiet/nghiep-vu`, `kiet/uc-04` đã gộp hết, có thể xóa.
