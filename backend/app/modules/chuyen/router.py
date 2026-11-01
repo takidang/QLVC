@@ -10,6 +10,7 @@ from app.db import get_db
 from app.models import NguoiDung
 from app.modules.chuyen import service
 from app.modules.chuyen.schemas import (
+    ChotVao,
     ChuyenChiTiet,
     ChuyenRa,
     ChuyenVao,
@@ -75,3 +76,14 @@ def ghep(chuyen_id: int, vao: GhepVao, db: Db, nd: Annotated[NguoiDung, Depends(
 @router.post("/{chuyen_id}/go", response_model=ChuyenChiTiet)
 def go(chuyen_id: int, vao: GhepVao, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)]):
     return service.go(db, chuyen_id, vao.don_ids, nd)
+
+
+@router.post("/{chuyen_id}/chot", response_model=ChuyenChiTiet)
+def chot(chuyen_id: int, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)], vao: ChotVao | None = None):
+    vao = vao or ChotVao()
+    return service.chot(db, chuyen_id, vao.xac_nhan_chay_rong, vao.xac_nhan_lai_am, nd)
+
+
+@router.post("/{chuyen_id}/mo-chot", response_model=ChuyenChiTiet)
+def mo_chot(chuyen_id: int, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)]):
+    return service.mo_chot(db, chuyen_id, nd)

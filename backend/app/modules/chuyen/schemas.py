@@ -93,4 +93,14 @@ class ChuyenChiTiet(ChuyenRa):
     lich_trinh: list[DiemRa]
     lai_du_kien: int
     canh_bao_lai_am: bool
+    chay_rong: bool
     don: list[DonRa]
+
+
+class ChotVao(BaseModel):
+    """Xác nhận khi chốt (UC-15): chuyến không có đơn (BR-23), lãi dự kiến âm (BR-52)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    xac_nhan_chay_rong: bool = False
+    xac_nhan_lai_am: bool = False
