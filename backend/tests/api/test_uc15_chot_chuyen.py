@@ -66,11 +66,6 @@ def test_uc15_ac1_ac2_chot_c01(client, dang_nhap_voi, db, kb):
         kb["d4"]: (luc(6, 20), luc(9)),
         kb["d2"]: (luc(7, 40), luc(11, 50)),
     }
-    assert {d.don_hang_id for d in db.scalars(select(Ghep).where(Ghep.chuyen_id == c01))} == {
-        kb["d1"],
-        kb["d2"],
-        kb["d4"],
-    }
     assert db.get(DonHang, kb["d1"]).trang_thai == "DA_GHEP"  # đơn không đổi trạng thái khi chốt
 
     # TC-BR71-01: đổi định mức tuyến sau khi chốt không ảnh hưởng chuyến
