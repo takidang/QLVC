@@ -62,4 +62,4 @@
 | UC-11-AC9 | API | `test_uc11_ac9_* (2 ca)` | Đạt | 30/10/2026 |
 | UC-11-AC10 | API | `test_uc11_ac10_danh_sach_va_chi_tiet` | Đạt | 30/10/2026 |
 | UC-11-AC11 | API | `test_uc11_ac11_* (5 ca)` | Đạt | 30/10/2026 |
-| UC-11-AC12 | UI | `docs/test-evidence/UC-11/` | CHƯA KIỂM | |
+| UC-11-AC12 | UI | `docs/test-evidence/UC-11/` (5 ảnh, ca a–e trong `docs/test-evidence/UC-11/du-lieu.md`) – Kiệt thử | Đạt (Kiệt thử; ca e thấy "Giờ khởi hành đã qua" nhưng ảnh chụp trước khi bấm, Kiệt xác nhận) | 30/10/2026 |

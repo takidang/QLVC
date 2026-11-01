@@ -16,6 +16,7 @@ from app.modules.danh_muc.tai_xe.router import router as tai_xe_router
 from app.modules.danh_muc.tuyen.router import router as tuyen_router
 from app.modules.danh_muc.xe.router import router as xe_router
 from app.modules.don.router import router as don_router
+from app.modules.nguoi_dung.router import router as nguoi_dung_router
 from app.modules.toi.router import router as toi_router
 
 
@@ -27,6 +28,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="QLVC", lifespan=lifespan)
 app.include_router(auth_router)
+app.include_router(nguoi_dung_router)
 app.include_router(xe_router)
 app.include_router(tai_xe_router)
 app.include_router(khach_hang_router)
@@ -35,8 +37,8 @@ app.include_router(cau_hinh_router)
 app.include_router(don_router)
 app.include_router(chuyen_router)
 app.include_router(nut_router)
-app.include_router(tuyen_router)
 app.include_router(toi_router)
+app.include_router(tuyen_router)
 
 
 # FastAPI mặc định trả 422 cho dữ liệu sai kiểu; 422 dành cho vi phạm BR (kien-truc.md mục 7).

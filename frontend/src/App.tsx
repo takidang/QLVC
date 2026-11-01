@@ -4,6 +4,7 @@ import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
 import DangNhap from './pages/DangNhap'
 import BangGiaDanhSach from './pages/quan-ly/BangGiaDanhSach'
 import CauHinh from './pages/quan-ly/CauHinh'
+import NguoiDungDanhSach from './pages/quan-ly/NguoiDungDanhSach'
 import ChuyenChiTiet from './pages/dieu-phoi/ChuyenChiTiet'
 import ChuyenDanhSach from './pages/dieu-phoi/ChuyenDanhSach'
 import DonDanhSach from './pages/dieu-phoi/DonDanhSach'
@@ -43,14 +44,15 @@ const TRANG_CON: Partial<
     { duong_dan: 'nut', ten: 'Nút', trang: <NutDanhSach /> },
     { duong_dan: 'tuyen', ten: 'Tuyến', trang: <TuyenDanhSach /> },
   ],
+  KE_TOAN: [{ duong_dan: 'chi-phi-xe', ten: 'Chi phí cố định xe', trang: <ChiPhiCoDinh /> }],
+  QUAN_LY: [
+    { duong_dan: 'nguoi-dung', ten: 'Người dùng', trang: <NguoiDungDanhSach /> },
+    { duong_dan: 'bang-gia', ten: 'Bảng giá', trang: <BangGiaDanhSach /> },
+    { duong_dan: 'cau-hinh', ten: 'Cấu hình', trang: <CauHinh /> },
+  ],
   TAI_XE: [
     { duong_dan: 'chuyen', ten: 'Chuyến của tôi', trang: <ChuyenCuaToi /> },
     { duong_dan: 'chuyen/:id', ten: 'Lịch trình chuyến', trang: <ChuyenCuaToiChiTiet />, an: true },
-  ],
-  KE_TOAN: [{ duong_dan: 'chi-phi-xe', ten: 'Chi phí cố định xe', trang: <ChiPhiCoDinh /> }],
-  QUAN_LY: [
-    { duong_dan: 'bang-gia', ten: 'Bảng giá', trang: <BangGiaDanhSach /> },
-    { duong_dan: 'cau-hinh', ten: 'Cấu hình', trang: <CauHinh /> },
   ],
 }
 
