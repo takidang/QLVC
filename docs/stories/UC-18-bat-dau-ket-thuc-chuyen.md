@@ -77,4 +77,4 @@ Trên trang lịch trình (UC-17), tài xế nhập km đồng hồ, chụp ản
 | UC-18-AC8 | API | `tests/api/test_uc18_bat_dau_ket_thuc.py::test_uc18_ac8_km_ket_thuc` | Đạt | 31/10/2026 |
 | UC-18-AC9 | API | `tests/api/test_uc18_bat_dau_ket_thuc.py::test_uc18_ac9_* (3 ca)` | Đạt | 31/10/2026 |
 | UC-18-AC10 | API | `tests/api/test_uc18_bat_dau_ket_thuc.py::test_uc18_ac10_* (5 ca)` | Đạt | 31/10/2026 |
-| UC-18-AC11 | UI | `docs/test-evidence/UC-18/` (4 ảnh, ca a–d ở `docs/test-evidence/du-lieu-thu-giao-dien.md` Phần 8) – Kiệt thử | Đạt | 31/10/2026 |
+| UC-18-AC11 | UI | `docs/test-evidence/UC-18/` (4 ảnh, ca a–d ở `docs/test-evidence/UC-18/du-lieu.md`) – Kiệt thử | Đạt | 31/10/2026 |

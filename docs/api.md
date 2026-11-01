@@ -29,8 +29,9 @@
 | POST | `/api/auth/dang-nhap` | CK | UC-01 | Đặt cookie; giới hạn tần suất |
 | POST | `/api/auth/dang-xuat` | Mọi vai trò | UC-01 | Xóa cookie |
 | GET | `/api/auth/toi` | Mọi vai trò | UC-01 | Thông tin và vai trò người đang đăng nhập |
-| GET, POST | `/api/nguoi-dung` | QL | UC-02 | BR-57 |
-| PATCH | `/api/nguoi-dung/{id}` | QL | UC-02 | Đổi vai trò, khóa tài khoản |
+| GET, POST | `/api/nguoi-dung` | QL | UC-02 | BR-57; `?vai_tro=&trang_thai=&tim=&trang=&so_dong=`; POST chỉ tạo `QUAN_LY`/`DIEU_PHOI`/`KE_TOAN` (tài xế tạo ở UC-04); trùng tên đăng nhập → 409 |
+| PATCH | `/api/nguoi-dung/{id}` | QL | UC-02 | `ten_dang_nhap`, `ho_ten`, `vai_tro`, `trang_thai` (khóa/mở, mở thì xóa khóa tạm); không nhận `mat_khau`. 409: đổi vai trò/trạng thái tài khoản tài xế (làm ở UC-04), tự đổi vai trò/trạng thái của mình, khóa/hạ Quản lý hoạt động cuối cùng |
+| PUT | `/api/nguoi-dung/{id}/mat-khau` | QL | UC-02 | `{mat_khau}` 8–200 ký tự → 204; xóa bộ đếm sai và khóa tạm; mọi vai trò kể cả tài xế |
 | GET | `/api/cau-hinh` | QL | UC-07 | Danh sách CFG-xx (gồm CFG-08…10) |
 | PUT | `/api/cau-hinh/{ma}` | QL | UC-07 | Ghi người sửa, thời điểm |
 | GET, POST | `/api/bang-gia` | QL | UC-07 | BR-48; mỗi mức có `hieu_luc_tu`, danh sách kèm cờ `dang_ap_dung`; trùng cặp tỉnh (không phân biệt hoa thường) + ngày → 409 |
