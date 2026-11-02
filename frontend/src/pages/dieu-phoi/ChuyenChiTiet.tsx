@@ -8,6 +8,9 @@ import {
   type ChuyenChiTiet as Chuyen,
   type ViPhamGhep,
 } from '../../api/chuyen'
+import { phanCong, taiXeKhaDungChuyen, xeKhaDungChuyen } from '../../api/chuyen'
+import type { TaiXeKhaDung, XeKhaDung } from '../../api/chuyen'
+import { ChonKhaDung, type KhaDung } from './ChuyenDanhSach'
 import type { Don } from '../../api/don'
 import { kemMaBr, LoiApi } from '../../api/goi'
 
@@ -44,7 +47,10 @@ export default function ChuyenChiTiet() {
       .then((r) => {
         if (bo) return
         setC(r)
-        if (r.trang_thai === 'LAP') donPhuHop(id).then((d) => !bo && setPhuHop(d))
+        if (r.trang_thai === 'LAP')
+          donPhuHop(id)
+            .then((d) => !bo && setPhuHop(d))
+            .catch(() => !bo && setLoi('Không tải được danh sách đơn chờ ghép'))
       })
       .catch((e) => !bo && setLoi(e instanceof LoiApi ? e.message : 'Không tải được chuyến'))
     return () => {
@@ -60,7 +66,7 @@ export default function ChuyenChiTiet() {
       setC(await (viec === 'ghep' ? ghepDon(id, chonGhep) : goDon(id, chonGo)))
       setChonGhep([])
       setChonGo([])
-      setPhuHop(await donPhuHop(id))
+      setLanTai((n) => n + 1) // tải lại đơn chờ ghép ở effect; lỗi tải lại không bị báo nhầm là lưu hỏng
     } catch (e) {
       if (e instanceof LoiApi && e.status === 422 && e.chiTiet.length) {
         setLoi(e.message)
@@ -153,6 +159,16 @@ export default function ChuyenChiTiet() {
             </table>
           )}
         </div>
+      )}
+
+      {dangLap && (
+        <DoiXeTaiXe
+          c={c}
+          onLuu={(r) => {
+            setC(r)
+            setLanTai((n) => n + 1)
+          }}
+        />
       )}
 
       <h2>Lịch trình</h2>
@@ -288,5 +304,101 @@ function BangDon({
         </tbody>
       </table>
     </>
+  )
+}
+
+// UC-12: đổi xe và/hoặc tài xế khi chuyến LAP; cái bị loại hiện kèm lý do (BR-11…19, tải theo đơn đang ghép)
+function DoiXeTaiXe({ c, onLuu }: { c: Chuyen; onLuu: (c: Chuyen) => void }) {
+  const [mo, setMo] = useState(false)
+  const [xeId, setXeId] = useState(String(c.xe_id))
+  const [taiXeId, setTaiXeId] = useState(String(c.tai_xe_id))
+  const [xe, setXe] = useState<KhaDung<XeKhaDung>>()
+  const [taiXe, setTaiXe] = useState<KhaDung<TaiXeKhaDung>>()
+  const [loi, setLoi] = useState<string[]>([])
+
+  useEffect(() => {
+    if (!mo) return
+    let bo = false
+    xeKhaDungChuyen(c.id)
+      .then((ds) => !bo && setXe({ khoa: '', ds, loi: '' }))
+      .catch(
+        (e) => !bo && setXe({ khoa: '', ds: [], loi: e instanceof LoiApi ? e.message : 'Lỗi' }),
+      )
+    return () => {
+      bo = true
+    }
+  }, [mo, c.id])
+  useEffect(() => {
+    if (!mo) return
+    let bo = false
+    taiXeKhaDungChuyen(c.id, xeId ? Number(xeId) : undefined)
+      .then((ds) => !bo && setTaiXe({ khoa: xeId, ds, loi: '' }))
+      .catch(
+        (e) =>
+          !bo && setTaiXe({ khoa: xeId, ds: [], loi: e instanceof LoiApi ? e.message : 'Lỗi' }),
+      )
+    return () => {
+      bo = true
+    }
+  }, [mo, c.id, xeId])
+
+  async function luu() {
+    setLoi([])
+    try {
+      onLuu(await phanCong(c.id, Number(xeId), Number(taiXeId)))
+      setMo(false)
+    } catch (e) {
+      setLoi(
+        e instanceof LoiApi && e.chiTiet.length
+          ? (e.chiTiet as { ma: string; thong_diep: string }[]).map((v) =>
+              kemMaBr(v.thong_diep, v.ma),
+            )
+          : [e instanceof LoiApi ? e.message : 'Không lưu được, vui lòng thử lại'],
+      )
+    }
+  }
+
+  if (!mo)
+    return (
+      <p>
+        <button className="phu" onClick={() => setMo(true)}>
+          Đổi xe / tài xế
+        </button>
+      </p>
+    )
+  return (
+    <div className="canh-bao">
+      <div className="hai-cot">
+        <ChonKhaDung
+          nhan="Xe"
+          kq={xe}
+          gia_tri={xeId}
+          onChon={setXeId}
+          ten={(x) => `${x.bien_so} (${x.tai_trong_kg.toLocaleString('vi-VN')} kg)`}
+        />
+        <ChonKhaDung
+          nhan="Tài xế"
+          kq={taiXe?.khoa === xeId ? taiXe : undefined}
+          gia_tri={taiXeId}
+          onChon={setTaiXeId}
+          ten={(t) => `${t.ho_ten} (hạng ${t.hang_gplx})`}
+        />
+      </div>
+      {loi.length > 0 && (
+        <ul role="alert" className="loi">
+          {loi.map((x) => (
+            <li key={x}>{x}</li>
+          ))}
+        </ul>
+      )}
+      <div className="nut">
+        <button type="button" className="phu" onClick={() => setMo(false)}>
+          Hủy
+        </button>
+        <button onClick={luu} disabled={!xeId || !taiXeId}>
+          Lưu xe / tài xế
+        </button>
+      </div>
+    </div>
   )
 }

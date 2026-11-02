@@ -27,18 +27,19 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="QLVC", lifespan=lifespan)
+# Xếp theo chữ cái: thêm router mới chèn đúng chỗ, hai người thêm cùng lúc ít khi đụng nhau (docs/nhanh-git.md mục 4)
 app.include_router(auth_router)
-app.include_router(nguoi_dung_router)
-app.include_router(xe_router)
-app.include_router(tai_xe_router)
-app.include_router(khach_hang_router)
 app.include_router(bang_gia_router)
 app.include_router(cau_hinh_router)
-app.include_router(don_router)
 app.include_router(chuyen_router)
+app.include_router(don_router)
+app.include_router(khach_hang_router)
+app.include_router(nguoi_dung_router)
 app.include_router(nut_router)
+app.include_router(tai_xe_router)
 app.include_router(toi_router)
 app.include_router(tuyen_router)
+app.include_router(xe_router)
 
 
 # FastAPI mặc định trả 422 cho dữ liệu sai kiểu; 422 dành cho vi phạm BR (kien-truc.md mục 7).

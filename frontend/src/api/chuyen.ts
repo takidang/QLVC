@@ -78,3 +78,10 @@ export const ghepDon = (id: number, don_ids: number[]) =>
   guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/ghep`, 'POST', { don_ids })
 export const goDon = (id: number, don_ids: number[]) =>
   guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/go`, 'POST', { don_ids })
+
+// UC-12: đổi xe, tài xế khi chuyến LAP
+export const xeKhaDungChuyen = (id: number) => goi<XeKhaDung[]>(`/api/chuyen/${id}/xe-kha-dung`)
+export const taiXeKhaDungChuyen = (id: number, xe_id?: number) =>
+  goi<TaiXeKhaDung[]>(`/api/chuyen/${id}/tai-xe-kha-dung?${query({ xe_id })}`)
+export const phanCong = (id: number, xe_id: number, tai_xe_id: number) =>
+  guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/phan-cong`, 'PUT', { xe_id, tai_xe_id })
