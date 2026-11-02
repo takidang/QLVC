@@ -100,11 +100,7 @@ def xet_ghep(
         else:
             hop_le.append(x)
 
-    kg, m3 = sum((x.kg for x in don), Decimal(0)), sum((x.m3 for x in don), Decimal(0))
-    if kg > tai_trong_kg:
-        loi(None, "BR-01", f"Tổng {_so(kg)} kg vượt tải trọng xe {_so(tai_trong_kg)} kg")
-    if m3 > the_tich_m3:
-        loi(None, "BR-02", f"Tổng {_so(m3)} m³ vượt thể tích thùng {_so(the_tich_m3)} m³")
+    vp += xet_tai(don, tai_trong_kg, the_tich_m3)
 
     diem = lich_trinh(khoi_hanh, thu_tu, phut, hop_le, cfg08)
     for d in diem:
@@ -116,6 +112,25 @@ def xet_ghep(
         if d.viec == "GIAO" and d.eta > x.han_giao:
             loi(x, "BR-06", f"ETA giao {_gio(d.eta)} sau hạn giao {_gio(x.han_giao)}")
     return diem, vp
+
+
+def xet_tai(don: list[DonGhep], tai_trong_kg: int, the_tich_m3: Decimal) -> list[dict]:
+    """BR-01, 02: tổng kg thực, m³ của đơn hiệu lực ≤ tải trọng, thể tích xe (vi phạm của cả chuyến)."""
+    kg, m3 = sum((x.kg for x in don), Decimal(0)), sum((x.m3 for x in don), Decimal(0))
+    vp = []
+    if kg > tai_trong_kg:
+        vp.append(
+            {"don_id": None, "ma": "BR-01", "thong_diep": f"Tổng {_so(kg)} kg vượt tải trọng xe {_so(tai_trong_kg)} kg"}
+        )
+    if m3 > the_tich_m3:
+        vp.append(
+            {
+                "don_id": None,
+                "ma": "BR-02",
+                "thong_diep": f"Tổng {_so(m3)} m³ vượt thể tích thùng {_so(the_tich_m3)} m³",
+            }
+        )
+    return vp
 
 
 def ty_le_lap_day(kg: Decimal, m3: Decimal, tai_trong_kg: int, the_tich_m3: Decimal) -> Decimal:
