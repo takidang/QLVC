@@ -62,7 +62,11 @@ python -m venv .venv
 .venv\Scripts\uvicorn app.main:app --reload
 ```
 
-Mở http://localhost:8000/api/health → `{"trang_thai":"ok"}`. Trong VS Code chọn interpreter `backend\.venv` để có gợi ý code.
+Mở http://localhost:8000/api/health → `{"trang_thai":"ok"}`.
+
+Tài khoản để thử: `.venv\Scripts\python -m app.tai_khoan_demo` tạo (hoặc đặt lại mật khẩu, mở khóa) `quanly`, `dieuphoi`, `ketoan`, `taixe`, mật khẩu chung **`demo12345`**. Quên mật khẩu thì chạy lại lệnh này. Bản demo (`APP_ENV=demo`) phải truyền mật khẩu riêng: `python -m app.tai_khoan_demo <mật khẩu>`.
+
+Trong VS Code chọn interpreter `backend\.venv` để có gợi ý code.
 
 ## 6. Frontend (cửa sổ PowerShell khác)
 
