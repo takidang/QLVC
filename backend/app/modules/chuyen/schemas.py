@@ -58,6 +58,13 @@ class TaiXeKhaDung(BaseModel):
     ly_do: list[LyDo]
 
 
+class PhanCongVao(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    xe_id: int
+    tai_xe_id: int
+
+
 class GhepVao(BaseModel):
     # Chỉ nhận danh sách đơn: không có cách ghép một phần đơn (BR-08), trường lạ → 400
     model_config = ConfigDict(extra="forbid")
