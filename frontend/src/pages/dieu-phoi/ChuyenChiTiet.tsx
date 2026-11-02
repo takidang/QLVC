@@ -44,7 +44,10 @@ export default function ChuyenChiTiet() {
       .then((r) => {
         if (bo) return
         setC(r)
-        if (r.trang_thai === 'LAP') donPhuHop(id).then((d) => !bo && setPhuHop(d))
+        if (r.trang_thai === 'LAP')
+          donPhuHop(id)
+            .then((d) => !bo && setPhuHop(d))
+            .catch(() => !bo && setLoi('Không tải được danh sách đơn chờ ghép'))
       })
       .catch((e) => !bo && setLoi(e instanceof LoiApi ? e.message : 'Không tải được chuyến'))
     return () => {
@@ -60,7 +63,7 @@ export default function ChuyenChiTiet() {
       setC(await (viec === 'ghep' ? ghepDon(id, chonGhep) : goDon(id, chonGo)))
       setChonGhep([])
       setChonGo([])
-      setPhuHop(await donPhuHop(id))
+      setLanTai((n) => n + 1) // tải lại đơn chờ ghép ở effect; lỗi tải lại không bị báo nhầm là lưu hỏng
     } catch (e) {
       if (e instanceof LoiApi && e.status === 422 && e.chiTiet.length) {
         setLoi(e.message)

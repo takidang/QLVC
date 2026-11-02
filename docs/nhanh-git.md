@@ -54,4 +54,4 @@ gh pr create --base main --head hotfix
   - PR nhỏ, review và gộp trong ngày. **Trước khi mở PR** chạy `git merge origin/dev` trên nhánh mình, sửa xung đột ngay.
   - Không làm nhánh mới chồng lên nhánh chưa gộp (ví dụ UC-18 trên UC-17), trừ khi bắt buộc; nếu chồng thì gộp nhánh dưới trước.
 - Không `push --force` lên `main`, `dev`, `test`. Không sửa lịch sử đã push.
-- Nhánh cũ `kiet/nghiep-vu`, `kiet/uc-04` đã gộp hết, có thể xóa.
+- Nhánh cũ `kiet/nghiep-vu` giữ lại (nhóm chốt 30/10); `kiet/uc-04` đã gộp hết, có thể xóa.
