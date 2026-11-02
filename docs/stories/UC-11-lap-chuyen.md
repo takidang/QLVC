@@ -1,6 +1,6 @@
 # UC-11: Lập chuyến
 
-- **Trạng thái:** Đang làm – AC1–AC11 đạt, AC12 giao diện đã làm, chờ Kiệt thử (Đã duyệt 30/10/2026 – Tài)
+- **Trạng thái:** Hoàn thành (01/11/2026, 12/12 AC, giao diện Kiệt thử 30/10) (Đã duyệt 30/10/2026 – Tài)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa); Kế toán chỉ xem
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-11/UC-12) · `docs/api.md` mục 2.4 · `docs/nghiep-vu.md` nhóm B, C, H, mục 2.1 (công thức), mục 11 (C01) · ca test `docs/ca-test-br.md` (TC-BR11…19, 22, 57, 64, 65)
 - **Quy tắc nghiệp vụ liên quan:** BR-11…19 (xe, tài xế), BR-22 (lập chuyến ở `LAP`), BR-30 (lịch sử trạng thái), BR-57 (phân quyền), BR-64 (kết thúc dự kiến, khoảng chiếm), BR-65 (giờ lái dự kiến)

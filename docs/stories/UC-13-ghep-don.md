@@ -1,6 +1,6 @@
 # UC-13: Ghép / gỡ đơn khỏi chuyến
 
-- **Trạng thái:** Đang làm – AC1–AC12 đạt, AC13 giao diện đã làm, chờ Kiệt thử (Đã duyệt 30/10/2026 – Tài: lãi âm khi ghép chỉ cảnh báo; trang chi tiết chuyến riêng)
+- **Trạng thái:** Hoàn thành (01/11/2026, 13/13 AC, giao diện Kiệt thử 30/10) (Đã duyệt 30/10/2026 – Tài: lãi âm khi ghép chỉ cảnh báo; trang chi tiết chuyến riêng)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa); Kế toán xem chi tiết chuyến
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-13) · `docs/api.md` mục 2.4, 3.1 · `docs/nghiep-vu.md` nhóm A, H, mục 2.1, mục 11 bước 3 · ca test `docs/ca-test-br.md` (TC-BR01…09, 30, 49, 52, 63, 64, 67)
 - **Quy tắc nghiệp vụ liên quan:** BR-01…09 (ghép), BR-10 (điểm dừng suy ra), BR-30 (lịch sử), BR-49 (kiểm tải theo kg thực), BR-52 (lãi dự kiến), BR-57, BR-63 (lịch trình, ETA), BR-64 (kết thúc dự kiến), BR-67 (kiểm lại cả chuyến)

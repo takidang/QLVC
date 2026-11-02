@@ -45,12 +45,13 @@
 | UC-03 Xe (mẫu) | 2 | Xong | 13/13 | |
 | UC-06…09 Đơn tối thiểu | 3–4 | Xong | UC-06 6/6, UC-07 9/9, UC-08 11/11 | UC-08-AC11 Kiệt thử 25/10; UC-09 bỏ ở 0.5; phiếu QR làm cùng UC-19 |
 | UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Xong | 9/9 | AC9 Kiệt thử 25/10 |
-| UC-11…13, 15 Chuyến tối thiểu | 3–4 | Đang làm | UC-11 11/12, UC-13 12/13 | Giao diện UC-11, UC-13 chờ Kiệt thử; tiếp UC-12, UC-15 |
+| UC-11…13, 15 Chuyến tối thiểu | 3–4 | Đang làm | UC-11 12/12, UC-13 13/13 | UC-11, UC-13 xong (giao diện Kiệt thử 30/10); UC-12 PR #4 chờ review + Kiệt thử giao diện; tiếp UC-15 |
 | UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Chưa bắt đầu | | |
 | UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 01/11: Đóng UC-11 (12/12), UC-13 (13/13) theo kết quả Kiệt thử giao diện. Lệnh tạo tài khoản demo 4 vai trò (PR #8).
 - 30/10: Chốt quy trình 4 nhánh `main` / `dev` / `test` / `hotfix` + nhánh use case (`docs/nhanh-git.md`, `CLAUDE.md`); tạo `test`, `hotfix`, đưa `dev` về đúng `main`.
 - 30/10: UC-13 Ghép/gỡ đơn: lịch trình ETA (BR-63, 64), kiểm lại cả chuyến (BR-01…06, 12, 13, 15…17, 67), lãi dự kiến, trang chi tiết chuyến; 39 test mới, toàn bộ 354 passed; 12/13 AC, giao diện chờ Kiệt thử. Review UC-11 sửa 2 mục.
 - 30/10: UC-11 Lập chuyến: backend + giao diện, BR-11…19, 64, 65 (khóa dòng chống hai người lập trùng xe), 49 test mới, toàn bộ 315 passed; 11/12 AC, giao diện chờ Kiệt thử.
