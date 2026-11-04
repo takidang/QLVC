@@ -8,7 +8,7 @@ from app.domain.chuyen import TaiXeXet, XeXet, xet_tai_xe, xet_xe
 from app.domain.lich_trinh import lich_trinh
 from app.loi import LoiNghiepVu
 from app.models import Chuyen, DonHang, Ghep, LichSuTrangThai, NguoiDung, TaiXe, Tep, Xe
-from app.modules.chuyen.service import _don_ghep, _ngu_canh, _ra, _truy_van
+from app.modules.chuyen.service import don_ghep, ngu_canh, ra_chuyen, truy_van_chuyen
 from app.modules.don.service import truy_van_don
 from app.phan_trang import PhanTrang
 from app.thoi_gian import GIO_VN, bay_gio, hom_nay_vn
@@ -29,14 +29,14 @@ def danh_sach(db: Session, nd: NguoiDung, nhom: str, pt: PhanTrang) -> tuple[lis
     so_don = (
         select(func.count()).where(Ghep.chuyen_id == Chuyen.id, _DON_CUA_CHUYEN).correlate(Chuyen).scalar_subquery()
     )
-    loc = _truy_van().where(Chuyen.tai_xe_id == _tai_xe_id(db, nd), Chuyen.trang_thai.in_(NHOM[nhom]))
+    loc = truy_van_chuyen().where(Chuyen.tai_xe_id == _tai_xe_id(db, nd), Chuyen.trang_thai.in_(NHOM[nhom]))
     tong = db.scalar(select(func.count()).select_from(loc.subquery()))
     if nhom == "can_lam":  # chuyến đang chạy lên đầu, rồi chuyến sắp chạy sớm trước
         thu_tu = (case((Chuyen.trang_thai == "DANG_CHAY", 0), else_=1), Chuyen.khoi_hanh_du_kien, Chuyen.id)
     else:
         thu_tu = (Chuyen.khoi_hanh_du_kien.desc(), Chuyen.id.desc())
     dong = db.execute(loc.add_columns(so_don).order_by(*thu_tu).offset(pt.bo_qua).limit(pt.so_dong))
-    return [_ra(d[:-1]) | {"so_don": d[-1]} for d in dong], tong
+    return [ra_chuyen(d[:-1]) | {"so_don": d[-1]} for d in dong], tong
 
 
 def _chuyen_cua_toi(db: Session, nd: NguoiDung, chuyen_id: int, khoa: bool = False) -> Chuyen:
@@ -61,8 +61,8 @@ def chi_tiet(db: Session, nd: NguoiDung, chuyen_id: int) -> dict:
     ten_khach = {d.id: k for d, k, *_ in dong}
     # Giờ dự kiến: ETA kế hoạch lưu lúc chốt (BR-71); chưa lưu thì tính theo lịch trình hiện tại (quyết định số 4)
     eta_kh = {(d.id, "LAY"): lay for d, *_, lay, _ in dong} | {(d.id, "GIAO"): giao for d, *_, giao in dong}
-    nc = _ngu_canh(db, c)
-    diem = lich_trinh(c.khoi_hanh_du_kien, nc.thu_tu, nc.phut, [_don_ghep(d) for d in don.values()], nc.cfg08)
+    nc = ngu_canh(db, c)
+    diem = lich_trinh(c.khoi_hanh_du_kien, nc.thu_tu, nc.phut, [don_ghep(d) for d in don.values()], nc.cfg08)
 
     def ra_diem(i: int, p) -> dict:
         d = don[p.don.id]
@@ -89,7 +89,7 @@ def chi_tiet(db: Session, nd: NguoiDung, chuyen_id: int) -> dict:
             "han_giao": d.han_giao,
         }
 
-    goc = _ra(db.execute(_truy_van().where(Chuyen.id == chuyen_id)).one())
+    goc = ra_chuyen(db.execute(truy_van_chuyen().where(Chuyen.id == chuyen_id)).one())
     return goc | {
         "so_don": len(don),
         "luong_tai_xe_chot": c.luong_tai_xe_chot,

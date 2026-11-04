@@ -202,7 +202,7 @@ def tao(db: Session, vao: ChuyenVao, nguoi: NguoiDung) -> int:
 _CHON = (Chuyen, Tuyen.ma, Tuyen.ten, Xe.bien_so, NguoiDung.ho_ten)
 
 
-def _truy_van():
+def truy_van_chuyen():
     return (
         select(*_CHON)
         .join(Tuyen, Tuyen.id == Chuyen.tuyen_id)
@@ -212,7 +212,7 @@ def _truy_van():
     )
 
 
-def _ra(dong) -> dict:
+def ra_chuyen(dong) -> dict:
     c, ma_tuyen, ten_tuyen, bien_so, ten_tai_xe = dong
     return {
         **{
@@ -236,16 +236,16 @@ def _ra(dong) -> dict:
 
 
 def lay(db: Session, chuyen_id: int) -> dict:
-    dong = db.execute(_truy_van().where(Chuyen.id == chuyen_id)).first()
+    dong = db.execute(truy_van_chuyen().where(Chuyen.id == chuyen_id)).first()
     if dong is None:
         raise LoiNghiepVu("KHONG_TIM_THAY", "Không tìm thấy chuyến", 404)
-    return _ra(dong)
+    return ra_chuyen(dong)
 
 
 def danh_sach(
     db: Session, pt: PhanTrang, trang_thai: str | None, ngay: date | None, tuyen_id: int | None
 ) -> tuple[list[dict], int]:
-    loc = _truy_van()
+    loc = truy_van_chuyen()
     if trang_thai:
         loc = loc.where(Chuyen.trang_thai == trang_thai)
     if ngay:  # ngày khởi hành theo giờ Việt Nam
@@ -257,7 +257,7 @@ def danh_sach(
     dong = db.execute(
         loc.order_by(Chuyen.khoi_hanh_du_kien.desc(), Chuyen.id.desc()).offset(pt.bo_qua).limit(pt.so_dong)
     )
-    return [_ra(d) for d in dong], tong
+    return [ra_chuyen(d) for d in dong], tong
 
 
 # ---------- UC-13: ghép / gỡ đơn, chi tiết chuyến ----------
@@ -281,7 +281,7 @@ class NguCanh:
         return max(self.phut.values(), default=0)
 
 
-def _ngu_canh(db: Session, chuyen: Chuyen, xe: Xe | None = None) -> NguCanh:
+def ngu_canh(db: Session, chuyen: Chuyen, xe: Xe | None = None) -> NguCanh:
     nut = db.execute(
         select(TuyenNut.nut_id, TuyenNut.thu_tu, TuyenNut.phut_tu_diem_dau, Nut.ten)
         .join(Nut, Nut.id == TuyenNut.nut_id)
@@ -299,7 +299,7 @@ def _ngu_canh(db: Session, chuyen: Chuyen, xe: Xe | None = None) -> NguCanh:
     )
 
 
-def _don_ghep(d: DonHang) -> DonGhep:
+def don_ghep(d: DonHang) -> DonGhep:
     # Đơn ghép lại sau khi đã lấy hàng: điểm lấy là nơi giữ hàng (BR-69)
     return DonGhep(
         d.id, d.ma_don, d.kg, d.m3, d.nut_giu_id or d.nut_lay_id, d.nut_giao_id, d.lay_tu, d.lay_den, d.han_giao
@@ -320,10 +320,10 @@ def chi_tiet(db: Session, chuyen_id: int) -> dict:
     """Tổng quan + thẻ Hàng (UC-13): tải, thể tích, % đầy, lịch trình BR-63, lãi dự kiến BR-52, đơn đang ghép."""
     goc = lay(db, chuyen_id)
     c = db.get(Chuyen, chuyen_id)
-    nc = _ngu_canh(db, c)
+    nc = ngu_canh(db, c)
     dong = _dong_don_cua_chuyen(db, chuyen_id)
     don = [d for d, *_ in dong]
-    diem = lich_trinh(c.khoi_hanh_du_kien, nc.thu_tu, nc.phut, [_don_ghep(d) for d in don], nc.cfg08)
+    diem = lich_trinh(c.khoi_hanh_du_kien, nc.thu_tu, nc.phut, [don_ghep(d) for d in don], nc.cfg08)
     kg, m3 = sum((d.kg for d in don), Decimal(0)), sum((d.m3 for d in don), Decimal(0))
     t = nc.tuyen
     # Khi LAP lấy định mức, lương từ tuyến; từ khi chốt lấy số đã chốt (BR-71)
@@ -386,10 +386,10 @@ def ghep(db: Session, chuyen_id: int, don_ids: list[int], nguoi: NguoiDung) -> d
     if sai := [d.ma_don for d in moi if d.trang_thai != "CHO_GHEP"]:
         raise LoiNghiepVu("BR-09", f"Đơn {', '.join(sai)} không ở trạng thái Chờ ghép (có thể vừa được ghép)", 409)
 
-    nc = _ngu_canh(db, c, xe)
+    nc = ngu_canh(db, c, xe)
     cu = [d for d, *_ in _dong_don_cua_chuyen(db, c.id)]
     diem, vp = xet_ghep(
-        [_don_ghep(d) for d in cu + moi],
+        [don_ghep(d) for d in cu + moi],
         ids,
         nc.thu_tu,
         nc.phut,
@@ -433,11 +433,11 @@ def go(db: Session, chuyen_id: int, don_ids: list[int], nguoi: NguoiDung) -> dic
     )
     if la := sorted(ids - {d.id for d in cu}):
         raise LoiNghiepVu("DON_KHONG_THUOC_CHUYEN", f"Đơn {la} không đang ghép trong chuyến {c.ma_chuyen}")
-    nc = _ngu_canh(db, c, xe)
+    nc = ngu_canh(db, c, xe)
     # Gỡ làm ETA phía sau sớm lên, có thể rơi trước khung giờ lấy (ghi chú BR-67). Kết thúc chỉ sớm đi
     # nên không cần kiểm lại giấy tờ, trùng lịch.
     diem, vp = xet_ghep(
-        [_don_ghep(d) for d in cu if d.id not in ids],
+        [don_ghep(d) for d in cu if d.id not in ids],
         set(),
         nc.thu_tu,
         nc.phut,
@@ -463,7 +463,7 @@ def don_phu_hop(db: Session, chuyen_id: int) -> list[dict]:
     c = db.get(Chuyen, chuyen_id)
     if c is None:
         raise LoiNghiepVu("KHONG_TIM_THAY", "Không tìm thấy chuyến", 404)
-    nc = _ngu_canh(db, c)
+    nc = ngu_canh(db, c)
     nut_lay = func.coalesce(DonHang.nut_giu_id, DonHang.nut_lay_id)
     dong = db.execute(
         truy_van_don()
@@ -483,7 +483,7 @@ def _khung_cua(db: Session, c: Chuyen) -> KhungChuyen:
 
 
 def _don_dang_ghep(db: Session, chuyen_id: int) -> list[DonGhep]:
-    return [_don_ghep(d) for d, *_ in _dong_don_cua_chuyen(db, chuyen_id)]
+    return [don_ghep(d) for d, *_ in _dong_don_cua_chuyen(db, chuyen_id)]
 
 
 def _chuyen(db: Session, chuyen_id: int) -> Chuyen:
@@ -543,13 +543,13 @@ def _doi_trang_thai_chuyen(db: Session, c: Chuyen, sang: str, nguoi: NguoiDung, 
 
 def chot(db: Session, chuyen_id: int, xac_nhan_chay_rong: bool, xac_nhan_lai_am: bool, nguoi: NguoiDung) -> dict:
     c, xe, tx = _khoa_chuyen(db, chuyen_id, viec="chốt")
-    nc = _ngu_canh(db, c, xe)
+    nc = ngu_canh(db, c, xe)
     ghep_hl = list(db.scalars(select(Ghep).where(Ghep.chuyen_id == c.id, Ghep.hieu_luc)))
     don = list(db.scalars(select(DonHang).where(DonHang.id.in_([g.don_hang_id for g in ghep_hl]))))
 
     # Kiểm lại nhóm A cho mọi đơn đang ghép, nhóm B đủ BR-11…19 theo khoảng chiếm hiện tại (BR-23)
     diem, vp = xet_ghep(
-        [_don_ghep(d) for d in don],
+        [don_ghep(d) for d in don],
         set(),
         nc.thu_tu,
         nc.phut,
