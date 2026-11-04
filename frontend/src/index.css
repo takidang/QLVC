@@ -349,3 +349,19 @@ ul.loi {
     gap: 8px;
   }
 }
+
+/* UC-18: ô bắt đầu / kết thúc chuyến */
+.form-km {
+  margin-bottom: 12px;
+  border-color: #1f5fbf;
+}
+
+.form-km label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+
+.form-km ul.loi {
+  padding-left: 18px;
+}

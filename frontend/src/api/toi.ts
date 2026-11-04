@@ -47,3 +47,11 @@ export const ngayGio = (iso: string) =>
     day: '2-digit',
     month: '2-digit',
   })
+
+// UC-18: bắt đầu / kết thúc chuyến – multipart (km + ảnh đồng hồ đã nén), trả lại chi tiết chuyến
+export function ghiKm(id: number, viec: 'bat-dau' | 'ket-thuc', km: number, anh: Blob) {
+  const form = new FormData()
+  form.append(viec === 'bat-dau' ? 'km_bat_dau' : 'km_ket_thuc', String(km))
+  form.append('anh_dong_ho', anh, 'dong-ho.jpg')
+  return goi<ChuyenCuaToiChiTiet>(`/api/toi/chuyen/${id}/${viec}`, { method: 'POST', body: form })
+}

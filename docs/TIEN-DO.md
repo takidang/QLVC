@@ -96,12 +96,13 @@
 | Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Xong | – | PR #1 merge 16/10 (Tài cập nhật hộ) |
 | Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Cài môi trường xong 19/10 (theo báo cáo tuần 2; Tài sửa hộ 25/10). Ca test BR xong 29/10, Tài chốt 30/10 (Tài cập nhật hộ). Còn UML |
 | UC-04 Tài xế (chép mẫu) | 2 | Xong | 10/10 | Tài review, merge vào `main` 25/10 (Tài cập nhật hộ) |
-| UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Đang làm | UC-02 11/11, UC-17 10/10 | UC-02 xong 30/10, PR #5 gộp vào `dev` 31/10. UC-17 xong 31/10 (14 test, thử giao diện đạt), PR #6 Tài review ổn, đã gộp `dev` mới vào nhánh. Còn UC-18, 19, 20. UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
+| UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Đang làm | UC-02 11/11, UC-17 10/10, UC-18 11/11 | UC-02 xong 30/10, PR #5 gộp vào `dev` 31/10. UC-17 xong 31/10 (14 test, thử giao diện đạt), PR #6 Tài review ổn, đã gộp `dev` mới vào nhánh. UC-18 xong 31/10 (32 test, thử giao diện đạt; thêm `python-multipart`), nhánh `kiet/uc-18-bat-dau-ket-thuc` nối sau UC-17, mở PR sau khi #6 gộp. Còn UC-19, 20. UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
 | Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Chưa bắt đầu | | |
 | UC-24, 25 | 7 | Chưa bắt đầu | | |
 | UC-26, 27, 34 (hiệu suất xe, ưu tiên S – thiếu giờ thì cắt trước), E2E | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Kiệt (mới nhất ở trên)
+- 31/10: UC-18 Bắt đầu / kết thúc chuyến: km + ảnh đồng hồ (BR-26, 70), kiểm lại giấy tờ BR-11…15 bằng hàm UC-11, kết thúc khi mọi đơn có kết quả (BR-28), gỡ đơn thất bại (BR-36); `app/luu_tru.py` kiểm/lưu ảnh dùng chung; thêm `python-multipart`; 32 test; thử giao diện đạt.
 - 31/10: UC-17 Xem chuyến được giao: danh sách cần làm / đã xong, lịch trình từng điểm cho tài xế (BR-58, 63, 71), chỉ hiện lương chuyến, chuyến người khác → 404; trang điện thoại; 14 test; thử giao diện đạt (sửa 1 lỗi kẹt "Đang tải…").
 - 30/10: Thử giao diện UC-11 (5 ca) và UC-13 (5 ca) cho Tài: đạt; thêm dữ liệu thử Phần 5, 6 vào `du-lieu-thu-giao-dien.md`.
 - 30/10: UC-02 Người dùng: Quản lý thêm (QL/ĐP/KT), sửa, đổi vai trò, khóa/mở (mở xóa khóa tạm), đặt lại mật khẩu; tài khoản tài xế chỉ đổi tên đăng nhập, họ tên, mật khẩu; chặn tự khóa và khóa Quản lý cuối (kể cả hai người khóa nhau cùng lúc). 41 test, toàn bộ 395 passed; thêm endpoint đặt lại mật khẩu vào `api.md`. Thử giao diện 6 ca đạt; 11/11 AC.
