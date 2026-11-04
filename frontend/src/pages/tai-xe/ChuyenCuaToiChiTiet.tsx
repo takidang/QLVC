@@ -6,9 +6,12 @@ import {
   chuyenCuaToiChiTiet,
   ghiKm,
   ngayGio,
+  thongBaoQuet,
   type ChuyenCuaToiChiTiet as ChiTiet,
+  type KetQuaQuet,
 } from '../../api/toi'
 import { nenAnh } from '../../nenAnh'
+import { KhongLay, QuetLay } from './QuetLay'
 
 const gio = (iso: string) =>
   new Date(iso).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
@@ -22,10 +25,20 @@ const TEN_TRANG_THAI_DON: Record<string, string> = {
 
 // UC-17: lịch trình cho tài xế – từng điểm dừng, đơn, địa chỉ, gọi điện. Không có cước (quyết định số 3)
 // UC-18: chuyến chờ chạy có ô Bắt đầu, chuyến đang chạy có ô Kết thúc (km + ảnh đồng hồ)
+// UC-19: chuyến đang chạy có khối Lấy hàng (quét QR / gõ mã); điểm lấy chưa lấy có nút Không lấy được
 export default function ChuyenCuaToiChiTiet() {
   const { id } = useParams()
   const [c, setC] = useState<ChiTiet | null>(null)
   const [loi, setLoi] = useState('')
+  const [quet, setQuet] = useState<KetQuaQuet | null>(null)
+
+  // Quét xong: giữ câu báo, tải lại lịch trình để trạng thái điểm đổi ngay
+  const xongQuet = (kq: KetQuaQuet) => {
+    setQuet(kq)
+    chuyenCuaToiChiTiet(Number(id))
+      .then(setC)
+      .catch(() => setLoi('Đã ghi nhận nhưng không tải lại được lịch trình, kéo xuống để tải lại'))
+  }
 
   useEffect(() => {
     chuyenCuaToiChiTiet(Number(id))
@@ -62,6 +75,16 @@ export default function ChuyenCuaToiChiTiet() {
             {c.luong_tai_xe_chot !== null &&
               ` · Lương chuyến ${c.luong_tai_xe_chot.toLocaleString('vi-VN')} đ`}
           </p>
+
+          {quet && (
+            <div role="status">
+              <p className="thanh-cong">{thongBaoQuet(quet, c).xong}</p>
+              {thongBaoQuet(quet, c).canhBao && (
+                <p className="canh-bao">{thongBaoQuet(quet, c).canhBao}</p>
+              )}
+            </div>
+          )}
+          {c.trang_thai === 'DANG_CHAY' && <QuetLay onXong={xongQuet} />}
 
           {(c.trang_thai === 'DA_CHOT' || c.trang_thai === 'DANG_CHAY') && (
             <FormKm key={c.trang_thai} c={c} onXong={setC} />
@@ -100,6 +123,9 @@ export default function ChuyenCuaToiChiTiet() {
                       ? `Khung lấy ${gio(p.lay_tu)}–${gio(p.lay_den)}`
                       : 'Lấy cả ngày'}
                 </div>
+                {c.trang_thai === 'DANG_CHAY' &&
+                  p.viec === 'LAY' &&
+                  p.trang_thai_don === 'DA_GHEP' && <KhongLay maDon={p.ma_don} onXong={xongQuet} />}
               </li>
             ))}
           </ol>

@@ -55,3 +55,72 @@ export function ghiKm(id: number, viec: 'bat-dau' | 'ket-thuc', km: number, anh:
   form.append('anh_dong_ho', anh, 'dong-ho.jpg')
   return goi<ChuyenCuaToiChiTiet>(`/api/toi/chuyen/${id}/${viec}`, { method: 'POST', body: form })
 }
+
+// UC-19: quét mã lấy / báo không lấy được – multipart; giờ quét do máy chủ ghi, chỉ gửi mã, tọa độ, ảnh
+export type KetQuaQuet = {
+  ma_don: string
+  trang_thai: string
+  canh_bao: string[]
+  lap_lai: boolean
+}
+export type LyDo = { id: number; ten: string; ap_dung: 'LAY' | 'GIAO'; phia: 'KHACH' | 'SU_CO_XE' }
+export type Gps = { lat: number; lng: number; do_chinh_xac_m: number }
+
+export const lyDo = (ap_dung: 'LAY' | 'GIAO') =>
+  goi<LyDo[]>(`/api/danh-muc/ly-do?ap_dung=${ap_dung}`)
+
+export function quetMa(vao: {
+  ma_don: string
+  loai: 'LAY' | 'KHONG_LAY'
+  gps: Gps | null
+  anh?: Blob[]
+  ly_do_id?: number
+}) {
+  const form = new FormData()
+  form.append('ma_don', vao.ma_don)
+  form.append('loai', vao.loai)
+  if (vao.gps) {
+    form.append('lat', vao.gps.lat.toFixed(6))
+    form.append('lng', vao.gps.lng.toFixed(6))
+    form.append('do_chinh_xac_m', vao.gps.do_chinh_xac_m.toFixed(1))
+  }
+  vao.anh?.forEach((a, i) => form.append('anh', a, `anh-${i + 1}.jpg`))
+  if (vao.ly_do_id !== undefined) form.append('ly_do_id', String(vao.ly_do_id))
+  return goi<KetQuaQuet>('/api/toi/quet', { method: 'POST', body: form })
+}
+
+// BR-43: xin vị trí lúc quét; từ chối hoặc quá 8 giây thì gửi không tọa độ (máy chủ gắn cờ thiếu GPS)
+export const layGps = () =>
+  new Promise<Gps | null>((xong) => {
+    if (!navigator.geolocation) return xong(null)
+    navigator.geolocation.getCurrentPosition(
+      ({ coords: c }) => xong({ lat: c.latitude, lng: c.longitude, do_chinh_xac_m: c.accuracy }),
+      () => xong(null),
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 30000 },
+    )
+  })
+
+const TEN_KET_QUA: Record<string, string> = {
+  DA_LAY: 'đã lấy',
+  DA_GIAO: 'đã giao',
+  THAT_BAI: 'đã báo thất bại',
+}
+
+// Câu báo sau khi quét (UC-19 bước 4): "Đã lấy: mã đơn, số kiện" – số kiện lấy từ lịch trình UC-17
+export function thongBaoQuet(
+  kq: KetQuaQuet,
+  c: ChuyenCuaToiChiTiet,
+): { xong: string; canhBao?: string } {
+  const kien = c.lich_trinh.find((p) => p.ma_don === kq.ma_don)?.so_kien
+  const xong = kq.lap_lai
+    ? `Đơn ${kq.ma_don} ${TEN_KET_QUA[kq.trang_thai] ?? kq.trang_thai} từ trước, không ghi thêm (BR-45)`
+    : kq.trang_thai === 'DA_LAY'
+      ? `Đã lấy ${kq.ma_don}${kien ? ` (${kien} kiện)` : ''}`
+      : `Đã báo không lấy được ${kq.ma_don}`
+  return kq.canh_bao.includes('THIEU_GPS')
+    ? {
+        xong,
+        canhBao: 'Không lấy được vị trí GPS: lượt quét vẫn ghi nhận, gắn cờ thiếu GPS (BR-43)',
+      }
+    : { xong }
+}

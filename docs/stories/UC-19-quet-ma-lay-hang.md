@@ -75,7 +75,14 @@ Chuyến đang chạy, tài xế tới điểm lấy, quét (hoặc gõ) mã đ�
 - Test đã viết: `tests/api/test_uc19_quet_lay.py` (50 ca). Đã thử làm hỏng 2 quy tắc (bỏ chặn trường lạ, coi mọi quét lặp là cùng ý) → 4 test đỏ, rồi trả lại code.
 - Kết quả: 50/50 đạt; toàn bộ **488 passed**; `ruff check`, `ruff format`, `alembic check`, `npm run lint`, `npm run build` sạch.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/api/test_uc19_quet_lay.py`
-- Còn lại: AC13 giao diện tài xế (sau khi PR #13 gộp), AC14 phiếu QR, AC15 camera (chờ Tài chốt thư viện).
+- File đã đổi (giao diện, 04/11, sau khi #12, #13 gộp và Tài chốt thư viện):
+  - `frontend/src/pages/tai-xe/QuetLay.tsx` (mới): khối **Lấy hàng** (camera `qr-scanner` + ô gõ mã), nút **Không lấy được** (lý do + ảnh nén bằng `nenAnh` của UC-18); GPS xin lúc quét, từ chối hoặc quá 8 giây thì gửi không tọa độ.
+  - `frontend/src/pages/tai-xe/ChuyenCuaToiChiTiet.tsx`: gắn khối quét khi `DANG_CHAY`, câu báo "Đã lấy mã đơn (n kiện)", tải lại lịch trình sau mỗi lượt quét.
+  - `frontend/src/pages/dieu-phoi/PhieuDon.tsx` (mới) + route `don/:id/phieu`; `DonDanhSach.tsx` (của Tài): **chỉ** đổi ô mã đơn thành liên kết mở phiếu. `src/qrcode.d.ts` khai báo kiểu cho `qrcode` thay vì cài thêm `@types/qrcode`.
+  - `frontend/src/api/toi.ts`: `quetMa`, `lyDo`, `layGps`, `thongBaoQuet`. `index.css`: khung camera, phiếu, `@media print`. `vite.config.ts`: `allowedHosts: ['.trycloudflare.com']` để thử camera qua Cloudflare Quick Tunnel.
+  - Gói mới (Tài đồng ý 04/11), ghim đúng phiên bản: `qrcode` 1.5.4 (MIT, kéo theo `dijkstrajs`, `pngjs`, `yargs` – hai gói sau chỉ dùng cho bản Node/CLI, không vào bundle), `qr-scanner` 1.4.2 (MIT, có sẵn kiểu TS, worker tạo từ chính mã của gói). Đã đọc mã nguồn: không gọi mạng, không đọc biến môi trường, không `eval`, không script cài đặt; cài với `--ignore-scripts`; `npm audit` 0 lỗ hổng.
+  - `docs/api.md`: bỏ `GET /api/don/{id}/phieu` (phiếu là trang in frontend). `docs/kien-truc.md` mục 1: ghi thư viện đã chọn.
+- Thử giao diện: `docs/test-evidence/UC-19/du-lieu.md` (phiếu p1–p3, tài xế 360 px a–g, điện thoại thật qua tunnel h–i).
 - Lệch đặc tả: thêm migration nạp lý do (đã ghi "Đang chặn", PR #11); `api.md` ghi rõ trường lạ → 400, quét trái kết quả → 409 BR-39, UC-19 chỉ nhận `LAY`, `KHONG_LAY`.
 
 ## Truy vết và kết quả

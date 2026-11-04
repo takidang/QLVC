@@ -10,6 +10,7 @@ import ChuyenDanhSach from './pages/dieu-phoi/ChuyenDanhSach'
 import DonDanhSach from './pages/dieu-phoi/DonDanhSach'
 import KhachHangDanhSach from './pages/dieu-phoi/KhachHangDanhSach'
 import NutDanhSach from './pages/dieu-phoi/NutDanhSach'
+import PhieuDon from './pages/dieu-phoi/PhieuDon'
 import TuyenDanhSach from './pages/dieu-phoi/TuyenDanhSach'
 import TaiXeDanhSach from './pages/dieu-phoi/TaiXeDanhSach'
 import XeDanhSach from './pages/dieu-phoi/XeDanhSach'
@@ -38,6 +39,7 @@ const TRANG_CON: Partial<
     { duong_dan: 'chuyen', ten: 'Chuyến', trang: <ChuyenDanhSach /> },
     { duong_dan: 'chuyen/:id', ten: 'Chi tiết chuyến', trang: <ChuyenChiTiet />, an: true },
     { duong_dan: 'don', ten: 'Đơn hàng', trang: <DonDanhSach /> },
+    { duong_dan: 'don/:id/phieu', ten: 'Phiếu đơn', trang: <PhieuDon />, an: true },
     { duong_dan: 'xe', ten: 'Xe', trang: <XeDanhSach /> },
     { duong_dan: 'tai-xe', ten: 'Tài xế', trang: <TaiXeDanhSach /> },
     { duong_dan: 'khach-hang', ten: 'Khách hàng', trang: <KhachHangDanhSach /> },

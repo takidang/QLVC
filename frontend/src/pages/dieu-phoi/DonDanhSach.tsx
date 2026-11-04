@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent, type InputHTMLAttributes } from 'react'
+import { Link } from 'react-router-dom'
 import { danhSachDon, taoDon, tinhCuoc, type BaoGia, type Don } from '../../api/don'
 import { kemMaBr, LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachKhachHang, type KhachHang } from '../../api/khachHang'
@@ -103,7 +104,11 @@ export default function DonDanhSach() {
         <tbody>
           {ds.du_lieu.map((d) => (
             <tr key={d.id}>
-              <td className="bien-so">{d.ma_don}</td>
+              <td className="bien-so">
+                <Link to={`${d.id}/phieu`} title="Mở phiếu in QR">
+                  {d.ma_don}
+                </Link>
+              </td>
               <td>{d.ten_khach}</td>
               <td>
                 {d.tinh_lay} → {d.tinh_giao}
