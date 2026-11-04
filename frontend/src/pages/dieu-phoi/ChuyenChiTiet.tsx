@@ -148,12 +148,12 @@ export default function ChuyenChiTiet() {
       <div className="thanh-cong-cu">
         <h1>Chuyến {c.ma_chuyen}</h1>
         <span className="nhan">{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</span>
-        {dangLap && (
+        {dangLap && lyDoHuy === null && (
           <button disabled={dangGui} onClick={() => lam('chot')}>
             Chốt chuyến
           </button>
         )}
-        {c.trang_thai === 'DA_CHOT' && (
+        {c.trang_thai === 'DA_CHOT' && lyDoHuy === null && (
           <button className="phu" disabled={dangGui} onClick={() => lam('mo-chot')}>
             Mở chốt
           </button>
@@ -183,7 +183,7 @@ export default function ChuyenChiTiet() {
             />
           </label>
           <button disabled={dangGui || !lyDoHuy.trim()}>Xác nhận hủy</button>
-          <button type="button" className="phu" onClick={() => setLyDoHuy(null)}>
+          <button type="button" className="phu" disabled={dangGui} onClick={() => setLyDoHuy(null)}>
             Thôi
           </button>
         </form>
