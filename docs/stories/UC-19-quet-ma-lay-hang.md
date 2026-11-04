@@ -1,6 +1,6 @@
 # UC-19: Quét mã lấy hàng / báo không lấy được
 
-- **Trạng thái:** Đang làm (duyệt 04/11/2026, Kiệt: làm đúng nghiệp vụ đã chốt, gồm phiếu QR và camera)
+- **Trạng thái:** Hoàn thành (04/11/2026, 15/15 AC, giao diện Kiệt thử 04/11) (duyệt 04/11/2026, Kiệt: làm đúng nghiệp vụ đã chốt, gồm phiếu QR và camera)
 - **Tác nhân:** Tài xế (điện thoại)
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-19) · `docs/api.md` mục 3.2 (`POST /api/toi/quet`), mục 2 (`GET /api/danh-muc/ly-do`) · `docs/so-do.md` mục 9 (thứ tự khóa) · `docs/security-rules.md` (quét mã, upload)
 - **Quy tắc nghiệp vụ liên quan:** BR-38 (chỉ đơn thuộc chuyến của mình đang chạy), BR-39 (lấy → `DA_LAY`, không lấy được → `THAT_BAI`), BR-42 (thất bại cần lý do + ảnh), BR-43 (giờ máy chủ, GPS, cờ thiếu GPS), BR-45 (quét lại không tạo bản ghi mới), BR-30 (lịch sử trạng thái), BR-37 (lý do có phía để đếm)
@@ -82,7 +82,9 @@ Chuyến đang chạy, tài xế tới điểm lấy, quét (hoặc gõ) mã đ�
   - `frontend/src/api/toi.ts`: `quetMa`, `lyDo`, `layGps`, `thongBaoQuet`. `index.css`: khung camera, phiếu, `@media print`. `vite.config.ts`: `allowedHosts: ['.trycloudflare.com']` để thử camera qua Cloudflare Quick Tunnel.
   - Gói mới (Tài đồng ý 04/11), ghim đúng phiên bản: `qrcode` 1.5.4 (MIT, kéo theo `dijkstrajs`, `pngjs`, `yargs` – hai gói sau chỉ dùng cho bản Node/CLI, không vào bundle), `qr-scanner` 1.4.2 (MIT, có sẵn kiểu TS, worker tạo từ chính mã của gói). Đã đọc mã nguồn: không gọi mạng, không đọc biến môi trường, không `eval`, không script cài đặt; cài với `--ignore-scripts`; `npm audit` 0 lỗ hổng.
   - `docs/api.md`: bỏ `GET /api/don/{id}/phieu` (phiếu là trang in frontend). `docs/kien-truc.md` mục 1: ghi thư viện đã chọn.
-- Thử giao diện: `docs/test-evidence/UC-19/du-lieu.md` (phiếu p1–p3, tài xế 360 px a–g, điện thoại thật qua tunnel h–i).
+- Thử giao diện: `docs/test-evidence/UC-19/du-lieu.md` (phiếu p1–p3, tài xế 360 px a–g, điện thoại thật qua tunnel h–i): **12/12 ca đạt** (Kiệt, 04/11).
+- Kiểm lại trước khi đóng (04/11): gộp `dev` mới (có #12, #13), toàn bộ **541 passed**; gộp thử với PR #14 của Tài (đổi tên hàm `chuyen/service`, UC-19 không dùng) cũng 541 passed; ruff, `alembic check`, lint, prettier, build sạch; `npm audit` 0 lỗ hổng.
+- **Để sau (Kiệt quyết 04/11, ghi trong `du-lieu.md`):** (1) Safari iPhone không hỏi quyền vị trí nên ghi thiếu GPS (Chrome iPhone lấy được) – đề xuất xin vị trí ngay lúc bấm Quét / Lấy hàng; (2) dòng lỗi camera cũ còn hiện khi mở camera lại; (3) cảnh báo quét sai vị trí (BR-44 đã bỏ ở 0.5) – thay đổi nghiệp vụ, bàn với Tài.
 - Lệch đặc tả: thêm migration nạp lý do (đã ghi "Đang chặn", PR #11); `api.md` ghi rõ trường lạ → 400, quét trái kết quả → 409 BR-39, UC-19 chỉ nhận `LAY`, `KHONG_LAY`.
 
 ## Truy vết và kết quả
@@ -101,6 +103,6 @@ Chuyến đang chạy, tài xế tới điểm lấy, quét (hoặc gõ) mã đ�
 | UC-19-AC10 | API | `test_uc19_ac10_*` (6 ca) | Đạt | 04/11/2026 |
 | UC-19-AC11 | API | `test_uc19_ac11_*` (5 ca) | Đạt | 04/11/2026 |
 | UC-19-AC12 | Dữ liệu | CSDL dev: `upgrade` → 12 lý do (6 LẤY, 3 `SU_CO_XE`), `downgrade -1` → 0, `upgrade` lại → 12, `alembic check` sạch; conftest + `test_uc19_ac12_migration_khop_danh_muc` | Đạt | 04/11/2026 |
-| UC-19-AC13 | UI | | CHƯA KIỂM | |
-| UC-19-AC14 | UI | | CHƯA KIỂM | |
-| UC-19-AC15 | UI | | CHƯA KIỂM | |
+| UC-19-AC13 | UI | Kiệt thử 360 px, ca a–g: `a1-quet-qr-lay-hang.png`, `a2-khong-lay-duoc.png`, `b-da-lay-thieu-gps.png`, `c-quet-lai.png`, `d-khong-thuoc.png`, `e-khong-lay-duoc.png`, `f-thieu-ly-do.png`, `g-khong-camera.png` | Đạt | 04/11/2026 |
+| UC-19-AC14 | UI | Kiệt thử ca p1–p3: `p1-phieu.png`, `p2-xem-truoc-in.png`, `p3-doc-qr.png` (camera iPhone đọc ra `DH-6HXV2Y`) | Đạt | 04/11/2026 |
+| UC-19-AC15 | UI | Kiệt thử trên iPhone qua Cloudflare Tunnel, ca h–i: `h-camera.png`, `i-quet-camera.png`; CSDL lượt quét có tọa độ (Chrome iPhone) | Đạt | 04/11/2026 |
