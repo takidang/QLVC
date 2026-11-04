@@ -19,6 +19,7 @@ os.environ["DATABASE_URL"] = TEST_URL.render_as_string(hide_password=False)
 from app.auth.bao_mat import bam_mat_khau  # noqa: E402
 from app.db import get_engine  # noqa: E402
 from app.domain.cau_hinh import THAM_SO  # noqa: E402
+from app.domain.ly_do import LY_DO  # noqa: E402
 from app.main import app  # noqa: E402
 from app.models import Base, NguoiDung  # noqa: E402
 
@@ -41,6 +42,10 @@ def _csdl_test():
     with engine.connect() as c:
         da_nap = dict(c.execute(text("SELECT ma, gia_tri FROM cau_hinh")).all())
     assert da_nap == {ma: ts.mac_dinh for ma, ts in THAM_SO.items()}, "Migration CFG lệch app/domain/cau_hinh.py"
+    # Danh mục lý do (UC-19-AC12): migration nạp đúng 12 lý do như app/domain/ly_do.py
+    with engine.connect() as c:
+        ly_do = tuple(tuple(r) for r in c.execute(text("SELECT ten, ap_dung, phia FROM ly_do ORDER BY id")))
+    assert ly_do == LY_DO, "Migration lý do lệch app/domain/ly_do.py"
     return engine
 
 
@@ -54,6 +59,10 @@ def db(_csdl_test):
         # Migration nạp sẵn CFG mặc định; xóa bảng xong thì nạp lại để test sau vẫn có
         for ma, ts in THAM_SO.items():
             c.execute(text("INSERT INTO cau_hinh (ma, gia_tri) VALUES (:ma, :gt)"), {"ma": ma, "gt": ts.mac_dinh})
+        for ten, ap_dung, phia in LY_DO:  # id 1…12 như migration (đã RESTART IDENTITY)
+            c.execute(
+                text("INSERT INTO ly_do (ten, ap_dung, phia) VALUES (:t, :a, :p)"), {"t": ten, "a": ap_dung, "p": phia}
+            )
 
 
 @pytest.fixture

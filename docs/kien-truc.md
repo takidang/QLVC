@@ -20,6 +20,8 @@
 
 Thư viện cụ thể (đọc QR, nén ảnh, sinh kiểu từ OpenAPI…) chọn khi làm story tương ứng, **hỏi trước khi cài** (CLAUDE.md) và kiểm tra bảo mật như với skill.
 
+Đã chọn: nén ảnh bằng canvas, không thư viện (UC-18). QR (UC-19, Tài chốt 04/11): `qrcode` 1.5.4 vẽ QR trên phiếu in, `qr-scanner` 1.4.2 đọc QR bằng camera (chạy cả iPhone), giữ ô gõ mã tay; ghim đúng phiên bản trong `package.json`. Thử camera trên điện thoại qua Cloudflare Quick Tunnel (`vite.config.ts` cho phép `*.trycloudflare.com`), không thêm plugin HTTPS.
+
 ---
 
 ## 2. Sơ đồ triển khai

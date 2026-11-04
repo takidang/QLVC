@@ -69,7 +69,7 @@
 | GET | `/api/don/{id}` | DP, KT | — | Kèm lịch sử trạng thái, các lần ghép, đã lấy hàng hay chưa |
 | PATCH | `/api/don/{id}` | DP | UC-10 | BR-33: chỉ khi `CHO_GHEP`/`DA_GHEP`; tính lại cước từ bản sao giá; đang ghép thì kiểm BR-67 |
 | POST | `/api/don/{id}/huy` | DP | UC-10, UC-22 | BR-34, cần `ly_do`; nhận cả `THAT_BAI` chưa có lượt quét lấy |
-| GET | `/api/don/{id}/phieu` | DP | UC-08 | Phiếu gửi hàng có QR (PDF hoặc PNG) |
+| – | ~~`/api/don/{id}/phieu`~~ | DP | UC-08, UC-19 | Bỏ endpoint (Tài chốt 04/11): phiếu gửi hàng là **trang in ở frontend** `/dieu-phoi/don/{id}/phieu`, đọc `GET /api/don/{id}`, vẽ QR bằng gói `qrcode` (QR chỉ chứa mã đơn), in bằng Ctrl+P |
 | POST | `/api/don/{id}/ghep-lai` | DP | UC-22 | `THAT_BAI → CHO_GHEP` (BR-36, 37, 69); `{han_giao?, nut_giu_id?, dia_chi_giu?, lat_giu?, lng_giu?}`; nơi giữ hàng bắt buộc khi đơn đã lấy |
 | POST | `/api/don/{id}/tra-hang` | DP | UC-22 | `THAT_BAI → TRA_HANG`, chỉ khi đơn đã có lượt quét lấy (BR-36) |
 
@@ -129,7 +129,7 @@ Mọi endpoint ghi tiền đều ghi `NHAT_KY_TIEN` (BR-62).
 
 | Phương thức | Đường dẫn | Vai trò | UC | BR / ghi chú |
 |---|---|---|---|---|
-| GET | `/api/danh-muc/ly-do` | DP, TX | UC-19, 20, 22 | `?ap_dung=LAY\|GIAO`; mỗi lý do có `phia` (`KHACH`/`SU_CO_XE`) cho BR-37, 42 |
+| GET | `/api/danh-muc/ly-do` | DP, TX | UC-19, 20, 22 | `?ap_dung=LAY\|GIAO` (bỏ trống: cả hai); trả `[{id, ten, ap_dung, phia}]`, `phia` (`KHACH`/`SU_CO_XE`) cho BR-37, 42. Danh mục nạp bằng migration `2a4c8d5f38e7` (12 lý do, `app/domain/ly_do.py`) |
 | GET | `/api/tep/{id}/link` | DP, KT, TX (của chuyến mình) | — | Link có hạn 5 phút (NFR-SEC-04) |
 | POST | `/api/tra-cuu` | CK | UC-28 | **Chi tiết ở mục 3.4** |
 
@@ -190,13 +190,13 @@ Request:
 | `ten_nguoi_nhan` | Với `GIAO` | |
 | `ly_do_id` | Với `KHONG_LAY`, `GIAO_THAT_BAI` | Mã trong danh mục lý do |
 
-**Không có trường thời gian**: giờ quét lấy từ server.
+**Không có trường thời gian**: giờ quét lấy từ server. Gửi trường thời gian hoặc trường lạ bất kỳ → 400 (TC-BR43-02). Gửi một nửa tọa độ (chỉ `lat` hoặc chỉ `lng`) → 400. Lỗi: đơn không thuộc chuyến của mình, chưa ghép hoặc mã không có → 403 `BR-38` (cùng một câu); chuyến không `DANG_CHAY` → 409 `BR-38`; thất bại thiếu lý do / ảnh → 422 `BR-42`; ảnh sai loại 400, quá 500 KB 413. UC-19 nhận `LAY`, `KHONG_LAY`; `GIAO`, `GIAO_THAT_BAI` thêm ở UC-20 (hiện → 400). Code ở `modules/quet/`.
 
 200:
 ```json
 { "ma_don": "DH-0012", "trang_thai": "DA_GIAO", "canh_bao": ["GIAO_TRE"], "lap_lai": false }
 ```
-`canh_bao` có thể gồm `THIEU_GPS` (BR-43), `GIAO_TRE` (BR-72). `lap_lai: true` khi đơn đã có kết quả từ trước (BR-45); khi đó không tạo bản ghi mới.
+`canh_bao` có thể gồm `THIEU_GPS` (BR-43), `GIAO_TRE` (BR-72). `lap_lai: true` khi quét lặp **cùng ý** với kết quả đã có (BR-45), ví dụ quét lấy đơn đã lấy; khi đó không tạo bản ghi mới, không lưu ảnh. Quét **trái kết quả** (báo không lấy được đơn đã lấy, quét lấy đơn đã thất bại) → 409 `BR-39`, `chi_tiet[0].trang_thai` là trạng thái hiện tại (TC-BR39-02).
 
 Lỗi: 403 đơn không thuộc chuyến của tài xế đang đăng nhập (BR-38, chống IDOR); 409 chuyến của mình nhưng không ở `DANG_CHAY` (BR-38), hoặc sai trạng thái đơn (ví dụ giao khi chưa lấy, BR-40); 422 thiếu ảnh, chữ ký, lý do (BR-41, 42); 413 file quá lớn.
 
