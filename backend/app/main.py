@@ -11,12 +11,14 @@ from app.modules.chuyen.router import router as chuyen_router
 from app.modules.danh_muc.bang_gia.router import router as bang_gia_router
 from app.modules.danh_muc.cau_hinh.router import router as cau_hinh_router
 from app.modules.danh_muc.khach_hang.router import router as khach_hang_router
+from app.modules.danh_muc.ly_do.router import router as ly_do_router
 from app.modules.danh_muc.nut.router import router as nut_router
 from app.modules.danh_muc.tai_xe.router import router as tai_xe_router
 from app.modules.danh_muc.tuyen.router import router as tuyen_router
 from app.modules.danh_muc.xe.router import router as xe_router
 from app.modules.don.router import router as don_router
 from app.modules.nguoi_dung.router import router as nguoi_dung_router
+from app.modules.quet.router import router as quet_router
 from app.modules.toi.router import router as toi_router
 
 
@@ -34,8 +36,10 @@ app.include_router(cau_hinh_router)
 app.include_router(chuyen_router)
 app.include_router(don_router)
 app.include_router(khach_hang_router)
+app.include_router(ly_do_router)
 app.include_router(nguoi_dung_router)
 app.include_router(nut_router)
+app.include_router(quet_router)
 app.include_router(tai_xe_router)
 app.include_router(toi_router)
 app.include_router(tuyen_router)
