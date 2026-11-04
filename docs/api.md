@@ -86,8 +86,8 @@
 | GET | `/api/chuyen/{id}/don-phu-hop` | DP | UC-13 | Đơn `CHO_GHEP` đã lọc BR-03, 04 (nút lấy = nơi giữ hàng nếu có, BR-69), hạn giao gần trước, tối đa 200 |
 | POST | `/api/chuyen/{id}/ghep` | DP | UC-13 | **Chi tiết ở mục 3.1** |
 | POST | `/api/chuyen/{id}/go` | DP | UC-13 | `{don_ids}`; kiểm lại cả chuyến (BR-67); ghép hết hiệu lực, đơn `→ CHO_GHEP`. Trả như 3.1. Gỡ làm đơn khác vi phạm → 422 `VI_PHAM_GO` (`chi_tiet` như 3.1); đơn không đang ghép trong chuyến → 422 `DON_KHONG_THUOC_CHUYEN`; chuyến không `LAP` → 409 `BR-09` |
-| POST | `/api/chuyen/{id}/chot` | DP | UC-15 | BR-23, 71; trả cảnh báo lãi âm (BR-52), cần `xac_nhan_lai_am=true`; chuyến 0 đơn cần `xac_nhan_chay_rong=true` |
-| POST | `/api/chuyen/{id}/mo-chot` | DP | UC-15 | BR-24: còn tạm ứng `HIEU_LUC` → 409 |
+| POST | `/api/chuyen/{id}/chot` | DP | UC-15 | Body tùy chọn `{xac_nhan_chay_rong, xac_nhan_lai_am}` (mặc định false). Kiểm lại nhóm A, B (BR-23): vi phạm → 422 `VI_PHAM_CHOT` (`chi_tiet` như 3.1); 0 đơn thiếu `xac_nhan_chay_rong` → 422 `BR-23`; lãi dự kiến âm thiếu `xac_nhan_lai_am` → 422 `BR-52` (chuyến rỗng chỉ cần xác nhận chạy rỗng). Lưu định mức, lương, ETA kế hoạch (BR-71). Trả như 3.1 (thêm `chay_rong`); chuyến không `LAP` → 409 `BR-09` |
+| POST | `/api/chuyen/{id}/mo-chot` | DP | UC-15 | BR-24: còn tạm ứng `HIEU_LUC` → 409 `BR-24`. Về `LAP`, xóa số đã chốt và ETA kế hoạch. Trả như 3.1; chuyến không `DA_CHOT` → 409 `BR-09` |
 | POST | `/api/chuyen/{id}/huy` | DP | UC-16 | BR-25, cần `ly_do`; còn tạm ứng `HIEU_LUC` → 409 |
 | POST | `/api/chuyen/{id}/ket-thuc-su-co` | DP | UC-32 | Chỉ khi `DANG_CHAY`; `{ly_do, km_ket_thuc?}` (BR-68); đơn `DA_GHEP`, `DA_LAY` → `THAT_BAI` lý do "sự cố xe" |
 | POST | `/api/su-co/{id}/dong` | DP | UC-32 | `{cach_xu_ly}`; sự cố `MO → DONG` |

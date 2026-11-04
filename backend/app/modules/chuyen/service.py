@@ -26,7 +26,7 @@ from app.domain.lich_trinh import (
     xet_tai,
 )
 from app.loi import LoiNghiepVu
-from app.models import Chuyen, DonHang, Ghep, LichSuTrangThai, NguoiDung, Nut, TaiXe, Tuyen, TuyenNut, Xe
+from app.models import Chuyen, DonHang, Ghep, LichSuTrangThai, NguoiDung, Nut, TaiXe, TamUng, Tuyen, TuyenNut, Xe
 from app.modules.chuyen.schemas import ChuyenVao
 from app.modules.danh_muc.cau_hinh import service as cau_hinh
 from app.modules.don.service import ra_don, truy_van_don
@@ -349,17 +349,23 @@ def chi_tiet(db: Session, chuyen_id: int) -> dict:
         ],
         "lai_du_kien": lai,
         "canh_bao_lai_am": lai < 0,  # chỉ cảnh báo khi ghép; xác nhận ở lúc chốt (quyết định UC-13 số 6)
+        "chay_rong": c.chay_rong,
         "don": [ra_don(d) for d in dong],
     }
 
 
-def _khoa_chuyen(db: Session, chuyen_id: int) -> tuple[Chuyen, Xe, TaiXe]:
+_TEN_TRANG_THAI = {"LAP": "Đang lập", "DA_CHOT": "Đã chốt"}
+
+
+def _khoa_chuyen(db: Session, chuyen_id: int, can: str = "LAP", viec: str = "thay đổi") -> tuple[Chuyen, Xe, TaiXe]:
     """Khóa chuyến rồi xe, tài xế (cùng thứ tự với lập chuyến) để hai thao tác trên một chuyến chạy lần lượt."""
     c = db.get(Chuyen, chuyen_id, with_for_update=True)
     if c is None:
         raise LoiNghiepVu("KHONG_TIM_THAY", "Không tìm thấy chuyến", 404)
-    if c.trang_thai != "LAP":
-        raise LoiNghiepVu("BR-09", f"Chuyến {c.ma_chuyen} không ở trạng thái Đang lập, không thay đổi được", 409)
+    if c.trang_thai != can:
+        raise LoiNghiepVu(
+            "BR-09", f"Chuyến {c.ma_chuyen} không ở trạng thái {_TEN_TRANG_THAI[can]}, không {viec} được", 409
+        )
     return c, db.get(Xe, c.xe_id, with_for_update=True), db.get(TaiXe, c.tai_xe_id, with_for_update=True)
 
 
@@ -519,5 +525,71 @@ def phan_cong(db: Session, chuyen_id: int, xe_id: int, tai_xe_id: int) -> dict:
     if vp:
         raise LoiNghiepVu(vp[0]["ma"], "Không đổi được xe/tài xế", chi_tiet=vp)
     c.xe_id, c.tai_xe_id = xe.id, tx.id
+    db.commit()
+    return chi_tiet(db, c.id)
+
+
+# ---------- UC-15: chốt / mở chốt ----------
+
+
+def _doi_trang_thai_chuyen(db: Session, c: Chuyen, sang: str, nguoi: NguoiDung) -> None:
+    db.add(LichSuTrangThai(doi_tuong="CHUYEN", doi_tuong_id=c.id, tu=c.trang_thai, sang=sang, nguoi=nguoi.id))
+    c.trang_thai = sang
+
+
+def chot(db: Session, chuyen_id: int, xac_nhan_chay_rong: bool, xac_nhan_lai_am: bool, nguoi: NguoiDung) -> dict:
+    c, xe, tx = _khoa_chuyen(db, chuyen_id, viec="chốt")
+    nc = _ngu_canh(db, c, xe)
+    ghep_hl = list(db.scalars(select(Ghep).where(Ghep.chuyen_id == c.id, Ghep.hieu_luc)))
+    don = list(db.scalars(select(DonHang).where(DonHang.id.in_([g.don_hang_id for g in ghep_hl]))))
+
+    # Kiểm lại nhóm A cho mọi đơn đang ghép, nhóm B đủ BR-11…19 theo khoảng chiếm hiện tại (BR-23)
+    diem, vp = xet_ghep(
+        [_don_ghep(d) for d in don],
+        set(),
+        nc.thu_tu,
+        nc.phut,
+        c.khoi_hanh_du_kien,
+        nc.cfg08,
+        xe.tai_trong_kg,
+        xe.the_tich_m3,
+    )
+    k = replace(_khung(db, c.tuyen_id, c.khoi_hanh_du_kien), ket_thuc=c.ket_thuc_du_kien)
+    ten = db.get(NguoiDung, tx.nguoi_dung_id).ho_ten
+    vp += _xet_xe(db, k, [xe], c.id)[xe.id] + _xet_tai_xe(db, k, [(tx, ten)], xe.ktt_toan_bo_kg, c.id)[tx.id]
+    if vp:
+        raise LoiNghiepVu("VI_PHAM_CHOT", "Chuyến vi phạm quy tắc, chưa chốt", chi_tiet=vp)
+
+    t = nc.tuyen
+    if not don:
+        if not xac_nhan_chay_rong:
+            raise LoiNghiepVu("BR-23", "Chuyến chưa có đơn nào, cần xác nhận chạy rỗng")
+    else:  # chuyến rỗng luôn lãi âm, xác nhận chạy rỗng là đủ (quyết định UC-15 số 2)
+        lai = lai_du_kien([d.cuoc_tinh for d in don], t.dm_dau + t.dm_cau_duong + t.dm_boc_xep, t.dm_luong_tai_xe)
+        if lai < 0 and not xac_nhan_lai_am:
+            raise LoiNghiepVu("BR-52", f"Lãi dự kiến âm ({lai:,} đ), cần xác nhận".replace(",", "."))
+
+    # Lưu định mức, lương của tuyến và ETA kế hoạch từng điểm (BR-71)
+    c.dm_dau_chot, c.dm_cau_duong_chot, c.dm_boc_xep_chot = t.dm_dau, t.dm_cau_duong, t.dm_boc_xep
+    c.luong_tai_xe_chot, c.chay_rong = t.dm_luong_tai_xe, not don
+    eta = {(d.don.id, d.viec): d.eta for d in diem}
+    for g in ghep_hl:
+        g.eta_lay_ke_hoach, g.eta_giao_ke_hoach = eta[g.don_hang_id, "LAY"], eta[g.don_hang_id, "GIAO"]
+    _doi_trang_thai_chuyen(db, c, "DA_CHOT", nguoi)
+    db.commit()
+    return chi_tiet(db, c.id)
+
+
+def mo_chot(db: Session, chuyen_id: int, nguoi: NguoiDung) -> dict:
+    c, _, _ = _khoa_chuyen(db, chuyen_id, can="DA_CHOT", viec="mở chốt")
+    if db.scalar(select(TamUng.id).where(TamUng.chuyen_id == c.id, TamUng.trang_thai == "HIEU_LUC").limit(1)):
+        raise LoiNghiepVu("BR-24", "Chuyến còn tạm ứng chưa thu hồi, cần Kế toán thu hồi tạm ứng trước", 409)
+    # Về LAP thì lãi dự kiến lấy lại từ tuyến; chốt lại lưu theo số mới (BR-52, 71; quyết định UC-15 số 4)
+    c.dm_dau_chot = c.dm_cau_duong_chot = c.dm_boc_xep_chot = c.luong_tai_xe_chot = None
+    c.chay_rong = False
+    db.execute(
+        update(Ghep).where(Ghep.chuyen_id == c.id, Ghep.hieu_luc).values(eta_lay_ke_hoach=None, eta_giao_ke_hoach=None)
+    )
+    _doi_trang_thai_chuyen(db, c, "LAP", nguoi)
     db.commit()
     return chi_tiet(db, c.id)
