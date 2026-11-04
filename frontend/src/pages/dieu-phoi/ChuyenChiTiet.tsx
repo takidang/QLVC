@@ -6,6 +6,7 @@ import {
   donPhuHop,
   ghepDon,
   goDon,
+  huyChuyen,
   moChotChuyen,
   phanCong,
   taiXeKhaDungChuyen,
@@ -39,7 +40,7 @@ const XAC_NHAN: Record<string, keyof XacNhanChot> = {
   'BR-52': 'xac_nhan_lai_am',
 }
 
-// Chi tiết chuyến, thẻ Hàng (UC-13): tải, lịch trình, ghép và gỡ đơn; chốt / mở chốt (UC-15)
+// Chi tiết chuyến, thẻ Hàng (UC-13): tải, lịch trình, ghép và gỡ đơn; chốt / mở chốt (UC-15); hủy (UC-16)
 export default function ChuyenChiTiet() {
   const id = Number(useParams().id)
   const [c, setC] = useState<Chuyen | null>(null)
@@ -47,6 +48,7 @@ export default function ChuyenChiTiet() {
   const [chonGhep, setChonGhep] = useState<number[]>([])
   const [chonGo, setChonGo] = useState<number[]>([])
   const [loi, setLoi] = useState('')
+  const [lyDoHuy, setLyDoHuy] = useState<string | null>(null) // null: chưa mở ô nhập lý do
   const [viPham, setViPham] = useState<ViPhamGhep[]>([])
   const [dangGui, setDangGui] = useState(false)
   const [lanTai, setLanTai] = useState(0)
@@ -83,7 +85,7 @@ export default function ChuyenChiTiet() {
     }
   }
 
-  async function lam(viec: 'ghep' | 'go' | 'chot' | 'mo-chot') {
+  async function lam(viec: 'ghep' | 'go' | 'chot' | 'mo-chot' | 'huy') {
     setLoi('')
     setViPham([])
     setDangGui(true)
@@ -93,9 +95,11 @@ export default function ChuyenChiTiet() {
         go: () => goDon(id, chonGo),
         chot,
         'mo-chot': () => moChotChuyen(id),
+        huy: () => huyChuyen(id, lyDoHuy ?? ''),
       }
       const moi = await goi[viec]()
       setC(moi)
+      setLyDoHuy(null)
       setChonGhep([])
       setChonGo([])
       setLanTai((n) => n + 1) // tải lại đơn chờ ghép ở effect; lỗi tải lại không bị báo nhầm là lưu hỏng
@@ -144,17 +148,46 @@ export default function ChuyenChiTiet() {
       <div className="thanh-cong-cu">
         <h1>Chuyến {c.ma_chuyen}</h1>
         <span className="nhan">{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</span>
-        {dangLap && (
+        {dangLap && lyDoHuy === null && (
           <button disabled={dangGui} onClick={() => lam('chot')}>
             Chốt chuyến
           </button>
         )}
-        {c.trang_thai === 'DA_CHOT' && (
+        {c.trang_thai === 'DA_CHOT' && lyDoHuy === null && (
           <button className="phu" disabled={dangGui} onClick={() => lam('mo-chot')}>
             Mở chốt
           </button>
         )}
+        {(dangLap || c.trang_thai === 'DA_CHOT') && lyDoHuy === null && (
+          <button className="phu" disabled={dangGui} onClick={() => setLyDoHuy('')}>
+            Hủy chuyến
+          </button>
+        )}
       </div>
+      {lyDoHuy !== null && (
+        <form
+          className="thanh-cong-cu"
+          onSubmit={(e) => {
+            e.preventDefault()
+            lam('huy')
+          }}
+        >
+          <label>
+            Lý do hủy
+            <input
+              required
+              autoFocus
+              maxLength={300}
+              value={lyDoHuy}
+              onChange={(e) => setLyDoHuy(e.target.value)}
+            />
+          </label>
+          <button disabled={dangGui || !lyDoHuy.trim()}>Xác nhận hủy</button>
+          <button type="button" className="phu" disabled={dangGui} onClick={() => setLyDoHuy(null)}>
+            Thôi
+          </button>
+        </form>
+      )}
       <p>
         {c.ma_tuyen} – {c.ten_tuyen} · Xe <strong>{c.bien_so}</strong> · Tài xế {c.ten_tai_xe} ·
         Khởi hành {lucVN(c.khoi_hanh_du_kien)} · Kết thúc dự kiến {lucVN(c.ket_thuc_du_kien)}
