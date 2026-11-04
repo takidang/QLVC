@@ -286,3 +286,66 @@ ul.loi {
   margin: 6px 0 0;
   padding-left: 20px;
 }
+
+/* Trang tài xế trên điện thoại (UC-17): thẻ thay bảng, không cuộn ngang ở 360 px */
+.dien-thoai {
+  max-width: 560px;
+}
+
+.dien-thoai h2 {
+  font-size: 1.1rem;
+  margin: 16px 0 8px;
+}
+
+.the-chon {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.the-chon button {
+  flex: 1;
+}
+
+.ds-the {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.the {
+  display: grid;
+  gap: 4px;
+  background: #fff;
+  border: 1px solid #dfe3e8;
+  border-radius: 8px;
+  padding: 12px;
+  color: inherit;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.the-dau {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.the-dau h1 {
+  margin: 8px 0;
+}
+
+.nhan.xam {
+  background: #eef0f3;
+  color: #3d4650;
+}
+
+@media (max-width: 520px) {
+  .trang header {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}

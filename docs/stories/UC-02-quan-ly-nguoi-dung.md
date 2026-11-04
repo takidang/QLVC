@@ -66,4 +66,4 @@ Quản lý xem danh sách tài khoản, thêm tài khoản Quản lý / Điều 
 | UC-02-AC8 | API | `tests/api/test_uc02_nguoi_dung.py::test_uc02_ac8_tai_khoan_tai_xe` | Đạt | 30/10/2026 |
 | UC-02-AC9 | API | `tests/api/test_uc02_nguoi_dung.py::test_uc02_ac9_* (5 ca, có ca đồng thời)` | Đạt | 30/10/2026 |
 | UC-02-AC10 | API | `tests/api/test_uc02_nguoi_dung.py::test_uc02_ac10_* (4 ca)` | Đạt | 30/10/2026 |
-| UC-02-AC11 | UI | `docs/test-evidence/UC-02/` (6 ảnh, ca a–f trong `docs/test-evidence/du-lieu-thu-giao-dien.md` Phần 4) + Kiệt xác nhận | Đạt | 30/10/2026 |
+| UC-02-AC11 | UI | `docs/test-evidence/UC-02/` (6 ảnh, ca a–f trong `docs/test-evidence/UC-02/du-lieu.md`) + Kiệt xác nhận | Đạt | 30/10/2026 |

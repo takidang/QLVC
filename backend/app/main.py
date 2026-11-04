@@ -17,6 +17,7 @@ from app.modules.danh_muc.tuyen.router import router as tuyen_router
 from app.modules.danh_muc.xe.router import router as xe_router
 from app.modules.don.router import router as don_router
 from app.modules.nguoi_dung.router import router as nguoi_dung_router
+from app.modules.toi.router import router as toi_router
 
 
 @asynccontextmanager
@@ -36,6 +37,7 @@ app.include_router(khach_hang_router)
 app.include_router(nguoi_dung_router)
 app.include_router(nut_router)
 app.include_router(tai_xe_router)
+app.include_router(toi_router)
 app.include_router(tuyen_router)
 app.include_router(xe_router)
 

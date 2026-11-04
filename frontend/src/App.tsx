@@ -14,6 +14,8 @@ import TuyenDanhSach from './pages/dieu-phoi/TuyenDanhSach'
 import TaiXeDanhSach from './pages/dieu-phoi/TaiXeDanhSach'
 import XeDanhSach from './pages/dieu-phoi/XeDanhSach'
 import ChiPhiCoDinh from './pages/ke-toan/ChiPhiCoDinh'
+import ChuyenCuaToi from './pages/tai-xe/ChuyenCuaToi'
+import ChuyenCuaToiChiTiet from './pages/tai-xe/ChuyenCuaToiChiTiet'
 
 const TRANG_CHU: Record<VaiTro, string> = {
   QUAN_LY: '/quan-ly',
@@ -48,7 +50,14 @@ const TRANG_CON: Partial<
     { duong_dan: 'bang-gia', ten: 'Bảng giá', trang: <BangGiaDanhSach /> },
     { duong_dan: 'cau-hinh', ten: 'Cấu hình', trang: <CauHinh /> },
   ],
+  TAI_XE: [
+    { duong_dan: 'chuyen', ten: 'Chuyến của tôi', trang: <ChuyenCuaToi /> },
+    { duong_dan: 'chuyen/:id', ten: 'Lịch trình chuyến', trang: <ChuyenCuaToiChiTiet />, an: true },
+  ],
 }
+
+// Vào trang của vai trò thì mở thẳng trang con này thay trang chào (tài xế vào thẳng chuyến của mình, UC-17)
+const TRANG_DAU: Partial<Record<VaiTro, string>> = { TAI_XE: 'chuyen' }
 
 // Chỉ để điều hướng; quyền thật do máy chủ kiểm (BR-57). Quản lý vào được trang Điều phối.
 const duocVao = (nd: NguoiDung, trang: VaiTro) =>
@@ -133,10 +142,14 @@ export default function App() {
             <Route
               index
               element={
-                <section className="noi-dung">
-                  <h1>Trang {TEN_VAI_TRO[vt]}</h1>
-                  <p className="ghi-chu">Chọn chức năng trên thanh menu.</p>
-                </section>
+                TRANG_DAU[vt] ? (
+                  <Navigate to={TRANG_DAU[vt]} replace />
+                ) : (
+                  <section className="noi-dung">
+                    <h1>Trang {TEN_VAI_TRO[vt]}</h1>
+                    <p className="ghi-chu">Chọn chức năng trên thanh menu.</p>
+                  </section>
+                )
               }
             />
             {(TRANG_CON[vt] ?? []).map((t) => (

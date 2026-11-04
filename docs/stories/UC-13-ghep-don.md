@@ -62,4 +62,4 @@
 | UC-13-AC10 | API | `test_uc13_ac10_* (2 ca)` | Đạt | 30/10/2026 |
 | UC-13-AC11 | API | `test_uc13_ac11_* (2 ca)` | Đạt | 30/10/2026 |
 | UC-13-AC12 | API | `test_uc13_ac12_* (5 ca)` | Đạt | 30/10/2026 |
-| UC-13-AC13 | UI | `docs/test-evidence/UC-13/` (5 ảnh ca a–e + 1 ảnh phụ, `docs/test-evidence/du-lieu-thu-giao-dien.md` Phần 6) – Kiệt thử | Đạt (Kiệt thử) | 30/10/2026 |
+| UC-13-AC13 | UI | `docs/test-evidence/UC-13/` (5 ảnh ca a–e + 1 ảnh phụ, `docs/test-evidence/UC-13/du-lieu.md`) – Kiệt thử | Đạt (Kiệt thử) | 30/10/2026 |
