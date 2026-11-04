@@ -88,7 +88,7 @@
 | POST | `/api/chuyen/{id}/go` | DP | UC-13 | `{don_ids}`; kiểm lại cả chuyến (BR-67); ghép hết hiệu lực, đơn `→ CHO_GHEP`. Trả như 3.1. Gỡ làm đơn khác vi phạm → 422 `VI_PHAM_GO` (`chi_tiet` như 3.1); đơn không đang ghép trong chuyến → 422 `DON_KHONG_THUOC_CHUYEN`; chuyến không `LAP` → 409 `BR-09` |
 | POST | `/api/chuyen/{id}/chot` | DP | UC-15 | Body tùy chọn `{xac_nhan_chay_rong, xac_nhan_lai_am}` (mặc định false). Kiểm lại nhóm A, B (BR-23): vi phạm → 422 `VI_PHAM_CHOT` (`chi_tiet` như 3.1); 0 đơn thiếu `xac_nhan_chay_rong` → 422 `BR-23`; lãi dự kiến âm thiếu `xac_nhan_lai_am` → 422 `BR-52` (chuyến rỗng chỉ cần xác nhận chạy rỗng). Lưu định mức, lương, ETA kế hoạch (BR-71). Trả như 3.1 (thêm `chay_rong`); chuyến không `LAP` → 409 `BR-09` |
 | POST | `/api/chuyen/{id}/mo-chot` | DP | UC-15 | BR-24: còn tạm ứng `HIEU_LUC` → 409 `BR-24`. Về `LAP`, xóa số đã chốt và ETA kế hoạch. Trả như 3.1; chuyến không `DA_CHOT` → 409 `BR-09` |
-| POST | `/api/chuyen/{id}/huy` | DP | UC-16 | BR-25, cần `ly_do`; còn tạm ứng `HIEU_LUC` → 409 |
+| POST | `/api/chuyen/{id}/huy` | DP | UC-16 | BR-25: body `{ly_do}` bắt buộc, 1–300 ký tự (thiếu, rỗng, trường lạ → 400). Chuyến không ở `LAP`/`DA_CHOT` hoặc còn tạm ứng `HIEU_LUC` → 409 `BR-25`. Ghép hết hiệu lực, đơn → `CHO_GHEP`, lý do lưu ở lịch sử trạng thái chuyến và đơn. Trả như 3.1 |
 | POST | `/api/chuyen/{id}/ket-thuc-su-co` | DP | UC-32 | Chỉ khi `DANG_CHAY`; `{ly_do, km_ket_thuc?}` (BR-68); đơn `DA_GHEP`, `DA_LAY` → `THAT_BAI` lý do "sự cố xe" |
 | POST | `/api/su-co/{id}/dong` | DP | UC-32 | `{cach_xu_ly}`; sự cố `MO → DONG` |
 | GET | `/api/chuyen/{id}/du-doan-tre` | DP | UC-30 | Lỗi hoặc chưa có mô hình → `{ "co_du_doan": false }` |
@@ -99,8 +99,8 @@
 |---|---|---|---|---|
 | GET | `/api/toi/chuyen` | TX | UC-17 | Chỉ chuyến của mình (BR-58). `?nhom=can_lam` (mặc định: `DA_CHOT`, `DANG_CHAY`, đang chạy lên đầu) \| `da_xong` (`HOAN_THANH`, `DA_QUYET_TOAN`, mới nhất trước); không bao giờ có `LAP`, `HUY`; mỗi dòng có `so_don`, không có tiền |
 | GET | `/api/toi/chuyen/{id}` | TX | UC-17 | Lịch trình theo BR-63, đơn ở từng điểm (địa chỉ, người liên hệ, SĐT, hàng, khung/hạn, trạng thái đơn); giờ là ETA kế hoạch lưu lúc chốt (BR-71), chưa lưu thì tính lại; có `luong_tai_xe_chot`, không có cước/lãi/định mức. Chuyến người khác, `LAP`, `HUY`, id không có → cùng 404 |
-| POST | `/api/toi/chuyen/{id}/bat-dau` | TX | UC-18 | multipart: `km_bat_dau`, `anh_dong_ho`; BR-26 (gồm BR-11…15), BR-70 |
-| POST | `/api/toi/chuyen/{id}/ket-thuc` | TX | UC-18 | multipart: `km_ket_thuc`, `anh_dong_ho`; BR-28, BR-70, rồi xử lý BR-36 |
+| POST | `/api/toi/chuyen/{id}/bat-dau` | TX | UC-18 | multipart: `km_bat_dau`, `anh_dong_ho`; BR-26 (đúng ngày khởi hành theo giờ VN, gồm BR-11…15 – vi phạm liệt kê trong `chi_tiet`), BR-70 (km ≥ km sàn của xe). Trả chi tiết chuyến như `GET /api/toi/chuyen/{id}`. Không phải chuyến của mình → 404; không ở `DA_CHOT` → 409 |
+| POST | `/api/toi/chuyen/{id}/ket-thuc` | TX | UC-18 | multipart: `km_ket_thuc`, `anh_dong_ho`; BR-28 (còn đơn → 422, `chi_tiet` có `ma_don`), BR-70 (km > km bắt đầu, cập nhật `km_dong_ho` xe), rồi xử lý BR-36. Không ở `DANG_CHAY` → 409. **Ảnh** (mọi API có ảnh): JPEG/PNG theo nội dung file, sai → 400; > 500 KB → 413 |
 | POST | `/api/toi/quet` | TX | UC-19, UC-20 | **Chi tiết ở mục 3.2** |
 | POST | `/api/toi/chuyen/{id}/chi-phi` | TX | UC-21 | multipart: loại, số tiền, `so_lit` (bắt buộc với dầu), ghi chú, ảnh (BR-54) |
 | PATCH, DELETE | `/api/toi/chi-phi/{id}` | TX | UC-21 | Chỉ khoản của mình khi `CHO_DUYET` |

@@ -93,3 +93,7 @@ export const chotChuyen = (id: number, xn: XacNhanChot) =>
   guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/chot`, 'POST', xn)
 export const moChotChuyen = (id: number) =>
   goi<ChuyenChiTiet>(`/api/chuyen/${id}/mo-chot`, { method: 'POST' })
+
+// Hủy (UC-16): lý do bắt buộc; còn tạm ứng hoặc chuyến đã chạy → 409 BR-25
+export const huyChuyen = (id: number, ly_do: string) =>
+  guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/huy`, 'POST', { ly_do })

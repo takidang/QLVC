@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { LoiApi } from '../../api/goi'
 import {
   TEN_TRANG_THAI,
   chuyenCuaToiChiTiet,
+  ghiKm,
   ngayGio,
   type ChuyenCuaToiChiTiet as ChiTiet,
 } from '../../api/toi'
+import { nenAnh } from '../../nenAnh'
 
 const gio = (iso: string) =>
   new Date(iso).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
@@ -19,6 +21,7 @@ const TEN_TRANG_THAI_DON: Record<string, string> = {
 }
 
 // UC-17: lịch trình cho tài xế – từng điểm dừng, đơn, địa chỉ, gọi điện. Không có cước (quyết định số 3)
+// UC-18: chuyến chờ chạy có ô Bắt đầu, chuyến đang chạy có ô Kết thúc (km + ảnh đồng hồ)
 export default function ChuyenCuaToiChiTiet() {
   const { id } = useParams()
   const [c, setC] = useState<ChiTiet | null>(null)
@@ -60,6 +63,10 @@ export default function ChuyenCuaToiChiTiet() {
               ` · Lương chuyến ${c.luong_tai_xe_chot.toLocaleString('vi-VN')} đ`}
           </p>
 
+          {(c.trang_thai === 'DA_CHOT' || c.trang_thai === 'DANG_CHAY') && (
+            <FormKm key={c.trang_thai} c={c} onXong={setC} />
+          )}
+
           <h2>Lịch trình</h2>
           {c.lich_trinh.length === 0 && <p className="trong">Chuyến chạy rỗng – không có đơn</p>}
           <ol className="ds-the">
@@ -99,5 +106,69 @@ export default function ChuyenCuaToiChiTiet() {
         </>
       )}
     </section>
+  )
+}
+
+// Lỗi nghiệp vụ có danh sách (BR-11…15 giấy tờ, BR-28 đơn còn lại): hiện từng dòng kèm mã BR
+const dongLoi = (e: unknown): string[] => {
+  if (!(e instanceof LoiApi)) return ['Không gửi được, kiểm tra mạng rồi thử lại']
+  const ds = (e.chiTiet as { ma?: string; thong_diep?: string }[]).filter((x) => x.thong_diep)
+  return ds.length ? [e.message, ...ds.map((x) => `${x.thong_diep} (${x.ma})`)] : [e.message]
+}
+
+function FormKm({ c, onXong }: { c: ChiTiet; onXong: (c: ChiTiet) => void }) {
+  const batDau = c.trang_thai === 'DA_CHOT'
+  const [km, setKm] = useState('')
+  const [anh, setAnh] = useState<File | null>(null)
+  const [loi, setLoi] = useState<string[]>([])
+  const [dangGui, setDangGui] = useState(false)
+
+  async function gui(e: FormEvent) {
+    e.preventDefault()
+    if (!anh) return setLoi(['Chụp ảnh đồng hồ km trước khi gửi'])
+    setLoi([])
+    setDangGui(true)
+    try {
+      onXong(await ghiKm(c.id, batDau ? 'bat-dau' : 'ket-thuc', Number(km), await nenAnh(anh)))
+    } catch (err) {
+      setLoi(err instanceof Error && !(err instanceof LoiApi) ? [err.message] : dongLoi(err))
+    } finally {
+      setDangGui(false)
+    }
+  }
+
+  return (
+    <form className="the form-km" onSubmit={gui}>
+      <strong>{batDau ? 'Bắt đầu chuyến' : 'Kết thúc chuyến'}</strong>
+      <label>
+        Km đồng hồ {batDau ? 'lúc xuất phát' : 'lúc về'}
+        <input
+          type="number"
+          inputMode="numeric"
+          min={0}
+          required
+          value={km}
+          onChange={(e) => setKm(e.target.value)}
+        />
+      </label>
+      <label>
+        Ảnh đồng hồ km
+        <input
+          type="file"
+          accept="image/jpeg,image/png"
+          capture="environment"
+          required
+          onChange={(e) => setAnh(e.target.files?.[0] ?? null)}
+        />
+      </label>
+      {loi.length > 0 && (
+        <ul role="alert" className="loi">
+          {loi.map((x) => (
+            <li key={x}>{x}</li>
+          ))}
+        </ul>
+      )}
+      <button disabled={dangGui}>{dangGui ? 'Đang gửi…' : batDau ? 'Bắt đầu' : 'Kết thúc'}</button>
+    </form>
   )
 }

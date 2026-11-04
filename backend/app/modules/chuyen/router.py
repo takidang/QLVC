@@ -15,6 +15,7 @@ from app.modules.chuyen.schemas import (
     ChuyenRa,
     ChuyenVao,
     GhepVao,
+    HuyVao,
     PhanCongVao,
     TaiXeKhaDung,
     TrangThaiChuyen,
@@ -103,3 +104,8 @@ def chot(chuyen_id: int, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)], v
 @router.post("/{chuyen_id}/mo-chot", response_model=ChuyenChiTiet)
 def mo_chot(chuyen_id: int, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)]):
     return service.mo_chot(db, chuyen_id, nd)
+
+
+@router.post("/{chuyen_id}/huy", response_model=ChuyenChiTiet)
+def huy(chuyen_id: int, vao: HuyVao, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)]):
+    return service.huy(db, chuyen_id, vao.ly_do, nd)
