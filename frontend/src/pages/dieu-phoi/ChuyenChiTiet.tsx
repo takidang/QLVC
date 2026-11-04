@@ -2,14 +2,20 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
   chiTietChuyen,
+  chotChuyen,
   donPhuHop,
   ghepDon,
   goDon,
+  moChotChuyen,
+  phanCong,
+  taiXeKhaDungChuyen,
+  xeKhaDungChuyen,
   type ChuyenChiTiet as Chuyen,
+  type TaiXeKhaDung,
   type ViPhamGhep,
+  type XacNhanChot,
+  type XeKhaDung,
 } from '../../api/chuyen'
-import { phanCong, taiXeKhaDungChuyen, xeKhaDungChuyen } from '../../api/chuyen'
-import type { TaiXeKhaDung, XeKhaDung } from '../../api/chuyen'
 import { ChonKhaDung, type KhaDung } from './ChuyenDanhSach'
 import type { Don } from '../../api/don'
 import { kemMaBr, LoiApi } from '../../api/goi'
@@ -28,8 +34,12 @@ const TEN_TRANG_THAI: Record<string, string> = {
   DA_QUYET_TOAN: 'Đã quyết toán',
   HUY: 'Hủy',
 }
+const XAC_NHAN: Record<string, keyof XacNhanChot> = {
+  'BR-23': 'xac_nhan_chay_rong',
+  'BR-52': 'xac_nhan_lai_am',
+}
 
-// Chi tiết chuyến, thẻ Hàng (UC-13): tải, lịch trình, ghép và gỡ đơn
+// Chi tiết chuyến, thẻ Hàng (UC-13): tải, lịch trình, ghép và gỡ đơn; chốt / mở chốt (UC-15)
 export default function ChuyenChiTiet() {
   const id = Number(useParams().id)
   const [c, setC] = useState<Chuyen | null>(null)
@@ -58,16 +68,40 @@ export default function ChuyenChiTiet() {
     }
   }, [id, lanTai])
 
-  async function lam(viec: 'ghep' | 'go') {
+  // Chốt: thiếu xác nhận chạy rỗng (BR-23) hoặc lãi âm (BR-52) thì hỏi, đồng ý thì gửi lại kèm cờ
+  async function chot(): Promise<Chuyen> {
+    const xn: XacNhanChot = {}
+    for (;;) {
+      try {
+        return await chotChuyen(id, xn)
+      } catch (e) {
+        const co = e instanceof LoiApi && e.status === 422 && XAC_NHAN[e.ma]
+        if (!co || !window.confirm(`${e instanceof Error ? e.message : ''}. Vẫn chốt chuyến?`))
+          throw e
+        xn[co] = true
+      }
+    }
+  }
+
+  async function lam(viec: 'ghep' | 'go' | 'chot' | 'mo-chot') {
     setLoi('')
     setViPham([])
     setDangGui(true)
     try {
-      setC(await (viec === 'ghep' ? ghepDon(id, chonGhep) : goDon(id, chonGo)))
+      const goi = {
+        ghep: () => ghepDon(id, chonGhep),
+        go: () => goDon(id, chonGo),
+        chot,
+        'mo-chot': () => moChotChuyen(id),
+      }
+      const moi = await goi[viec]()
+      setC(moi)
       setChonGhep([])
       setChonGo([])
       setLanTai((n) => n + 1) // tải lại đơn chờ ghép ở effect; lỗi tải lại không bị báo nhầm là lưu hỏng
     } catch (e) {
+      // Người dùng bấm Hủy ở hộp xác nhận: không báo lỗi
+      if (e instanceof LoiApi && e.status === 422 && XAC_NHAN[e.ma]) return
       if (e instanceof LoiApi && e.status === 422 && e.chiTiet.length) {
         setLoi(e.message)
         setViPham(e.chiTiet as ViPhamGhep[])
@@ -110,6 +144,16 @@ export default function ChuyenChiTiet() {
       <div className="thanh-cong-cu">
         <h1>Chuyến {c.ma_chuyen}</h1>
         <span className="nhan">{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</span>
+        {dangLap && (
+          <button disabled={dangGui} onClick={() => lam('chot')}>
+            Chốt chuyến
+          </button>
+        )}
+        {c.trang_thai === 'DA_CHOT' && (
+          <button className="phu" disabled={dangGui} onClick={() => lam('mo-chot')}>
+            Mở chốt
+          </button>
+        )}
       </div>
       <p>
         {c.ma_tuyen} – {c.ten_tuyen} · Xe <strong>{c.bien_so}</strong> · Tài xế {c.ten_tai_xe} ·
@@ -129,8 +173,10 @@ export default function ChuyenChiTiet() {
       <p>
         Lấp đầy <strong>{Math.round(Number(c.ty_le_lap_day) * 100)}%</strong> · Lãi dự kiến{' '}
         <strong className={c.canh_bao_lai_am ? 'het-han' : undefined}>
-          {dong(c.lai_du_kien)} đ{c.canh_bao_lai_am && ' (lãi âm – sẽ phải xác nhận khi chốt)'}
+          {dong(c.lai_du_kien)} đ
+          {dangLap && c.canh_bao_lai_am && ' (lãi âm – sẽ phải xác nhận khi chốt)'}
         </strong>
+        {c.chay_rong && ' · Chạy rỗng (đã xác nhận)'}
       </p>
 
       {loi && (
