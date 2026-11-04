@@ -161,7 +161,7 @@ export default function ChuyenDanhSach() {
   )
 }
 
-type KhaDung<T> = { khoa: string; ds: T[]; loi: string }
+export type KhaDung<T> = { khoa: string; ds: T[]; loi: string }
 
 function FormLapChuyen({ onDong, onLuu }: { onDong: () => void; onLuu: (c: Chuyen) => void }) {
   const [dsTuyen, setDsTuyen] = useState<Tuyen[]>([])
@@ -330,7 +330,7 @@ function FormLapChuyen({ onDong, onLuu }: { onDong: () => void; onLuu: (c: Chuye
 }
 
 // Ô chọn xe / tài xế: cái bị loại không chọn được, lý do loại hiện bên dưới (UC-11 luồng chính bước 2)
-function ChonKhaDung<T extends { id: number; kha_dung: boolean; ly_do: LyDo[] }>({
+export function ChonKhaDung<T extends { id: number; kha_dung: boolean; ly_do: LyDo[] }>({
   nhan,
   kq,
   gia_tri,

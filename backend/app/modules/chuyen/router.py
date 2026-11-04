@@ -10,10 +10,12 @@ from app.db import get_db
 from app.models import NguoiDung
 from app.modules.chuyen import service
 from app.modules.chuyen.schemas import (
+    ChotVao,
     ChuyenChiTiet,
     ChuyenRa,
     ChuyenVao,
     GhepVao,
+    PhanCongVao,
     TaiXeKhaDung,
     TrangThaiChuyen,
     XeKhaDung,
@@ -62,6 +64,21 @@ def chi_tiet(chuyen_id: int, db: Db):
     return service.chi_tiet(db, chuyen_id)
 
 
+@router.get("/{chuyen_id}/xe-kha-dung", response_model=list[XeKhaDung], dependencies=[Depends(DIEU_PHOI)])
+def xe_kha_dung_chuyen(chuyen_id: int, db: Db):
+    return service.xe_kha_dung_chuyen(db, chuyen_id)
+
+
+@router.get("/{chuyen_id}/tai-xe-kha-dung", response_model=list[TaiXeKhaDung], dependencies=[Depends(DIEU_PHOI)])
+def tai_xe_kha_dung_chuyen(chuyen_id: int, db: Db, xe_id: int | None = None):
+    return service.tai_xe_kha_dung_chuyen(db, chuyen_id, xe_id)
+
+
+@router.put("/{chuyen_id}/phan-cong", response_model=ChuyenChiTiet, dependencies=[Depends(DIEU_PHOI)])
+def phan_cong(chuyen_id: int, vao: PhanCongVao, db: Db):
+    return service.phan_cong(db, chuyen_id, vao.xe_id, vao.tai_xe_id)
+
+
 @router.get("/{chuyen_id}/don-phu-hop", response_model=list[DonRa], dependencies=[Depends(DIEU_PHOI)])
 def don_phu_hop(chuyen_id: int, db: Db):
     return service.don_phu_hop(db, chuyen_id)
@@ -75,3 +92,14 @@ def ghep(chuyen_id: int, vao: GhepVao, db: Db, nd: Annotated[NguoiDung, Depends(
 @router.post("/{chuyen_id}/go", response_model=ChuyenChiTiet)
 def go(chuyen_id: int, vao: GhepVao, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)]):
     return service.go(db, chuyen_id, vao.don_ids, nd)
+
+
+@router.post("/{chuyen_id}/chot", response_model=ChuyenChiTiet)
+def chot(chuyen_id: int, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)], vao: ChotVao | None = None):
+    vao = vao or ChotVao()
+    return service.chot(db, chuyen_id, vao.xac_nhan_chay_rong, vao.xac_nhan_lai_am, nd)
+
+
+@router.post("/{chuyen_id}/mo-chot", response_model=ChuyenChiTiet)
+def mo_chot(chuyen_id: int, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)]):
+    return service.mo_chot(db, chuyen_id, nd)

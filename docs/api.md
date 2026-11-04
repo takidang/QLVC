@@ -81,13 +81,13 @@
 | POST | `/api/chuyen` | DP | UC-11 | `{tuyen_id, khoi_hanh_du_kien, xe_id, tai_xe_id}` → `LAP` (BR-22), mã `CH-yyMMdd-NN` theo ngày khởi hành. Vi phạm → 422, `ma` là BR đầu tiên, `chi_tiet` đủ mọi vi phạm; tuyến `NGUNG` → 422 `TUYEN_NGUNG`; giờ đã qua → 422 `KHOI_HANH_DA_QUA` |
 | GET | `/api/chuyen` | DP, KT | UC-11, UC-32 | Lọc trạng thái, ngày, tuyến. `?ngay=` trả **bảng chuyến trong ngày**: % đầy, tiến độ "đã xong/tổng điểm", cờ trễ (CFG-09), sự cố mở, đơn thất bại, chưa quyết toán |
 | GET | `/api/chuyen/{id}` | DP, KT | UC-13, UC-32 | UC-13 đã làm tổng quan + thẻ Hàng (cùng dạng với kết quả ghép ở mục 3.1). Đủ 5 thẻ ở UC-32: tổng quan, hàng (tải, thể tích, % đầy), lịch trình (điểm dừng suy ra theo BR-63; ETA kế hoạch từ khi chốt, giờ quét thực tế, độ trễ; kết thúc dự kiến khi đang chạy theo BR-73), dòng thời gian (km, lượt quét, chi phí, sự cố), tiền |
-| GET | `/api/chuyen/{id}/xe-kha-dung`, `/tai-xe-kha-dung` | DP | UC-12 | Như trên, cho chuyến đã có |
+| GET | `/api/chuyen/{id}/xe-kha-dung`, `/tai-xe-kha-dung` | DP | UC-12 | Như trên, cho chuyến đã có: không trùng lịch với chính nó, xe phải chở đủ đơn đang ghép (BR-01, 02); tài xế mặc định xét hạng theo xe hiện tại, `?xe_id=` để xét theo xe sắp đổi |
 | PUT | `/api/chuyen/{id}/phan-cong` | DP | UC-12 | `{xe_id, tai_xe_id}`; chỉ khi `LAP`; kiểm BR-11…19 và BR-67 |
 | GET | `/api/chuyen/{id}/don-phu-hop` | DP | UC-13 | Đơn `CHO_GHEP` đã lọc BR-03, 04 (nút lấy = nơi giữ hàng nếu có, BR-69), hạn giao gần trước, tối đa 200 |
 | POST | `/api/chuyen/{id}/ghep` | DP | UC-13 | **Chi tiết ở mục 3.1** |
 | POST | `/api/chuyen/{id}/go` | DP | UC-13 | `{don_ids}`; kiểm lại cả chuyến (BR-67); ghép hết hiệu lực, đơn `→ CHO_GHEP`. Trả như 3.1. Gỡ làm đơn khác vi phạm → 422 `VI_PHAM_GO` (`chi_tiet` như 3.1); đơn không đang ghép trong chuyến → 422 `DON_KHONG_THUOC_CHUYEN`; chuyến không `LAP` → 409 `BR-09` |
-| POST | `/api/chuyen/{id}/chot` | DP | UC-15 | BR-23, 71; trả cảnh báo lãi âm (BR-52), cần `xac_nhan_lai_am=true`; chuyến 0 đơn cần `xac_nhan_chay_rong=true` |
-| POST | `/api/chuyen/{id}/mo-chot` | DP | UC-15 | BR-24: còn tạm ứng `HIEU_LUC` → 409 |
+| POST | `/api/chuyen/{id}/chot` | DP | UC-15 | Body tùy chọn `{xac_nhan_chay_rong, xac_nhan_lai_am}` (mặc định false). Kiểm lại nhóm A, B (BR-23): vi phạm → 422 `VI_PHAM_CHOT` (`chi_tiet` như 3.1); 0 đơn thiếu `xac_nhan_chay_rong` → 422 `BR-23`; lãi dự kiến âm thiếu `xac_nhan_lai_am` → 422 `BR-52` (chuyến rỗng chỉ cần xác nhận chạy rỗng). Lưu định mức, lương, ETA kế hoạch (BR-71). Trả như 3.1 (thêm `chay_rong`); chuyến không `LAP` → 409 `BR-09` |
+| POST | `/api/chuyen/{id}/mo-chot` | DP | UC-15 | BR-24: còn tạm ứng `HIEU_LUC` → 409 `BR-24`. Về `LAP`, xóa số đã chốt và ETA kế hoạch. Trả như 3.1; chuyến không `DA_CHOT` → 409 `BR-09` |
 | POST | `/api/chuyen/{id}/huy` | DP | UC-16 | BR-25, cần `ly_do`; còn tạm ứng `HIEU_LUC` → 409 |
 | POST | `/api/chuyen/{id}/ket-thuc-su-co` | DP | UC-32 | Chỉ khi `DANG_CHAY`; `{ly_do, km_ket_thuc?}` (BR-68); đơn `DA_GHEP`, `DA_LAY` → `THAT_BAI` lý do "sự cố xe" |
 | POST | `/api/su-co/{id}/dong` | DP | UC-32 | `{cach_xu_ly}`; sự cố `MO → DONG` |
@@ -97,8 +97,8 @@
 
 | Phương thức | Đường dẫn | Vai trò | UC | BR / ghi chú |
 |---|---|---|---|---|
-| GET | `/api/toi/chuyen` | TX | UC-17 | Chỉ chuyến của mình (BR-58) |
-| GET | `/api/toi/chuyen/{id}` | TX | UC-17 | Lịch trình theo BR-63, đơn ở từng điểm |
+| GET | `/api/toi/chuyen` | TX | UC-17 | Chỉ chuyến của mình (BR-58). `?nhom=can_lam` (mặc định: `DA_CHOT`, `DANG_CHAY`, đang chạy lên đầu) \| `da_xong` (`HOAN_THANH`, `DA_QUYET_TOAN`, mới nhất trước); không bao giờ có `LAP`, `HUY`; mỗi dòng có `so_don`, không có tiền |
+| GET | `/api/toi/chuyen/{id}` | TX | UC-17 | Lịch trình theo BR-63, đơn ở từng điểm (địa chỉ, người liên hệ, SĐT, hàng, khung/hạn, trạng thái đơn); giờ là ETA kế hoạch lưu lúc chốt (BR-71), chưa lưu thì tính lại; có `luong_tai_xe_chot`, không có cước/lãi/định mức. Chuyến người khác, `LAP`, `HUY`, id không có → cùng 404 |
 | POST | `/api/toi/chuyen/{id}/bat-dau` | TX | UC-18 | multipart: `km_bat_dau`, `anh_dong_ho`; BR-26 (gồm BR-11…15), BR-70 |
 | POST | `/api/toi/chuyen/{id}/ket-thuc` | TX | UC-18 | multipart: `km_ket_thuc`, `anh_dong_ho`; BR-28, BR-70, rồi xử lý BR-36 |
 | POST | `/api/toi/quet` | TX | UC-19, UC-20 | **Chi tiết ở mục 3.2** |

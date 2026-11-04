@@ -58,6 +58,13 @@ class TaiXeKhaDung(BaseModel):
     ly_do: list[LyDo]
 
 
+class PhanCongVao(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    xe_id: int
+    tai_xe_id: int
+
+
 class GhepVao(BaseModel):
     # Chỉ nhận danh sách đơn: không có cách ghép một phần đơn (BR-08), trường lạ → 400
     model_config = ConfigDict(extra="forbid")
@@ -93,4 +100,14 @@ class ChuyenChiTiet(ChuyenRa):
     lich_trinh: list[DiemRa]
     lai_du_kien: int
     canh_bao_lai_am: bool
+    chay_rong: bool
     don: list[DonRa]
+
+
+class ChotVao(BaseModel):
+    """Xác nhận khi chốt (UC-15): chuyến không có đơn (BR-23), lãi dự kiến âm (BR-52)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    xac_nhan_chay_rong: bool = False
+    xac_nhan_lai_am: bool = False

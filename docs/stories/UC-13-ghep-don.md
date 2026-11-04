@@ -1,6 +1,6 @@
 # UC-13: Ghép / gỡ đơn khỏi chuyến
 
-- **Trạng thái:** Đang làm – AC1–AC12 đạt, AC13 giao diện đã làm, chờ Kiệt thử (Đã duyệt 30/10/2026 – Tài: lãi âm khi ghép chỉ cảnh báo; trang chi tiết chuyến riêng)
+- **Trạng thái:** Hoàn thành (01/11/2026, 13/13 AC, giao diện Kiệt thử 30/10) (Đã duyệt 30/10/2026 – Tài: lãi âm khi ghép chỉ cảnh báo; trang chi tiết chuyến riêng)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa); Kế toán xem chi tiết chuyến
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-13) · `docs/api.md` mục 2.4, 3.1 · `docs/nghiep-vu.md` nhóm A, H, mục 2.1, mục 11 bước 3 · ca test `docs/ca-test-br.md` (TC-BR01…09, 30, 49, 52, 63, 64, 67)
 - **Quy tắc nghiệp vụ liên quan:** BR-01…09 (ghép), BR-10 (điểm dừng suy ra), BR-30 (lịch sử), BR-49 (kiểm tải theo kg thực), BR-52 (lãi dự kiến), BR-57, BR-63 (lịch trình, ETA), BR-64 (kết thúc dự kiến), BR-67 (kiểm lại cả chuyến)
@@ -43,6 +43,7 @@
 - Test đã viết: `backend/tests/unit/test_uc13_lich_trinh.py` (23 ca, theo TC-BR01…06, 49, 52, 63, 64, 67), `backend/tests/api/test_uc13_ghep_don.py` (16 ca). Sửa `test_uc11_ac10` vì chi tiết chuyến giờ có thêm thẻ Hàng. Toàn bộ **354 passed** (30/10). `ruff`, `npm run lint`, `npm run build` sạch.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/unit/test_uc13_lich_trinh.py tests/api/test_uc13_ghep_don.py`
 - Khi viết test phát hiện: lô [Đ2, Đ6] trên C01 vi phạm **hai** quy tắc (BR-01 tải, và BR-06 ở Đ2 vì thêm 2 điểm dừng) – hệ thống báo đủ cả hai, đúng quyết định "báo mọi vi phạm".
+- Review `ponytail-review` 30/10: Ship, sửa 2 mục – thêm test BR-16 khi ghép làm chuyến kéo dài chồng chuyến khác của cùng xe (đã thử: gõ sai mã trong danh sách lọc thì test hỏng); trang chi tiết: ghép/gỡ xong tải lại đơn chờ ghép qua effect, lỗi tải lại không còn báo nhầm "Không lưu được". Toàn bộ **355 passed**.
 - Lệch đặc tả: kết quả ghép trả dạng chi tiết chuyến (`id` thay `chuyen_id`, không có `da_ghep` – danh sách đơn nằm ở `don`); thêm mã `VI_PHAM_GO`, `DON_KHONG_THUOC_CHUYEN` – đã sửa `api.md`.
 
 ## Truy vết và kết quả
@@ -56,9 +57,9 @@
 | UC-13-AC5 | Logic | `test_uc13_ac5_* (7 ca)` | Đạt | 30/10/2026 |
 | UC-13-AC6 | Logic | `test_uc13_ac6_* (2 ca)` | Đạt | 30/10/2026 |
 | UC-13-AC7 | API | `tests/api/test_uc13_ghep_don.py::test_uc13_ac7_ghep_c01` + unit `test_uc13_lai_du_kien_va_lap_day` | Đạt | 30/10/2026 |
-| UC-13-AC8 | API | `test_uc13_ac8_* (3 ca)` | Đạt | 30/10/2026 |
+| UC-13-AC8 | API | `test_uc13_ac8_* (4 ca)` | Đạt | 30/10/2026 |
 | UC-13-AC9 | API | `test_uc13_ac9_* (3 ca)` | Đạt | 30/10/2026 |
 | UC-13-AC10 | API | `test_uc13_ac10_* (2 ca)` | Đạt | 30/10/2026 |
 | UC-13-AC11 | API | `test_uc13_ac11_* (2 ca)` | Đạt | 30/10/2026 |
 | UC-13-AC12 | API | `test_uc13_ac12_* (5 ca)` | Đạt | 30/10/2026 |
-| UC-13-AC13 | UI | `docs/test-evidence/UC-13/` (5 ảnh ca a–e + 1 ảnh phụ, `docs/test-evidence/du-lieu-thu-giao-dien.md` Phần 6) – Kiệt thử | Đạt (Kiệt thử) | 30/10/2026 |
+| UC-13-AC13 | UI | `docs/test-evidence/UC-13/` (5 ảnh ca a–e + 1 ảnh phụ, `docs/test-evidence/UC-13/du-lieu.md`) – Kiệt thử | Đạt (Kiệt thử) | 30/10/2026 |

@@ -67,6 +67,7 @@ export type ChuyenChiTiet = Chuyen & {
   lich_trinh: DiemDung[]
   lai_du_kien: number
   canh_bao_lai_am: boolean
+  chay_rong: boolean
   don: Don[]
 }
 // Vi phạm khi ghép/gỡ: don_id null là vi phạm của cả chuyến (tải, thể tích, giấy tờ, trùng lịch)
@@ -78,3 +79,17 @@ export const ghepDon = (id: number, don_ids: number[]) =>
   guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/ghep`, 'POST', { don_ids })
 export const goDon = (id: number, don_ids: number[]) =>
   guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/go`, 'POST', { don_ids })
+
+// UC-12: đổi xe, tài xế khi chuyến LAP
+export const xeKhaDungChuyen = (id: number) => goi<XeKhaDung[]>(`/api/chuyen/${id}/xe-kha-dung`)
+export const taiXeKhaDungChuyen = (id: number, xe_id?: number) =>
+  goi<TaiXeKhaDung[]>(`/api/chuyen/${id}/tai-xe-kha-dung?${query({ xe_id })}`)
+export const phanCong = (id: number, xe_id: number, tai_xe_id: number) =>
+  guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/phan-cong`, 'PUT', { xe_id, tai_xe_id })
+
+// Chốt (UC-15): máy chủ trả 422 BR-23 (chuyến rỗng) / BR-52 (lãi âm) khi thiếu xác nhận
+export type XacNhanChot = { xac_nhan_chay_rong?: boolean; xac_nhan_lai_am?: boolean }
+export const chotChuyen = (id: number, xn: XacNhanChot) =>
+  guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/chot`, 'POST', xn)
+export const moChotChuyen = (id: number) =>
+  goi<ChuyenChiTiet>(`/api/chuyen/${id}/mo-chot`, { method: 'POST' })
