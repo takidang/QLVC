@@ -2,7 +2,7 @@
 
 > Tài ghi 01/11/2026, nhờ Kiệt thử. Chụp ảnh lưu vào thư mục này, tên ở cột "Ảnh"; điền cột "Kết quả" và dòng AC11 trong `docs/stories/UC-15-chot-chuyen.md`.
 > Chuẩn bị: `git pull` nhánh `tai/uc-15-chot-chuyen` (hoặc `dev` sau khi gộp), chạy backend + frontend. Đăng nhập `dieuphoi` / `demo12345` (lệnh `python -m app.tai_khoan_demo`, xem `docs/cai-moi-truong.md`).
-> Dùng lại dữ liệu UC-13 trên máy Kiệt (Phần 6 trong `docs/test-evidence/du-lieu-thu-giao-dien.md`): tuyến T01, xe 5.000 kg / 20 m³, đơn Đ1, Đ2, Đ4, Đ8 cho **ngày mai** (tạo đơn mới nếu đơn cũ đã qua ngày).
+> Dùng lại dữ liệu UC-13 trên máy Kiệt (`docs/test-evidence/UC-13/du-lieu.md`): tuyến T01, xe 5.000 kg / 20 m³, đơn Đ1, Đ2, Đ4, Đ8 cho **ngày mai** (tạo đơn mới nếu đơn cũ đã qua ngày).
 
 | Ca | Thao tác | Mong đợi | Ảnh | Kết quả |
 |---|---|---|---|---|
