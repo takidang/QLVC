@@ -1,5 +1,6 @@
 # ruff: noqa: F811  (kb là fixture nhập từ test UC-17, dùng làm tham số)
 import importlib.util
+import re
 import threading
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
@@ -129,7 +130,7 @@ def test_uc19_ac3_khong_lay_duoc(client, db, ch):
     (tep,) = db.scalars(select(Tep).where(Tep.luot_quet_id == lq.id))
     assert (tep.loai, tep.kich_thuoc) == ("ANH", len(JPG))
     assert (ch["thu_muc"] / tep.duong_dan).read_bytes() == JPG  # file thật, tên do máy chủ sinh
-    assert tep.duong_dan.endswith(".jpg") and "a0" not in tep.duong_dan
+    assert re.fullmatch(r"[0-9a-f]{32}\.jpg", tep.duong_dan)  # không dùng tên "a0.jpg" người dùng gửi
 
     ly_do = db.scalar(
         select(LichSuTrangThai.ly_do).where(
