@@ -4,6 +4,7 @@ from typing import Literal
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field
 
+from app.kieu import ChuBatBuoc
 from app.modules.don.schemas import DonRa
 
 TrangThaiChuyen = Literal["LAP", "DA_CHOT", "DANG_CHAY", "HOAN_THANH", "DA_QUYET_TOAN", "HUY"]  # ST-T
@@ -102,6 +103,14 @@ class ChuyenChiTiet(ChuyenRa):
     canh_bao_lai_am: bool
     chay_rong: bool
     don: list[DonRa]
+
+
+class HuyVao(BaseModel):
+    """Hủy chuyến (UC-16): lý do bắt buộc (BR-25), lưu vào lịch sử trạng thái."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    ly_do: ChuBatBuoc = Field(max_length=300)
 
 
 class ChotVao(BaseModel):

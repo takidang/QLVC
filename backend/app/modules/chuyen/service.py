@@ -369,9 +369,11 @@ def _khoa_chuyen(db: Session, chuyen_id: int, can: str = "LAP", viec: str = "tha
     return c, db.get(Xe, c.xe_id, with_for_update=True), db.get(TaiXe, c.tai_xe_id, with_for_update=True)
 
 
-def _doi_trang_thai(db: Session, don: list[DonHang], sang: str, nguoi: NguoiDung) -> None:
+def _doi_trang_thai(db: Session, don: list[DonHang], sang: str, nguoi: NguoiDung, ly_do: str | None = None) -> None:
     for d in don:
-        db.add(LichSuTrangThai(doi_tuong="DON", doi_tuong_id=d.id, tu=d.trang_thai, sang=sang, nguoi=nguoi.id))
+        db.add(
+            LichSuTrangThai(doi_tuong="DON", doi_tuong_id=d.id, tu=d.trang_thai, sang=sang, ly_do=ly_do, nguoi=nguoi.id)
+        )
         d.trang_thai = sang
 
 
@@ -532,8 +534,10 @@ def phan_cong(db: Session, chuyen_id: int, xe_id: int, tai_xe_id: int) -> dict:
 # ---------- UC-15: chốt / mở chốt ----------
 
 
-def _doi_trang_thai_chuyen(db: Session, c: Chuyen, sang: str, nguoi: NguoiDung) -> None:
-    db.add(LichSuTrangThai(doi_tuong="CHUYEN", doi_tuong_id=c.id, tu=c.trang_thai, sang=sang, nguoi=nguoi.id))
+def _doi_trang_thai_chuyen(db: Session, c: Chuyen, sang: str, nguoi: NguoiDung, ly_do: str | None = None) -> None:
+    db.add(
+        LichSuTrangThai(doi_tuong="CHUYEN", doi_tuong_id=c.id, tu=c.trang_thai, sang=sang, ly_do=ly_do, nguoi=nguoi.id)
+    )
     c.trang_thai = sang
 
 
@@ -580,9 +584,16 @@ def chot(db: Session, chuyen_id: int, xac_nhan_chay_rong: bool, xac_nhan_lai_am:
     return chi_tiet(db, c.id)
 
 
+def _con_tam_ung(db: Session, chuyen_id: int) -> bool:
+    return (
+        db.scalar(select(TamUng.id).where(TamUng.chuyen_id == chuyen_id, TamUng.trang_thai == "HIEU_LUC").limit(1))
+        is not None
+    )
+
+
 def mo_chot(db: Session, chuyen_id: int, nguoi: NguoiDung) -> dict:
     c, _, _ = _khoa_chuyen(db, chuyen_id, can="DA_CHOT", viec="mở chốt")
-    if db.scalar(select(TamUng.id).where(TamUng.chuyen_id == c.id, TamUng.trang_thai == "HIEU_LUC").limit(1)):
+    if _con_tam_ung(db, c.id):
         raise LoiNghiepVu("BR-24", "Chuyến còn tạm ứng chưa thu hồi, cần Kế toán thu hồi tạm ứng trước", 409)
     # Về LAP thì lãi dự kiến lấy lại từ tuyến; chốt lại lưu theo số mới (BR-52, 71; quyết định UC-15 số 4)
     c.dm_dau_chot = c.dm_cau_duong_chot = c.dm_boc_xep_chot = c.luong_tai_xe_chot = None
@@ -591,5 +602,35 @@ def mo_chot(db: Session, chuyen_id: int, nguoi: NguoiDung) -> dict:
         update(Ghep).where(Ghep.chuyen_id == c.id, Ghep.hieu_luc).values(eta_lay_ke_hoach=None, eta_giao_ke_hoach=None)
     )
     _doi_trang_thai_chuyen(db, c, "LAP", nguoi)
+    db.commit()
+    return chi_tiet(db, c.id)
+
+
+# ---------- UC-16: hủy chuyến ----------
+
+
+def huy(db: Session, chuyen_id: int, ly_do: str, nguoi: NguoiDung) -> dict:
+    # Khóa dòng chuyến như ghép/gỡ/chốt: hủy và các thao tác đó trên cùng chuyến chạy lần lượt
+    c = db.get(Chuyen, chuyen_id, with_for_update=True)
+    if c is None:
+        raise LoiNghiepVu("KHONG_TIM_THAY", "Không tìm thấy chuyến", 404)
+    if c.trang_thai not in ("LAP", "DA_CHOT"):
+        raise LoiNghiepVu("BR-25", f"Chuyến {c.ma_chuyen} đã chạy hoặc đã hủy, không hủy được", 409)
+    if _con_tam_ung(db, c.id):
+        raise LoiNghiepVu("BR-25", "Chuyến còn tạm ứng chưa thu hồi, cần Kế toán thu hồi tạm ứng trước", 409)
+
+    don = list(
+        db.scalars(
+            select(DonHang)
+            .join(Ghep, Ghep.don_hang_id == DonHang.id)
+            .where(Ghep.chuyen_id == c.id, Ghep.hieu_luc)
+            .order_by(DonHang.id)
+            .with_for_update(of=DonHang)
+        )
+    )
+    db.execute(update(Ghep).where(Ghep.chuyen_id == c.id, Ghep.hieu_luc).values(hieu_luc=False))
+    _doi_trang_thai(db, don, "CHO_GHEP", nguoi, ly_do)
+    # Giữ số đã chốt làm dấu vết (quyết định UC-16 số 5); chuyến HUY không chiếm lịch (BR-16, 17)
+    _doi_trang_thai_chuyen(db, c, "HUY", nguoi, ly_do)
     db.commit()
     return chi_tiet(db, c.id)
