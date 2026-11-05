@@ -96,12 +96,13 @@
 | Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Xong | – | PR #1 merge 16/10 (Tài cập nhật hộ) |
 | Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Cài môi trường xong 19/10 (theo báo cáo tuần 2; Tài sửa hộ 25/10). Ca test BR xong 29/10, Tài chốt 30/10 (Tài cập nhật hộ). Còn UML |
 | UC-04 Tài xế (chép mẫu) | 2 | Xong | 10/10 | Tài review, merge vào `main` 25/10 (Tài cập nhật hộ) |
-| UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Đang làm | UC-02 11/11, UC-17 10/10, UC-18 11/11, UC-19 15/15 | UC-02 (PR #5), UC-17 (PR #6), UC-18 (PR #13) đã gộp `dev`. UC-19 xong 04/11 (50 test, giao diện + phiếu QR + camera thử đạt 12/12 ca), mở PR vào `dev` chờ Tài review; để sau: GPS trên Safari iPhone, BR-44 quét sai vị trí. Còn UC-20. UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
+| UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Đang làm | UC-02 11/11, UC-17 10/10, UC-18 11/11, UC-19 15/15, UC-20 14/16 | UC-02 (PR #5), UC-17 (PR #6), UC-18 (PR #13), UC-19 (PR #15) đã gộp `dev`. UC-20 backend + giao diện xong 05/11 (40 test, kèm 3 góp ý review #15: tối đa 5 ảnh, trần độ chính xác GPS, xin vị trí lúc bấm), chờ Kiệt thử giao diện AC14–AC15 (`docs/test-evidence/UC-20/du-lieu.md`) rồi mở PR. BR-44 để hướng phát triển (Tài chốt). UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
 | Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Chưa bắt đầu | | |
 | UC-24, 25 | 7 | Chưa bắt đầu | | |
 | UC-26, 27, 34 (hiệu suất xe, ưu tiên S – thiếu giờ thì cắt trước), E2E | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Kiệt (mới nhất ở trên)
+- 05/11: UC-20 Quét giao: `GIAO` (ảnh + chữ ký PNG + tên, BR-41), giao trễ (BR-72), sinh phải thu + nhật ký tiền (BR-56, 62), `GIAO_THAT_BAI` (BR-42), đơn chưa lấy 409 BR-40, bảng quét lặp / trái kết quả; giao diện quét xác nhận + ô ký canvas; xin vị trí lúc bấm (Safari); 40 test, toàn bộ 581 passed; 14/16 AC. Gộp #15 (UC-19).
 - 04/11: Đóng UC-19 (15/15 AC): thử giao diện 12/12 ca (phiếu QR, tài xế 360 px, camera iPhone qua Cloudflare Tunnel có GPS thật); 541 passed. Để sau: GPS Safari iPhone, BR-44.
 - 04/11: UC-19 giao diện: khối Lấy hàng (camera `qr-scanner` + gõ mã), Không lấy được (lý do + ảnh), phiếu in QR (`qrcode`), cho phép Cloudflare Tunnel trong Vite; chờ thử giao diện.
 - 04/11: UC-19 Quét lấy hàng (backend): `POST /api/toi/quet` ở module `quet/` (BR-38, 39, 42, 43, 45: không thuộc chuyến 403, chuyến chưa chạy 409, quét lặp cùng ý trả trạng thái hiện tại, trái kết quả 409 BR-39, trường lạ 400), `GET /api/danh-muc/ly-do`, migration nạp 12 lý do; 50 test, toàn bộ 488 passed; 12/15 AC. Review PR #12 (UC-16) của Tài: đạt, 459 passed. Gộp `dev` mới vào UC-18, mở PR #13.

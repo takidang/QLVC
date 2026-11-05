@@ -1,22 +1,25 @@
 import QrScanner from 'qr-scanner'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { LoiApi } from '../../api/goi'
-import { layGps, lyDo, quetMa, type KetQuaQuet, type LyDo } from '../../api/toi'
+import { layGps, lyDo, quetMa, type Gps, type KetQuaQuet, type LyDo } from '../../api/toi'
 import { nenAnh } from '../../nenAnh'
 
-const LOI_MANG = 'Không gửi được, kiểm tra mạng rồi thử lại'
+export const LOI_MANG = 'Không gửi được, kiểm tra mạng rồi thử lại'
+export const SO_ANH_TOI_DA = 5 // máy chủ chặn > 5 ảnh (review PR #15)
 // UC-19 luồng chính: camera đọc QR trên phiếu (qr-scanner); luồng 2a: gõ mã đơn. Cả hai gửi cùng một API
 export function QuetLay({ onXong }: { onXong: (kq: KetQuaQuet) => void }) {
   const [ma, setMa] = useState('')
   const [moCamera, setMoCamera] = useState(false)
   const [dangGui, setDangGui] = useState(false)
   const [loi, setLoi] = useState('')
+  const gpsKhiBam = useRef<Promise<Gps | null> | null>(null)
 
-  async function gui(maDon: string) {
+  // Vị trí xin ngay trong lúc bấm (Quét / Lấy hàng): Safari iPhone chỉ hỏi quyền khi có thao tác người dùng
+  async function gui(maDon: string, gps: Promise<Gps | null> = layGps()) {
     setLoi('')
     setDangGui(true)
     try {
-      onXong(await quetMa({ ma_don: maDon, loai: 'LAY', gps: await layGps() }))
+      onXong(await quetMa({ ma_don: maDon, loai: 'LAY', gps: await gps }))
       setMa('')
     } catch (e) {
       setLoi(e instanceof LoiApi ? e.message : LOI_MANG)
@@ -32,7 +35,7 @@ export function QuetLay({ onXong }: { onXong: (kq: KetQuaQuet) => void }) {
         <Camera
           onDoc={(m) => {
             setMoCamera(false)
-            gui(m)
+            gui(m, gpsKhiBam.current ?? layGps())
           }}
           onLoi={(t) => {
             setMoCamera(false)
@@ -41,7 +44,14 @@ export function QuetLay({ onXong }: { onXong: (kq: KetQuaQuet) => void }) {
           onDong={() => setMoCamera(false)}
         />
       ) : (
-        <button type="button" disabled={dangGui} onClick={() => setMoCamera(true)}>
+        <button
+          type="button"
+          disabled={dangGui}
+          onClick={() => {
+            gpsKhiBam.current = layGps()
+            setMoCamera(true)
+          }}
+        >
           Quét mã QR
         </button>
       )}
@@ -75,7 +85,7 @@ export function QuetLay({ onXong }: { onXong: (kq: KetQuaQuet) => void }) {
   )
 }
 
-function Camera(p: {
+export function Camera(p: {
   onDoc: (ma: string) => void
   onLoi: (t: string) => void
   onDong: () => void
@@ -117,8 +127,17 @@ function Camera(p: {
   )
 }
 
-// UC-19 luồng 1b: không lấy được – chọn lý do trong danh mục + chụp ít nhất 1 ảnh (BR-42) → đơn THAT_BAI
-export function KhongLay({ maDon, onXong }: { maDon: string; onXong: (kq: KetQuaQuet) => void }) {
+// UC-19 luồng 1b / UC-20 luồng 3a: không lấy / giao được – lý do trong danh mục + ít nhất 1 ảnh (BR-42) → THAT_BAI
+export function KhongLay({
+  maDon,
+  viec = 'LAY',
+  onXong,
+}: {
+  maDon: string
+  viec?: 'LAY' | 'GIAO'
+  onXong: (kq: KetQuaQuet) => void
+}) {
+  const ten = viec === 'LAY' ? 'không lấy được' : 'giao không được'
   const [mo, setMo] = useState(false)
   const [dsLyDo, setDsLyDo] = useState<LyDo[]>([])
   const [lyDoId, setLyDoId] = useState('')
@@ -128,14 +147,16 @@ export function KhongLay({ maDon, onXong }: { maDon: string; onXong: (kq: KetQua
 
   useEffect(() => {
     if (!mo || dsLyDo.length) return
-    lyDo('LAY')
+    lyDo(viec)
       .then(setDsLyDo)
       .catch(() => setLoi('Không tải được danh mục lý do'))
-  }, [mo, dsLyDo.length])
+  }, [mo, dsLyDo.length, viec])
 
   async function gui(e: FormEvent) {
     e.preventDefault()
     if (!lyDoId || !anh.length) return setLoi('Chọn lý do và chụp ít nhất 1 ảnh (BR-42)')
+    if (anh.length > SO_ANH_TOI_DA) return setLoi(`Tối đa ${SO_ANH_TOI_DA} ảnh`)
+    const gps = layGps() // xin vị trí ngay lúc bấm, trước khi nén ảnh (Safari)
     setLoi('')
     setDangGui(true)
     try {
@@ -143,8 +164,8 @@ export function KhongLay({ maDon, onXong }: { maDon: string; onXong: (kq: KetQua
       onXong(
         await quetMa({
           ma_don: maDon,
-          loai: 'KHONG_LAY',
-          gps: await layGps(),
+          loai: viec === 'LAY' ? 'KHONG_LAY' : 'GIAO_THAT_BAI',
+          gps: await gps,
           anh: daNen,
           ly_do_id: Number(lyDoId),
         }),
@@ -159,13 +180,13 @@ export function KhongLay({ maDon, onXong }: { maDon: string; onXong: (kq: KetQua
   if (!mo)
     return (
       <button type="button" className="phu" onClick={() => setMo(true)}>
-        Không lấy được
+        {viec === 'LAY' ? 'Không lấy được' : 'Giao không được'}
       </button>
     )
   return (
     <form className="form-km" onSubmit={gui}>
       <label>
-        Lý do không lấy được {maDon}
+        Lý do {ten} {maDon}
         <select required value={lyDoId} onChange={(e) => setLyDoId(e.target.value)}>
           <option value="">– Chọn lý do –</option>
           {dsLyDo.map((x) => (
@@ -195,7 +216,7 @@ export function KhongLay({ maDon, onXong }: { maDon: string; onXong: (kq: KetQua
         <button type="button" className="phu" disabled={dangGui} onClick={() => setMo(false)}>
           Thôi
         </button>
-        <button disabled={dangGui}>{dangGui ? 'Đang gửi…' : 'Báo không lấy được'}</button>
+        <button disabled={dangGui}>{dangGui ? 'Đang gửi…' : `Báo ${ten}`}</button>
       </div>
     </form>
   )

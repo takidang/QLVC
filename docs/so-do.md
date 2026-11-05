@@ -625,6 +625,7 @@ Liên quan: BR-38…45, 72
 - Đơn không thuộc chuyến của tài xế đang đăng nhập → 403, chống IDOR. Chuyến của mình nhưng sai trạng thái → 409.
 - Khóa chuyến trước, đơn sau (thứ tự khóa ở `kien-truc.md` mục 6), để tài xế không kết thúc chuyến khi một lượt quét đang chạy.
 - Giao thành công sinh khoản phải thu ngay trong cùng giao dịch. Giao sau hạn vẫn cho giao, gắn cờ giao trễ.
+- Quét lại đơn đã có kết quả: cùng ý thì trả trạng thái hiện tại (BR-45), trái kết quả thì 409 – bảng đầy đủ ở `api.md` mục 3.2 (UC-19 quyết định 6, UC-20 quyết định 3).
 
 ```mermaid
 sequenceDiagram
@@ -645,8 +646,10 @@ sequenceDiagram
     SV-->>API: 403 [BR-38]
   else chuyến của mình nhưng không ở DANG_CHAY
     SV-->>API: 409 [BR-38]
-  else đơn đã có kết quả (DA_GIAO hoặc THAT_BAI)
-    SV-->>API: 200 kèm trạng thái hiện tại [BR-45]
+  else đơn đã có kết quả, quét lặp cùng ý (giao lại đơn DA_GIAO, báo thất bại lại đơn THAT_BAI)
+    SV-->>API: 200 kèm trạng thái hiện tại, không ghi gì [BR-45]
+  else đơn đã có kết quả, quét trái kết quả (giao đơn THAT_BAI, báo thất bại đơn DA_GIAO)
+    SV-->>API: 409 kèm trạng thái hiện tại [BR-40]
   else đơn đang DA_GHEP
     SV-->>API: 409 "đơn chưa được quét lấy" [BR-40]
   else hợp lệ
