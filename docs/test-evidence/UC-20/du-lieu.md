@@ -18,12 +18,12 @@ Tab ẩn danh, `F12` → `Ctrl + Shift + M`, rộng 360. Đăng nhập `an` / `m
 
 | Ca | Làm gì | Kết quả đúng | Ảnh | Kết quả |
 |---|---|---|---|---|
-| a | Xem các điểm **Giao** | Điểm giao DH-MSKG7T và DH-6HXV2Y có nút **Giao hàng** và **Giao không được**; điểm giao DH-9ZTTPG (Thất bại) không có nút; không cuộn ngang | `a-nut-giao.png` | |
-| b | DH-MSKG7T → **Giao hàng** → gõ `DH-6HXV2Y` → **Xác nhận mã** | Đỏ "Mã DH-6HXV2Y không khớp đơn của điểm này (DH-MSKG7T)"; nút **Xác nhận giao** mờ | `b-sai-ma.png` | |
-| c | Gõ `dh-mskg7t` → **Xác nhận mã** | Xanh "Đã xác nhận đúng kiện DH-MSKG7T" | `c-dung-ma.png` | |
-| d | Chọn ảnh, nhập tên `Lê Văn Nhận`, **ký bằng chuột** vào ô ký; bấm **Xóa chữ ký** | Có nét ký; xóa thì ô trắng lại và nút **Xác nhận giao** mờ lại | `d-ky-va-xoa.png` | |
-| e | Ký lại → **Xác nhận giao** | Xanh "**Đã giao DH-MSKG7T (10 kiện)**"; khung vàng "Giao sau hạn giao … (BR-72)" (có thể thêm khung thiếu GPS nếu máy không cho vị trí); điểm giao đổi **Đã giao**, mất nút | `e-da-giao-tre.png` | |
-| f | DH-6HXV2Y → **Giao không được** | Hiện ô "Lý do giao không được DH-6HXV2Y" với 6 lý do giao (Người nhận vắng … Xe hỏng / sự cố trên đường), ô ảnh; bấm **Thôi** để đóng, **không gửi** (đơn để dành cho Phần 2) | `f-ly-do-giao.png` | |
+| a | Xem các điểm **Giao** | Điểm giao DH-MSKG7T và DH-6HXV2Y có nút **Giao hàng** và **Giao không được**; điểm giao DH-9ZTTPG (Thất bại) không có nút; không cuộn ngang | `a-nut-giao.png` | Đạt |
+| b | DH-MSKG7T → **Giao hàng** → gõ `DH-6HXV2Y` → **Xác nhận mã** | Đỏ "Mã DH-6HXV2Y không khớp đơn của điểm này (DH-MSKG7T)"; nút **Xác nhận giao** mờ | `b-sai-ma.png` | Đạt |
+| c | Gõ `dh-mskg7t` → **Xác nhận mã** | Xanh "Đã xác nhận đúng kiện DH-MSKG7T" | `c-dung-ma.png` | Đạt |
+| d | Chọn ảnh, nhập tên `Lê Văn Nhận`, **ký bằng chuột** vào ô ký; bấm **Xóa chữ ký** | Có nét ký; xóa thì ô trắng lại và nút **Xác nhận giao** mờ lại | `d-ky-va-xoa.png` | Đạt |
+| e | Ký lại → **Xác nhận giao** | Xanh "**Đã giao DH-MSKG7T (10 kiện)**"; khung vàng "Giao sau hạn giao … (BR-72)" (có thể thêm khung thiếu GPS nếu máy không cho vị trí); điểm giao đổi **Đã giao**, mất nút | `e-da-giao-tre.png` | Đạt (có thêm khung thiếu GPS vì máy tính không cho vị trí) |
+| f | DH-6HXV2Y → **Giao không được** | Hiện ô "Lý do giao không được DH-6HXV2Y" với 6 lý do giao (Người nhận vắng … Xe hỏng / sự cố trên đường), ô ảnh; bấm **Thôi** để đóng, **không gửi** (đơn để dành cho Phần 2) | `f-ly-do-giao.png` | Đạt |
 
 ## Phần 2 – iPhone thật qua Cloudflare Tunnel (AC15)
 
@@ -33,16 +33,22 @@ Tab ẩn danh, `F12` → `Ctrl + Shift + M`, rộng 360. Đăng nhập `an` / `m
 
 | Ca | Làm gì | Kết quả đúng | Ảnh | Kết quả |
 |---|---|---|---|---|
-| g | DH-6HXV2Y → **Giao hàng** → **Quét mã QR trên kiện** → cho phép camera → quét QR trên màn hình máy tính | Camera tắt, hiện "Đã xác nhận đúng kiện DH-6HXV2Y" | `g-quet-xac-nhan.png` | |
-| h | Chụp ảnh bằng camera, nhập tên, **ký bằng ngón tay** (trang không bị cuộn khi ký) | Nét ký mượt theo ngón tay | `h-ky-ngon-tay.png` | |
-| i | **Xác nhận giao** → Safari hỏi vị trí → **Cho phép** | **Safari có hỏi quyền vị trí** (sửa lỗi của UC-19); "Đã giao DH-6HXV2Y (5 kiện)" + khung giao trễ, **không** có khung thiếu GPS | `i-giao-safari.png` | |
+| g | DH-6HXV2Y → **Giao hàng** → **Quét mã QR trên kiện** → cho phép camera → quét QR trên màn hình máy tính | Camera tắt, hiện "Đã xác nhận đúng kiện DH-6HXV2Y" | `g-quet-xac-nhan.png` | Đạt |
+| h | Chụp ảnh bằng camera, nhập tên, **ký bằng ngón tay** (trang không bị cuộn khi ký) | Nét ký mượt theo ngón tay | `h-ky-ngon-tay.png` | Đạt (chữ ký lưu trên máy chủ trùng nét trong ảnh) |
+| i | **Xác nhận giao** → Safari hỏi vị trí → **Cho phép** | **Safari có hỏi quyền vị trí** (sửa lỗi của UC-19); "Đã giao DH-6HXV2Y (5 kiện)" + khung giao trễ, **không** có khung thiếu GPS | – | Đạt, kiểm bằng CSDL, không chụp ảnh: lượt quét `GIAO` của DH-6HXV2Y có tọa độ 10.849955, 106.796945, sai số 35 m, `thieu_gps = false` |
 
 ## Phần 3 – Kết thúc vòng tối thiểu (tùy chọn, làm cuối cùng)
 
 | Ca | Làm gì | Kết quả đúng | Ảnh | Kết quả |
 |---|---|---|---|---|
-| k | Sau khi DH-MSKG7T, DH-6HXV2Y đã giao: khối **Kết thúc chuyến** nhập km `50200` + ảnh → **Kết thúc** | Chuyến **Hoàn thành**; vòng tạo đơn → ghép → chốt → bắt đầu → lấy → giao → kết thúc chạy trọn (mốc 08/11). Sau ca này chuyến không thử lại được | `k-hoan-thanh.png` | |
+| k | Sau khi DH-MSKG7T, DH-6HXV2Y đã giao: khối **Kết thúc chuyến** nhập km `50200` + ảnh → **Kết thúc** | Chuyến **Hoàn thành**; vòng tạo đơn → ghép → chốt → bắt đầu → lấy → giao → kết thúc chạy trọn (mốc 08/11). Sau ca này chuyến không thử lại được | `k-hoan-thanh.png` | Đạt (ảnh chụp lúc nhập km trước khi bấm; CSDL: chuyến `HOAN_THANH`) |
 
 ## Sau khi thử
 
 Claude kiểm CSDL: lượt quét `GIAO` có tên người nhận, tọa độ (Safari), 2 tệp (`ANH`, `CHU_KY`); ghép `ket_qua = DA_GIAO`, `giao_tre = true`; mỗi đơn đã giao có 1 `PHAI_THU` = cước, `CHUA_THU` và 1 dòng `NHAT_KY_TIEN`.
+
+### Kết quả (Kiệt thử 05/11/2026, Claude kiểm CSDL)
+
+- 10/10 ca đạt (a–i, k). Lần thử đầu ở Phần 2, Kiệt lỡ bấm **Xác nhận giao** khi chưa ký xong (nút sáng ngay từ nét ký đầu tiên) nên chưa chụp được ảnh ca h. Claude đưa DH-6HXV2Y về `DA_LAY` trên CSDL thử, xóa lượt giao, 2 tệp, phải thu, nhật ký tiền và lịch sử của lần đó, rồi Kiệt thử lại. Vì vậy `nhat_ky_tien` trên máy Kiệt không có id 2.
+- CSDL: DH-MSKG7T và DH-6HXV2Y đều `DA_GIAO`, ghép `ket_qua = DA_GIAO`, `giao_tre = true`. Mỗi lượt `GIAO` có tên người nhận và 2 tệp (`ANH`, `CHU_KY` PNG), các tệp có trên đĩa. Phải thu 2.997.000 và 800.000, đúng bằng cước, `CHUA_THU`, mỗi khoản 1 dòng `NHAT_KY_TIEN` `TAO`. Chuyến CH-261031-01 `HOAN_THANH`.
+- Ghi nhận ngoài UC-20 (để sau, Kiệt quyết): khối **Kết thúc chuyến** (UC-18) tràn khỏi khung bên phải trên iPhone; nhãn điểm **Lấy** hiện trạng thái đơn ("Đã giao"); có thể thêm bước hỏi lại trước **Xác nhận giao** để chống chạm nhầm.

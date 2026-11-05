@@ -1,6 +1,6 @@
 # UC-20: Quét mã giao hàng / báo giao không được
 
-- **Trạng thái:** Đang làm (duyệt 05/11/2026, Kiệt: đồng ý 9 quyết định và 3 chỗ sửa tài liệu – sơ đồ 9 tách quét lặp cùng ý / trái kết quả, `use-cases.md` thêm lý do "Xe hỏng", `api.md` 1–5 ảnh)
+- **Trạng thái:** Hoàn thành 16/16 AC (05/11/2026; duyệt 05/11/2026, Kiệt: đồng ý 9 quyết định và 3 chỗ sửa tài liệu – sơ đồ 9 tách quét lặp cùng ý / trái kết quả, `use-cases.md` thêm lý do "Xe hỏng", `api.md` 1–5 ảnh)
 - **Tác nhân:** Tài xế (điện thoại)
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-20) · `docs/api.md` mục 3.2 (`POST /api/toi/quet`) · `docs/so-do.md` mục 9 (sequence quét giao) · `docs/kien-truc.md` mục 6 (thứ tự khóa) · `docs/security-rules.md` (quét mã, upload) · ca test `docs/ca-test-br.md` (TC-BR35, 40, 41, 42, 56, 72)
 - **Quy tắc nghiệp vụ liên quan:** BR-35 (không giao một phần), BR-38 (chỉ đơn thuộc chuyến của mình đang chạy), BR-40 (giao: `DA_LAY` → `DA_GIAO` hoặc `THAT_BAI`), BR-41 (giao thành công cần ảnh + chữ ký + tên người nhận), BR-42 (thất bại cần lý do + ảnh), BR-43 (giờ máy chủ, GPS), BR-45 (quét lại không tạo bản ghi mới), BR-56 (giao xong sinh phải thu `CHUA_THU`), BR-62 (nhật ký tiền), BR-72 (giao sau hạn vẫn giao, đánh dấu trễ), BR-30 (lịch sử trạng thái)
@@ -90,7 +90,8 @@ Dùng tiếp CH-261031-01 trên máy Kiệt sau UC-19: **DH-MSKG7T**, **DH-6HXV2
 - Test đã viết: `tests/api/test_uc20_quet_giao.py` (40 ca). Đã thử làm hỏng 4 quy tắc (bỏ sinh phải thu, bỏ đánh dấu trễ, cho giao đơn chưa lấy, bỏ bắt buộc chữ ký) → mỗi lần có test đỏ, rồi trả lại code.
 - Kết quả: 40/40 đạt; toàn bộ **581 passed**; ruff, `alembic check`, oxlint, tsc, prettier, build sạch. Không đổi CSDL, không thêm gói.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/api/test_uc20_quet_giao.py`
-- Thử giao diện: `docs/test-evidence/UC-20/du-lieu.md`.
+- Thử giao diện: `docs/test-evidence/UC-20/du-lieu.md`. Kiệt thử 05/11: 10/10 ca đạt; chạy lại trước khi mở PR: 581 passed, mọi kiểm tra sạch.
+- Để sau (ngoài UC-20, Kiệt quyết): khối Kết thúc chuyến (UC-18) tràn khung trên iPhone; nhãn điểm Lấy hiện trạng thái đơn; hỏi lại trước Xác nhận giao để chống chạm nhầm (nút sáng từ nét ký đầu tiên).
 
 ## Truy vết và kết quả
 
@@ -109,6 +110,6 @@ Dùng tiếp CH-261031-01 trên máy Kiệt sau UC-19: **DH-MSKG7T**, **DH-6HXV2
 | UC-20-AC11 | API | `test_uc20_ac11_khong_giao_mot_phan` | Đạt | 05/11/2026 |
 | UC-20-AC12 | API | `test_uc20_ac12_*` (6 ca) | Đạt | 05/11/2026 |
 | UC-20-AC13 | API | `test_uc20_ac13_ket_thuc_sau_khi_giao` | Đạt | 05/11/2026 |
-| UC-20-AC14 | UI | | CHƯA KIỂM | |
-| UC-20-AC15 | UI | | CHƯA KIỂM | |
+| UC-20-AC14 | UI | Kiệt thử máy tính 360 px, ca a–f: `docs/test-evidence/UC-20/a…f-*.png` | Đạt | 05/11/2026 |
+| UC-20-AC15 | UI | Kiệt thử iPhone **Safari** qua Cloudflare Tunnel, ca g, h, i, k: `g-quet-xac-nhan.png`, `h-ky-ngon-tay.png`, `k-hoan-thanh.png`; ca i kiểm bằng CSDL (tọa độ có, sai số 35 m: Safari đã hỏi và gửi vị trí); Điều phối mở phiếu QR; phải thu kiểm bằng CSDL. Chrome iPhone không thử lại (UC-19 đã có tọa độ trên Chrome) | Đạt | 05/11/2026 |
 | UC-20-AC16 | API | `test_uc20_ac16_*` (4 ca, biên 5 ảnh, 999.999,9 / 1.000.000) | Đạt | 05/11/2026 |
