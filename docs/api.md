@@ -102,8 +102,9 @@
 | POST | `/api/toi/chuyen/{id}/bat-dau` | TX | UC-18 | multipart: `km_bat_dau`, `anh_dong_ho`; BR-26 (đúng ngày khởi hành theo giờ VN, gồm BR-11…15 – vi phạm liệt kê trong `chi_tiet`), BR-70 (km ≥ km sàn của xe). Trả chi tiết chuyến như `GET /api/toi/chuyen/{id}`. Không phải chuyến của mình → 404; không ở `DA_CHOT` → 409 |
 | POST | `/api/toi/chuyen/{id}/ket-thuc` | TX | UC-18 | multipart: `km_ket_thuc`, `anh_dong_ho`; BR-28 (còn đơn → 422, `chi_tiet` có `ma_don`), BR-70 (km > km bắt đầu, cập nhật `km_dong_ho` xe), rồi xử lý BR-36. Không ở `DANG_CHAY` → 409. **Ảnh** (mọi API có ảnh): JPEG/PNG theo nội dung file, sai → 400; > 500 KB → 413 |
 | POST | `/api/toi/quet` | TX | UC-19, UC-20 | **Chi tiết ở mục 3.2** |
-| POST | `/api/toi/chuyen/{id}/chi-phi` | TX | UC-21 | multipart: loại, số tiền, `so_lit` (bắt buộc với dầu), ghi chú, ảnh (BR-54) |
-| PATCH, DELETE | `/api/toi/chi-phi/{id}` | TX | UC-21 | Chỉ khoản của mình khi `CHO_DUYET` |
+| GET | `/api/toi/chuyen/{id}/chi-phi` | TX | UC-21 | Khoản chi của chuyến mình (cũ trước, kèm `so_anh`), `tong_da_khai` (trừ khoản `TU_CHOI`), `tam_ung_da_nhan` (Σ tạm ứng `HIEU_LUC`). Chuyến người khác / `LAP` / `HUY` → 404 |
+| POST | `/api/toi/chuyen/{id}/chi-phi` | TX | UC-21 | multipart: `loai` (`DAU`/`CAU_DUONG`/`BOC_XEP`/`PHAT_SINH`), `so_tien` (1…10¹²), `so_lit` (> 0, 2 chữ số thập phân; **bắt buộc với dầu, cấm với loại khác**), `ghi_chu` (≤ 500), `anh` 1–5 (BR-54). Trường lạ, sai kiểu, dầu thiếu lít → 400; > 5 ảnh → 400 `QUA_NHIEU_ANH`; thiếu ghi chú / ảnh → 422 `BR-54`; chuyến người khác / `LAP` / `HUY` → 404; `DA_CHOT` → 409 `BR-54`, `DA_QUYET_TOAN` → 409 `BR-29`. Ghi được khi `DANG_CHAY`, `HOAN_THANH`; lưu `CHO_DUYET` + `NHAT_KY_TIEN` `TAO`. 201 trả khoản |
+| PATCH, DELETE | `/api/toi/chi-phi/{id}` | TX | UC-21 | Chỉ khoản của mình khi `CHO_DUYET`, chuyến chưa quyết toán (khác → 409 `BR-54` / `BR-29`; khoản người khác → 404). PATCH JSON `{loai?, so_tien?, so_lit?, ghi_chu?}` kiểm lại BR-54, không đổi ảnh, không gì thay đổi → 400 `KHONG_CO_THAY_DOI`, nhật ký `SUA`. DELETE xóa khoản + tệp, nhật ký `XOA` giữ giá trị cũ, 204 |
 | POST | `/api/toi/chuyen/{id}/su-co` | TX | UC-33 | multipart: loại, ghi chú, ảnh; chuyến của mình `DANG_CHAY`; không đổi trạng thái chuyến |
 
 ### 2.6 Tiền: tạm ứng, chi phí, quyết toán, công nợ, báo cáo
