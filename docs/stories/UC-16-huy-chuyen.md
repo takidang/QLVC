@@ -53,4 +53,4 @@ Trên trang chi tiết chuyến `LAP` hoặc `DA_CHOT`, Điều phối bấm **H
 | UC-16-AC7 | API | `test_uc16_ac7_lich_su_co_ly_do` | Đạt | 04/11/2026 |
 | UC-16-AC8 | API | `test_uc16_ac8_huy_va_ghep_dong_thoi` | Đạt | 04/11/2026 |
 | UC-16-AC9 | API | `test_uc16_ac9_* (5 ca)` | Đạt | 04/11/2026 |
-| UC-16-AC10 | UI | Chờ thử (`docs/test-evidence/UC-16/du-lieu.md`) | CHƯA KIỂM | |
+| UC-16-AC10 | UI | Kiệt thử 6/6 ca: `docs/test-evidence/UC-16/`; hủy chuyến có đơn → đơn về chờ ghép (CSDL); BR-25 có tạm ứng chưa thử giao diện (test tự động) | Đạt | 07/11/2026 |
