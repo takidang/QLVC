@@ -118,7 +118,7 @@ export default function TamUng() {
                 <input
                   type="number"
                   min={1}
-                  step={1000}
+                  step={1}
                   value={soTien}
                   onChange={(e) => setSoTien(e.target.value)}
                   required
@@ -231,7 +231,7 @@ function SuaKhoan({
         <input
           type="number"
           min={1}
-          step={1000}
+          step={1}
           aria-label="Số tiền mới"
           value={so}
           onChange={(e) => setSo(e.target.value)}

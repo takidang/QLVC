@@ -168,9 +168,11 @@ def test_uc23_ac6_sua_giam(client, dang_nhap_voi, db, c01):
 
 
 def test_uc23_ac6_sua_vuot(client, db, c01):
-    tu = cap(client, c01, DINH_MUC).json()["id"]
-    assert ma(sua_tu(client, tu, 1_100_000)) == (422, "BR-53")
-    assert khoan(db, c01)[0].so_tien == DINH_MUC
+    tu = cap(client, c01, 600_000).json()["id"]
+    r = sua_tu(client, tu, 1_100_000)
+    assert ma(r) == (422, "BR-53")
+    assert "khoản này sửa tối đa 1.000.000 đ" in r.json()["thong_diep"]  # không phải "còn được cấp" (400.000)
+    assert khoan(db, c01)[0].so_tien == 600_000
     assert len(nhat_ky(db, tu)) == 1
 
 

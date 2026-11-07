@@ -1,6 +1,6 @@
 # UC-23: Cấp / sửa / thu hồi tạm ứng
 
-- **Trạng thái:** Đang làm (duyệt 07/11/2026, Kiệt: đồng ý 9 quyết định)
+- **Trạng thái:** Hoàn thành 14/14 AC (07/11/2026; duyệt 07/11/2026, Kiệt: đồng ý 9 quyết định)
 - **Tác nhân:** Kế toán (Quản lý chỉ xem)
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-23) · `docs/api.md` mục 2.6 · `docs/security-rules.md` (bảng dữ liệu tiền) · `docs/kien-truc.md` mục 6 (khóa dòng chuyến) · ca test `docs/ca-test-br.md` (TC-BR53-01…06, TC-BR62-01, TC-BR24-01/02, TC-BR25-02) · kịch bản `nghiep-vu.md` mục 11 bước 4
 - **Quy tắc nghiệp vụ liên quan:** BR-53 (chỉ cấp khi chuyến `DA_CHOT` tới trước `HOAN_THANH`; tổng `HIEU_LUC` ≤ định mức đã chốt; kiểm ở mọi lần tạo và sửa), BR-62 (nhật ký tiền chỉ thêm), BR-24 / BR-25 (mở chốt, hủy chuyến cần thu hồi trước – UC-15, 16 đã kiểm), BR-29 (đã quyết toán thì chỉ đọc)
@@ -63,7 +63,7 @@ Chuyến đã chốt, Kế toán cấp tiền tạm ứng cho tài xế để tr
 - Test đã viết: `tests/api/test_uc23_tam_ung.py` (49 ca). Đã thử làm hỏng 4 quy tắc (bỏ khóa dòng chuyến, sửa không trừ khoản đang sửa, tính cả khoản đã thu hồi, bỏ nhật ký thu hồi) → mỗi lần có test đỏ, rồi trả lại code.
 - Kết quả: 49/49 đạt; toàn bộ **590 passed**; ruff, `alembic check`, oxlint, tsc, prettier, build sạch.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/api/test_uc23_tam_ung.py`
-- Thử giao diện: `docs/test-evidence/UC-23/du-lieu.md`.
+- Thử giao diện: `docs/test-evidence/UC-23/du-lieu.md`. Kiệt thử 07/11: 7/7 ca đạt. Sửa trong lúc thử: ô số tiền `step` 1 đồng (trước là 1000 + `min=1` nên trình duyệt chặn 1.200.000); câu báo vượt định mức khi **sửa** ghi "khoản này sửa tối đa …" thay cho "còn được cấp …" (số tối đa của chính khoản, không phải số còn cấp thêm).
 
 ## Truy vết và kết quả
 
@@ -82,4 +82,4 @@ Chuyến đã chốt, Kế toán cấp tiền tạm ứng cho tài xế để tr
 | UC-23-AC11 | API | `test_uc23_ac11_*` (8 ca) | Đạt | 07/11/2026 |
 | UC-23-AC12 | API | `test_uc23_ac12_*` (3 ca) | Đạt | 07/11/2026 |
 | UC-23-AC13 | API | `test_uc23_ac13_cap_dong_thoi` | Đạt | 07/11/2026 |
-| UC-23-AC14 | UI | | CHƯA KIỂM | |
+| UC-23-AC14 | UI | Kiệt thử 7 ca a–g trên máy tính: `docs/test-evidence/UC-23/a…g-*.png`; CSDL khớp (khoản, nhật ký 5 dòng) | Đạt | 07/11/2026 |

@@ -49,7 +49,8 @@ def _kiem_br53(db: Session, c: Chuyen, so_tien: int, tru_id: int | None = None) 
         raise LoiNghiepVu(
             "BR-53",
             f"Tổng tạm ứng {_tien(da_cap + so_tien)} vượt định mức đã chốt {_tien(dm)} của chuyến {c.ma_chuyen}; "
-            f"còn được cấp {_tien(con)}",
+            # sửa: số tối đa là của chính khoản đang sửa (đã trừ khỏi tổng), không phải số còn cấp thêm
+            f"{'khoản này sửa tối đa' if tru_id is not None else 'còn được cấp'} {_tien(con)}",
             422,
             chi_tiet=[{"ma": "BR-53", "dinh_muc": dm, "tong_hieu_luc": da_cap, "con_duoc_cap": con}],
         )
