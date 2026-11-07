@@ -19,6 +19,7 @@ from app.modules.danh_muc.xe.router import router as xe_router
 from app.modules.don.router import router as don_router
 from app.modules.nguoi_dung.router import router as nguoi_dung_router
 from app.modules.quet.router import router as quet_router
+from app.modules.tien.tam_ung.router import router as tam_ung_router
 from app.modules.toi.router import router as toi_router
 
 
@@ -41,6 +42,7 @@ app.include_router(nguoi_dung_router)
 app.include_router(nut_router)
 app.include_router(quet_router)
 app.include_router(tai_xe_router)
+app.include_router(tam_ung_router)
 app.include_router(toi_router)
 app.include_router(tuyen_router)
 app.include_router(xe_router)

@@ -15,6 +15,7 @@ import TuyenDanhSach from './pages/dieu-phoi/TuyenDanhSach'
 import TaiXeDanhSach from './pages/dieu-phoi/TaiXeDanhSach'
 import XeDanhSach from './pages/dieu-phoi/XeDanhSach'
 import ChiPhiCoDinh from './pages/ke-toan/ChiPhiCoDinh'
+import TamUng from './pages/ke-toan/TamUng'
 import ChuyenCuaToi from './pages/tai-xe/ChuyenCuaToi'
 import ChuyenCuaToiChiTiet from './pages/tai-xe/ChuyenCuaToiChiTiet'
 
@@ -46,7 +47,10 @@ const TRANG_CON: Partial<
     { duong_dan: 'nut', ten: 'Nút', trang: <NutDanhSach /> },
     { duong_dan: 'tuyen', ten: 'Tuyến', trang: <TuyenDanhSach /> },
   ],
-  KE_TOAN: [{ duong_dan: 'chi-phi-xe', ten: 'Chi phí cố định xe', trang: <ChiPhiCoDinh /> }],
+  KE_TOAN: [
+    { duong_dan: 'chi-phi-xe', ten: 'Chi phí cố định xe', trang: <ChiPhiCoDinh /> },
+    { duong_dan: 'tam-ung', ten: 'Tạm ứng', trang: <TamUng /> },
+  ],
   QUAN_LY: [
     { duong_dan: 'nguoi-dung', ten: 'Người dùng', trang: <NguoiDungDanhSach /> },
     { duong_dan: 'bang-gia', ten: 'Bảng giá', trang: <BangGiaDanhSach /> },

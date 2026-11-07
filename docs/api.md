@@ -110,10 +110,11 @@
 
 | Phương thức | Đường dẫn | Vai trò | UC | BR / ghi chú |
 |---|---|---|---|---|
-| POST | `/api/chuyen/{id}/tam-ung` | KT | UC-23 | BR-53: chuyến `DA_CHOT`/`DANG_CHAY`; tổng vượt định mức đã chốt → 422 |
-| PATCH | `/api/tam-ung/{id}` | KT | UC-23 | Kiểm lại BR-53 mỗi lần sửa; cần `ly_do` |
-| POST | `/api/tam-ung/{id}/thu-hoi` | KT | UC-23 | `HIEU_LUC → DA_THU_HOI`; dùng trước khi mở chốt hoặc hủy chuyến (BR-24, 25) |
-| GET | `/api/tam-ung` | KT, QL | UC-23 | Lọc `trang_thai`, `chuyen_id`, `tai_xe_id` |
+| GET | `/api/chuyen/{id}/tam-ung` | KT, QL | UC-23 | Màn hình cấp: `{chuyen_id, ma_chuyen, trang_thai_chuyen, dinh_muc, tong_hieu_luc, con_duoc_cap, khoan: [...]}`; định mức = dầu + cầu đường + bốc xếp đã chốt; `con_duoc_cap` = định mức − tổng `HIEU_LUC` (không âm) là số gợi ý |
+| POST | `/api/chuyen/{id}/tam-ung` | KT | UC-23 | `{so_tien, hinh_thuc}` (`so_tien` số nguyên 1…10¹², `TIEN_MAT`/`CHUYEN_KHOAN`; sai, trường lạ → 400). Khóa dòng chuyến; chuyến không `DA_CHOT`/`DANG_CHAY` → 409 `BR-53`; tổng `HIEU_LUC` vượt định mức đã chốt → 422 `BR-53` (`chi_tiet` có `con_duoc_cap`). 201 trả khoản `{id, chuyen_id, ma_chuyen, tai_xe_id, ten_tai_xe, so_tien, hinh_thuc, trang_thai, tao_luc}`; tài xế là tài xế của chuyến |
+| PATCH | `/api/tam-ung/{id}` | KT | UC-23 | `{so_tien, hinh_thuc?, ly_do}` (`ly_do` 1–300 ký tự). Kiểm lại BR-53 (các khoản khác + số mới) → 422; khoản `DA_THU_HOI` hoặc chuyến không `DA_CHOT`/`DANG_CHAY`/`HOAN_THANH` → 409 `BR-53`, chuyến `DA_QUYET_TOAN` → 409 `BR-29`; số và hình thức giữ nguyên → 400 `KHONG_CO_THAY_DOI` |
+| POST | `/api/tam-ung/{id}/thu-hoi` | KT | UC-23 | `{ly_do?}` (bỏ trống: nhật ký ghi "Tài xế đã nộp lại tạm ứng"). `HIEU_LUC → DA_THU_HOI`; dùng trước khi mở chốt hoặc hủy chuyến (BR-24, 25). Trạng thái như PATCH; đã thu hồi → 409 |
+| GET | `/api/tam-ung` | KT, QL | UC-23 | Lọc `trang_thai`, `chuyen_id`, `tai_xe_id`; phân trang, mới nhất trước |
 | POST | `/api/chi-phi/{id}/duyet` | KT | UC-24 | `{so_tien_duyet, ly_do?}`; lý do bắt buộc khi khác số khai |
 | POST | `/api/chi-phi/{id}/tu-choi` | KT | UC-24 | Cần `ly_do` |
 | GET | `/api/chuyen/{id}/quyet-toan` | KT | UC-24 | Bảng quyết toán dự kiến: định mức – thực tế – chênh lệch, dầu tham khảo, lý do lãi lệch dự kiến |
