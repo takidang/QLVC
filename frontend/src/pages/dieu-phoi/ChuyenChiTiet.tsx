@@ -394,6 +394,8 @@ function DoiXeTaiXe({ c, onLuu }: { c: Chuyen; onLuu: (c: Chuyen) => void }) {
   const [xe, setXe] = useState<KhaDung<XeKhaDung>>()
   const [taiXe, setTaiXe] = useState<KhaDung<TaiXeKhaDung>>()
   const [loi, setLoi] = useState<string[]>([])
+  // Ghép / gỡ đơn khi khung đang mở làm đổi tải cần chở (BR-01): tải lại danh sách khả dụng
+  const donGhep = c.don.map((d) => d.id).join(',')
 
   useEffect(() => {
     if (!mo) return
@@ -406,7 +408,7 @@ function DoiXeTaiXe({ c, onLuu }: { c: Chuyen; onLuu: (c: Chuyen) => void }) {
     return () => {
       bo = true
     }
-  }, [mo, c.id])
+  }, [mo, c.id, donGhep])
   useEffect(() => {
     if (!mo) return
     let bo = false
@@ -419,7 +421,7 @@ function DoiXeTaiXe({ c, onLuu }: { c: Chuyen; onLuu: (c: Chuyen) => void }) {
     return () => {
       bo = true
     }
-  }, [mo, c.id, xeId])
+  }, [mo, c.id, xeId, donGhep])
 
   async function luu() {
     setLoi([])
