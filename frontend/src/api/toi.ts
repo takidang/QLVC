@@ -57,11 +57,14 @@ export function ghiKm(id: number, viec: 'bat-dau' | 'ket-thuc', km: number, anh:
 }
 
 // UC-19: quét mã lấy / báo không lấy được – multipart; giờ quét do máy chủ ghi, chỉ gửi mã, tọa độ, ảnh
+export type LoaiQuet = 'LAY' | 'KHONG_LAY' | 'GIAO' | 'GIAO_THAT_BAI'
+// `loai` không do máy chủ trả: gắn thêm ở đây để câu báo phân biệt lấy / giao
 export type KetQuaQuet = {
   ma_don: string
   trang_thai: string
   canh_bao: string[]
   lap_lai: boolean
+  loai: LoaiQuet
 }
 export type LyDo = { id: number; ten: string; ap_dung: 'LAY' | 'GIAO'; phia: 'KHACH' | 'SU_CO_XE' }
 export type Gps = { lat: number; lng: number; do_chinh_xac_m: number }
@@ -71,10 +74,12 @@ export const lyDo = (ap_dung: 'LAY' | 'GIAO') =>
 
 export function quetMa(vao: {
   ma_don: string
-  loai: 'LAY' | 'KHONG_LAY'
+  loai: LoaiQuet
   gps: Gps | null
   anh?: Blob[]
   ly_do_id?: number
+  chu_ky?: Blob // UC-20: ảnh PNG người nhận ký (BR-41)
+  ten_nguoi_nhan?: string
 }) {
   const form = new FormData()
   form.append('ma_don', vao.ma_don)
@@ -86,7 +91,11 @@ export function quetMa(vao: {
   }
   vao.anh?.forEach((a, i) => form.append('anh', a, `anh-${i + 1}.jpg`))
   if (vao.ly_do_id !== undefined) form.append('ly_do_id', String(vao.ly_do_id))
-  return goi<KetQuaQuet>('/api/toi/quet', { method: 'POST', body: form })
+  if (vao.chu_ky) form.append('chu_ky', vao.chu_ky, 'chu-ky.png')
+  if (vao.ten_nguoi_nhan !== undefined) form.append('ten_nguoi_nhan', vao.ten_nguoi_nhan)
+  return goi<Omit<KetQuaQuet, 'loai'>>('/api/toi/quet', { method: 'POST', body: form }).then(
+    (kq): KetQuaQuet => ({ ...kq, loai: vao.loai }),
+  )
 }
 
 // BR-43: xin vị trí lúc quét; từ chối hoặc quá 8 giây thì gửi không tọa độ (máy chủ gắn cờ thiếu GPS)
@@ -106,21 +115,23 @@ const TEN_KET_QUA: Record<string, string> = {
   THAT_BAI: 'đã báo thất bại',
 }
 
-// Câu báo sau khi quét (UC-19 bước 4): "Đã lấy: mã đơn, số kiện" – số kiện lấy từ lịch trình UC-17
-export function thongBaoQuet(
-  kq: KetQuaQuet,
-  c: ChuyenCuaToiChiTiet,
-): { xong: string; canhBao?: string } {
+const VIEC_XONG: Record<LoaiQuet, string> = {
+  LAY: 'Đã lấy',
+  KHONG_LAY: 'Đã báo không lấy được',
+  GIAO: 'Đã giao',
+  GIAO_THAT_BAI: 'Đã báo giao không được',
+}
+const CANH_BAO: Record<string, string> = {
+  THIEU_GPS: 'Không lấy được vị trí GPS: lượt quét vẫn ghi nhận, gắn cờ thiếu GPS (BR-43)',
+  GIAO_TRE: 'Giao sau hạn giao: đơn được đánh dấu giao trễ, cước giữ nguyên (BR-72)',
+}
+
+// Câu báo sau khi quét (UC-19, 20): "Đã lấy / Đã giao: mã đơn, số kiện" – số kiện lấy từ lịch trình UC-17
+export function thongBaoQuet(kq: KetQuaQuet, c: ChuyenCuaToiChiTiet) {
   const kien = c.lich_trinh.find((p) => p.ma_don === kq.ma_don)?.so_kien
+  const coKien = kq.loai === 'LAY' || kq.loai === 'GIAO'
   const xong = kq.lap_lai
     ? `Đơn ${kq.ma_don} ${TEN_KET_QUA[kq.trang_thai] ?? kq.trang_thai} từ trước, không ghi thêm (BR-45)`
-    : kq.trang_thai === 'DA_LAY'
-      ? `Đã lấy ${kq.ma_don}${kien ? ` (${kien} kiện)` : ''}`
-      : `Đã báo không lấy được ${kq.ma_don}`
-  return kq.canh_bao.includes('THIEU_GPS')
-    ? {
-        xong,
-        canhBao: 'Không lấy được vị trí GPS: lượt quét vẫn ghi nhận, gắn cờ thiếu GPS (BR-43)',
-      }
-    : { xong }
+    : `${VIEC_XONG[kq.loai]} ${kq.ma_don}${coKien && kien ? ` (${kien} kiện)` : ''}`
+  return { xong, canhBao: kq.canh_bao.map((m) => CANH_BAO[m] ?? m) }
 }

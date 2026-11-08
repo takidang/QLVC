@@ -270,9 +270,17 @@ def test_uc19_ac8_quet_dong_thoi(db, ch, tmp_path):
 
 
 # AC9 – loại, trường thiếu, trường lạ
-@pytest.mark.parametrize("loai", ["GIAO", "GIAO_THAT_BAI", "XYZ", "lay"])
-def test_uc19_ac9_loai_chua_lam_hoac_la(client, db, ch, loai):
+@pytest.mark.parametrize("loai", ["XYZ", "lay"])
+def test_uc19_ac9_loai_la(client, db, ch, loai):
     assert quet(client, loai=loai).status_code == 400
+    assert trang_thai(db, ch["d1"]) == "DA_GHEP"
+
+
+# Từ UC-20 GIAO, GIAO_THAT_BAI là loại hợp lệ: đơn còn DA_GHEP thì báo chưa quét lấy (UC-20-AC8)
+@pytest.mark.parametrize("loai", ["GIAO", "GIAO_THAT_BAI"])
+def test_uc19_ac9_giao_don_chua_lay(client, db, ch, loai):
+    r = quet(client, loai=loai)
+    assert (r.status_code, r.json()["ma"]) == (409, "BR-40")
     assert trang_thai(db, ch["d1"]) == "DA_GHEP"
 
 
