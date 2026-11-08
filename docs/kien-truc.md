@@ -22,6 +22,8 @@ Thư viện cụ thể (đọc QR, nén ảnh, sinh kiểu từ OpenAPI…) ch�
 
 Đã chọn: nén ảnh bằng canvas, không thư viện (UC-18). QR (UC-19, Tài chốt 04/11): `qrcode` 1.5.4 vẽ QR trên phiếu in, `qr-scanner` 1.4.2 đọc QR bằng camera (chạy cả iPhone), giữ ô gõ mã tay; ghim đúng phiên bản trong `package.json`. Thử camera trên điện thoại qua Cloudflare Quick Tunnel (`vite.config.ts` cho phép `*.trycloudflare.com`), không thêm plugin HTTPS.
 
+Bản đồ (Tài chốt 08/11): `leaflet` 1.9.4 + `react-leaflet` 5.0.0 (+ `@types/leaflet`), nền OpenStreetMap (miễn phí, không khóa API, cần mạng khi demo). **Khóa vùng hiển thị** trong đất liền Việt Nam (kinh độ ≤ ~109,6°, mức phóng nhỏ nhất ~7) để không hiện vùng Hoàng Sa, Trường Sa (OSM có thể ghi tên không phải tiếng Việt); mỗi chuyến tự phóng vừa các điểm của nó (tuyến ≤ 10 giờ nên luôn gọn trong một vùng, cả khi thêm kho miền Bắc). Cần xem cả nước thì đổi nền sang nhà cung cấp Việt Nam (Goong, Vietmap – khóa API trong `.env`). Trình bày kiểu theo dõi đơn của các hãng giao hàng (bản đồ ở trên, dòng thời gian dọc ở dưới), chỉ học bố cục. Dùng ở chi tiết chuyến (sau UC-32) và tra cứu đơn UC-28.
+
 ---
 
 ## 2. Sơ đồ triển khai
