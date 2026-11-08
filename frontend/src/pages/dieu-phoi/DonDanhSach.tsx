@@ -1,6 +1,18 @@
 import { useEffect, useState, type FormEvent, type InputHTMLAttributes } from 'react'
 import { Link } from 'react-router-dom'
-import { danhSachDon, huyDon, suaDon, taoDon, tinhCuoc, type BaoGia, type Don } from '../../api/don'
+import {
+  danhSachDon,
+  donCanXuLy,
+  ghepLaiDon,
+  huyDon,
+  suaDon,
+  taoDon,
+  tinhCuoc,
+  traHangDon,
+  type BaoGia,
+  type Don,
+  type DonThatBai,
+} from '../../api/don'
 import { kemMaBr, LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachKhachHang, type KhachHang } from '../../api/khachHang'
 import { danhSachNut, type Nut } from '../../api/tuyen'
@@ -97,6 +109,15 @@ export default function DonDanhSach() {
         </p>
       )}
       {thongBao && <p className="thanh-cong">{thongBao}</p>}
+      <DonThatBaiCanXuLy
+        lanTai={lanTai}
+        onHuy={setDangHuy}
+        onXong={(cau) => {
+          setVuaTao(null)
+          setThongBao(cau)
+          setLanTai((n) => n + 1)
+        }}
+      />
       {loiTai && (
         <p role="alert" className="loi">
           {loiTai}
@@ -509,6 +530,227 @@ function FormHuyDon({
           <button disabled={dangGui || !lyDo.trim()}>
             {dangGui ? 'Đang hủy…' : 'Xác nhận hủy'}
           </button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+// UC-22: đơn thất bại của chuyến đã kết thúc. Ghép lại (khóa khi đạt ngưỡng BR-37; đã lấy thì cần nơi giữ hàng
+// BR-69), trả hàng (chỉ khi đã lấy), hủy (chỉ khi chưa lấy, dùng hộp hủy của UC-10)
+function DonThatBaiCanXuLy({
+  lanTai,
+  onHuy,
+  onXong,
+}: {
+  lanTai: number
+  onHuy: (d: Don) => void
+  onXong: (cau: string) => void
+}) {
+  const [ds, setDs] = useState<DonThatBai[]>([])
+  const [loi, setLoi] = useState('')
+  const [dangGhep, setDangGhep] = useState<DonThatBai | null>(null)
+  const [dangGui, setDangGui] = useState(false)
+
+  useEffect(() => {
+    let bo = false
+    donCanXuLy()
+      .then((r) => !bo && setDs(r))
+      .catch((e) => !bo && setLoi(e instanceof LoiApi ? e.message : 'Không tải được đơn thất bại'))
+    return () => {
+      bo = true
+    }
+  }, [lanTai])
+
+  async function traHang(d: DonThatBai) {
+    if (!window.confirm(`Trả hàng đơn ${d.ma_don} cho khách? Đơn không còn doanh thu.`)) return
+    setLoi('')
+    setDangGui(true)
+    try {
+      await traHangDon(d.id)
+      onXong(`Đã chuyển đơn ${d.ma_don} sang Trả hàng.`)
+    } catch (e) {
+      setLoi(e instanceof LoiApi ? e.message : 'Không lưu được, vui lòng thử lại')
+    } finally {
+      setDangGui(false)
+    }
+  }
+
+  if (!ds.length && !loi) return null
+  return (
+    <div className="canh-bao">
+      <h2>Đơn thất bại cần xử lý ({ds.length})</h2>
+      {loi && (
+        <p role="alert" className="loi">
+          {loi}
+        </p>
+      )}
+      <table>
+        <thead>
+          <tr>
+            <th>Mã đơn</th>
+            <th>Lấy → giao</th>
+            <th>Lý do gần nhất</th>
+            <th>Hàng</th>
+            <th className="so">Giao thất bại (phía khách)</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {ds.map((d) => {
+            const datNguong = d.so_lan_giao_tb_khach >= d.nguong
+            return (
+              <tr key={d.id}>
+                <td className="bien-so">{d.ma_don}</td>
+                <td>
+                  {d.tinh_lay} → {d.tinh_giao}
+                </td>
+                <td>{d.ly_do_cuoi ?? '–'}</td>
+                <td>{d.da_lay ? 'Đã lấy' : 'Chưa lấy'}</td>
+                <td className="so">
+                  {d.so_lan_giao_tb_khach}/{d.nguong}
+                </td>
+                <td className="hanh-dong">
+                  {d.cho_chuyen_xong ? (
+                    <span className="ghi-chu">Chờ chuyến kết thúc</span>
+                  ) : (
+                    <>
+                      <button
+                        className="phu"
+                        disabled={dangGui || datNguong}
+                        title={
+                          datNguong ? `Đạt ${d.nguong} lần giao thất bại phía khách (BR-37)` : ''
+                        }
+                        onClick={() => setDangGhep(d)}
+                      >
+                        Ghép lại
+                      </button>
+                      {d.da_lay ? (
+                        <button className="phu" disabled={dangGui} onClick={() => traHang(d)}>
+                          Trả hàng
+                        </button>
+                      ) : (
+                        <button className="phu" disabled={dangGui} onClick={() => onHuy(d)}>
+                          Hủy
+                        </button>
+                      )}
+                    </>
+                  )}
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+      {dangGhep && (
+        <FormGhepLai
+          d={dangGhep}
+          onDong={() => setDangGhep(null)}
+          onXong={(x) => {
+            setDangGhep(null)
+            onXong(`Đã đưa đơn ${x.ma_don} về Chờ ghép.`)
+          }}
+        />
+      )}
+    </div>
+  )
+}
+
+function FormGhepLai({
+  d,
+  onDong,
+  onXong,
+}: {
+  d: DonThatBai
+  onDong: () => void
+  onXong: (d: Don) => void
+}) {
+  const [dsNut, setDsNut] = useState<Nut[]>([])
+  const [nutGiu, setNutGiu] = useState('')
+  const [diaChi, setDiaChi] = useState('')
+  const [han, setHan] = useState('')
+  const [loi, setLoi] = useState<string[]>([])
+  const [dangGui, setDangGui] = useState(false)
+
+  useEffect(() => {
+    if (!d.da_lay) return
+    danhSachNut({ so_dong: 100 })
+      .then((r) => setDsNut(r.du_lieu))
+      .catch(() => setLoi(['Không tải được danh sách nút']))
+  }, [d.da_lay])
+
+  async function gui(e: FormEvent) {
+    e.preventDefault()
+    setLoi([])
+    setDangGui(true)
+    try {
+      onXong(
+        await ghepLaiDon(d.id, {
+          ...(han ? { han_giao: coMuiGio(han)! } : {}),
+          ...(d.da_lay ? { nut_giu_id: Number(nutGiu), dia_chi_giu: diaChi.trim() } : {}),
+        }),
+      )
+    } catch (err) {
+      setLoi(
+        err instanceof LoiApi && err.chiTiet.length
+          ? (err.chiTiet as { ma?: string; thong_diep?: string }[]).map((c) =>
+              kemMaBr(c.thong_diep ?? '', c.ma ?? err.ma),
+            )
+          : [err instanceof LoiApi ? err.message : 'Không lưu được, vui lòng thử lại'],
+      )
+    } finally {
+      setDangGui(false)
+    }
+  }
+
+  return (
+    <div className="nen-mo" onClick={onDong}>
+      <form className="hop-thoai" onSubmit={gui} onClick={(e) => e.stopPropagation()}>
+        <h2>Ghép lại đơn {d.ma_don}</h2>
+        <p className="ghi-chu">
+          Đơn về Chờ ghép, cước giữ nguyên. Hạn giao hiện tại {lucVN(d.han_giao)}.
+        </p>
+        {d.da_lay && (
+          <>
+            <p>Hàng đã lấy: chọn nơi đang giữ hàng, chuyến sau lấy hàng tại đây (BR-69).</p>
+            <label>
+              Nút giữ hàng
+              <select value={nutGiu} onChange={(e) => setNutGiu(e.target.value)} required>
+                <option value="">– Chọn nút –</option>
+                {dsNut.map((n) => (
+                  <option key={n.id} value={n.id}>
+                    {n.ten} ({n.tinh})
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Địa chỉ giữ hàng
+              <input
+                value={diaChi}
+                maxLength={300}
+                required
+                onChange={(e) => setDiaChi(e.target.value)}
+              />
+            </label>
+          </>
+        )}
+        <label>
+          Hạn giao mới (bỏ trống: giữ hạn cũ)
+          <input type="datetime-local" value={han} onChange={(e) => setHan(e.target.value)} />
+        </label>
+        {loi.length > 0 && (
+          <ul role="alert" className="loi">
+            {loi.map((x) => (
+              <li key={x}>{x}</li>
+            ))}
+          </ul>
+        )}
+        <div className="nut">
+          <button type="button" className="phu" disabled={dangGui} onClick={onDong}>
+            Thôi
+          </button>
+          <button disabled={dangGui}>{dangGui ? 'Đang lưu…' : 'Ghép lại'}</button>
         </div>
       </form>
     </div>

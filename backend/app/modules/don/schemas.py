@@ -110,6 +110,24 @@ class HuyDonVao(BaseModel):
     ly_do: ChuBatBuoc = Field(max_length=300)
 
 
+class GhepLaiVao(BaseModel):
+    """UC-22: ghép lại đơn THAT_BAI; nơi giữ hàng bắt buộc khi đã lấy (BR-69), được đổi hạn giao."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    han_giao: AwareDatetime | None = None
+    nut_giu_id: int | None = None
+    dia_chi_giu: DiaChi | None = None
+    lat_giu: ViDo | None = None
+    lng_giu: KinhDo | None = None
+
+
+class TraHangVao(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    ly_do: Annotated[ChuBatBuoc, Field(max_length=300)] | None = None
+
+
 class DonRa(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -138,3 +156,13 @@ class DonRa(BaseModel):
     cuoc_tinh: int
     trang_thai: str
     tao_luc: datetime
+
+
+class DonCanXuLyRa(DonRa):
+    """UC-22 bước 1: đơn THAT_BAI kèm thông tin chọn cách xử lý (BR-36, 37)."""
+
+    da_lay: bool
+    so_lan_giao_tb_khach: int
+    nguong: int  # CFG-04
+    ly_do_cuoi: str | None
+    cho_chuyen_xong: bool  # còn ghép hiệu lực: chuyến chưa kết thúc, chưa xử lý được

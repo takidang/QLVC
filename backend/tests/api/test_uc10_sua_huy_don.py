@@ -184,11 +184,11 @@ def test_uc10_ac8_chuyen_da_chot(client, dang_nhap_voi, db, kb):
 
 
 # AC9 – hủy sai trạng thái
-@pytest.mark.parametrize("tt", ["DA_LAY", "DA_GIAO", "THAT_BAI", "TRA_HANG"])
+@pytest.mark.parametrize("tt", ["DA_LAY", "DA_GIAO", "TRA_HANG"])
 def test_uc10_ac9_trang_thai_khong_huy_duoc(client, dang_nhap_voi, db, kb, tt):
     dang_nhap_voi("DIEU_PHOI")
     sua(db, DonHang, kb["d8"], trang_thai=tt)
-    r = huy(client, kb["d8"])  # TC-BR34-03 (DA_LAY); THAT_BAI để UC-22
+    r = huy(client, kb["d8"])  # TC-BR34-03 (DA_LAY); THAT_BAI ở UC-22
     assert (r.status_code, r.json()["ma"]) == (409, "BR-34")
     assert trang_thai(db, kb["d8"]) == tt
 

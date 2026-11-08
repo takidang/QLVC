@@ -11,7 +11,7 @@ from app.domain.cuoc import kiem_br31_don_hop_le, kl_quy_doi, kl_tinh_cuoc, tinh
 from app.loi import LoiNghiepVu
 from app.models import Chuyen, DonHang, Ghep, NguoiDung, NhatKyTien, TaiXe, Xe
 from app.modules.chuyen import service as chuyen
-from app.modules.don import service
+from app.modules.don import service, that_bai
 from app.modules.don.schemas import DonSua
 from app.thoi_gian import bay_gio
 
@@ -97,6 +97,14 @@ def sua(db: Session, don_id: int, vao: DonSua, nguoi: NguoiDung) -> dict:
 
 
 def huy(db: Session, don_id: int, ly_do: str, nguoi: NguoiDung) -> dict:
+    if db.scalar(select(DonHang.trang_thai).where(DonHang.id == don_id)) == "THAT_BAI":
+        # UC-22: đơn thất bại của chuyến đã kết thúc, chỉ hủy được khi chưa lấy hàng (BR-34, 36)
+        d = that_bai.khoa_that_bai(db, don_id, "hủy", "BR-34")
+        if that_bai.da_lay(db, d.id):
+            raise LoiNghiepVu("BR-34", f"Đơn {d.ma_don} đã lấy hàng, không hủy được: ghép lại hoặc trả hàng")
+        chuyen._doi_trang_thai(db, [d], "HUY", nguoi, ly_do)
+        db.commit()
+        return service.lay(db, d.id)
     d, khoa_chuyen = _khoa(db, don_id, "BR-34", "hủy")
     if khoa_chuyen:
         # Đang ghép: gỡ khỏi chuyến trước (BR-34), lịch trình tính lại như gỡ ở UC-13

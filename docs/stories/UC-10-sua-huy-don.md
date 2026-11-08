@@ -32,7 +32,7 @@
 | UC-10-AC6 | Gửi `nut_giao_id`, `khach_hang_id` hoặc trường lạ → 400; body rỗng → 400 | API | BR-32, 33 |
 | UC-10-AC7 | Hủy Đ8 `CHO_GHEP` lý do "khách hủy" → 200, `HUY`; lịch sử 1 dòng `CHO_GHEP → HUY` có lý do, người hủy (TC-BR34-01). Lý do thiếu, rỗng, toàn khoảng trắng, 301 ký tự → 400; đúng 300 ký tự đạt (biên) | API | BR-30, 34 |
 | UC-10-AC8 | Hủy Đ4 đang ghép vào C01 `LAP` → `HUY`; ghép của Đ4 `hieu_luc = false`; lịch trình C01 không còn điểm của Đ4; lịch sử `DA_GHEP → CHO_GHEP`, `CHO_GHEP → HUY`. Đơn ở chuyến `DA_CHOT` → 409 `BR-34`, không đổi | API | BR-30, 34, 67 |
-| UC-10-AC9 | Hủy sai trạng thái: `DA_LAY` → 409 `BR-34` (TC-BR34-03); `HUY` (hủy lần 2), `DA_GIAO`, `THAT_BAI` → 409 | API | BR-34 |
+| UC-10-AC9 | Hủy sai trạng thái: `DA_LAY` → 409 `BR-34` (TC-BR34-03); `HUY` (hủy lần 2), `DA_GIAO`, `TRA_HANG` → 409 (`THAT_BAI` xử lý ở UC-22) | API | BR-34 |
 | UC-10-AC10 | Đồng thời: hủy đơn và ghép chính đơn đó vào chuyến gửi cùng lúc → đơn không vừa `HUY` vừa có ghép hiệu lực (hoặc ghép trước rồi hủy tự gỡ, hoặc hủy trước rồi ghép nhận 409) | API | BR-34, 07 |
 | UC-10-AC11 | Phân quyền: Điều phối, Quản lý sửa / hủy được; Kế toán, Tài xế → 403; chưa đăng nhập → 401 | API | BR-57 |
 | UC-10-AC12 | Giao diện: danh sách đơn có Sửa / Hủy cho đơn chờ ghép, đã ghép; form sửa điền sẵn, khách và nút khóa; lưu xong hiện cước mới; vi phạm hiện bảng mã BR; hủy bắt buộc lý do | UI | NFR-USA-02 |
@@ -58,7 +58,7 @@
 | UC-10-AC6 | API | `test_uc10_ac6_* (6 ca)` | Đạt | 08/11/2026 |
 | UC-10-AC7 | API | `test_uc10_ac7_* (6 ca)` | Đạt | 08/11/2026 |
 | UC-10-AC8 | API | `test_uc10_ac8_* (2 ca)` | Đạt | 08/11/2026 |
-| UC-10-AC9 | API | `test_uc10_ac9_* (5 ca)` | Đạt | 08/11/2026 |
+| UC-10-AC9 | API | `test_uc10_ac9_* (4 ca)` | Đạt | 08/11/2026 |
 | UC-10-AC10 | API | `test_uc10_ac10_huy_va_ghep_dong_thoi` | Đạt | 08/11/2026 |
 | UC-10-AC11 | API | `test_uc10_ac11_* (5 ca)` | Đạt | 08/11/2026 |
 | UC-10-AC12 | UI | Chờ thử (`docs/test-evidence/UC-10/du-lieu.md`) | CHƯA KIỂM | |
