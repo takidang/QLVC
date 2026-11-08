@@ -90,6 +90,48 @@ class DiemRa(BaseModel):
     don_id: int
     ma_don: str
     eta: datetime
+    # UC-32: so ETA kế hoạch (lưu lúc chốt) với giờ quét thực tế
+    eta_ke_hoach: datetime | None = None
+    thuc_te: datetime | None = None
+    ket_qua: str | None = None  # LAY|KHONG_LAY|GIAO|GIAO_THAT_BAI|BO (không lấy được thì bỏ điểm giao)
+    tre_phut: int | None = None
+
+
+class TheoDoi(BaseModel):
+    """Một dòng của bảng chuyến trong ngày (UC-32 bước 1)."""
+
+    xong: int
+    tong: int
+    ty_le_lap_day: Decimal
+    co: list[str]  # TRE|SU_CO|THAT_BAI|CHUA_QUYET_TOAN|CHONG_LICH
+    chong: list[str]  # mã chuyến kế tiếp bị chồng (BR-73)
+
+
+class ChuyenNgay(ChuyenRa):
+    theo_doi: TheoDoi | None = None
+
+
+class SuKien(BaseModel):
+    luc: datetime
+    loai: str  # TRANG_THAI|QUET|SU_CO
+    noi_dung: str
+    nguoi: str | None = None
+
+
+class TienChuyen(BaseModel):
+    dinh_muc: int
+    luong: int
+    tam_ung_hieu_luc: int
+    doanh_thu: int
+
+
+class SuCoRa(BaseModel):
+    id: int
+    loai: str
+    ghi_chu: str | None
+    trang_thai: str
+    cach_xu_ly: str | None
+    luc: datetime
 
 
 class ChuyenChiTiet(ChuyenRa):
@@ -103,6 +145,32 @@ class ChuyenChiTiet(ChuyenRa):
     canh_bao_lai_am: bool
     chay_rong: bool
     don: list[DonRa]
+    # UC-32 (chỉ có ở GET /api/chuyen/{id})
+    co: list[str] | None = None
+    chong: list[str] | None = None
+    ket_thuc_dang_chay: datetime | None = None
+    ket_thuc_bat_thuong: bool | None = None
+    ly_do_ket_thuc: str | None = None
+    km_bat_dau: int | None = None
+    km_ket_thuc: int | None = None
+    dong_thoi_gian: list[SuKien] | None = None
+    tien: TienChuyen | None = None
+    su_co: list[SuCoRa] | None = None
+
+
+class KetThucSuCoVao(BaseModel):
+    """BR-68: lý do bắt buộc; km cuối nếu biết (BR-70)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    ly_do: ChuBatBuoc = Field(max_length=300)
+    km_ket_thuc: int | None = Field(default=None, ge=0, le=9_999_999)
+
+
+class DongSuCoVao(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    cach_xu_ly: ChuBatBuoc = Field(max_length=500)
 
 
 class HuyVao(BaseModel):

@@ -19,6 +19,14 @@ import {
 } from '../../api/chuyen'
 import { ChonKhaDung, type KhaDung } from './ChuyenDanhSach'
 import type { Don } from '../../api/don'
+import TheoDoiChuyen from './TheoDoiChuyen'
+
+const TEN_KET_QUA: Record<string, string> = {
+  LAY: 'đã lấy',
+  KHONG_LAY: 'không lấy được',
+  GIAO: 'đã giao',
+  GIAO_THAT_BAI: 'giao không được',
+}
 import { kemMaBr, LoiApi } from '../../api/goi'
 
 const dong = (n: number) => n.toLocaleString('vi-VN')
@@ -250,6 +258,8 @@ export default function ChuyenChiTiet() {
         />
       )}
 
+      <TheoDoiChuyen c={c} onDoi={(r) => (r ? setC(r) : setLanTai((n) => n + 1))} />
+
       <h2>Lịch trình</h2>
       <table>
         <thead>
@@ -259,6 +269,8 @@ export default function ChuyenChiTiet() {
             <th>Việc</th>
             <th>Đơn</th>
             <th>ETA</th>
+            {c.tien && <th>Giờ quét</th>}
+            {c.tien && <th className="so">Trễ</th>}
           </tr>
         </thead>
         <tbody>
@@ -269,6 +281,17 @@ export default function ChuyenChiTiet() {
               <td>{d.viec === 'LAY' ? 'Lấy' : 'Giao'}</td>
               <td className="bien-so">{d.ma_don}</td>
               <td>{gio(d.eta)}</td>
+              {c.tien && (
+                <td>
+                  {d.thuc_te ? gio(d.thuc_te) : d.ket_qua === 'BO' ? 'Bỏ (không lấy được)' : '–'}
+                  {d.ket_qua && d.ket_qua !== 'BO' && ` · ${TEN_KET_QUA[d.ket_qua] ?? d.ket_qua}`}
+                </td>
+              )}
+              {c.tien && (
+                <td className={d.tre_phut != null && d.tre_phut > 15 ? 'so loi' : 'so'}>
+                  {d.tre_phut != null ? `${d.tre_phut}′` : ''}
+                </td>
+              )}
             </tr>
           ))}
           {c.lich_trinh.length === 0 && (

@@ -2,7 +2,7 @@ from dataclasses import dataclass, replace
 from datetime import date, datetime, time, timedelta
 from decimal import Decimal
 
-from sqlalchemy import func, select, update
+from sqlalchemy import func, or_, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -307,11 +307,12 @@ def don_ghep(d: DonHang) -> DonGhep:
 
 
 def _dong_don_cua_chuyen(db: Session, chuyen_id: int) -> list:
-    """Đơn đang ghép hiệu lực của chuyến, dạng dòng của `truy_van_don` (có tên khách, tỉnh)."""
+    """Đơn của chuyến, dạng dòng của `truy_van_don` (có tên khách, tỉnh): ghép còn hiệu lực, hoặc đã có kết quả
+    (đơn thất bại của chuyến đã kết thúc hết hiệu lực theo BR-36 nhưng vẫn thuộc chuyến – UC-32 quyết định 4)."""
     return db.execute(
         truy_van_don()
         .join(Ghep, Ghep.don_hang_id == DonHang.id)
-        .where(Ghep.chuyen_id == chuyen_id, Ghep.hieu_luc)
+        .where(Ghep.chuyen_id == chuyen_id, or_(Ghep.hieu_luc, Ghep.ket_qua.is_not(None)))
         .order_by(DonHang.id)
     ).all()
 
