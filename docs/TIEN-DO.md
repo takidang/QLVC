@@ -96,12 +96,14 @@
 | Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Xong | – | PR #1 merge 16/10 (Tài cập nhật hộ) |
 | Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Cài môi trường xong 19/10 (theo báo cáo tuần 2; Tài sửa hộ 25/10). Ca test BR xong 29/10, Tài chốt 30/10 (Tài cập nhật hộ). Còn UML |
 | UC-04 Tài xế (chép mẫu) | 2 | Xong | 10/10 | Tài review, merge vào `main` 25/10 (Tài cập nhật hộ) |
-| UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Xong | UC-02 11/11, UC-17 10/10, UC-18 11/11, UC-19 15/15, UC-20 16/16 | UC-02 (PR #5), UC-17 (PR #6), UC-18 (PR #13), UC-19 (PR #15) đã gộp `dev`. UC-20 xong 05/11 (40 test, kèm 3 góp ý review #15: tối đa 5 ảnh, trần độ chính xác GPS, xin vị trí lúc bấm; Safari iPhone đã gửi vị trí), PR chờ Tài review. Vòng tối thiểu mốc 08/11 chạy trọn trên giao diện. BR-44 để hướng phát triển (Tài chốt). UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
-| Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Chưa bắt đầu | | |
+| UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Xong | UC-02 11/11, UC-17 10/10, UC-18 11/11, UC-19 15/15, UC-20 16/16 | UC-02 (PR #5), UC-17 (PR #6), UC-18 (PR #13), UC-19 (PR #15), UC-20 (PR #16) đã gộp `dev`. UC-20 xong 05/11 (40 test, kèm 3 góp ý review #15: tối đa 5 ảnh, trần độ chính xác GPS, xin vị trí lúc bấm; Safari iPhone đã gửi vị trí), gộp `dev` (PR #16, 08/11). Vòng tối thiểu mốc 08/11 chạy trọn trên giao diện. BR-44 để hướng phát triển (Tài chốt). UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
+| Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Đang làm | UC-23 14/14 | UC-23 Tạm ứng (nhánh `kiet/uc-23-tam-ung`) xong 07/11 (49 test, thử giao diện 7/7 ca), PR #17 (gộp `dev` 08/11). Làm trước UC-21 vì không đụng trang tài xế (UC-20 PR #16 chưa gộp). UC-21 làm tiếp (#16 đã gộp); UC-33 sau UC-24 |
 | UC-24, 25 | 7 | Chưa bắt đầu | | |
 | UC-26, 27, 34 (hiệu suất xe, ưu tiên S – thiếu giờ thì cắt trước), E2E | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Kiệt (mới nhất ở trên)
+- 07/11: Đóng UC-23 (14/14 AC): thử giao diện 7/7 ca (cấp, vượt định mức, sửa, thu hồi, mở chốt bị chặn rồi được); sửa bước ô số tiền và câu báo khi sửa vượt định mức.
+- 07/11: UC-23 Tạm ứng: module `tien/tam_ung/` (cấp, sửa, thu hồi, xem; BR-53 kiểm ở mọi lần cấp và sửa, khóa dòng chuyến, nhật ký tiền BR-62, đã quyết toán → BR-29), thêm `GET /api/chuyen/{id}/tam-ung` (gợi ý số còn được cấp); trang Kế toán **Tạm ứng**; 49 test, toàn bộ 590 passed; 13/14 AC. PR #16 (UC-20) chờ Tài review.
 - 05/11: Đóng UC-20 (16/16 AC): thử giao diện 10/10 ca (máy tính 360 px; iPhone Safari qua tunnel: quét xác nhận, ký ngón tay, có GPS; kết thúc chuyến CH-261031-01 → vòng tối thiểu chạy trọn); 581 passed. Để sau: khối Kết thúc chuyến tràn khung iPhone, hỏi lại trước Xác nhận giao.
 - 05/11: UC-20 Quét giao: `GIAO` (ảnh + chữ ký PNG + tên, BR-41), giao trễ (BR-72), sinh phải thu + nhật ký tiền (BR-56, 62), `GIAO_THAT_BAI` (BR-42), đơn chưa lấy 409 BR-40, bảng quét lặp / trái kết quả; giao diện quét xác nhận + ô ký canvas; xin vị trí lúc bấm (Safari); 40 test, toàn bộ 581 passed; 14/16 AC. Gộp #15 (UC-19).
 - 04/11: Đóng UC-19 (15/15 AC): thử giao diện 12/12 ca (phiếu QR, tài xế 360 px, camera iPhone qua Cloudflare Tunnel có GPS thật); 541 passed. Để sau: GPS Safari iPhone, BR-44.
