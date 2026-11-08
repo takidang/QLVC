@@ -1,6 +1,6 @@
 # UC-12: Gán / đổi xe và tài xế
 
-- **Trạng thái:** Đang làm – AC1–AC4 đạt, AC5 giao diện đã làm, chờ Kiệt thử (Tài giao "làm luôn" 30/10; quyết định dưới đây Tài xem lại)
+- **Trạng thái:** Xong 08/11/2026 – 5/5 AC (AC5 Kiệt thử 07/11, PR #18). Còn 1 lỗi giao diện nhỏ ngoài AC: khung Đổi xe đang mở mà ghép thêm đơn thì danh sách xe không tải lại (máy chủ vẫn chặn BR-01), Tài sửa riêng (Tài giao "làm luôn" 30/10; quyết định dưới đây Tài xem lại)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa)
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-11/UC-12) · `docs/api.md` mục 2.4 (`/api/chuyen/{id}/xe-kha-dung`, `/tai-xe-kha-dung`, `PUT /phan-cong`)
 - **Quy tắc nghiệp vụ liên quan:** BR-01, 02 (tải theo đơn đang ghép), BR-09, BR-11…19, BR-57, BR-67
