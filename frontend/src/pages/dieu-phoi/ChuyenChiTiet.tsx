@@ -401,7 +401,12 @@ function DoiXeTaiXe({ c, onLuu }: { c: Chuyen; onLuu: (c: Chuyen) => void }) {
     if (!mo) return
     let bo = false
     xeKhaDungChuyen(c.id)
-      .then((ds) => !bo && setXe({ khoa: '', ds, loi: '' }))
+      .then((ds) => {
+        if (bo) return
+        setXe({ khoa: '', ds, loi: '' })
+        // xe đang chọn không còn dùng được (vd. vừa ghép thêm đơn, quá tải BR-01): bỏ chọn
+        setXeId((v) => (ds.some((x) => String(x.id) === v && x.kha_dung) ? v : ''))
+      })
       .catch(
         (e) => !bo && setXe({ khoa: '', ds: [], loi: e instanceof LoiApi ? e.message : 'Lỗi' }),
       )
@@ -413,7 +418,11 @@ function DoiXeTaiXe({ c, onLuu }: { c: Chuyen; onLuu: (c: Chuyen) => void }) {
     if (!mo) return
     let bo = false
     taiXeKhaDungChuyen(c.id, xeId ? Number(xeId) : undefined)
-      .then((ds) => !bo && setTaiXe({ khoa: xeId, ds, loi: '' }))
+      .then((ds) => {
+        if (bo) return
+        setTaiXe({ khoa: xeId, ds, loi: '' })
+        setTaiXeId((v) => (ds.some((t) => String(t.id) === v && t.kha_dung) ? v : ''))
+      })
       .catch(
         (e) =>
           !bo && setTaiXe({ khoa: xeId, ds: [], loi: e instanceof LoiApi ? e.message : 'Lỗi' }),
