@@ -386,24 +386,8 @@ def ghep(db: Session, chuyen_id: int, don_ids: list[int], nguoi: NguoiDung) -> d
     if sai := [d.ma_don for d in moi if d.trang_thai != "CHO_GHEP"]:
         raise LoiNghiepVu("BR-09", f"Đơn {', '.join(sai)} không ở trạng thái Chờ ghép (có thể vừa được ghép)", 409)
 
-    nc = ngu_canh(db, c, xe)
     cu = [d for d, *_ in _dong_don_cua_chuyen(db, c.id)]
-    diem, vp = xet_ghep(
-        [don_ghep(d) for d in cu + moi],
-        ids,
-        nc.thu_tu,
-        nc.phut,
-        c.khoi_hanh_du_kien,
-        nc.cfg08,
-        xe.tai_trong_kg,
-        xe.the_tich_m3,
-    )
-    ket_thuc = ket_thuc_du_kien(c.khoi_hanh_du_kien, nc.phut_tuyen, diem, nc.cfg08, nc.cfg05)
-    # Kết thúc dự kiến lùi: kiểm lại giấy tờ theo ngày kết thúc mới, trùng lịch theo khoảng chiếm mới (BR-67)
-    k = replace(_khung(db, c.tuyen_id, c.khoi_hanh_du_kien), ket_thuc=ket_thuc)
-    ten = db.get(NguoiDung, tx.nguoi_dung_id).ho_ten
-    vp += [v for v in _xet_xe(db, k, [xe], c.id)[xe.id] if v["ma"] in ("BR-12", "BR-13", "BR-16")]
-    vp += [v for v in _xet_tai_xe(db, k, [(tx, ten)], None, c.id)[tx.id] if v["ma"] in ("BR-15", "BR-17")]
+    ket_thuc, vp = xet_ca_chuyen(db, c, xe, tx, cu + moi, ids)
     if vp:
         # Không ghép đơn nào trong lô (UC-13 ngoại lệ 3a)
         raise LoiNghiepVu("VI_PHAM_GHEP", "Có đơn vi phạm quy tắc ghép, chưa ghép đơn nào", chi_tiet=vp)
@@ -417,6 +401,31 @@ def ghep(db: Session, chuyen_id: int, don_ids: list[int], nguoi: NguoiDung) -> d
         db.rollback()
         raise LoiNghiepVu("BR-07", "Đơn vừa được ghép vào chuyến khác, tải lại danh sách", 409) from None
     return chi_tiet(db, c.id)
+
+
+def xet_ca_chuyen(
+    db: Session, c: Chuyen, xe: Xe, tx: TaiXe, don: list[DonHang], moi: set[int]
+) -> tuple[datetime, list[dict]]:
+    """Kiểm cả chuyến với danh sách đơn `don` (BR-67): BR-01…06, giấy tờ theo ngày kết thúc mới, trùng lịch theo
+    khoảng chiếm mới. Dùng cho ghép (UC-13) và sửa đơn đang ghép (UC-10). Trả (kết thúc dự kiến, vi phạm)."""
+    nc = ngu_canh(db, c, xe)
+    diem, vp = xet_ghep(
+        [don_ghep(d) for d in don],
+        moi,
+        nc.thu_tu,
+        nc.phut,
+        c.khoi_hanh_du_kien,
+        nc.cfg08,
+        xe.tai_trong_kg,
+        xe.the_tich_m3,
+    )
+    ket_thuc = ket_thuc_du_kien(c.khoi_hanh_du_kien, nc.phut_tuyen, diem, nc.cfg08, nc.cfg05)
+    # Kết thúc dự kiến lùi: kiểm lại giấy tờ theo ngày kết thúc mới, trùng lịch theo khoảng chiếm mới (BR-67)
+    k = replace(_khung(db, c.tuyen_id, c.khoi_hanh_du_kien), ket_thuc=ket_thuc)
+    ten = db.get(NguoiDung, tx.nguoi_dung_id).ho_ten
+    vp += [v for v in _xet_xe(db, k, [xe], c.id)[xe.id] if v["ma"] in ("BR-12", "BR-13", "BR-16")]
+    vp += [v for v in _xet_tai_xe(db, k, [(tx, ten)], None, c.id)[tx.id] if v["ma"] in ("BR-15", "BR-17")]
+    return ket_thuc, vp
 
 
 def go(db: Session, chuyen_id: int, don_ids: list[int], nguoi: NguoiDung) -> dict:
@@ -433,6 +442,22 @@ def go(db: Session, chuyen_id: int, don_ids: list[int], nguoi: NguoiDung) -> dic
     )
     if la := sorted(ids - {d.id for d in cu}):
         raise LoiNghiepVu("DON_KHONG_THUOC_CHUYEN", f"Đơn {la} không đang ghép trong chuyến {c.ma_chuyen}")
+    go_da_khoa(db, c, xe, cu, ids, nguoi)
+    db.commit()
+    return chi_tiet(db, c.id)
+
+
+def go_da_khoa(
+    db: Session,
+    c: Chuyen,
+    xe: Xe,
+    cu: list[DonHang],
+    ids: set[int],
+    nguoi: NguoiDung,
+    ly_do: str | None = None,
+    ma_loi: str = "VI_PHAM_GO",
+) -> None:
+    """Gỡ `ids` khỏi chuyến đã khóa (`cu`: đơn đang ghép đã khóa); chưa commit. Dùng ở gỡ (UC-13), hủy đơn (UC-10)."""
     nc = ngu_canh(db, c, xe)
     # Gỡ làm ETA phía sau sớm lên, có thể rơi trước khung giờ lấy (ghi chú BR-67). Kết thúc chỉ sớm đi
     # nên không cần kiểm lại giấy tờ, trùng lịch.
@@ -447,15 +472,13 @@ def go(db: Session, chuyen_id: int, don_ids: list[int], nguoi: NguoiDung) -> dic
         xe.the_tich_m3,
     )
     if vp:
-        raise LoiNghiepVu("VI_PHAM_GO", "Gỡ đơn làm đơn khác vi phạm quy tắc, chưa gỡ đơn nào", chi_tiet=vp)
+        raise LoiNghiepVu(ma_loi, "Gỡ đơn làm đơn khác vi phạm quy tắc, chưa gỡ đơn nào", chi_tiet=vp)
 
     db.execute(
         update(Ghep).where(Ghep.chuyen_id == c.id, Ghep.don_hang_id.in_(ids), Ghep.hieu_luc).values(hieu_luc=False)
     )
-    _doi_trang_thai(db, [d for d in cu if d.id in ids], "CHO_GHEP", nguoi)
+    _doi_trang_thai(db, [d for d in cu if d.id in ids], "CHO_GHEP", nguoi, ly_do)
     c.ket_thuc_du_kien = ket_thuc_du_kien(c.khoi_hanh_du_kien, nc.phut_tuyen, diem, nc.cfg08, nc.cfg05)
-    db.commit()
-    return chi_tiet(db, c.id)
 
 
 def don_phu_hop(db: Session, chuyen_id: int) -> list[dict]:

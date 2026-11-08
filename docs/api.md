@@ -67,8 +67,8 @@
 | POST | `/api/don` | DP | UC-08 | Tạo đơn `CHO_GHEP`, chốt cước ngay (BR-31, 32, 48); thiếu bảng giá → 422 BR-48 |
 | GET | `/api/don` | DP, KT | UC-08 | Lọc `trang_thai`, `khach_hang_id`, `tu`, `den`, `sap_qua_han` |
 | GET | `/api/don/{id}` | DP, KT | — | Kèm lịch sử trạng thái, các lần ghép, đã lấy hàng hay chưa |
-| PATCH | `/api/don/{id}` | DP | UC-10 | BR-33: chỉ khi `CHO_GHEP`/`DA_GHEP`; tính lại cước từ bản sao giá; đang ghép thì kiểm BR-67 |
-| POST | `/api/don/{id}/huy` | DP | UC-10, UC-22 | BR-34, cần `ly_do`; nhận cả `THAT_BAI` chưa có lượt quét lấy |
+| PATCH | `/api/don/{id}` | DP | UC-10 | BR-33: chỉ khi `CHO_GHEP`/`DA_GHEP` (đơn đang ghép: chuyến phải `LAP`, không thì 409 `BR-33`); gửi trường nào sửa trường đó, không sửa khách, nút lấy / giao (→ 400); kiểm lại BR-31; tính lại cước từ bản sao giá, cước đổi thì ghi nhật ký tiền (BR-62); đang ghép thì kiểm BR-67, vi phạm → 422 `VI_PHAM_SUA` |
+| POST | `/api/don/{id}/huy` | DP | UC-10, UC-22 | BR-34, cần `ly_do` (1–300 ký tự); `CHO_GHEP` → `HUY`; `DA_GHEP` ở chuyến `LAP` tự gỡ rồi hủy (gỡ làm đơn khác vi phạm → 422 `VI_PHAM_HUY`), chuyến đã chốt → 409; trạng thái khác → 409 `BR-34`. `THAT_BAI` chưa có lượt quét lấy: UC-22 mở thêm |
 | – | ~~`/api/don/{id}/phieu`~~ | DP | UC-08, UC-19 | Bỏ endpoint (Tài chốt 04/11): phiếu gửi hàng là **trang in ở frontend** `/dieu-phoi/don/{id}/phieu`, đọc `GET /api/don/{id}`, vẽ QR bằng gói `qrcode` (QR chỉ chứa mã đơn), in bằng Ctrl+P |
 | POST | `/api/don/{id}/ghep-lai` | DP | UC-22 | `THAT_BAI → CHO_GHEP` (BR-36, 37, 69); `{han_giao?, nut_giu_id?, dia_chi_giu?, lat_giu?, lng_giu?}`; nơi giữ hàng bắt buộc khi đơn đã lấy |
 | POST | `/api/don/{id}/tra-hang` | DP | UC-22 | `THAT_BAI → TRA_HANG`, chỉ khi đơn đã có lượt quét lấy (BR-36) |

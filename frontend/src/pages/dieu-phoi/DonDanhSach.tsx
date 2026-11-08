@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent, type InputHTMLAttributes } from 'react'
 import { Link } from 'react-router-dom'
-import { danhSachDon, taoDon, tinhCuoc, type BaoGia, type Don } from '../../api/don'
+import { danhSachDon, huyDon, suaDon, taoDon, tinhCuoc, type BaoGia, type Don } from '../../api/don'
 import { kemMaBr, LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachKhachHang, type KhachHang } from '../../api/khachHang'
 import { danhSachNut, type Nut } from '../../api/tuyen'
@@ -11,6 +11,16 @@ const lucVN = (iso: string) =>
   new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' })
 // Ô datetime-local không có múi giờ; nhà xe ở Việt Nam nên gắn +07:00 (API bắt buộc có múi giờ)
 const coMuiGio = (v: string) => (v ? `${v}:00+07:00` : null)
+// Ngược lại: giờ ISO → giá trị ô datetime-local theo giờ Việt Nam
+const oGio = (iso: string | null) =>
+  iso
+    ? new Date(iso)
+        .toLocaleString('sv-SE', { timeZone: 'Asia/Ho_Chi_Minh' })
+        .slice(0, 16)
+        .replace(' ', 'T')
+    : ''
+// UC-10: sửa / hủy khi hàng chưa lấy (BR-33, 34)
+const SUA_DUOC = ['CHO_GHEP', 'DA_GHEP']
 const TEN_TRANG_THAI: Record<string, string> = {
   CHO_GHEP: 'Chờ ghép',
   DA_GHEP: 'Đã ghép',
@@ -29,6 +39,9 @@ export default function DonDanhSach() {
   const [loiTai, setLoiTai] = useState('')
   const [moForm, setMoForm] = useState(false)
   const [vuaTao, setVuaTao] = useState<Don | null>(null)
+  const [dangSua, setDangSua] = useState<Don | null>(null)
+  const [dangHuy, setDangHuy] = useState<Don | null>(null)
+  const [thongBao, setThongBao] = useState('')
   const [lanTai, setLanTai] = useState(0)
 
   useEffect(() => {
@@ -83,6 +96,7 @@ export default function DonDanhSach() {
           Đã tạo đơn <strong>{vuaTao.ma_don}</strong>, cước {dong(vuaTao.cuoc_tinh)} đ (đã chốt).
         </p>
       )}
+      {thongBao && <p className="thanh-cong">{thongBao}</p>}
       {loiTai && (
         <p role="alert" className="loi">
           {loiTai}
@@ -99,6 +113,7 @@ export default function DonDanhSach() {
             <th>Hạn giao</th>
             <th className="so">Cước (đ)</th>
             <th>Trạng thái</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -120,11 +135,23 @@ export default function DonDanhSach() {
               <td>{lucVN(d.han_giao)}</td>
               <td className="so">{dong(d.cuoc_tinh)}</td>
               <td>{TEN_TRANG_THAI[d.trang_thai] ?? d.trang_thai}</td>
+              <td className="hanh-dong">
+                {SUA_DUOC.includes(d.trang_thai) && (
+                  <>
+                    <button className="phu" onClick={() => setDangSua(d)}>
+                      Sửa
+                    </button>
+                    <button className="phu" onClick={() => setDangHuy(d)}>
+                      Hủy
+                    </button>
+                  </>
+                )}
+              </td>
             </tr>
           ))}
           {ds.du_lieu.length === 0 && (
             <tr>
-              <td colSpan={7} className="trong">
+              <td colSpan={8} className="trong">
                 Chưa có đơn nào phù hợp
               </td>
             </tr>
@@ -149,6 +176,31 @@ export default function DonDanhSach() {
           onLuu={(d) => {
             setMoForm(false)
             setVuaTao(d)
+            setThongBao('')
+            setLanTai((n) => n + 1)
+          }}
+        />
+      )}
+      {dangSua && (
+        <FormTaoDon
+          goc={dangSua}
+          onDong={() => setDangSua(null)}
+          onLuu={(d) => {
+            setDangSua(null)
+            setVuaTao(null)
+            setThongBao(`Đã sửa đơn ${d.ma_don}, cước ${dong(d.cuoc_tinh)} đ.`)
+            setLanTai((n) => n + 1)
+          }}
+        />
+      )}
+      {dangHuy && (
+        <FormHuyDon
+          d={dangHuy}
+          onDong={() => setDangHuy(null)}
+          onXong={(d) => {
+            setDangHuy(null)
+            setVuaTao(null)
+            setThongBao(`Đã hủy đơn ${d.ma_don}.`)
             setLanTai((n) => n + 1)
           }}
         />
@@ -177,8 +229,37 @@ const FORM_TRONG = {
 }
 type Form = typeof FORM_TRONG
 
-function FormTaoDon({ onDong, onLuu }: { onDong: () => void; onLuu: (d: Don) => void }) {
-  const [f, setF] = useState<Form>(FORM_TRONG)
+const tuDon = (d: Don): Form => ({
+  khach_hang_id: String(d.khach_hang_id),
+  mo_ta: d.mo_ta ?? '',
+  kg: String(Number(d.kg)),
+  m3: String(Number(d.m3)),
+  so_kien: String(d.so_kien),
+  nut_lay_id: String(d.nut_lay_id),
+  dia_chi_lay: d.dia_chi_lay,
+  nguoi_lien_he_lay: d.nguoi_lien_he_lay ?? '',
+  sdt_lay: d.sdt_lay,
+  lay_tu: oGio(d.lay_tu),
+  lay_den: oGio(d.lay_den),
+  nut_giao_id: String(d.nut_giao_id),
+  dia_chi_giao: d.dia_chi_giao,
+  nguoi_nhan: d.nguoi_nhan,
+  sdt_nhan: d.sdt_nhan,
+  han_giao: oGio(d.han_giao),
+})
+
+// Tạo đơn (UC-08); có `goc` thì là sửa đơn (UC-10): khách, nút khóa, chỉ gửi trường đã đổi,
+// cước máy chủ tính lại từ giá đã chốt trên đơn nên không hiện báo giá theo giá hiện tại
+function FormTaoDon({
+  goc,
+  onDong,
+  onLuu,
+}: {
+  goc?: Don
+  onDong: () => void
+  onLuu: (d: Don) => void
+}) {
+  const [f, setF] = useState<Form>(() => (goc ? tuDon(goc) : FORM_TRONG))
   const [dsKhach, setDsKhach] = useState<KhachHang[]>([])
   const [dsNut, setDsNut] = useState<Nut[]>([])
   // Kết quả báo giá gắn với đúng bộ dữ liệu đã tính, dữ liệu đổi thì không hiện số cũ
@@ -200,7 +281,7 @@ function FormTaoDon({ onDong, onLuu }: { onDong: () => void; onLuu: (d: Don) => 
   // Cước tạm tính: đủ nút lấy, nút giao, kg, m³ thì hỏi máy chủ (BR-46…48); kết quả cũ về muộn thì bỏ
   const { nut_lay_id, nut_giao_id, kg, m3 } = f
   const khoaGia = [nut_lay_id, nut_giao_id, kg, m3].join('|')
-  const duDeTinh = !!nut_lay_id && !!nut_giao_id && Number(kg) > 0 && Number(m3) > 0
+  const duDeTinh = !goc && !!nut_lay_id && !!nut_giao_id && Number(kg) > 0 && Number(m3) > 0
   useEffect(() => {
     if (!duDeTinh) return
     let bo = false
@@ -229,27 +310,34 @@ function FormTaoDon({ onDong, onLuu }: { onDong: () => void; onLuu: (d: Don) => 
     setLoiTruong({})
     setLoiChung([])
     setDangGui(true)
+    const vao = {
+      ...f,
+      khach_hang_id: Number(f.khach_hang_id),
+      so_kien: Number(f.so_kien),
+      nut_lay_id: Number(f.nut_lay_id),
+      nut_giao_id: Number(f.nut_giao_id),
+      mo_ta: f.mo_ta.trim() || null,
+      nguoi_lien_he_lay: f.nguoi_lien_he_lay.trim() || null,
+      lay_tu: coMuiGio(f.lay_tu),
+      lay_den: coMuiGio(f.lay_den),
+      han_giao: coMuiGio(f.han_giao)!,
+    }
     try {
-      onLuu(
-        await taoDon({
-          ...f,
-          khach_hang_id: Number(f.khach_hang_id),
-          so_kien: Number(f.so_kien),
-          nut_lay_id: Number(f.nut_lay_id),
-          nut_giao_id: Number(f.nut_giao_id),
-          mo_ta: f.mo_ta.trim() || null,
-          nguoi_lien_he_lay: f.nguoi_lien_he_lay.trim() || null,
-          lay_tu: coMuiGio(f.lay_tu),
-          lay_den: coMuiGio(f.lay_den),
-          han_giao: coMuiGio(f.han_giao)!,
-        }),
+      if (!goc) return onLuu(await taoDon(vao))
+      const cu = tuDon(goc)
+      const doi = (Object.keys(f) as (keyof Form)[]).filter(
+        (k) => k !== 'khach_hang_id' && k !== 'nut_lay_id' && k !== 'nut_giao_id' && f[k] !== cu[k],
       )
+      if (!doi.length) return onDong()
+      onLuu(await suaDon(goc.id, Object.fromEntries(doi.map((k) => [k, vao[k]]))))
     } catch (err) {
       const theoTruong = loiTheoTruong(err)
       setLoiTruong(theoTruong)
-      if (err instanceof LoiApi && err.ma === 'BR-31')
+      if (err instanceof LoiApi && ['BR-31', 'VI_PHAM_SUA'].includes(err.ma))
         setLoiChung(
-          err.chiTiet.map((c) => kemMaBr((c as { thong_diep?: string }).thong_diep ?? '', err.ma)),
+          (err.chiTiet as { ma?: string; thong_diep?: string }[]).map((c) =>
+            kemMaBr(c.thong_diep ?? '', c.ma ?? err.ma),
+          ),
         )
       else if (Object.keys(theoTruong).length === 0)
         setLoiChung([err instanceof LoiApi ? err.message : 'Không lưu được, vui lòng thử lại'])
@@ -270,7 +358,7 @@ function FormTaoDon({ onDong, onLuu }: { onDong: () => void; onLuu: (d: Don) => 
   const chonNut = (k: 'nut_lay_id' | 'nut_giao_id', nhan: string) => (
     <label>
       {nhan}
-      <select value={f[k]} onChange={sua(k)} required>
+      <select value={f[k]} onChange={sua(k)} required disabled={!!goc}>
         <option value="">– Chọn nút –</option>
         {dsNut.map((n) => (
           <option key={n.id} value={n.id}>
@@ -284,12 +372,17 @@ function FormTaoDon({ onDong, onLuu }: { onDong: () => void; onLuu: (d: Don) => 
   return (
     <div className="nen-mo" onClick={onDong}>
       <form className="hop-thoai rong" onSubmit={gui} onClick={(e) => e.stopPropagation()}>
-        <h2>Tạo đơn</h2>
+        <h2>{goc ? `Sửa đơn ${goc.ma_don}` : 'Tạo đơn'}</h2>
         <div className="hai-cot">
           <label>
             Khách hàng
-            <select value={f.khach_hang_id} onChange={sua('khach_hang_id')} required>
-              <option value="">– Chọn khách –</option>
+            <select
+              value={f.khach_hang_id}
+              onChange={sua('khach_hang_id')}
+              required
+              disabled={!!goc}
+            >
+              <option value="">{goc ? goc.ten_khach : '– Chọn khách –'}</option>
               {dsKhach.map((k) => (
                 <option key={k.id} value={k.id}>
                   {k.ten} ({k.sdt})
@@ -328,7 +421,12 @@ function FormTaoDon({ onDong, onLuu }: { onDong: () => void; onLuu: (d: Don) => 
         </div>
 
         <div className="canh-bao">
-          {baoGia ? (
+          {goc ? (
+            <>
+              Cước hiện tại <strong>{dong(goc.cuoc_tinh)} đ</strong>. Đổi kg, m³ thì cước tính lại
+              theo giá đã chốt khi tạo đơn (BR-33). Đổi khách hoặc điểm: hủy đơn và tạo đơn mới.
+            </>
+          ) : baoGia ? (
             <>
               <strong>Cước: {dong(baoGia.cuoc)} đ</strong> (KL tính cước{' '}
               {Number(baoGia.kl_tinh_cuoc).toLocaleString('vi-VN')} kg × {dong(baoGia.don_gia_kg)}{' '}
@@ -352,7 +450,65 @@ function FormTaoDon({ onDong, onLuu }: { onDong: () => void; onLuu: (d: Don) => 
           <button type="button" className="phu" onClick={onDong}>
             Hủy
           </button>
-          <button disabled={dangGui || !baoGia}>{dangGui ? 'Đang lưu…' : 'Lưu đơn'}</button>
+          <button disabled={dangGui || (!goc && !baoGia)}>
+            {dangGui ? 'Đang lưu…' : 'Lưu đơn'}
+          </button>
+        </div>
+      </form>
+    </div>
+  )
+}
+
+// UC-10: hủy đơn chưa lấy hàng, lý do bắt buộc (BR-34); đơn đang ghép máy chủ tự gỡ khỏi chuyến
+function FormHuyDon({
+  d,
+  onDong,
+  onXong,
+}: {
+  d: Don
+  onDong: () => void
+  onXong: (d: Don) => void
+}) {
+  const [lyDo, setLyDo] = useState('')
+  const [loi, setLoi] = useState('')
+  const [dangGui, setDangGui] = useState(false)
+
+  async function gui(e: FormEvent) {
+    e.preventDefault()
+    setLoi('')
+    setDangGui(true)
+    try {
+      onXong(await huyDon(d.id, lyDo.trim()))
+    } catch (err) {
+      setLoi(err instanceof LoiApi ? err.message : 'Không hủy được, vui lòng thử lại')
+    } finally {
+      setDangGui(false)
+    }
+  }
+
+  return (
+    <div className="nen-mo" onClick={onDong}>
+      <form className="hop-thoai" onSubmit={gui} onClick={(e) => e.stopPropagation()}>
+        <h2>Hủy đơn {d.ma_don}</h2>
+        {d.trang_thai === 'DA_GHEP' && (
+          <p className="canh-bao">Đơn đang ghép vào chuyến: hủy sẽ gỡ đơn khỏi chuyến trước.</p>
+        )}
+        <label>
+          Lý do hủy
+          <input value={lyDo} maxLength={300} required onChange={(e) => setLyDo(e.target.value)} />
+        </label>
+        {loi && (
+          <p role="alert" className="loi">
+            {loi}
+          </p>
+        )}
+        <div className="nut">
+          <button type="button" className="phu" disabled={dangGui} onClick={onDong}>
+            Thôi
+          </button>
+          <button disabled={dangGui || !lyDo.trim()}>
+            {dangGui ? 'Đang hủy…' : 'Xác nhận hủy'}
+          </button>
         </div>
       </form>
     </div>

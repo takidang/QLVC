@@ -7,8 +7,8 @@ from sqlalchemy.orm import Session
 from app.auth.phu_thuoc import can_vai_tro
 from app.db import get_db
 from app.models import NguoiDung
-from app.modules.don import service
-from app.modules.don.schemas import DonRa, DonVao, TinhCuocRa, TinhCuocVao, TrangThaiDon
+from app.modules.don import service, sua_huy
+from app.modules.don.schemas import DonRa, DonSua, DonVao, HuyDonVao, TinhCuocRa, TinhCuocVao, TrangThaiDon
 from app.phan_trang import DanhSach, PhanTrang, phan_trang
 
 router = APIRouter(prefix="/api/don", tags=["don"])
@@ -45,3 +45,13 @@ def danh_sach(
 @router.get("/{don_id}", response_model=DonRa, dependencies=[XEM])
 def chi_tiet(don_id: int, db: Db):
     return service.lay(db, don_id)
+
+
+@router.patch("/{don_id}", response_model=DonRa)
+def sua(don_id: int, vao: DonSua, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)]):
+    return sua_huy.sua(db, don_id, vao, nd)
+
+
+@router.post("/{don_id}/huy", response_model=DonRa)
+def huy(don_id: int, vao: HuyDonVao, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)]):
+    return sua_huy.huy(db, don_id, vao.ly_do, nd)
