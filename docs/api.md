@@ -185,19 +185,26 @@ Request:
 |---|---|---|
 | `ma_don` | Có | Đọc từ QR hoặc nhập tay |
 | `loai` | Có | `LAY`, `KHONG_LAY`, `GIAO`, `GIAO_THAT_BAI` (hai loại sau đưa đơn về `THAT_BAI`) |
-| `lat`, `lng`, `do_chinh_xac_m` | Không | Thiếu thì gắn cờ `thieu_gps` (BR-43) |
-| `anh` (1 hoặc nhiều) | Theo loại | Bắt buộc với `GIAO`, `KHONG_LAY`, `GIAO_THAT_BAI` (BR-41, 42); ≤ 500 KB mỗi ảnh |
+| `lat`, `lng`, `do_chinh_xac_m` | Không | Thiếu thì gắn cờ `thieu_gps` (BR-43); `do_chinh_xac_m` 0 ≤ … < 1.000.000 (cột `Numeric(8, 1)`) |
+| `anh` (1–5) | Theo loại | Bắt buộc với `GIAO`, `KHONG_LAY`, `GIAO_THAT_BAI` (BR-41, 42); ≤ 500 KB mỗi ảnh; quá 5 ảnh → 400 `QUA_NHIEU_ANH` (review PR #15). `LAY` gửi kèm thì bỏ qua |
 | `chu_ky` | Với `GIAO` | PNG |
 | `ten_nguoi_nhan` | Với `GIAO` | |
 | `ly_do_id` | Với `KHONG_LAY`, `GIAO_THAT_BAI` | Mã trong danh mục lý do |
 
-**Không có trường thời gian**: giờ quét lấy từ server. Gửi trường thời gian hoặc trường lạ bất kỳ → 400 (TC-BR43-02). Gửi một nửa tọa độ (chỉ `lat` hoặc chỉ `lng`) → 400. Lỗi: đơn không thuộc chuyến của mình, chưa ghép hoặc mã không có → 403 `BR-38` (cùng một câu); chuyến không `DANG_CHAY` → 409 `BR-38`; thất bại thiếu lý do / ảnh → 422 `BR-42`; ảnh sai loại 400, quá 500 KB 413. UC-19 nhận `LAY`, `KHONG_LAY`; `GIAO`, `GIAO_THAT_BAI` thêm ở UC-20 (hiện → 400). Code ở `modules/quet/`.
+**Không có trường thời gian**: giờ quét lấy từ server. Gửi trường thời gian hoặc trường lạ bất kỳ → 400 (TC-BR43-02). Gửi một nửa tọa độ (chỉ `lat` hoặc chỉ `lng`) → 400. Lỗi: đơn không thuộc chuyến của mình, chưa ghép hoặc mã không có → 403 `BR-38` (cùng một câu); chuyến không `DANG_CHAY` → 409 `BR-38`; thất bại thiếu lý do / ảnh → 422 `BR-42`; ảnh sai loại 400, quá 500 KB 413. `GIAO`: thiếu ảnh, chữ ký hoặc tên người nhận (1–100 ký tự sau khi bỏ khoảng trắng) → 422 `BR-41`; chữ ký không phải PNG → 400. Giao thành công: ghép `ket_qua = DA_GIAO`, quá hạn giao (giờ máy chủ sau `han_giao`) → `giao_tre`, `canh_bao` `GIAO_TRE`; sinh `PHAI_THU` = cước, `CHUA_THU` + `NHAT_KY_TIEN` `TAO` (BR-56, 62). `GIAO_THAT_BAI` cần lý do áp dụng `GIAO` + ảnh, không sinh phải thu. Code ở `modules/quet/` (UC-19, UC-20).
 
 200:
 ```json
 { "ma_don": "DH-0012", "trang_thai": "DA_GIAO", "canh_bao": ["GIAO_TRE"], "lap_lai": false }
 ```
-`canh_bao` có thể gồm `THIEU_GPS` (BR-43), `GIAO_TRE` (BR-72). `lap_lai: true` khi quét lặp **cùng ý** với kết quả đã có (BR-45), ví dụ quét lấy đơn đã lấy; khi đó không tạo bản ghi mới, không lưu ảnh. Quét **trái kết quả** (báo không lấy được đơn đã lấy, quét lấy đơn đã thất bại) → 409 `BR-39`, `chi_tiet[0].trang_thai` là trạng thái hiện tại (TC-BR39-02).
+`canh_bao` có thể gồm `THIEU_GPS` (BR-43), `GIAO_TRE` (BR-72). `lap_lai: true` khi quét lặp **cùng ý** với kết quả đã có (BR-45), ví dụ quét lấy đơn đã lấy; khi đó không tạo bản ghi mới, không lưu ảnh. Quét **trái kết quả** → 409, `chi_tiet[0].trang_thai` là trạng thái hiện tại (TC-BR39-02). Đơn còn `DA_GHEP` mà quét giao → 409 `BR-40` "chưa được quét lấy" (TC-BR40-02). Bảng đầy đủ (UC-20 quyết định 3):
+
+| Đơn đang | `LAY` | `KHONG_LAY` | `GIAO` | `GIAO_THAT_BAI` |
+|---|---|---|---|---|
+| `DA_GHEP` | → `DA_LAY` | → `THAT_BAI` | 409 `BR-40` | 409 `BR-40` |
+| `DA_LAY` | lặp (200) | 409 `BR-39` | → `DA_GIAO` | → `THAT_BAI` |
+| `DA_GIAO` | lặp (200) | 409 `BR-39` | lặp (200) | 409 `BR-40` |
+| `THAT_BAI` | 409 `BR-39` | lặp (200) | 409 `BR-40` | lặp (200) |
 
 Lỗi: 403 đơn không thuộc chuyến của tài xế đang đăng nhập (BR-38, chống IDOR); 409 chuyến của mình nhưng không ở `DANG_CHAY` (BR-38), hoặc sai trạng thái đơn (ví dụ giao khi chưa lấy, BR-40); 422 thiếu ảnh, chữ ký, lý do (BR-41, 42); 413 file quá lớn.
 
