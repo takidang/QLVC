@@ -56,4 +56,4 @@ Trên trang chi tiết chuyến `LAP`, Điều phối bấm **Chốt**. Hệ th�
 | UC-15-AC8 | API | `test_uc15_ac8_lich_su` | Đạt | 01/11/2026 |
 | UC-15-AC9 | API | `test_uc15_ac9_* (2 ca, có ca đồng thời)` | Đạt | 01/11/2026 |
 | UC-15-AC10 | API | `test_uc15_ac10_* (5 ca)` | Đạt | 01/11/2026 |
-| UC-15-AC11 | UI | Chờ Kiệt thử (`docs/test-evidence/UC-15/du-lieu.md`) | CHƯA KIỂM | |
+| UC-15-AC11 | UI | Kiệt thử 6/6 ca: `docs/test-evidence/UC-15/` (ca d kiểm bằng CSDL); BR-24 trên giao diện thử ở UC-23 | Đạt | 07/11/2026 |

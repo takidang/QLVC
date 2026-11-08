@@ -40,4 +40,4 @@ Chuyến `LAP` cần đổi xe hoặc tài xế (xe hỏng, tài xế nghỉ). �
 | UC-12-AC2 | API | `test_uc12_ac2_* (3 ca)` | Đạt | 30/10/2026 |
 | UC-12-AC3 | API | `test_uc12_ac3_kha_dung_cho_chuyen` | Đạt | 30/10/2026 |
 | UC-12-AC4 | API | `test_uc12_ac4_* (4 ca)` | Đạt | 30/10/2026 |
-| UC-12-AC5 | UI | `docs/test-evidence/UC-12/` | CHƯA KIỂM | |
+| UC-12-AC5 | UI | Kiệt thử 3/3 ca: `docs/test-evidence/UC-12/a…c-*.png`; ghi nhận: danh sách xe không tải lại khi ghép đơn lúc khung đổi xe đang mở (máy chủ vẫn chặn BR-01) – Tài xem | Đạt | 07/11/2026 |
