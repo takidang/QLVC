@@ -48,11 +48,12 @@
 | UC-06…09 Đơn tối thiểu | 3–4 | Xong | UC-06 6/6, UC-07 9/9, UC-08 11/11 | UC-08-AC11 Kiệt thử 25/10; UC-09 bỏ ở 0.5; phiếu QR làm cùng UC-19 |
 | UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Xong | 9/9 | AC9 Kiệt thử 25/10 |
 | UC-11…13, 15 Chuyến tối thiểu | 3–4 | Xong | UC-11 12/12, UC-12 5/5, UC-13 13/13, UC-15 11/11 | Đóng UC-12, 15 ngày 08/11 theo kết quả Kiệt thử (PR #18); còn sửa lỗi nhỏ danh sách xe UC-12 |
-| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Đang làm | UC-16 10/10, UC-10 11/12, UC-22 11/12, UC-32 10/11 | UC-16 xong 08/11. UC-10, 22 (PR #23), UC-32 (PR #24) đã vào `dev` 09/11, chờ Kiệt thử giao diện (AC12 UC-10, 22; AC11 UC-32) |
+| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Đang làm | UC-16 10/10, UC-10 11/12, UC-22 11/12, UC-32 10/11 | UC-16 xong 08/11. UC-10, 22 (PR #23), UC-32 (PR #24) đã vào `dev` 09/11, chờ Kiệt thử giao diện (AC12 UC-10, 22; AC11 UC-32). Bản đồ chi tiết chuyến (Leaflet + OSM) đã vào `dev` (PR #25) |
 | UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 09/11: Gộp #25 bản đồ chi tiết chuyến (tọa độ điểm dừng, khóa vùng đất liền VN; ghi giấy phép gói trong PR) và #26 quy ước mới: PR code không sửa TIEN-DO, người gộp cập nhật một lần bằng PR riêng.
 - 09/11: Gộp #19…#24 sau khi Kiệt duyệt (gỡ xung đột TIEN-DO ở #23, #24); `dev` có UC-10, 22, 32.
 - 08/11: UC-32 Theo dõi chuyến: bảng chuyến trong ngày (tiến độ, % đầy, cờ trễ / sự cố / thất bại / chưa quyết toán / chồng lịch BR-73), chi tiết có giờ quét, trễ, dòng thời gian, tiền, sự cố; kết thúc do sự cố (BR-68), đóng sự cố; 24 test mới, toàn bộ 654 passed; 10/11 AC.
 - 08/11: Review và gộp #16 (UC-20), #17 (UC-23; gộp `dev` vào nhánh, sửa xung đột TIEN-DO phần Kiệt, 630 passed), #18 (Kiệt thử giao diện UC-12, 15, 16). Đóng UC-12 (5/5), UC-15 (11/11), UC-16 (10/10). Vòng tối thiểu mốc 08/11 đã vào `dev`.
