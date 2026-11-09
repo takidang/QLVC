@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type FormEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import { danhSachChuyen, type Chuyen } from '../../api/chuyen'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
 import {
@@ -30,6 +30,8 @@ export default function TamUng() {
   const [dangSua, setDangSua] = useState<number | null>(null)
   const [thongBao, setThongBao] = useState('')
   const [loi, setLoi] = useState('')
+  const [dangGui, setDangGui] = useState(false) // khóa nút tiền khi đang gửi: bấm hai lần không cấp hai khoản
+  const chuyenDangXem = useRef(0) // bỏ kết quả về muộn của chuyến đã chọn trước đó
 
   useEffect(() => {
     // shortcut: 100 chuyến mỗi trạng thái, đủ cho nhà xe khoảng 10 xe
@@ -39,12 +41,18 @@ export default function TamUng() {
   }, [])
 
   const tai = useCallback((id: number) => {
+    chuyenDangXem.current = id
     tamUngChuyen(id)
       .then((r) => {
+        if (chuyenDangXem.current !== id) return
         setTu(r)
         setSoTien(String(r.con_duoc_cap)) // gợi ý = định mức − đã cấp còn hiệu lực (UC-23 bước 1)
       })
-      .catch((e) => setLoi(e instanceof LoiApi ? e.message : 'Không tải được tạm ứng'))
+      .catch(
+        (e) =>
+          chuyenDangXem.current === id &&
+          setLoi(e instanceof LoiApi ? e.message : 'Không tải được tạm ứng'),
+      )
   }, [])
 
   function chonChuyen(id: string) {
@@ -54,11 +62,14 @@ export default function TamUng() {
     setThongBao('')
     setLoi('')
     if (id) tai(Number(id))
+    else chuyenDangXem.current = 0
   }
 
   async function lam(viec: () => Promise<unknown>, xong: string, truong = 'so_tien') {
+    if (dangGui) return
     setThongBao('')
     setLoi('')
+    setDangGui(true)
     try {
       await viec()
       setThongBao(xong)
@@ -66,6 +77,8 @@ export default function TamUng() {
       tai(Number(chuyenId))
     } catch (err) {
       setLoi(thongBaoLoi(err, truong))
+    } finally {
+      setDangGui(false)
     }
   }
 
@@ -134,7 +147,7 @@ export default function TamUng() {
                   ))}
                 </select>
               </label>
-              <button>Cấp tạm ứng</button>
+              <button disabled={dangGui}>{dangGui ? 'Đang gửi…' : 'Cấp tạm ứng'}</button>
             </form>
           ) : (
             <p className="ghi-chu">
@@ -173,6 +186,7 @@ export default function TamUng() {
                     lam(() => suaTamUng(k.id, so, ht, lyDo), `Đã sửa thành ${dong(so)}`)
                   }
                   onThoi={() => setDangSua(null)}
+                  dangGui={dangGui}
                 />
               ) : (
                 <tr key={k.id}>
@@ -184,10 +198,10 @@ export default function TamUng() {
                   <td className="hanh-dong">
                     {suaDuoc && k.trang_thai === 'HIEU_LUC' && (
                       <>
-                        <button className="phu" onClick={() => setDangSua(k.id)}>
+                        <button className="phu" disabled={dangGui} onClick={() => setDangSua(k.id)}>
                           Sửa
                         </button>
-                        <button className="phu" onClick={() => thuHoi(k)}>
+                        <button className="phu" disabled={dangGui} onClick={() => thuHoi(k)}>
                           Thu hồi
                         </button>
                       </>
@@ -215,8 +229,10 @@ function SuaKhoan({
   k,
   onLuu,
   onThoi,
+  dangGui,
 }: {
   k: KhoanTamUng
+  dangGui: boolean
   onLuu: (so: number, ht: HinhThuc, lyDo: string) => Promise<void>
   onThoi: () => void
 }) {
@@ -260,7 +276,10 @@ function SuaKhoan({
         />
       </td>
       <td className="hanh-dong">
-        <button disabled={!lyDo.trim() || !so} onClick={() => void onLuu(Number(so), ht, lyDo)}>
+        <button
+          disabled={dangGui || !lyDo.trim() || !so}
+          onClick={() => void onLuu(Number(so), ht, lyDo)}
+        >
           Lưu
         </button>
         <button className="phu" onClick={onThoi}>
