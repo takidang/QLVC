@@ -1,6 +1,6 @@
 # UC-16: Hủy chuyến
 
-- **Trạng thái:** Đang làm – AC1–AC9 đạt, AC10 giao diện đã làm, chờ thử (Đã duyệt 04/11/2026 – Tài)
+- **Trạng thái:** Xong 08/11/2026 – 10/10 AC (AC10 Kiệt thử 07/11, PR #18) (Đã duyệt 04/11/2026 – Tài)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa)
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-16) · `docs/api.md` mục 2.4 · `docs/nghiep-vu.md` BR-25, 30, mục 5.1, 5.2 · ca test `docs/ca-test-br.md` (TC-BR25-01…04)
 - **Quy tắc nghiệp vụ liên quan:** BR-07 (một ghép hiệu lực), BR-16, 17 (chuyến `HUY` không chiếm lịch), BR-25 (hủy), BR-30 (lịch sử), BR-57 (phân quyền)
@@ -53,4 +53,4 @@ Trên trang chi tiết chuyến `LAP` hoặc `DA_CHOT`, Điều phối bấm **H
 | UC-16-AC7 | API | `test_uc16_ac7_lich_su_co_ly_do` | Đạt | 04/11/2026 |
 | UC-16-AC8 | API | `test_uc16_ac8_huy_va_ghep_dong_thoi` | Đạt | 04/11/2026 |
 | UC-16-AC9 | API | `test_uc16_ac9_* (5 ca)` | Đạt | 04/11/2026 |
-| UC-16-AC10 | UI | Chờ thử (`docs/test-evidence/UC-16/du-lieu.md`) | CHƯA KIỂM | |
+| UC-16-AC10 | UI | Kiệt thử 6/6 ca: `docs/test-evidence/UC-16/`; hủy chuyến có đơn → đơn về chờ ghép (CSDL); BR-25 có tạm ứng chưa thử giao diện (test tự động) | Đạt | 07/11/2026 |

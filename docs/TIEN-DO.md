@@ -9,7 +9,7 @@
 |---|---|---|
 | Nền móng: models, migration, đăng nhập, khung frontend | 18/10 | Xong 16/10 |
 | UC-03 mẫu + docs/mau-use-case.md | 25/10 | Xong 24/10 |
-| Vòng tối thiểu: tạo đơn → ghép → chốt → quét → giao | 08/11 | Chưa bắt đầu |
+| Vòng tối thiểu: tạo đơn → ghép → chốt → quét → giao | 08/11 | Xong 08/11 (gộp UC-20, PR #16) |
 | Quyết toán chạy được | 29/11 | Chưa bắt đầu |
 | UC-30 dự đoán trễ (phần AI) | 06/12 | Chưa bắt đầu |
 | Nộp LMS | 21–27/12 | |
@@ -34,7 +34,7 @@
 - 30/10 – **Nhóm chốt quy trình nhánh** (`docs/nhanh-git.md`): `main` bản ổn định (vai trò master, giữ tên), `dev` tích hợp, `test` thử trước khi lên `main`, `hotfix` sửa gấp. Mỗi use case một nhánh `tai/uc-xx-...` / `kiet/uc-xx-...` tách từ `dev`, PR vào `dev`, CI xanh + người kia review mới gộp. Không push thẳng `main`, `dev`. Commit này là lần cuối ghi thẳng lên `main` để cả hai máy đọc được quy trình.
 - 30/10 – Kiệt → Tài: (1) đã thử UC-11-AC12 (5 ca) và UC-13-AC13 (5 ca + 1 ảnh phụ): **đạt hết**, ảnh `docs/test-evidence/UC-11/`, `UC-13/`, kết quả điền trong story; Tài xác nhận và đóng 2 story. (2) Lịch trình UC-13 lấy Đ4 trước Đ1 ở TP.HCM, kịch bản mục 11 ghi Đ1 trước – ETA vẫn đúng, Tài xem có cần sửa không. (3) UC-02 xong 11/11, nhờ review PR `kiet/uc-02-nguoi-dung` → `dev` (kết quả thử UC-11, 13 đi cùng PR này vì chung file dữ liệu thử).
 - 30/10 – Tài → Kiệt: **review 2 PR vào `dev`**: #3 (sửa sau review UC-13) và PR UC-12 Đổi xe/tài xế. Khi thử UC-13 thì thử thêm UC-12 (`UC-12-AC5`): trên trang chi tiết chuyến đang lập có đơn Đ1, Đ4 → "Đổi xe / tài xế" → xe nhỏ (tải 1.500 kg) hiện lý do BR-01; chọn xe khác đủ tải + tài xế khác → Lưu → biển số, tên tài xế đổi. Ảnh vào `docs/test-evidence/UC-12/`.
-- 31/10 – Kiệt → Tài: Kiệt **thêm migration thứ 3** (nạp danh mục lý do `LY_DO`: lý do lấy / giao không được kèm `phia` KHACH/SU_CO_XE cho BR-37, 42) trong nhánh UC-19 (`kiet/uc-19-quet-lay`, từ 04/11 tách thẳng từ `dev`; migration `2a4c8d5f38e7` đã viết, gạch dòng này khi PR UC-19 gộp). Tài chưa thêm migration tới khi dòng này được gạch; cần thêm thì nhắn Kiệt để nối sau migration này.
+- ~~31/10 – Kiệt → Tài: Kiệt **thêm migration thứ 3** (nạp danh mục lý do `LY_DO`: lý do lấy / giao không được kèm `phia` KHACH/SU_CO_XE cho BR-37, 42) trong nhánh UC-19 (`kiet/uc-19-quet-lay`, từ 04/11 tách thẳng từ `dev`; migration `2a4c8d5f38e7` đã viết, gạch dòng này khi PR UC-19 gộp). Tài chưa thêm migration tới khi dòng này được gạch; cần thêm thì nhắn Kiệt để nối sau migration này.~~ Xong 05/11: PR #15 (UC-19) đã gộp `dev`, migration `2a4c8d5f38e7` trên `dev`; UC-20 không thêm migration.
 
 ## Câu hỏi chờ thầy
 - ~~A1–A6 (nghiep-vu.md mục 1): chưa gửi~~ Nhóm tự chốt 16/10 (nghiep-vu.md mục 1).
@@ -47,12 +47,17 @@
 | UC-03 Xe (mẫu) | 2 | Xong | 13/13 | |
 | UC-06…09 Đơn tối thiểu | 3–4 | Xong | UC-06 6/6, UC-07 9/9, UC-08 11/11 | UC-08-AC11 Kiệt thử 25/10; UC-09 bỏ ở 0.5; phiếu QR làm cùng UC-19 |
 | UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Xong | 9/9 | AC9 Kiệt thử 25/10 |
-| UC-11…13, 15 Chuyến tối thiểu | 3–4 | Đang làm | UC-11 12/12, UC-12 4/5, UC-13 13/13, UC-15 10/11 | UC-11, UC-13 xong; UC-12 (AC5), UC-15 (AC11) code đã vào `dev`, chờ thử giao diện |
-| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Đang làm | UC-16 9/10 | UC-16 Hủy chuyến: PR chờ Kiệt review, giao diện chờ thử (AC10) |
+| UC-11…13, 15 Chuyến tối thiểu | 3–4 | Xong | UC-11 12/12, UC-12 5/5, UC-13 13/13, UC-15 11/11 | Đóng UC-12, 15 ngày 08/11 theo kết quả Kiệt thử (PR #18); còn sửa lỗi nhỏ danh sách xe UC-12 |
+| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Đang làm | UC-16 10/10, UC-10 11/12, UC-22 11/12, UC-32 10/11 | UC-16 xong 08/11. UC-10, 22 (PR #23), UC-32 (PR #24) đã vào `dev` 09/11, chờ Kiệt thử giao diện (AC12 UC-10, 22; AC11 UC-32) |
 | UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 09/11: Gộp #19…#24 sau khi Kiệt duyệt (gỡ xung đột TIEN-DO ở #23, #24); `dev` có UC-10, 22, 32.
+- 08/11: UC-32 Theo dõi chuyến: bảng chuyến trong ngày (tiến độ, % đầy, cờ trễ / sự cố / thất bại / chưa quyết toán / chồng lịch BR-73), chi tiết có giờ quét, trễ, dòng thời gian, tiền, sự cố; kết thúc do sự cố (BR-68), đóng sự cố; 24 test mới, toàn bộ 654 passed; 10/11 AC.
+- 08/11: Review và gộp #16 (UC-20), #17 (UC-23; gộp `dev` vào nhánh, sửa xung đột TIEN-DO phần Kiệt, 630 passed), #18 (Kiệt thử giao diện UC-12, 15, 16). Đóng UC-12 (5/5), UC-15 (11/11), UC-16 (10/10). Vòng tối thiểu mốc 08/11 đã vào `dev`.
+- 08/11: UC-22 Xử lý đơn thất bại: ghép lại (BR-37 chỉ đếm giao thất bại phía khách, BR-69 nơi giữ hàng, bỏ khung lấy cũ), trả hàng khi đã lấy, hủy khi chưa lấy (BR-34, 36), danh sách cần xử lý; 20 test mới; 11/12 AC; làm chung PR #23 với UC-10 (dùng chung endpoint hủy).
+- 08/11: UC-10 Sửa / hủy đơn: sửa khi chưa lấy (BR-33), cước tính lại từ bản sao giá + nhật ký tiền, đơn đang ghép kiểm lại cả chuyến (BR-67); hủy kèm lý do, đơn đang ghép tự gỡ (BR-34); 35 test mới, toàn bộ 665 passed; 11/12 AC. Sửa sau review: lỗi danh sách xe UC-12 (#20), 3 điểm màn tài xế (#21), trang Tạm ứng chống bấm hai lần (#22).
 - 04/11: UC-16 Hủy chuyến: chặn khi đã chạy hoặc còn tạm ứng (BR-25), đơn về chờ ghép, lý do vào lịch sử, chuyến hủy không chiếm lịch; 21 test mới, toàn bộ 459 passed; 9/10 AC. Gỡ xung đột PR #10, review và gộp #6 (UC-17), #11; #10 UC-15 vào `dev`.
 - 01/11: UC-15 Chốt / mở chốt chuyến: kiểm lại nhóm A, B, xác nhận chạy rỗng (BR-23) và lãi âm (BR-52), lưu định mức, lương, ETA kế hoạch (BR-71), mở chốt chặn khi còn tạm ứng (BR-24); 17 test mới, toàn bộ 412 passed; 10/11 AC, giao diện chờ Kiệt thử.
 - 01/11: Đóng UC-11 (12/12), UC-13 (13/13) theo kết quả Kiệt thử giao diện. Lệnh tạo tài khoản demo 4 vai trò (PR #8).
@@ -96,12 +101,16 @@
 | Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Xong | – | PR #1 merge 16/10 (Tài cập nhật hộ) |
 | Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Cài môi trường xong 19/10 (theo báo cáo tuần 2; Tài sửa hộ 25/10). Ca test BR xong 29/10, Tài chốt 30/10 (Tài cập nhật hộ). Còn UML |
 | UC-04 Tài xế (chép mẫu) | 2 | Xong | 10/10 | Tài review, merge vào `main` 25/10 (Tài cập nhật hộ) |
-| UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Đang làm | UC-02 11/11, UC-17 10/10, UC-18 11/11, UC-19 15/15 | UC-02 (PR #5), UC-17 (PR #6), UC-18 (PR #13) đã gộp `dev`. UC-19 xong 04/11 (50 test, giao diện + phiếu QR + camera thử đạt 12/12 ca), mở PR vào `dev` chờ Tài review; để sau: GPS trên Safari iPhone, BR-44 quét sai vị trí. Còn UC-20. UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
-| Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Chưa bắt đầu | | |
+| UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Xong | UC-02 11/11, UC-17 10/10, UC-18 11/11, UC-19 15/15, UC-20 16/16 | UC-02 (PR #5), UC-17 (PR #6), UC-18 (PR #13), UC-19 (PR #15), UC-20 (PR #16) đã gộp `dev`. UC-20 xong 05/11 (40 test, kèm 3 góp ý review #15: tối đa 5 ảnh, trần độ chính xác GPS, xin vị trí lúc bấm; Safari iPhone đã gửi vị trí), gộp `dev` (PR #16, 08/11). Vòng tối thiểu mốc 08/11 chạy trọn trên giao diện. BR-44 để hướng phát triển (Tài chốt). UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
+| Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Đang làm | UC-23 14/14 | UC-23 Tạm ứng (nhánh `kiet/uc-23-tam-ung`) xong 07/11 (49 test, thử giao diện 7/7 ca), PR #17 (gộp `dev` 08/11). Làm trước UC-21 vì không đụng trang tài xế (UC-20 PR #16 chưa gộp). UC-21 làm tiếp (#16 đã gộp); UC-33 sau UC-24 |
 | UC-24, 25 | 7 | Chưa bắt đầu | | |
 | UC-26, 27, 34 (hiệu suất xe, ưu tiên S – thiếu giờ thì cắt trước), E2E | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Kiệt (mới nhất ở trên)
+- 07/11: Đóng UC-23 (14/14 AC): thử giao diện 7/7 ca (cấp, vượt định mức, sửa, thu hồi, mở chốt bị chặn rồi được); sửa bước ô số tiền và câu báo khi sửa vượt định mức.
+- 07/11: UC-23 Tạm ứng: module `tien/tam_ung/` (cấp, sửa, thu hồi, xem; BR-53 kiểm ở mọi lần cấp và sửa, khóa dòng chuyến, nhật ký tiền BR-62, đã quyết toán → BR-29), thêm `GET /api/chuyen/{id}/tam-ung` (gợi ý số còn được cấp); trang Kế toán **Tạm ứng**; 49 test, toàn bộ 590 passed; 13/14 AC. PR #16 (UC-20) chờ Tài review.
+- 05/11: Đóng UC-20 (16/16 AC): thử giao diện 10/10 ca (máy tính 360 px; iPhone Safari qua tunnel: quét xác nhận, ký ngón tay, có GPS; kết thúc chuyến CH-261031-01 → vòng tối thiểu chạy trọn); 581 passed. Để sau: khối Kết thúc chuyến tràn khung iPhone, hỏi lại trước Xác nhận giao.
+- 05/11: UC-20 Quét giao: `GIAO` (ảnh + chữ ký PNG + tên, BR-41), giao trễ (BR-72), sinh phải thu + nhật ký tiền (BR-56, 62), `GIAO_THAT_BAI` (BR-42), đơn chưa lấy 409 BR-40, bảng quét lặp / trái kết quả; giao diện quét xác nhận + ô ký canvas; xin vị trí lúc bấm (Safari); 40 test, toàn bộ 581 passed; 14/16 AC. Gộp #15 (UC-19).
 - 04/11: Đóng UC-19 (15/15 AC): thử giao diện 12/12 ca (phiếu QR, tài xế 360 px, camera iPhone qua Cloudflare Tunnel có GPS thật); 541 passed. Để sau: GPS Safari iPhone, BR-44.
 - 04/11: UC-19 giao diện: khối Lấy hàng (camera `qr-scanner` + gõ mã), Không lấy được (lý do + ảnh), phiếu in QR (`qrcode`), cho phép Cloudflare Tunnel trong Vite; chờ thử giao diện.
 - 04/11: UC-19 Quét lấy hàng (backend): `POST /api/toi/quet` ở module `quet/` (BR-38, 39, 42, 43, 45: không thuộc chuyến 403, chuyến chưa chạy 409, quét lặp cùng ý trả trạng thái hiện tại, trái kết quả 409 BR-39, trường lạ 400), `GET /api/danh-muc/ly-do`, migration nạp 12 lý do; 50 test, toàn bộ 488 passed; 12/15 AC. Review PR #12 (UC-16) của Tài: đạt, 459 passed. Gộp `dev` mới vào UC-18, mở PR #13.

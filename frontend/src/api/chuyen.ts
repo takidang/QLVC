@@ -16,6 +16,14 @@ export type Chuyen = {
   khoi_hanh_du_kien: string
   ket_thuc_du_kien: string
   trang_thai: string
+  // UC-32: chỉ có khi lọc theo ngày (bảng chuyến trong ngày)
+  theo_doi?: {
+    xong: number
+    tong: number
+    ty_le_lap_day: string
+    co: string[]
+    chong: string[]
+  } | null
 }
 export type ChuyenVao = {
   tuyen_id: number
@@ -59,6 +67,10 @@ export type DiemDung = {
   don_id: number
   ma_don: string
   eta: string
+  eta_ke_hoach?: string | null
+  thuc_te?: string | null
+  ket_qua?: string | null
+  tre_phut?: number | null
 }
 export type ChuyenChiTiet = Chuyen & {
   tai_trong: { da_dung_kg: string; toi_da_kg: number }
@@ -69,6 +81,25 @@ export type ChuyenChiTiet = Chuyen & {
   canh_bao_lai_am: boolean
   chay_rong: boolean
   don: Don[]
+  // UC-32: chỉ có ở GET chi tiết (không có trong kết quả ghép / gỡ / chốt)
+  co?: string[] | null
+  chong?: string[] | null
+  ket_thuc_dang_chay?: string | null
+  ket_thuc_bat_thuong?: boolean | null
+  ly_do_ket_thuc?: string | null
+  km_bat_dau?: number | null
+  km_ket_thuc?: number | null
+  dong_thoi_gian?: { luc: string; loai: string; noi_dung: string; nguoi?: string | null }[] | null
+  tien?: { dinh_muc: number; luong: number; tam_ung_hieu_luc: number; doanh_thu: number } | null
+  su_co?: SuCo[] | null
+}
+export type SuCo = {
+  id: number
+  loai: string
+  ghi_chu: string | null
+  trang_thai: string
+  cach_xu_ly: string | null
+  luc: string
 }
 // Vi phạm khi ghép/gỡ: don_id null là vi phạm của cả chuyến (tải, thể tích, giấy tờ, trùng lịch)
 export type ViPhamGhep = { don_id: number | null; ma: string; thong_diep: string }
@@ -97,3 +128,17 @@ export const moChotChuyen = (id: number) =>
 // Hủy (UC-16): lý do bắt buộc; còn tạm ứng hoặc chuyến đã chạy → 409 BR-25
 export const huyChuyen = (id: number, ly_do: string) =>
   guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/huy`, 'POST', { ly_do })
+
+// UC-32: kết thúc do sự cố (BR-68), đóng sự cố tài xế báo (UC-33)
+export const ketThucSuCo = (id: number, ly_do: string, km_ket_thuc: number | null) =>
+  guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/ket-thuc-su-co`, 'POST', { ly_do, km_ket_thuc })
+export const dongSuCo = (id: number, cach_xu_ly: string) =>
+  guiJson<SuCo>(`/api/su-co/${id}/dong`, 'POST', { cach_xu_ly })
+// Cờ trên bảng chuyến trong ngày (UC-32)
+export const TEN_CO: Record<string, string> = {
+  TRE: 'Trễ',
+  SU_CO: 'Sự cố',
+  THAT_BAI: 'Đơn thất bại',
+  CHUA_QUYET_TOAN: 'Chưa quyết toán',
+  CHONG_LICH: 'Chồng lịch',
+}

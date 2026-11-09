@@ -1,6 +1,6 @@
 # UC-15: Chốt / mở chốt chuyến
 
-- **Trạng thái:** Đang làm – AC1–AC10 đạt, AC11 giao diện đã làm, chờ Kiệt thử (Đã duyệt 01/11/2026 – Tài: xác nhận chạy rỗng một lần là đủ; mở chốt xóa số đã chốt)
+- **Trạng thái:** Xong 08/11/2026 – 11/11 AC (AC11 Kiệt thử 07/11, PR #18) (Đã duyệt 01/11/2026 – Tài: xác nhận chạy rỗng một lần là đủ; mở chốt xóa số đã chốt)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa)
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-15) · `docs/api.md` mục 2.4 · `docs/nghiep-vu.md` BR-23, 24, 52, 71, mục 2.1, 5.1, mục 11 bước 4 · ca test `docs/ca-test-br.md` (TC-BR23-01…03, BR24-01, 02, BR30-01, BR52-01, 02, BR71-01, 02)
 - **Quy tắc nghiệp vụ liên quan:** BR-01…06 (nhóm A), BR-11…19 (nhóm B), BR-23 (chốt), BR-24 (mở chốt), BR-30 (lịch sử), BR-52 (lãi dự kiến), BR-57 (phân quyền), BR-71 (lưu định mức, lương, ETA kế hoạch)
@@ -56,4 +56,4 @@ Trên trang chi tiết chuyến `LAP`, Điều phối bấm **Chốt**. Hệ th�
 | UC-15-AC8 | API | `test_uc15_ac8_lich_su` | Đạt | 01/11/2026 |
 | UC-15-AC9 | API | `test_uc15_ac9_* (2 ca, có ca đồng thời)` | Đạt | 01/11/2026 |
 | UC-15-AC10 | API | `test_uc15_ac10_* (5 ca)` | Đạt | 01/11/2026 |
-| UC-15-AC11 | UI | Chờ Kiệt thử (`docs/test-evidence/UC-15/du-lieu.md`) | CHƯA KIỂM | |
+| UC-15-AC11 | UI | Kiệt thử 6/6 ca: `docs/test-evidence/UC-15/` (ca d kiểm bằng CSDL); BR-24 trên giao diện thử ở UC-23 | Đạt | 07/11/2026 |

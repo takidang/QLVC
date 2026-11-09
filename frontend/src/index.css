@@ -356,6 +356,15 @@ ul.loi {
   border-color: #1f5fbf;
 }
 
+/* Ô nhập trong thẻ không rộng quá khung trên điện thoại hẹp (ô số, ô chọn tệp có bề rộng tự nhiên lớn) */
+.the input,
+.the select,
+.the button {
+  box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
+}
+
 .form-km label {
   display: grid;
   gap: 4px;
@@ -399,4 +408,26 @@ ul.loi {
     border: 1px solid #000;
     box-shadow: none;
   }
+}
+
+/* UC-20: nút giao trên điểm giao; ô ký tên bằng ngón tay */
+.giao-nut {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.giao-nut > form {
+  flex-basis: 100%;
+}
+.o-ky {
+  display: grid;
+  gap: 6px;
+}
+.o-ky canvas {
+  width: 100%;
+  height: 160px;
+  border: 1px dashed #8a8f98;
+  border-radius: 6px;
+  background: #fff;
+  touch-action: none; /* vẽ không làm cuộn trang */
 }

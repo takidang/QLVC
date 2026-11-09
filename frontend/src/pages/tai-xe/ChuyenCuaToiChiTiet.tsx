@@ -11,26 +11,29 @@ import {
   type KetQuaQuet,
 } from '../../api/toi'
 import { nenAnh } from '../../nenAnh'
+import { GiaoHang } from './GiaoHang'
 import { KhongLay, QuetLay } from './QuetLay'
 
 const gio = (iso: string) =>
   new Date(iso).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
-const TEN_TRANG_THAI_DON: Record<string, string> = {
-  DA_GHEP: 'Chờ lấy',
-  DA_LAY: 'Đã lấy',
-  DA_GIAO: 'Đã giao',
-  THAT_BAI: 'Thất bại',
-  TRA_HANG: 'Trả hàng',
+// Nhãn theo việc của điểm: điểm Lấy của đơn đã giao vẫn là "Đã lấy", không phải "Đã giao"
+const NHAN_DIEM: Record<'LAY' | 'GIAO', Record<string, string>> = {
+  LAY: { DA_GHEP: 'Chờ lấy', DA_LAY: 'Đã lấy', DA_GIAO: 'Đã lấy', TRA_HANG: 'Đã lấy' },
+  GIAO: { DA_GHEP: 'Chưa lấy hàng', DA_LAY: 'Chờ giao', DA_GIAO: 'Đã giao', TRA_HANG: 'Trả hàng' },
 }
+const nhanDiem = (viec: 'LAY' | 'GIAO', tt: string) =>
+  NHAN_DIEM[viec][tt] ?? (tt === 'THAT_BAI' ? 'Thất bại' : tt)
 
 // UC-17: lịch trình cho tài xế – từng điểm dừng, đơn, địa chỉ, gọi điện. Không có cước (quyết định số 3)
 // UC-18: chuyến chờ chạy có ô Bắt đầu, chuyến đang chạy có ô Kết thúc (km + ảnh đồng hồ)
 // UC-19: chuyến đang chạy có khối Lấy hàng (quét QR / gõ mã); điểm lấy chưa lấy có nút Không lấy được
+// UC-20: điểm giao của đơn đã lấy có Giao hàng (quét xác nhận, ảnh, tên, chữ ký) và Giao không được
 export default function ChuyenCuaToiChiTiet() {
   const { id } = useParams()
   const [c, setC] = useState<ChiTiet | null>(null)
   const [loi, setLoi] = useState('')
   const [quet, setQuet] = useState<KetQuaQuet | null>(null)
+  const tb = quet && c ? thongBaoQuet(quet, c) : null
 
   // Quét xong: giữ câu báo, tải lại lịch trình để trạng thái điểm đổi ngay
   const xongQuet = (kq: KetQuaQuet) => {
@@ -76,12 +79,14 @@ export default function ChuyenCuaToiChiTiet() {
               ` · Lương chuyến ${c.luong_tai_xe_chot.toLocaleString('vi-VN')} đ`}
           </p>
 
-          {quet && (
+          {tb && (
             <div role="status">
-              <p className="thanh-cong">{thongBaoQuet(quet, c).xong}</p>
-              {thongBaoQuet(quet, c).canhBao && (
-                <p className="canh-bao">{thongBaoQuet(quet, c).canhBao}</p>
-              )}
+              <p className="thanh-cong">{tb.xong}</p>
+              {tb.canhBao.map((x) => (
+                <p key={x} className="canh-bao">
+                  {x}
+                </p>
+              ))}
             </div>
           )}
           {c.trang_thai === 'DANG_CHAY' && <QuetLay onXong={xongQuet} />}
@@ -99,9 +104,7 @@ export default function ChuyenCuaToiChiTiet() {
                   <strong>
                     {p.thu_tu}. {gio(p.eta)} · {p.viec === 'LAY' ? 'Lấy' : 'Giao'} tại {p.nut}
                   </strong>
-                  <span className="nhan xam">
-                    {TEN_TRANG_THAI_DON[p.trang_thai_don] ?? p.trang_thai_don}
-                  </span>
+                  <span className="nhan xam">{nhanDiem(p.viec, p.trang_thai_don)}</span>
                 </div>
                 <div>
                   <span className="bien-so">{p.ma_don}</span> · {p.ten_khach}
@@ -126,6 +129,14 @@ export default function ChuyenCuaToiChiTiet() {
                 {c.trang_thai === 'DANG_CHAY' &&
                   p.viec === 'LAY' &&
                   p.trang_thai_don === 'DA_GHEP' && <KhongLay maDon={p.ma_don} onXong={xongQuet} />}
+                {c.trang_thai === 'DANG_CHAY' &&
+                  p.viec === 'GIAO' &&
+                  p.trang_thai_don === 'DA_LAY' && (
+                    <div className="giao-nut">
+                      <GiaoHang maDon={p.ma_don} onXong={xongQuet} />
+                      <KhongLay maDon={p.ma_don} viec="GIAO" onXong={xongQuet} />
+                    </div>
+                  )}
               </li>
             ))}
           </ol>

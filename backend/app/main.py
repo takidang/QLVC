@@ -8,6 +8,7 @@ from app.auth.router import router as auth_router
 from app.config import get_settings
 from app.loi import LoiNghiepVu
 from app.modules.chuyen.router import router as chuyen_router
+from app.modules.chuyen.router import router_su_co as su_co_router
 from app.modules.danh_muc.bang_gia.router import router as bang_gia_router
 from app.modules.danh_muc.cau_hinh.router import router as cau_hinh_router
 from app.modules.danh_muc.khach_hang.router import router as khach_hang_router
@@ -20,6 +21,7 @@ from app.modules.don.router import router as don_router
 from app.modules.nguoi_dung.router import router as nguoi_dung_router
 from app.modules.quet.router import router as quet_router
 from app.modules.tien.chi_phi.router import router as chi_phi_router
+from app.modules.tien.tam_ung.router import router as tam_ung_router
 from app.modules.toi.router import router as toi_router
 
 
@@ -42,7 +44,9 @@ app.include_router(ly_do_router)
 app.include_router(nguoi_dung_router)
 app.include_router(nut_router)
 app.include_router(quet_router)
+app.include_router(su_co_router)
 app.include_router(tai_xe_router)
+app.include_router(tam_ung_router)
 app.include_router(toi_router)
 app.include_router(tuyen_router)
 app.include_router(xe_router)

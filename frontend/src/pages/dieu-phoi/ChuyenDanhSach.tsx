@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import {
   danhSachChuyen,
+  TEN_CO,
   lapChuyen,
   taiXeKhaDung,
   xeKhaDung,
@@ -108,6 +109,9 @@ export default function ChuyenDanhSach() {
             <th>Khởi hành</th>
             <th>Kết thúc dự kiến</th>
             <th>Trạng thái</th>
+            {ngay && <th>Tiến độ</th>}
+            {ngay && <th className="so">Đầy</th>}
+            {ngay && <th>Cờ</th>}
           </tr>
         </thead>
         <tbody>
@@ -124,11 +128,30 @@ export default function ChuyenDanhSach() {
               <td>{lucVN(c.khoi_hanh_du_kien)}</td>
               <td>{lucVN(c.ket_thuc_du_kien)}</td>
               <td>{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</td>
+              {ngay && c.theo_doi && (
+                <>
+                  <td>
+                    {c.theo_doi.xong}/{c.theo_doi.tong} điểm
+                  </td>
+                  <td className="so">{Math.round(Number(c.theo_doi.ty_le_lap_day) * 100)}%</td>
+                  <td>
+                    {c.theo_doi.co.map((x) => (
+                      <span
+                        key={x}
+                        className="nhan do"
+                        title={x === 'CHONG_LICH' ? c.theo_doi!.chong.join(', ') : ''}
+                      >
+                        {TEN_CO[x] ?? x}
+                      </span>
+                    ))}
+                  </td>
+                </>
+              )}
             </tr>
           ))}
           {ds.du_lieu.length === 0 && (
             <tr>
-              <td colSpan={7} className="trong">
+              <td colSpan={ngay ? 10 : 7} className="trong">
                 Chưa có chuyến nào phù hợp
               </td>
             </tr>

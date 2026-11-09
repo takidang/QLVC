@@ -154,7 +154,7 @@ Ghi chú: UC-30 chỉ **gợi ý**; module phụ hỏng thì lõi vẫn chạy.
   3. Tài xế chụp ≥ 1 ảnh (trình duyệt tự nén theo NFR-PER-03), nhập tên người nhận, người nhận ký trên màn hình.
   4. Hệ thống kiểm BR-41, lưu ảnh + chữ ký + GPS + giờ máy chủ → đơn `DA_GIAO`; quá hạn giao thì đánh dấu giao trễ (BR-72); sinh khoản phải thu `CHUA_THU` (BR-56).
 - **Luồng thay thế:**
-  - 3a. **Giao không được:** chọn lý do (người nhận vắng, từ chối nhận, sai địa chỉ, hàng hư hỏng, khác; mỗi lý do có phía khách/sự cố xe), chụp ảnh (BR-42) → `THAT_BAI`.
+  - 3a. **Giao không được:** chọn lý do (người nhận vắng, từ chối nhận, sai địa chỉ, hàng hư hỏng, xe hỏng / sự cố trên đường, khác; mỗi lý do có phía khách/sự cố xe – danh mục ở `app/domain/ly_do.py`), chụp ảnh (BR-42) → `THAT_BAI`.
 - **Ngoại lệ:** 2a. Đơn chưa lấy (`DA_GHEP`) → báo "Đơn chưa được quét lấy". 4a. Thiếu ảnh/chữ ký → không cho lưu.
 
 ### UC-21 Ghi chi phí
