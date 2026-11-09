@@ -119,8 +119,9 @@
 | POST | `/api/chi-phi/{id}/tu-choi` | KT | UC-24 | Cần `ly_do` |
 | GET | `/api/chuyen/{id}/quyet-toan` | KT | UC-24 | Bảng quyết toán dự kiến: định mức – thực tế – chênh lệch, dầu tham khảo, lý do lãi lệch dự kiến |
 | POST | `/api/chuyen/{id}/quyet-toan` | KT | UC-24 | **Chi tiết ở mục 3.3** |
-| GET | `/api/phai-thu` | KT | UC-25 | Lọc `trang_thai_tt`, `khach_hang_id`; tổng nợ theo khách |
-| POST | `/api/phai-thu/da-thu` | KT | UC-25 | `{phai_thu_ids, ngay}`; đánh dấu một hoặc nhiều khoản `DA_THU` (BR-56) |
+| GET | `/api/phai-thu` | KT, QL | UC-25 | Lọc `trang_thai_tt`, `khach_hang_id`; phân trang, đơn giao mới trước. `{du_lieu, tong, tong_tien}`; mỗi dòng `{id, don_hang_id, ma_don, khach_hang_id, ten_khach, ngay_giao, so_tien, trang_thai_tt, phieu_thu_id, ngay_thu}` |
+| GET | `/api/phai-thu/theo-khach` | KT, QL | UC-25 | Nợ theo khách (chỉ `CHUA_THU`): `[{khach_hang_id, ten_khach, so_khoan, tong_no}]`, nợ nhiều trước |
+| POST | `/api/phai-thu/da-thu` | KT | UC-25 | `{phai_thu_ids, ngay}`: 1–100 id không trùng, `ngay` dạng `YYYY-MM-DD` không sau hôm nay (sai → 400); id không có → 404; có khoản đã thu → 409 `BR-56` (cả lô không đổi); khoản của nhiều khách → 422 `BR-56`. Lập một `PHIEU_THU` cho khách, các khoản `DA_THU` + `phieu_thu_id`, mỗi khoản 1 dòng `NHAT_KY_TIEN` `DA_THU`; đơn giữ `DA_GIAO` (BR-56). Trả `{phieu_thu_id, khach_hang_id, tong_tien, ngay, so_khoan}` |
 | GET | `/api/bao-cao/lai-lo` | QL, KT (DP xem) | UC-26 | `?theo=chuyen\|xe\|thang&tu=&den=`; theo xe, tháng thì trừ chi phí cố định |
 | GET | `/api/bao-cao/hieu-suat-xe` | QL (KT xem) | UC-34 | `?thang=`; % lấp đầy trung bình, số chuyến chạy rỗng, km, dầu thực tế so với định mức |
 
