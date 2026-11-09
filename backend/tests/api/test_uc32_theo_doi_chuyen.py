@@ -5,7 +5,7 @@ from decimal import Decimal
 import pytest
 from sqlalchemy import select
 
-from app.models import Chuyen, DonHang, Ghep, LichSuTrangThai, LuotQuet, SuCo, TamUng, Xe
+from app.models import Chuyen, DonHang, Ghep, LichSuTrangThai, LuotQuet, Nut, SuCo, TamUng, Xe
 from app.modules.chuyen import theo_doi
 from tests.api.test_uc13_ghep_don import NGAY, kb, lap, luc, trang_thai  # noqa: F401 (kb là fixture)
 from tests.api.test_uc15_chot_chuyen import chot, chuyen, lap_c01, sua
@@ -142,6 +142,17 @@ def test_uc32_ac5_chi_tiet(client, db, kb, dang_chay):
     luc_su_kien = [s["luc"] for s in ct["dong_thoi_gian"]]
     assert luc_su_kien == sorted(luc_su_kien)
     assert [s["loai"] for s in ct["su_co"]] == ["KET_XE"]
+
+
+# Bản đồ chi tiết chuyến: mỗi điểm mang tọa độ của nút; nút chưa có tọa độ thì null (giao diện bỏ qua)
+def test_chi_tiet_co_toa_do_diem(client, db, kb, dang_chay):
+    nut = db.scalar(select(Nut).where(Nut.ten == "TP.HCM"))
+    nut.lat, nut.lng = Decimal("10.776889"), Decimal("106.700806")
+    db.commit()
+    ds = chi_tiet(client, dang_chay["c01"])["lich_trinh"]
+    co = [p for p in ds if p["nut"] == "TP.HCM"]
+    assert co and all((Decimal(p["lat"]), Decimal(p["lng"])) == (nut.lat, nut.lng) for p in co)
+    assert all(p["lat"] is None and p["lng"] is None for p in ds if p["nut"] != "TP.HCM")
 
 
 # AC6 – kết thúc do sự cố (TC-BR68-01)
