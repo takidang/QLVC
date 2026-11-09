@@ -58,6 +58,7 @@ Trong chuyến (đang chạy hoặc đã về, chưa quyết toán), tài xế g
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/api/test_uc21_chi_phi.py`
 - Giao diện (09/11, sau khi gộp `dev` có #16, #19–#24; `main.py` xung đột 1 dòng router với UC-23, giữ cả hai; 759 passed): `api/chiPhi.ts`, `pages/tai-xe/ChiPhi.tsx` (khối Chi phí: tạm ứng đã nhận / đã khai, danh sách khoản, form ghi có ảnh nén, số lít chỉ hiện khi chọn Dầu, Sửa tại chỗ không đổi ảnh, Xóa hỏi xác nhận; chuyến đã quyết toán chỉ xem), `ChuyenCuaToiChiTiet.tsx` thêm 2 dòng gắn khối, `index.css` (`.ds-chi`). Thiếu ghi chú / ảnh để máy chủ báo 422 kèm `BR-54`.
 - Thử giao diện: `docs/test-evidence/UC-21/du-lieu.md`.
+- Kèm theo (Tài nhờ 09/11, góp ý ở #21; module `toi` và trang tài xế là của Kiệt): `GET /api/toi/chuyen/{id}` trả thêm `da_lay` cho từng điểm (đã quét lấy **trong chính chuyến này** – không dùng `da_lay` theo đơn của `don/that_bai.py` vì đơn ghép lại BR-69 có thể đã lấy ở chuyến trước); điểm Lấy của đơn giao thất bại hiện "Đã lấy". Test `test_uc20_diem_lay_da_lay_khi_giao_that_bai` (thử làm hỏng: luôn `False` → đỏ). CSS `.ds-chi` đặt sau `.hanh-dong` (không ở cuối tệp) để không xung đột với #25. Toàn bộ 760 passed. Theo quy ước #26: PR này không sửa `TIEN-DO.md`.
 
 ## Truy vết và kết quả
 
