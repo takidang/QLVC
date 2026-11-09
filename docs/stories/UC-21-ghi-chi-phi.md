@@ -1,6 +1,6 @@
 # UC-21: Ghi chi phí
 
-- **Trạng thái:** Đang làm (duyệt 07/11/2026, Kiệt: "làm như bình thường, làm tiếp" – 9 quyết định như đề xuất; khi code chỉnh AC5, xem quyết định 10)
+- **Trạng thái:** Hoàn thành 14/14 AC (09/11/2026; duyệt 07/11/2026, Kiệt: "làm như bình thường, làm tiếp" – 9 quyết định như đề xuất; khi code chỉnh AC5, xem quyết định 10)
 - **Tác nhân:** Tài xế (điện thoại)
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-21) · `docs/api.md` mục 2.5 (`/api/toi/chuyen/{id}/chi-phi`, `/api/toi/chi-phi/{id}`) · `docs/security-rules.md` (bảng dữ liệu tiền, upload) · `docs/kien-truc.md` mục 6 (khóa) · ca test `docs/ca-test-br.md` (TC-BR54-01…03) · kịch bản `nghiep-vu.md` mục 11 (dầu 26 lít 520.000, cầu đường 230.000, bốc xếp 300.000)
 - **Quy tắc nghiệp vụ liên quan:** BR-54 (số tiền > 0, ghi chú, ≥ 1 ảnh chứng từ; dầu thêm số lít; ghi được tới khi quyết toán), BR-58 (chỉ chuyến của mình), BR-62 (nhật ký tiền), BR-29 (đã quyết toán thì chỉ đọc), NFR-PER-03 (ảnh ≤ 500 KB, nén trên trình duyệt)
@@ -76,5 +76,5 @@ Trong chuyến (đang chạy hoặc đã về, chưa quyết toán), tài xế g
 | UC-21-AC10 | API | `test_uc21_ac10_xoa` | Đạt | 07/11/2026 |
 | UC-21-AC11 | API | `test_uc21_ac11_*` (4 ca) | Đạt | 07/11/2026 |
 | UC-21-AC12 | API | `test_uc21_ac12_loi_giua_chung` | Đạt | 07/11/2026 |
-| UC-21-AC13 | UI | | CHƯA KIỂM | |
-| UC-21-AC14 | UI | | CHƯA KIỂM | |
+| UC-21-AC13 | UI | Kiệt thử 9 ca a–h, g2 trên máy tính 360 px: `docs/test-evidence/UC-21/a…h-*.png`; CSDL khớp | Đạt | 09/11/2026 |
+| UC-21-AC14 | UI | Kiệt thử iPhone Safari qua Cloudflare Tunnel (ca i): chụp hóa đơn bằng camera, ảnh lưu 200 KB (đã nén ≤ 500 KB), khoản có 1 tệp; khối không tràn khung: `i-iphone.png` | Đạt | 09/11/2026 |
