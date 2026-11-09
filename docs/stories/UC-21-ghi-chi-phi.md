@@ -56,7 +56,8 @@ Trong chuyến (đang chạy hoặc đã về, chưa quyết toán), tài xế g
 - Không đổi CSDL, không thêm gói. Giá trị `XOA` mới trong cột chuỗi `nhat_ky_tien.hanh_dong` (quyết định 7).
 - Test đã viết: `tests/api/test_uc21_chi_phi.py` (51 ca, gồm 1 ca khóa: ghi chi phí đợi khi dòng chuyến đang bị khóa, rồi đọc lại trạng thái mới). Đã thử làm hỏng 4 quy tắc (dầu không cần số lít, không bắt buộc ảnh, sửa được khoản đã duyệt, bỏ khóa chuyến) → mỗi lần có test đỏ, rồi trả lại code.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/api/test_uc21_chi_phi.py`
-- **Giao diện (AC13, AC14) chưa làm:** chờ PR #16 (UC-20) gộp `dev` vì cùng trang tài xế `ChuyenCuaToiChiTiet.tsx`.
+- Giao diện (09/11, sau khi gộp `dev` có #16, #19–#24; `main.py` xung đột 1 dòng router với UC-23, giữ cả hai; 759 passed): `api/chiPhi.ts`, `pages/tai-xe/ChiPhi.tsx` (khối Chi phí: tạm ứng đã nhận / đã khai, danh sách khoản, form ghi có ảnh nén, số lít chỉ hiện khi chọn Dầu, Sửa tại chỗ không đổi ảnh, Xóa hỏi xác nhận; chuyến đã quyết toán chỉ xem), `ChuyenCuaToiChiTiet.tsx` thêm 2 dòng gắn khối, `index.css` (`.ds-chi`). Thiếu ghi chú / ảnh để máy chủ báo 422 kèm `BR-54`.
+- Thử giao diện: `docs/test-evidence/UC-21/du-lieu.md`.
 
 ## Truy vết và kết quả
 

@@ -431,3 +431,16 @@ ul.loi {
   background: #fff;
   touch-action: none; /* vẽ không làm cuộn trang */
 }
+
+/* UC-21: danh sách khoản chi trong khối Chi phí */
+.ds-chi {
+  list-style: none;
+  padding: 0;
+  margin: 8px 0;
+  display: grid;
+  gap: 10px;
+}
+.ds-chi > li {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 8px;
+}

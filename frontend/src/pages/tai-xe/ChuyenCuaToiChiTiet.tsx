@@ -11,6 +11,7 @@ import {
   type KetQuaQuet,
 } from '../../api/toi'
 import { nenAnh } from '../../nenAnh'
+import { ChiPhi } from './ChiPhi'
 import { GiaoHang } from './GiaoHang'
 import { KhongLay, QuetLay } from './QuetLay'
 
@@ -93,6 +94,9 @@ export default function ChuyenCuaToiChiTiet() {
 
           {(c.trang_thai === 'DA_CHOT' || c.trang_thai === 'DANG_CHAY') && (
             <FormKm key={c.trang_thai} c={c} onXong={setC} />
+          )}
+          {['DANG_CHAY', 'HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai) && (
+            <ChiPhi chuyenId={c.id} ghiDuoc={c.trang_thai !== 'DA_QUYET_TOAN'} />
           )}
 
           <h2>Lịch trình</h2>
