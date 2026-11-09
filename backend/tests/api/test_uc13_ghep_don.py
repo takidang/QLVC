@@ -169,7 +169,11 @@ def test_uc13_ac7_ghep_c01(client, dang_nhap_voi, db, kb):
         (kb[k], "CHO_GHEP", "DA_GHEP", dp.id) for k in ("d1", "d2", "d4")
     }
     assert db.get(Chuyen, c01).ket_thuc_du_kien == luc(13, 30)
-    assert client.get(f"/api/chuyen/{c01}").json() == c
+    # GET có thêm phần theo dõi của UC-32 (cờ, dòng thời gian, tiền, sự cố); phần còn lại giống kết quả ghép
+    them = {"co", "chong", "ket_thuc_dang_chay", "ket_thuc_bat_thuong", "ly_do_ket_thuc", "km_bat_dau", "km_ket_thuc"}
+    them |= {"dong_thoi_gian", "tien", "su_co"}
+    g = client.get(f"/api/chuyen/{c01}").json()
+    assert {k: v for k, v in g.items() if k not in them} == {k: v for k, v in c.items() if k not in them}
 
 
 # AC8 – ghép bị chặn, không ghép đơn nào trong lô
