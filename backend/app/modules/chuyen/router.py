@@ -8,15 +8,19 @@ from sqlalchemy.orm import Session
 from app.auth.phu_thuoc import can_vai_tro
 from app.db import get_db
 from app.models import NguoiDung
-from app.modules.chuyen import service
+from app.modules.chuyen import service, theo_doi
 from app.modules.chuyen.schemas import (
     ChotVao,
     ChuyenChiTiet,
+    ChuyenNgay,
     ChuyenRa,
     ChuyenVao,
+    DongSuCoVao,
     GhepVao,
     HuyVao,
+    KetThucSuCoVao,
     PhanCongVao,
+    SuCoRa,
     TaiXeKhaDung,
     TrangThaiChuyen,
     XeKhaDung,
@@ -48,7 +52,7 @@ def tao(vao: ChuyenVao, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)]):
     return service.lay(db, service.tao(db, vao, nd))
 
 
-@router.get("", response_model=DanhSach[ChuyenRa], dependencies=[XEM])
+@router.get("", response_model=DanhSach[ChuyenNgay], dependencies=[XEM])
 def danh_sach(
     db: Db,
     pt: Annotated[PhanTrang, Depends(phan_trang)],
@@ -57,12 +61,14 @@ def danh_sach(
     tuyen_id: int | None = None,
 ):
     du_lieu, tong = service.danh_sach(db, pt, trang_thai, ngay, tuyen_id)
+    if ngay:  # bảng chuyến trong ngày: tiến độ, % đầy, cờ (UC-32)
+        du_lieu = theo_doi.bang_ngay(db, du_lieu)
     return {"du_lieu": du_lieu, "tong": tong}
 
 
 @router.get("/{chuyen_id}", response_model=ChuyenChiTiet, dependencies=[XEM])
 def chi_tiet(chuyen_id: int, db: Db):
-    return service.chi_tiet(db, chuyen_id)
+    return theo_doi.chi_tiet(db, chuyen_id)
 
 
 @router.get("/{chuyen_id}/xe-kha-dung", response_model=list[XeKhaDung], dependencies=[Depends(DIEU_PHOI)])
@@ -109,3 +115,17 @@ def mo_chot(chuyen_id: int, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)]
 @router.post("/{chuyen_id}/huy", response_model=ChuyenChiTiet)
 def huy(chuyen_id: int, vao: HuyVao, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)]):
     return service.huy(db, chuyen_id, vao.ly_do, nd)
+
+
+@router.post("/{chuyen_id}/ket-thuc-su-co", response_model=ChuyenChiTiet)
+def ket_thuc_su_co(chuyen_id: int, vao: KetThucSuCoVao, db: Db, nd: Annotated[NguoiDung, Depends(DIEU_PHOI)]):
+    return theo_doi.ket_thuc_su_co(db, chuyen_id, vao.ly_do, vao.km_ket_thuc, nd)
+
+
+# Sự cố do tài xế báo ở UC-33 (Kiệt); Điều phối đóng ở UC-32. Đặt trong module chuyến, không tạo module su_co
+router_su_co = APIRouter(prefix="/api/su-co", tags=["su-co"])
+
+
+@router_su_co.post("/{su_co_id}/dong", response_model=SuCoRa, dependencies=[Depends(DIEU_PHOI)])
+def dong_su_co(su_co_id: int, vao: DongSuCoVao, db: Db):
+    return theo_doi.dong_su_co(db, su_co_id, vao.cach_xu_ly)

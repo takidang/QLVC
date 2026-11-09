@@ -48,11 +48,13 @@
 | UC-06…09 Đơn tối thiểu | 3–4 | Xong | UC-06 6/6, UC-07 9/9, UC-08 11/11 | UC-08-AC11 Kiệt thử 25/10; UC-09 bỏ ở 0.5; phiếu QR làm cùng UC-19 |
 | UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Xong | 9/9 | AC9 Kiệt thử 25/10 |
 | UC-11…13, 15 Chuyến tối thiểu | 3–4 | Xong | UC-11 12/12, UC-12 5/5, UC-13 13/13, UC-15 11/11 | Đóng UC-12, 15 ngày 08/11 theo kết quả Kiệt thử (PR #18); còn sửa lỗi nhỏ danh sách xe UC-12 |
-| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Đang làm | UC-16 10/10, UC-10 11/12, UC-22 11/12 | UC-16 xong 08/11. UC-10, UC-22 đã vào `dev` (PR #23), chờ Kiệt thử giao diện (AC12 mỗi UC). Còn UC-32 |
+| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Đang làm | UC-16 10/10, UC-10 11/12, UC-22 11/12, UC-32 10/11 | UC-16 xong 08/11. UC-10, 22 (PR #23), UC-32 (PR #24) đã vào `dev` 09/11, chờ Kiệt thử giao diện (AC12 UC-10, 22; AC11 UC-32) |
 | UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 09/11: Gộp #19…#24 sau khi Kiệt duyệt (gỡ xung đột TIEN-DO ở #23, #24); `dev` có UC-10, 22, 32.
+- 08/11: UC-32 Theo dõi chuyến: bảng chuyến trong ngày (tiến độ, % đầy, cờ trễ / sự cố / thất bại / chưa quyết toán / chồng lịch BR-73), chi tiết có giờ quét, trễ, dòng thời gian, tiền, sự cố; kết thúc do sự cố (BR-68), đóng sự cố; 24 test mới, toàn bộ 654 passed; 10/11 AC.
 - 08/11: Review và gộp #16 (UC-20), #17 (UC-23; gộp `dev` vào nhánh, sửa xung đột TIEN-DO phần Kiệt, 630 passed), #18 (Kiệt thử giao diện UC-12, 15, 16). Đóng UC-12 (5/5), UC-15 (11/11), UC-16 (10/10). Vòng tối thiểu mốc 08/11 đã vào `dev`.
 - 08/11: UC-22 Xử lý đơn thất bại: ghép lại (BR-37 chỉ đếm giao thất bại phía khách, BR-69 nơi giữ hàng, bỏ khung lấy cũ), trả hàng khi đã lấy, hủy khi chưa lấy (BR-34, 36), danh sách cần xử lý; 20 test mới; 11/12 AC; làm chung PR #23 với UC-10 (dùng chung endpoint hủy).
 - 08/11: UC-10 Sửa / hủy đơn: sửa khi chưa lấy (BR-33), cước tính lại từ bản sao giá + nhật ký tiền, đơn đang ghép kiểm lại cả chuyến (BR-67); hủy kèm lý do, đơn đang ghép tự gỡ (BR-34); 35 test mới, toàn bộ 665 passed; 11/12 AC. Sửa sau review: lỗi danh sách xe UC-12 (#20), 3 điểm màn tài xế (#21), trang Tạm ứng chống bấm hai lần (#22).
