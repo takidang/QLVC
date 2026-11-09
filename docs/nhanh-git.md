@@ -15,14 +15,14 @@ Bốn nhánh dài hạn, cộng nhánh ngắn cho từng use case. Claude của 
 git switch dev
 git pull
 git switch -c kiet/uc-02-nguoi-dung        # tên: <người>/uc-xx-<mô tả ngắn>
-# ... story-flow: story, code, test, cập nhật TIEN-DO phần mình ...
+# ... story-flow: story, code, test (không sửa TIEN-DO.md) ...
 git push -u origin kiet/uc-02-nguoi-dung
 gh pr create --base dev                     # tiêu đề: "UC-02 Người dùng – nhờ Tài review"
 ```
 - PR vào `dev` phải **CI xanh** và được **người kia review** (Claude của người kia chạy `ponytail-review` trên PR). Góp ý ghi dưới dạng đề xuất, người làm tự quyết sửa hay không.
 - Gộp xong thì xóa nhánh use case (`gh pr merge --merge --delete-branch`).
 - Làm lâu hơn 1–2 ngày thì kéo `dev` mới về nhánh mình (`git merge origin/dev`) để đỡ xung đột.
-- Việc tài liệu nhỏ của riêng mình (một dòng tiến độ, nhật ký) đi cùng nhánh use case; không có use case nào thì dùng nhánh `tai/tai-lieu-...` / `kiet/tai-lieu-...` như trên.
+- `TIEN-DO.md` không đi cùng nhánh use case (chốt 09/11, sau nhiều lần xung đột ở #17, #23, #24). Gộp xong một đợt PR thì người gộp cập nhật tiến độ một lần bằng PR riêng `tai/tien-do-...` / `kiet/tien-do-...` (kiểu #19), đóng story luôn trong đó. Việc tài liệu khác không thuộc use case nào dùng nhánh `tai/tai-lieu-...` / `kiet/tai-lieu-...`.
 
 ## 2. Lên `test` rồi `main` (trước mốc demo, báo cáo tuần)
 ```
