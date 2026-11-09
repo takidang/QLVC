@@ -19,6 +19,7 @@ import {
 } from '../../api/chuyen'
 import { ChonKhaDung, type KhaDung } from './ChuyenDanhSach'
 import type { Don } from '../../api/don'
+import BanDoChuyen from './BanDoChuyen'
 import TheoDoiChuyen from './TheoDoiChuyen'
 
 const TEN_KET_QUA: Record<string, string> = {
@@ -261,6 +262,7 @@ export default function ChuyenChiTiet() {
       <TheoDoiChuyen c={c} onDoi={(r) => (r ? setC(r) : setLanTai((n) => n + 1))} />
 
       <h2>Lịch trình</h2>
+      <BanDoChuyen lichTrinh={c.lich_trinh} />
       <table>
         <thead>
           <tr>

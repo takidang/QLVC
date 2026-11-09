@@ -444,3 +444,12 @@ ul.loi {
   background: #fff;
   touch-action: none; /* vẽ không làm cuộn trang */
 }
+
+/* Bản đồ chi tiết chuyến (Leaflet) */
+.ban-do {
+  height: 320px;
+  margin: 0 0 16px;
+  border: 1px solid #d0d7de;
+  border-radius: 8px;
+  z-index: 0;
+}

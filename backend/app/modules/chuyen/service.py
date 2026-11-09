@@ -333,6 +333,8 @@ def chi_tiet(db: Session, chuyen_id: int) -> dict:
     else:
         dinh_muc, luong = t.dm_dau + t.dm_cau_duong + t.dm_boc_xep, t.dm_luong_tai_xe
     lai = lai_du_kien([d.cuoc_tinh for d in don], dinh_muc, luong)
+    nut_tuyen = select(Nut.id, Nut.lat, Nut.lng).where(Nut.id.in_(nc.ten_nut))
+    toa_do = {n: (lat, lng) for n, lat, lng in db.execute(nut_tuyen)}
     return goc | {
         "tai_trong": {"da_dung_kg": kg, "toi_da_kg": nc.xe.tai_trong_kg},
         "the_tich": {"da_dung_m3": m3, "toi_da_m3": nc.xe.the_tich_m3},
@@ -345,6 +347,8 @@ def chi_tiet(db: Session, chuyen_id: int) -> dict:
                 "don_id": d.don.id,
                 "ma_don": d.don.ma_don,
                 "eta": d.eta,
+                "lat": toa_do[d.nut][0],  # bản đồ chi tiết chuyến; nút chưa có tọa độ thì None
+                "lng": toa_do[d.nut][1],
             }
             for i, d in enumerate(diem, start=1)
         ],

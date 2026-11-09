@@ -95,6 +95,8 @@ class DiemRa(BaseModel):
     thuc_te: datetime | None = None
     ket_qua: str | None = None  # LAY|KHONG_LAY|GIAO|GIAO_THAT_BAI|BO (không lấy được thì bỏ điểm giao)
     tre_phut: int | None = None
+    lat: Decimal | None = None  # tọa độ nút, vẽ bản đồ chi tiết chuyến
+    lng: Decimal | None = None
 
 
 class TheoDoi(BaseModel):

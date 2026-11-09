@@ -71,6 +71,8 @@ export type DiemDung = {
   thuc_te?: string | null
   ket_qua?: string | null
   tre_phut?: number | null
+  lat?: string | null
+  lng?: string | null
 }
 export type ChuyenChiTiet = Chuyen & {
   tai_trong: { da_dung_kg: string; toi_da_kg: number }
