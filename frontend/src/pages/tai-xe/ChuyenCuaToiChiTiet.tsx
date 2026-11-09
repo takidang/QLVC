@@ -16,13 +16,13 @@ import { KhongLay, QuetLay } from './QuetLay'
 
 const gio = (iso: string) =>
   new Date(iso).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
-const TEN_TRANG_THAI_DON: Record<string, string> = {
-  DA_GHEP: 'Chờ lấy',
-  DA_LAY: 'Đã lấy',
-  DA_GIAO: 'Đã giao',
-  THAT_BAI: 'Thất bại',
-  TRA_HANG: 'Trả hàng',
+// Nhãn theo việc của điểm: điểm Lấy của đơn đã giao vẫn là "Đã lấy", không phải "Đã giao"
+const NHAN_DIEM: Record<'LAY' | 'GIAO', Record<string, string>> = {
+  LAY: { DA_GHEP: 'Chờ lấy', DA_LAY: 'Đã lấy', DA_GIAO: 'Đã lấy', TRA_HANG: 'Đã lấy' },
+  GIAO: { DA_GHEP: 'Chưa lấy hàng', DA_LAY: 'Chờ giao', DA_GIAO: 'Đã giao', TRA_HANG: 'Trả hàng' },
 }
+const nhanDiem = (viec: 'LAY' | 'GIAO', tt: string) =>
+  NHAN_DIEM[viec][tt] ?? (tt === 'THAT_BAI' ? 'Thất bại' : tt)
 
 // UC-17: lịch trình cho tài xế – từng điểm dừng, đơn, địa chỉ, gọi điện. Không có cước (quyết định số 3)
 // UC-18: chuyến chờ chạy có ô Bắt đầu, chuyến đang chạy có ô Kết thúc (km + ảnh đồng hồ)
@@ -104,9 +104,7 @@ export default function ChuyenCuaToiChiTiet() {
                   <strong>
                     {p.thu_tu}. {gio(p.eta)} · {p.viec === 'LAY' ? 'Lấy' : 'Giao'} tại {p.nut}
                   </strong>
-                  <span className="nhan xam">
-                    {TEN_TRANG_THAI_DON[p.trang_thai_don] ?? p.trang_thai_don}
-                  </span>
+                  <span className="nhan xam">{nhanDiem(p.viec, p.trang_thai_don)}</span>
                 </div>
                 <div>
                   <span className="bien-so">{p.ma_don}</span> · {p.ten_khach}
