@@ -16,7 +16,8 @@ Danh sách, lúc nào dùng cái nào: `docs/SKILLS.md`.
 - Người đang dùng máy ghi trong `CLAUDE.local.md`. Không có file đó thì hỏi trước khi sửa tiến độ.
 - Đầu phiên: `git switch dev` → `git pull`, đọc `docs/TIEN-DO.md` (mục "Đang chặn" và phần của người dùng máy này), báo ngắn việc tiếp theo.
 - Chỉ sửa phần của người dùng máy này trong `TIEN-DO.md`; mục chung không thêm dòng nữa (nhắn nhau qua PR).
-- Sau `story done` hoặc trước khi kết thúc phiên: cập nhật dòng việc (trạng thái, AC đạt/tổng, còn thiếu), thêm 1 dòng nhật ký, commit cùng code.
+- PR làm code **không sửa `TIEN-DO.md`** (nhiều PR cùng sửa một dòng là xung đột). Tiến độ ghi trong mô tả PR (AC đạt/tổng, còn thiếu).
+- Gộp xong một đợt PR: **người gộp** cập nhật `TIEN-DO.md` một lần bằng PR riêng (nhánh `tai/tien-do-...` / `kiet/tien-do-...`): dòng việc (trạng thái, AC đạt/tổng, còn thiếu) + 1 dòng nhật ký. Đóng story (`story done`) đi chung PR này.
 - Trước khi sửa file dùng chung (`models/`, migration, `domain/trang_thai.py`): ghi vào "Đang chặn" và commit trước.
 
 ## Nhánh git (chi tiết: `docs/nhanh-git.md`)
