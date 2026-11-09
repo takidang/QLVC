@@ -345,3 +345,16 @@ def test_uc20_ac16_toi_da_5_anh(client, db, gh):
 def test_uc20_ac16_do_chinh_xac_gps(client, db, gh, chinh_xac, ma):
     r = quet(client, "DH-0002", gps={"lat": "10.7", "lng": "106.7", "do_chinh_xac_m": chinh_xac})
     assert r.status_code == ma
+
+
+# Góp ý #21 (Tài nhờ Kiệt làm cùng UC-21): điểm Lấy của đơn giao thất bại vẫn là "Đã lấy" – API trả cờ da_lay
+def test_uc20_diem_lay_da_lay_khi_giao_that_bai(client, db, ch):
+    assert quet(client, "DH-0001").status_code == 200  # lấy thật trong chuyến
+    assert bao_giao_khong_duoc(client, "DH-0001").status_code == 200  # rồi giao không được
+    assert quet(client, "DH-0002", "KHONG_LAY", anh=[JPG], ly_do_id=LY_DO_LAY).status_code == 200  # không lấy được
+
+    diem = client.get(f"/api/toi/chuyen/{ch['c01'].id}").json()["lich_trinh"]
+    co = {(p["ma_don"], p["viec"]): (p["trang_thai_don"], p["da_lay"]) for p in diem}
+    assert co[("DH-0001", "LAY")] == ("THAT_BAI", True)  # giao thất bại: hàng đã lấy
+    assert co[("DH-0002", "LAY")] == ("THAT_BAI", False)  # thất bại khi lấy
+    assert co[("DH-0004", "LAY")] == ("DA_GHEP", False)

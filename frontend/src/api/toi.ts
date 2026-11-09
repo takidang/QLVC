@@ -18,6 +18,7 @@ export type DiemCuaToi = {
   m3: string
   so_kien: number
   trang_thai_don: string
+  da_lay: boolean // đã quét lấy trong chuyến này
   dia_chi: string
   nguoi_lien_he: string | null
   sdt: string
