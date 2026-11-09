@@ -28,6 +28,7 @@ class DiemCuaToi(BaseModel):
     m3: Decimal
     so_kien: int
     trang_thai_don: str
+    da_lay: bool  # đã quét lấy trong chuyến này (nhãn điểm Lấy khi đơn giao thất bại)
     dia_chi: str
     nguoi_lien_he: str | None
     sdt: str

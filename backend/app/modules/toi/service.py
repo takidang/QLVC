@@ -7,7 +7,7 @@ from app import luu_tru
 from app.domain.chuyen import TaiXeXet, XeXet, xet_tai_xe, xet_xe
 from app.domain.lich_trinh import lich_trinh
 from app.loi import LoiNghiepVu
-from app.models import Chuyen, DonHang, Ghep, LichSuTrangThai, NguoiDung, TaiXe, Tep, Xe
+from app.models import Chuyen, DonHang, Ghep, LichSuTrangThai, LuotQuet, NguoiDung, TaiXe, Tep, Xe
 from app.modules.chuyen.service import don_ghep, ngu_canh, ra_chuyen, truy_van_chuyen
 from app.modules.don.service import truy_van_don
 from app.phan_trang import PhanTrang
@@ -61,6 +61,15 @@ def chi_tiet(db: Session, nd: NguoiDung, chuyen_id: int) -> dict:
     ten_khach = {d.id: k for d, k, *_ in dong}
     # Giờ dự kiến: ETA kế hoạch lưu lúc chốt (BR-71); chưa lưu thì tính theo lịch trình hiện tại (quyết định số 4)
     eta_kh = {(d.id, "LAY"): lay for d, *_, lay, _ in dong} | {(d.id, "GIAO"): giao for d, *_, giao in dong}
+    # Đơn đã quét lấy trong chính chuyến này: điểm Lấy của đơn giao thất bại vẫn là "Đã lấy" (góp ý #21).
+    # Đếm theo chuyến, không theo đơn: đơn ghép lại (BR-69) có thể đã lấy ở chuyến trước
+    da_lay = set(
+        db.scalars(
+            select(Ghep.don_hang_id)
+            .join(LuotQuet, LuotQuet.ghep_id == Ghep.id)
+            .where(Ghep.chuyen_id == chuyen_id, LuotQuet.loai == "LAY")
+        )
+    )
     nc = ngu_canh(db, c)
     diem = lich_trinh(c.khoi_hanh_du_kien, nc.thu_tu, nc.phut, [don_ghep(d) for d in don.values()], nc.cfg08)
 
@@ -80,6 +89,7 @@ def chi_tiet(db: Session, nd: NguoiDung, chuyen_id: int) -> dict:
             "m3": d.m3,
             "so_kien": d.so_kien,
             "trang_thai_don": d.trang_thai,
+            "da_lay": d.id in da_lay,
             # Đơn ghép lại sau khi đã lấy: lấy ở nơi đang giữ hàng (BR-69)
             "dia_chi": (d.dia_chi_giu or d.dia_chi_lay) if lay else d.dia_chi_giao,
             "nguoi_lien_he": d.nguoi_lien_he_lay if lay else d.nguoi_nhan,
