@@ -33,6 +33,8 @@ export function GiaoHang({ maDon, onXong }: { maDon: string; onXong: (kq: KetQua
       return setLoi('Cần quét đúng mã, chụp ảnh, nhập tên người nhận và người nhận ký (BR-41)')
     if (anh.length > SO_ANH_TOI_DA) return setLoi(`Tối đa ${SO_ANH_TOI_DA} ảnh`)
     const gps = layGps() // xin vị trí ngay lúc bấm Xác nhận giao (Safari chỉ hỏi khi có thao tác)
+    // Hỏi lại sau khi đã xin vị trí: nút sáng từ nét ký đầu tiên, dễ chạm nhầm
+    if (!window.confirm(`Xác nhận đã giao đơn ${maDon} cho ${ten.trim()}?`)) return
     setLoi('')
     setDangGui(true)
     try {
