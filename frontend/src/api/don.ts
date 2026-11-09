@@ -11,13 +11,18 @@ export type Don = {
   kg: string
   m3: string
   so_kien: number
+  nut_lay_id: number
   tinh_lay: string
   dia_chi_lay: string
+  nguoi_lien_he_lay: string | null
+  sdt_lay: string
   lay_tu: string | null
   lay_den: string | null
+  nut_giao_id: number
   tinh_giao: string
   dia_chi_giao: string
   nguoi_nhan: string
+  sdt_nhan: string
   han_giao: string
   cuoc_tinh: number
   trang_thai: string
@@ -66,3 +71,23 @@ export const tinhCuoc = (vao: {
   m3: string
 }) => guiJson<BaoGia>('/api/don/tinh-cuoc', 'POST', vao)
 export const taoDon = (vao: DonVao) => guiJson<Don>('/api/don', 'POST', vao)
+// UC-10: gửi trường nào sửa trường đó; khách, nút lấy / giao không sửa được (BR-32, 33)
+export const suaDon = (id: number, thay: Partial<DonVao>) =>
+  guiJson<Don>(`/api/don/${id}`, 'PATCH', thay)
+export const huyDon = (id: number, ly_do: string) =>
+  guiJson<Don>(`/api/don/${id}/huy`, 'POST', { ly_do })
+
+// UC-22: đơn thất bại sau khi chuyến kết thúc (BR-36, 37, 69)
+export type DonThatBai = Don & {
+  da_lay: boolean
+  so_lan_giao_tb_khach: number
+  nguong: number
+  ly_do_cuoi: string | null
+  cho_chuyen_xong: boolean
+}
+export const donCanXuLy = () => goi<DonThatBai[]>('/api/don/can-xu-ly')
+export const ghepLaiDon = (
+  id: number,
+  vao: { han_giao?: string; nut_giu_id?: number; dia_chi_giu?: string },
+) => guiJson<Don>(`/api/don/${id}/ghep-lai`, 'POST', vao)
+export const traHangDon = (id: number) => guiJson<Don>(`/api/don/${id}/tra-hang`, 'POST', {})
