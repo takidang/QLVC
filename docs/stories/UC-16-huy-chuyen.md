@@ -1,6 +1,6 @@
 # UC-16: Hủy chuyến
 
-- **Trạng thái:** Đang làm – AC1–AC9 đạt, AC10 giao diện đã làm, chờ thử (Đã duyệt 04/11/2026 – Tài)
+- **Trạng thái:** Xong 08/11/2026 – 10/10 AC (AC10 Kiệt thử 07/11, PR #18) (Đã duyệt 04/11/2026 – Tài)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa)
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-16) · `docs/api.md` mục 2.4 · `docs/nghiep-vu.md` BR-25, 30, mục 5.1, 5.2 · ca test `docs/ca-test-br.md` (TC-BR25-01…04)
 - **Quy tắc nghiệp vụ liên quan:** BR-07 (một ghép hiệu lực), BR-16, 17 (chuyến `HUY` không chiếm lịch), BR-25 (hủy), BR-30 (lịch sử), BR-57 (phân quyền)

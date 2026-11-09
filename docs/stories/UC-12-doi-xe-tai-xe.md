@@ -1,6 +1,6 @@
 # UC-12: Gán / đổi xe và tài xế
 
-- **Trạng thái:** Đang làm – AC1–AC4 đạt, AC5 giao diện đã làm, chờ Kiệt thử (Tài giao "làm luôn" 30/10; quyết định dưới đây Tài xem lại)
+- **Trạng thái:** Xong 08/11/2026 – 5/5 AC (AC5 Kiệt thử 07/11, PR #18). Còn 1 lỗi giao diện nhỏ ngoài AC: khung Đổi xe đang mở mà ghép thêm đơn thì danh sách xe không tải lại (máy chủ vẫn chặn BR-01), Tài sửa riêng (Tài giao "làm luôn" 30/10; quyết định dưới đây Tài xem lại)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa)
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-11/UC-12) · `docs/api.md` mục 2.4 (`/api/chuyen/{id}/xe-kha-dung`, `/tai-xe-kha-dung`, `PUT /phan-cong`)
 - **Quy tắc nghiệp vụ liên quan:** BR-01, 02 (tải theo đơn đang ghép), BR-09, BR-11…19, BR-57, BR-67
@@ -27,6 +27,7 @@ Chuyến `LAP` cần đổi xe hoặc tài xế (xe hỏng, tài xế nghỉ). �
 | UC-12-AC5 | Giao diện: trang chi tiết chuyến `LAP` có nút "Đổi xe / tài xế" → chọn xe, tài xế (cái bị loại hiện lý do kèm mã BR) → lưu, thông tin chuyến cập nhật; lỗi hiện kèm mã BR | UI | NFR-USA-02 |
 
 ## Ghi chú triển khai
+- 08/11 sửa lỗi Kiệt ghi nhận khi thử AC5: khung Đổi xe / tài xế đang mở mà ghép hoặc gỡ đơn thì danh sách xe, tài xế khả dụng không tải lại (ô chọn còn xe đã không đủ tải). Nay tải lại theo danh sách đơn đang ghép (`ChuyenChiTiet.tsx`, `DoiXeTaiXe`). Máy chủ vốn đã chặn BR-01 nên không đổi API, không thêm test backend.
 - File đã đổi: `backend/app/domain/lich_trinh.py` (tách `xet_tai` cho BR-01, 02 dùng chung), `backend/app/modules/chuyen/{schemas,service,router}.py` (`phan_cong`, danh sách khả dụng cho chuyến đã có, dùng chung `_ds_xe`, `_ds_tai_xe` với UC-11); `frontend/src/api/chuyen.ts`, `frontend/src/pages/dieu-phoi/ChuyenChiTiet.tsx` (khối Đổi xe / tài xế, dùng lại `ChonKhaDung` của UC-11).
 - Test đã viết: `backend/tests/api/test_uc12_doi_xe_tai_xe.py` (9 ca, dùng lại dữ liệu kịch bản của `test_uc13_ghep_don.py`).  Toàn bộ **363 passed** (30/10), `ruff`, `npm run lint`, `npm run build` sạch.
 - Lệnh chạy test: `cd backend; .venv\\Scripts\\python -m pytest tests/api/test_uc12_doi_xe_tai_xe.py`
