@@ -53,6 +53,7 @@
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 10/11: Review và gộp #29 UC-21 Chi phí (kèm nhãn điểm Lấy `da_lay`), #30 UC-25 Công nợ của Kiệt (gỡ xung đột 1 dòng `main.py`, 787 passed); gộp #28 CI chạy một lần mỗi PR, bỏ qua PR tài liệu.
 - 09/11: Gộp #25 bản đồ chi tiết chuyến (tọa độ điểm dừng, khóa vùng đất liền VN; ghi giấy phép gói trong PR) và #26 quy ước mới: PR code không sửa TIEN-DO, người gộp cập nhật một lần bằng PR riêng.
 - 09/11: Gộp #19…#24 sau khi Kiệt duyệt (gỡ xung đột TIEN-DO ở #23, #24); `dev` có UC-10, 22, 32.
 - 08/11: UC-32 Theo dõi chuyến: bảng chuyến trong ngày (tiến độ, % đầy, cờ trễ / sự cố / thất bại / chưa quyết toán / chồng lịch BR-73), chi tiết có giờ quét, trễ, dòng thời gian, tiền, sự cố; kết thúc do sự cố (BR-68), đóng sự cố; 24 test mới, toàn bộ 654 passed; 10/11 AC.
