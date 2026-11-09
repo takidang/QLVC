@@ -15,6 +15,7 @@ import TuyenDanhSach from './pages/dieu-phoi/TuyenDanhSach'
 import TaiXeDanhSach from './pages/dieu-phoi/TaiXeDanhSach'
 import XeDanhSach from './pages/dieu-phoi/XeDanhSach'
 import ChiPhiCoDinh from './pages/ke-toan/ChiPhiCoDinh'
+import CongNo from './pages/ke-toan/CongNo'
 import TamUng from './pages/ke-toan/TamUng'
 import ChuyenCuaToi from './pages/tai-xe/ChuyenCuaToi'
 import ChuyenCuaToiChiTiet from './pages/tai-xe/ChuyenCuaToiChiTiet'
@@ -49,6 +50,7 @@ const TRANG_CON: Partial<
   ],
   KE_TOAN: [
     { duong_dan: 'chi-phi-xe', ten: 'Chi phí cố định xe', trang: <ChiPhiCoDinh /> },
+    { duong_dan: 'cong-no', ten: 'Công nợ', trang: <CongNo /> },
     { duong_dan: 'tam-ung', ten: 'Tạm ứng', trang: <TamUng /> },
   ],
   QUAN_LY: [

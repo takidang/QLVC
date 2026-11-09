@@ -51,7 +51,8 @@ Giao xong mỗi đơn sinh một khoản phải thu bằng cước (UC-20). Kế
 - Không đổi CSDL, không thêm gói. Giá trị `DA_THU` mới trong cột chuỗi `nhat_ky_tien.hanh_dong`.
 - Test đã viết: `tests/api/test_uc25_cong_no.py` (26 ca). Đã thử làm hỏng 4 quy tắc (cho thu trùng, cho nhiều khách một phiếu, bỏ khóa dòng, cho ngày tương lai) → mỗi lần có test đỏ, rồi trả lại code.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/api/test_uc25_cong_no.py`
-- **Giao diện (AC10) chưa làm.**
+- Giao diện (09/11, sau khi gộp `dev`, 734 passed): `api/congNo.ts`, `pages/ke-toan/CongNo.tsx` (bảng nợ theo khách → Xem → tab Chưa thu / Đã thu, ô tích, tổng đã chọn, ngày thu mặc định hôm nay và không cho chọn sau hôm nay, hỏi xác nhận, thông báo số phiếu), `App.tsx` thêm menu **Công nợ** theo chữ cái. Không thêm CSS.
+- Thử giao diện: `docs/test-evidence/UC-25/du-lieu.md`. Theo quy ước #26: PR không sửa `TIEN-DO.md`.
 
 ## Truy vết và kết quả
 
