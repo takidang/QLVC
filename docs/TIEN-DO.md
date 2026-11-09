@@ -9,7 +9,7 @@
 |---|---|---|
 | Nền móng: models, migration, đăng nhập, khung frontend | 18/10 | Xong 16/10 |
 | UC-03 mẫu + docs/mau-use-case.md | 25/10 | Xong 24/10 |
-| Vòng tối thiểu: tạo đơn → ghép → chốt → quét → giao | 08/11 | Chưa bắt đầu |
+| Vòng tối thiểu: tạo đơn → ghép → chốt → quét → giao | 08/11 | Xong 08/11 (gộp UC-20, PR #16) |
 | Quyết toán chạy được | 29/11 | Chưa bắt đầu |
 | UC-30 dự đoán trễ (phần AI) | 06/12 | Chưa bắt đầu |
 | Nộp LMS | 21–27/12 | |
@@ -47,12 +47,13 @@
 | UC-03 Xe (mẫu) | 2 | Xong | 13/13 | |
 | UC-06…09 Đơn tối thiểu | 3–4 | Xong | UC-06 6/6, UC-07 9/9, UC-08 11/11 | UC-08-AC11 Kiệt thử 25/10; UC-09 bỏ ở 0.5; phiếu QR làm cùng UC-19 |
 | UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Xong | 9/9 | AC9 Kiệt thử 25/10 |
-| UC-11…13, 15 Chuyến tối thiểu | 3–4 | Đang làm | UC-11 12/12, UC-12 4/5, UC-13 13/13, UC-15 10/11 | UC-11, UC-13 xong; UC-12 (AC5), UC-15 (AC11) code đã vào `dev`, chờ thử giao diện |
-| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Đang làm | UC-16 9/10 | UC-16 Hủy chuyến: PR chờ Kiệt review, giao diện chờ thử (AC10) |
+| UC-11…13, 15 Chuyến tối thiểu | 3–4 | Xong | UC-11 12/12, UC-12 5/5, UC-13 13/13, UC-15 11/11 | Đóng UC-12, 15 ngày 08/11 theo kết quả Kiệt thử (PR #18); còn sửa lỗi nhỏ danh sách xe UC-12 |
+| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Đang làm | UC-16 10/10 | UC-16 xong 08/11; còn UC-10, 22, 32 |
 | UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 08/11: Review và gộp #16 (UC-20), #17 (UC-23; gộp `dev` vào nhánh, sửa xung đột TIEN-DO phần Kiệt, 630 passed), #18 (Kiệt thử giao diện UC-12, 15, 16). Đóng UC-12 (5/5), UC-15 (11/11), UC-16 (10/10). Vòng tối thiểu mốc 08/11 đã vào `dev`.
 - 04/11: UC-16 Hủy chuyến: chặn khi đã chạy hoặc còn tạm ứng (BR-25), đơn về chờ ghép, lý do vào lịch sử, chuyến hủy không chiếm lịch; 21 test mới, toàn bộ 459 passed; 9/10 AC. Gỡ xung đột PR #10, review và gộp #6 (UC-17), #11; #10 UC-15 vào `dev`.
 - 01/11: UC-15 Chốt / mở chốt chuyến: kiểm lại nhóm A, B, xác nhận chạy rỗng (BR-23) và lãi âm (BR-52), lưu định mức, lương, ETA kế hoạch (BR-71), mở chốt chặn khi còn tạm ứng (BR-24); 17 test mới, toàn bộ 412 passed; 10/11 AC, giao diện chờ Kiệt thử.
 - 01/11: Đóng UC-11 (12/12), UC-13 (13/13) theo kết quả Kiệt thử giao diện. Lệnh tạo tài khoản demo 4 vai trò (PR #8).
