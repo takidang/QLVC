@@ -1,6 +1,6 @@
 # UC-25: Công nợ – xem nợ theo khách, đánh dấu đã thu
 
-- **Trạng thái:** Đang làm (duyệt 09/11/2026, Kiệt: "đồng ý vậy làm đi" – 8 quyết định như đề xuất)
+- **Trạng thái:** Hoàn thành 10/10 AC (09/11/2026; duyệt 09/11/2026, Kiệt: "đồng ý vậy làm đi" – 8 quyết định như đề xuất)
 - **Tác nhân:** Kế toán (Quản lý xem)
 - **Đặc tả:** `docs/use-cases.md` mục 2 (UC-25, ưu tiên S; đặc tả rút gọn ở story này) · `docs/api.md` mục 2.6 (`/api/phai-thu`) · `docs/so-do.md` ERD (`PHAI_THU`, `PHIEU_THU`: "một lần đánh dấu đã thu") · `docs/security-rules.md` (bảng dữ liệu tiền: phải thu khóa khi `DA_THU`) · ca test `docs/ca-test-br.md` TC-BR56-02 · kịch bản `nghiep-vu.md` mục 11 bước 8 (Cty B nợ 2.240.000, đánh dấu đã thu cả hai đơn một lần)
 - **Quy tắc nghiệp vụ liên quan:** BR-56 (đơn `DA_GIAO` sinh phải thu bằng cước – UC-20 đã làm; trạng thái thanh toán `CHUA_THU`/`DA_THU` là trường riêng, không đổi vòng đời đơn; Kế toán đánh dấu đã thu cho một hoặc nhiều đơn), BR-62 (nhật ký tiền), BR-57 (phân quyền)
@@ -67,4 +67,4 @@ Giao xong mỗi đơn sinh một khoản phải thu bằng cước (UC-20). Kế
 | UC-25-AC7 | API | `test_uc25_ac7_danh_sach` | Đạt | 09/11/2026 |
 | UC-25-AC8 | API | `test_uc25_ac8_theo_khach` | Đạt | 09/11/2026 |
 | UC-25-AC9 | API | `test_uc25_ac9_*` (8 ca) | Đạt | 09/11/2026 |
-| UC-25-AC10 | UI | | CHƯA KIỂM | |
+| UC-25-AC10 | UI | Kiệt thử 9/9 ca trên máy tính: `docs/test-evidence/UC-25/a…h-*.png`; CSDL khớp (2 phiếu thu, 3 khoản `DA_THU`, đơn vẫn `DA_GIAO`) | Đạt | 09/11/2026 |
