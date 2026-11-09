@@ -417,24 +417,35 @@ function DoiXeTaiXe({ c, onLuu }: { c: Chuyen; onLuu: (c: Chuyen) => void }) {
   const [xe, setXe] = useState<KhaDung<XeKhaDung>>()
   const [taiXe, setTaiXe] = useState<KhaDung<TaiXeKhaDung>>()
   const [loi, setLoi] = useState<string[]>([])
+  // Ghép / gỡ đơn khi khung đang mở làm đổi tải cần chở (BR-01): tải lại danh sách khả dụng
+  const donGhep = c.don.map((d) => d.id).join(',')
 
   useEffect(() => {
     if (!mo) return
     let bo = false
     xeKhaDungChuyen(c.id)
-      .then((ds) => !bo && setXe({ khoa: '', ds, loi: '' }))
+      .then((ds) => {
+        if (bo) return
+        setXe({ khoa: '', ds, loi: '' })
+        // xe đang chọn không còn dùng được (vd. vừa ghép thêm đơn, quá tải BR-01): bỏ chọn
+        setXeId((v) => (ds.some((x) => String(x.id) === v && x.kha_dung) ? v : ''))
+      })
       .catch(
         (e) => !bo && setXe({ khoa: '', ds: [], loi: e instanceof LoiApi ? e.message : 'Lỗi' }),
       )
     return () => {
       bo = true
     }
-  }, [mo, c.id])
+  }, [mo, c.id, donGhep])
   useEffect(() => {
     if (!mo) return
     let bo = false
     taiXeKhaDungChuyen(c.id, xeId ? Number(xeId) : undefined)
-      .then((ds) => !bo && setTaiXe({ khoa: xeId, ds, loi: '' }))
+      .then((ds) => {
+        if (bo) return
+        setTaiXe({ khoa: xeId, ds, loi: '' })
+        setTaiXeId((v) => (ds.some((t) => String(t.id) === v && t.kha_dung) ? v : ''))
+      })
       .catch(
         (e) =>
           !bo && setTaiXe({ khoa: xeId, ds: [], loi: e instanceof LoiApi ? e.message : 'Lỗi' }),
@@ -442,7 +453,7 @@ function DoiXeTaiXe({ c, onLuu }: { c: Chuyen; onLuu: (c: Chuyen) => void }) {
     return () => {
       bo = true
     }
-  }, [mo, c.id, xeId])
+  }, [mo, c.id, xeId, donGhep])
 
   async function luu() {
     setLoi([])
