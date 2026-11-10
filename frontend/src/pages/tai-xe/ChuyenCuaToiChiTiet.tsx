@@ -12,6 +12,7 @@ import {
 } from '../../api/toi'
 import { nenAnh } from '../../nenAnh'
 import { ChiPhi } from './ChiPhi'
+import { SuCoChuyen } from './SuCo'
 import { GiaoHang } from './GiaoHang'
 import { KhongLay, QuetLay } from './QuetLay'
 
@@ -99,6 +100,9 @@ export default function ChuyenCuaToiChiTiet() {
           )}
           {['DANG_CHAY', 'HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai) && (
             <ChiPhi chuyenId={c.id} ghiDuoc={c.trang_thai !== 'DA_QUYET_TOAN'} />
+          )}
+          {['DANG_CHAY', 'HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai) && (
+            <SuCoChuyen chuyenId={c.id} baoDuoc={c.trang_thai === 'DANG_CHAY'} />
           )}
 
           <h2>Lịch trình</h2>

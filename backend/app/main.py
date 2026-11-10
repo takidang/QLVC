@@ -20,6 +20,7 @@ from app.modules.danh_muc.xe.router import router as xe_router
 from app.modules.don.router import router as don_router
 from app.modules.nguoi_dung.router import router as nguoi_dung_router
 from app.modules.quet.router import router as quet_router
+from app.modules.su_co.router import router as bao_su_co_router
 from app.modules.tep.router import router as tep_router
 from app.modules.tien.chi_phi.router import router as chi_phi_router
 from app.modules.tien.cong_no.router import router as cong_no_router
@@ -38,6 +39,7 @@ app = FastAPI(title="QLVC", lifespan=lifespan)
 # Xếp theo chữ cái: thêm router mới chèn đúng chỗ, hai người thêm cùng lúc ít khi đụng nhau (docs/nhanh-git.md mục 4)
 app.include_router(auth_router)
 app.include_router(bang_gia_router)
+app.include_router(bao_su_co_router)
 app.include_router(cau_hinh_router)
 app.include_router(chi_phi_router)
 app.include_router(chuyen_router)
