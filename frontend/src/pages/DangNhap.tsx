@@ -1,5 +1,6 @@
-import { useState, type FormEvent } from 'react'
+import { useState, type CSSProperties, type FormEvent } from 'react'
 import { dangNhap, LoiApi, type NguoiDung } from '../api/auth'
+import { NEN } from '../nen'
 
 export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }) {
   const [ten, setTen] = useState('')
@@ -30,7 +31,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
   return (
     <main className="dang-nhap">
       <div className="dn-khung">
-        <section className="dn-hinh">
+        <section className="dn-hinh" style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}>
           <p>
             Lập chuyến, theo dõi từng điểm dừng, giao hàng bằng quét mã và quyết toán theo chuyến.
           </p>

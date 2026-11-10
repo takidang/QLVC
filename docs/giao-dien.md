@@ -66,9 +66,16 @@ Viên thuốc nền trắng mờ, chữ mực, **biểu tượng mang màu và c
 
 ## Màn đăng nhập (01)
 
-Khung kính hai nửa: trái là ảnh xe tải lúc hoàng hôn (`frontend/public/anh/dang-nhap.jpg`) phủ màu `--o-liu` đậm dần xuống dưới, có một dòng mô tả hệ thống; phải là logo, tiêu đề, hai ô nhập có nhãn phía trên, câu lỗi nền đỏ nhạt, nút chính bo tròn có mũi tên. Dưới 760 px ẩn nửa trái, chỉ còn form. Hành vi và câu lỗi giữ nguyên như UC-01.
+Khung kính hai nửa: trái là ảnh xe tải phủ màu `--o-liu` đậm dần xuống dưới, có một dòng mô tả hệ thống; phải là tiêu đề, hai ô nhập có nhãn phía trên, câu lỗi nền đỏ nhạt, nút chính bo tròn có mũi tên. Dưới 760 px ẩn nửa trái, chỉ còn form. Hành vi và câu lỗi giữ nguyên như UC-01.
 
-Nguồn ảnh: Josiah Farrow trên Unsplash, <https://unsplash.com/photos/ucuOscdCaO4>, giấy phép Unsplash (dùng miễn phí, không bắt buộc ghi nguồn); đã cắt vuông quanh xe và nén lại.
+**Mỗi lần mở web** (`frontend/src/nen.ts`) chọn ngẫu nhiên một trong hai ảnh, kèm bộ màu hợp ảnh, áp cho cả app:
+
+| Ảnh (`frontend/public/anh/`) | Bộ màu | Nguồn (Unsplash, giấy phép Unsplash) |
+|---|---|---|
+| `dang-nhap-hoang-hon.jpg`: thùng xe, trời xanh chuyển cam | Sương xanh (`suong`) | Caleb Ruiter, <https://unsplash.com/photos/EmEQ6kK_5P0> |
+| `dang-nhap-luot-ngang.jpg`: đầu kéo lướt ngang, tông be xám | Cát ấm (`cat`) | Roberto, <https://unsplash.com/photos/9Ayfcdmu2YE> |
+
+Khi có nút đổi bộ màu trong Cài đặt, lựa chọn đã lưu của người dùng phải thắng lựa chọn ngẫu nhiên.
 - Tiêu đề trang 46 px, đậm 300, giãn chữ -0.03em. Số liệu lớn 32 px, đậm 300.
 - Chữ thường 14 px (điện thoại 15 px); chữ phụ 12.5–13.5 px.
 - Giờ, số, mã, biển số: `font-variant-numeric: tabular-nums`.

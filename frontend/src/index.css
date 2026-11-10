@@ -183,7 +183,7 @@ body {
       color-mix(in srgb, var(--o-liu) 86%, transparent) 84%,
       var(--o-liu) 100%
     ),
-    url('/anh/dang-nhap.jpg') 62% center / cover no-repeat,
+    var(--anh) center / cover no-repeat,
     var(--o-liu);
 }
 .dn-hinh p {
