@@ -65,6 +65,8 @@ This is a report the user asked for, so give it in full.
 
 ## 4. Output
 
+End with one line `Bước tiếp:` — "gõ số để sửa (vd. `sửa 1, 3`)" when there are Must/Should fixes; otherwise "mở PR vào `dev`" (or, inside a story, the next step of `story-flow`).
+
 Very simple language: short sentences, everyday words. Explain a technical
 term the first time you use it. The reader may never have seen this code.
 Reply in the user's language (Vietnamese for Tai).

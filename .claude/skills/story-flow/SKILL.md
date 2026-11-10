@@ -43,6 +43,14 @@ Sau đó:
 ### `story report`
 Gom bảng truy vết của mọi story thành `docs/test-report.md`: số AC, đạt / không đạt / chưa kiểm theo từng use case, danh sách lỗi còn mở. Chỉ lấy số liệu từ các story, không ước lượng.
 
+## Dẫn từng bước (Tai hay quên lệnh)
+
+Thứ tự một use case: `story new` → Tai duyệt AC → `story dev` → `ponytail-review` → mở PR vào `dev`, Kiệt review → Kiệt thử giao diện theo `docs/test-evidence/UC-xx/du-lieu.md`, commit ảnh → `story done` (đi chung PR tiến độ của người gộp) → hết đợt thì `story report`.
+
+- Xong mỗi lệnh, kết thúc câu trả lời bằng **một dòng "Bước tiếp:"** nêu việc kế theo thứ tự trên, kèm lệnh gõ được (vd. "Bước tiếp: `story dev UC-12`" hoặc "Bước tiếp: chờ Kiệt thử ca a–f, có ảnh thì `story done UC-10`"). Không tự chạy bước kế khi Tai chưa bảo.
+- Có AC `FAIL` / `CHƯA KIỂM`: "Bước tiếp" nêu đúng ca còn thiếu và ai làm (Tai sửa hay Kiệt thử).
+- Tai không nhớ UC đang ở bước nào: đọc trạng thái trong story, `docs/TIEN-DO.md`, PR đang mở (`gh pr list`) rồi nói bước hiện tại.
+
 ## Loại tiêu chí và bằng chứng bắt buộc
 
 | Loại | Ví dụ trong đề tài | Bằng chứng | Thiếu thì |

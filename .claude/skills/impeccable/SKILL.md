@@ -71,6 +71,18 @@ Bề mặt:
 - **polish:** lượt cuối trước demo: chốt hệ thống → thu bằng chứng (screenshot desktop + mobile) → phân loại → sửa cả luồng (flow, layout/type, màu/ảnh/icon, tương tác/state, copy/code) → kiểm lại.
 - **bolder / quieter / distill:** khuếch đại thiết kế nhạt / làm dịu thiết kế ồn / cắt về cốt lõi.
 
+## 5a. Quy trình một trang (Tai hay quên lệnh: dẫn từng bước)
+
+1. `build <màn>` → 2. `critique <màn>` → 3. `audit <màn>` → 4. gửi Kiệt thử, sửa một mẻ → 5. `polish` (một lần cho cả app, trước demo).
+
+- Xong mỗi bước, kết thúc câu trả lời bằng **một dòng "Bước tiếp:"** nêu lệnh kế theo thứ tự trên (vd. "Bước tiếp: `impeccable audit màn đăng nhập`"). Không tự chạy bước kế khi Tai chưa bảo.
+- Tai nói **"chưa ổn", "chưa đẹp", "kỳ kỳ"** mà không nói rõ: hỏi lại một câu kèm gợi ý, chọn lệnh hợp nhất với điều mình thấy trên màn:
+  - `bolder`: nhạt, phẳng, không có điểm nhấn
+  - `quieter`: rối, nhiều màu, nhiều thứ tranh nhau
+  - `distill`: thừa chi tiết, chữ, khung
+  - `critique`: chưa rõ vì sao, cần chấm lại
+- Tai không nhớ đang ở bước nào: xem `git log` của trang đó rồi nói bước hiện tại.
+
 ## 6. Kiểm có giới hạn, không lặp vô tận
 
 Build xong → một lượt kiểm gộp (desktop + mobile cùng lúc) → sửa hết một mẻ → tối đa một lượt xác nhận nữa → dừng. Báo Tai ngắn gọn đã kiểm gì, sửa gì.
