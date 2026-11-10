@@ -43,6 +43,16 @@ Sau đó:
 ### `story report`
 Gom bảng truy vết của mọi story thành `docs/test-report.md`: số AC, đạt / không đạt / chưa kiểm theo từng use case, danh sách lỗi còn mở. Chỉ lấy số liệu từ các story, không ước lượng.
 
+## Dẫn từng bước (hay quên lệnh)
+
+**Người làm** = người dùng máy ghi trong `CLAUDE.local.md`; **người kia** = thành viên còn lại (Tài / Kiệt). Nhắc đúng tên theo vai, không ghi cứng.
+
+Thứ tự một use case: `story new` → người làm duyệt AC → `story dev` → `ponytail-review` → mở PR vào `dev`, người kia review → người kia thử giao diện theo `docs/test-evidence/UC-xx/du-lieu.md`, commit ảnh → `story done` (đi chung PR tiến độ của người gộp) → hết đợt thì `story report`.
+
+- Xong mỗi lệnh, kết thúc câu trả lời bằng **một dòng "Bước tiếp:"** nêu việc kế theo thứ tự trên, kèm lệnh gõ được (vd. "Bước tiếp: `story dev UC-12`" hoặc "Bước tiếp: chờ <người kia> thử ca a–f, có ảnh thì `story done UC-10`"). Không tự chạy bước kế khi người dùng chưa bảo.
+- Có AC `FAIL` / `CHƯA KIỂM`: "Bước tiếp" nêu đúng ca còn thiếu và ai làm (người làm sửa hay người kia thử), ghi tên.
+- Quên UC đang ở bước nào: đọc trạng thái trong story, `docs/TIEN-DO.md`, PR đang mở (`gh pr list`; máy không có `gh` thì `git fetch` rồi `git branch -r --no-merged origin/dev`, `git log origin/dev --oneline -10` xem đã gộp chưa) rồi nói bước hiện tại.
+
 ## Loại tiêu chí và bằng chứng bắt buộc
 
 | Loại | Ví dụ trong đề tài | Bằng chứng | Thiếu thì |

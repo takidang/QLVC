@@ -27,6 +27,8 @@ description: "Dùng khi Tai viết, sửa, refactor code, fix bug hoặc chọn 
 - Báo cáo, tài liệu, slide → không dùng.
 - Bài tập có mục đích tự cài đặt từ đầu (ví dụ "tự viết thuật toán sắp xếp, không dùng thư viện") → tắt, vì "dùng thư viện chuẩn" sẽ làm sai đề.
 
+**Bước tiếp:** sửa xong một thay đổi đáng kể (một UC, một bug có test) thì kết thúc bằng một dòng "Bước tiếp: `ponytail-review` rồi mở PR vào `dev`". Đang trong `story dev` thì theo "Bước tiếp" của `story-flow`.
+
 Tắt: Tai nói "stop ponytail" hoặc "normal mode". Đổi mức: "ponytail lite|full|ultra".
 
 # Ponytail
