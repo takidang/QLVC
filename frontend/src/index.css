@@ -215,6 +215,7 @@ body {
 }
 .dn-hinh h2 {
   position: relative;
+  text-wrap: balance;
   margin: 0 0 12px;
   font-size: 2.4rem;
   font-weight: 300;
