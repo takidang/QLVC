@@ -117,9 +117,9 @@
 | PATCH | `/api/tam-ung/{id}` | KT | UC-23 | `{so_tien, hinh_thuc?, ly_do}` (`ly_do` 1–300 ký tự). Kiểm lại BR-53 (các khoản khác + số mới) → 422; khoản `DA_THU_HOI` hoặc chuyến không `DA_CHOT`/`DANG_CHAY`/`HOAN_THANH` → 409 `BR-53`, chuyến `DA_QUYET_TOAN` → 409 `BR-29`; số và hình thức giữ nguyên → 400 `KHONG_CO_THAY_DOI` |
 | POST | `/api/tam-ung/{id}/thu-hoi` | KT | UC-23 | `{ly_do?}` (bỏ trống: nhật ký ghi "Tài xế đã nộp lại tạm ứng"). `HIEU_LUC → DA_THU_HOI`; dùng trước khi mở chốt hoặc hủy chuyến (BR-24, 25). Trạng thái như PATCH; đã thu hồi → 409 |
 | GET | `/api/tam-ung` | KT, QL | UC-23 | Lọc `trang_thai`, `chuyen_id`, `tai_xe_id`; phân trang, mới nhất trước |
-| POST | `/api/chi-phi/{id}/duyet` | KT | UC-24 | `{so_tien_duyet, ly_do?}`; lý do bắt buộc khi khác số khai |
-| POST | `/api/chi-phi/{id}/tu-choi` | KT | UC-24 | Cần `ly_do` |
-| GET | `/api/chuyen/{id}/quyet-toan` | KT | UC-24 | Bảng quyết toán dự kiến: định mức – thực tế – chênh lệch, dầu tham khảo, lý do lãi lệch dự kiến |
+| POST | `/api/chi-phi/{id}/duyet` | KT | UC-24 | `{so_tien_duyet, ly_do?}`: số nguyên 1 … số khai (lớn hơn → 422 `BR-55`); khác số khai mà thiếu lý do → 422 `BR-55`. Chỉ khi chuyến `HOAN_THANH` (khác → 409 `BR-55`, `DA_QUYET_TOAN` → 409 `BR-29`). Đổi quyết định được tới khi quyết toán; giống hệt lần trước → 400 `KHONG_CO_THAY_DOI`. Nhật ký `DUYET`. Trả khoản `{id, loai, so_tien_khai, so_tien_duyet, so_lit, ghi_chu, trang_thai, anh: [tep_id], tao_luc}` |
+| POST | `/api/chi-phi/{id}/tu-choi` | KT | UC-24 | `{ly_do}` bắt buộc; `so_tien_duyet` → null; điều kiện chuyến như duyệt; nhật ký `TU_CHOI` |
+| GET | `/api/chuyen/{id}/quyet-toan` | KT, QL | UC-24 | Chuyến `HOAN_THANH` (tạm tính) hoặc `DA_QUYET_TOAN` (kèm cách xử lý đã lưu); khác → 409 `BR-55`. Đơn giao / thất bại, doanh thu, `chi_theo_loai` (định mức – thực tế đã duyệt – chênh lệch), km, dầu tham khảo / thực tế (lít), khoản chi kèm id ảnh, `so_cho_duyet`, lương chốt / lương dùng, tạm ứng `HIEU_LUC`, chênh lệch, `xu_ly_goi_y`, lãi, lãi dự kiến, `ly_do_lech` (cộng lại = lãi − lãi dự kiến) |
 | POST | `/api/chuyen/{id}/quyet-toan` | KT | UC-24 | **Chi tiết ở mục 3.3** |
 | GET | `/api/phai-thu` | KT, QL | UC-25 | Lọc `trang_thai_tt`, `khach_hang_id`; phân trang, đơn giao mới trước. `{du_lieu, tong, tong_tien}`; mỗi dòng `{id, don_hang_id, ma_don, khach_hang_id, ten_khach, ngay_giao, so_tien, trang_thai_tt, phieu_thu_id, ngay_thu}` |
 | GET | `/api/phai-thu/theo-khach` | KT, QL | UC-25 | Nợ theo khách (chỉ `CHUA_THU`): `[{khach_hang_id, ten_khach, so_khoan, tong_no}]`, nợ nhiều trước |
@@ -134,7 +134,8 @@ Mọi endpoint ghi tiền đều ghi `NHAT_KY_TIEN` (BR-62).
 | Phương thức | Đường dẫn | Vai trò | UC | BR / ghi chú |
 |---|---|---|---|---|
 | GET | `/api/danh-muc/ly-do` | DP, TX | UC-19, 20, 22 | `?ap_dung=LAY\|GIAO` (bỏ trống: cả hai); trả `[{id, ten, ap_dung, phia}]`, `phia` (`KHACH`/`SU_CO_XE`) cho BR-37, 42. Danh mục nạp bằng migration `2a4c8d5f38e7` (12 lý do, `app/domain/ly_do.py`) |
-| GET | `/api/tep/{id}/link` | DP, KT, TX (của chuyến mình) | — | Link có hạn 5 phút (NFR-SEC-04) |
+| GET | `/api/tep/{id}/link` | DP, KT, TX (của chuyến mình) | — | Link có hạn 5 phút (NFR-SEC-04). **UC-24 đã làm phần ảnh chi phí cho KT, QL** (tệp khác → 403): `{url, het_han}`, link ký HMAC |
+| GET | `/api/tep/{id}/anh?het=&ky=` | (link) | UC-24 | Mở ảnh từ link trên, không cần cookie; hết hạn / sai chữ ký → 403; `nosniff` |
 | POST | `/api/tra-cuu` | CK | UC-28 | **Chi tiết ở mục 3.4** |
 
 ---
@@ -240,7 +241,7 @@ Request (số liệu tiền do server tính; Kế toán chỉ gửi phần phả
 }
 ```
 
-409: chuyến không ở `HOAN_THANH`; còn chi phí `CHO_DUYET` (BR-55). 422: thiếu hoặc sai `xu_ly_chenh_lech`; thiếu lương tay khi kết thúc do sự cố (BR-68). Sau khi thành công, mọi endpoint ghi tiền của chuyến trả 409 (BR-29).
+409: chuyến không ở `HOAN_THANH` (`BR-55`; đã quyết toán `BR-29`); còn chi phí `CHO_DUYET` (`BR-55`, `chi_tiet` có `chi_phi_ids`). 422: thiếu hoặc sai dấu `xu_ly_chenh_lech`; chênh lệch ≠ 0 mà thiếu `hinh_thuc` / `luc_xu_ly` hoặc `luc_xu_ly` ở tương lai (`BR-55`); thiếu lương tay hoặc lý do khi kết thúc do sự cố (`BR-68`). `luc_xu_ly` phải có múi giờ (thiếu → 400). Chênh lệch 0 thì `hinh_thuc`, `luc_xu_ly` bỏ qua. Nhật ký `QUYET_TOAN`, thêm `LUONG_TAY` nếu nhập tay. Sau khi thành công, mọi endpoint ghi tiền của chuyến trả 409 (BR-29).
 
 ### 3.4 `POST /api/tra-cuu` (UC-28)
 
