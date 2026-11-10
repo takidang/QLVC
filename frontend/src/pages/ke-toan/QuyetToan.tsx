@@ -99,6 +99,7 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
   }
 
   const ghiDuoc = !chiXem && bang?.trang_thai === 'HOAN_THANH'
+  const tamTinh = bang?.can_luong_tay && bang.trang_thai === 'HOAN_THANH'
 
   return (
     <section className="noi-dung">
@@ -314,7 +315,13 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
                 <td>− {dong(bang.luong_tai_xe)}</td>
               </tr>
               <tr>
-                <th>Lãi chuyến</th>
+                <th>
+                  Lãi chuyến
+                  {/* Kết thúc do sự cố: lương thật nhập lúc quyết toán (BR-68), giờ tạm lấy lương đã chốt */}
+                  {tamTinh && (
+                    <span className="ghi-chu"> (tạm tính, lương nhập lúc quyết toán)</span>
+                  )}
+                </th>
                 <th className={bang.lai < 0 ? 'loi' : ''}>{dong(bang.lai)}</th>
               </tr>
               <tr>
