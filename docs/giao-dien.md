@@ -72,8 +72,8 @@ Cả trang chia đôi (không khung nổi): trái là form trên nền trang (r�
 
 | Ảnh (`frontend/public/anh/`) | Bộ màu | Nguồn (Unsplash, giấy phép Unsplash) |
 |---|---|---|
-| `dang-nhap-hoang-hon.jpg`: thùng xe, trời xanh chuyển cam | Sương xanh (`suong`) | Caleb Ruiter, <https://unsplash.com/photos/EmEQ6kK_5P0> |
-| `dang-nhap-luot-ngang.jpg`: đầu kéo lướt ngang, tông be xám | Cát ấm (`cat`) | Roberto, <https://unsplash.com/photos/9Ayfcdmu2YE> |
+| `dang-nhap-hoang-hon.webp`: thùng xe, trời xanh chuyển cam | Sương xanh (`suong`) | Caleb Ruiter, <https://unsplash.com/photos/EmEQ6kK_5P0> |
+| `dang-nhap-luot-ngang.webp`: đầu kéo lướt ngang, tông be xám | Cát ấm (`cat`) | Roberto, <https://unsplash.com/photos/9Ayfcdmu2YE> |
 
 Khi có nút đổi bộ màu trong Cài đặt, lựa chọn đã lưu của người dùng phải thắng lựa chọn ngẫu nhiên.
 - Tiêu đề trang 46 px, đậm 300, giãn chữ -0.03em. Số liệu lớn 32 px, đậm 300.

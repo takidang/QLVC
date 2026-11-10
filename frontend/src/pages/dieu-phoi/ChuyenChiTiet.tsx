@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
   chiTietChuyen,
@@ -19,8 +19,10 @@ import {
 } from '../../api/chuyen'
 import { ChonKhaDung, type KhaDung } from './ChuyenDanhSach'
 import type { Don } from '../../api/don'
-import BanDoChuyen from './BanDoChuyen'
 import TheoDoiChuyen from './TheoDoiChuyen'
+
+// Bản đồ (leaflet + css) tải riêng khi mở chi tiết chuyến, không kéo theo vào màn đăng nhập
+const BanDoChuyen = lazy(() => import('./BanDoChuyen'))
 
 const TEN_KET_QUA: Record<string, string> = {
   LAY: 'đã lấy',
@@ -262,7 +264,9 @@ export default function ChuyenChiTiet() {
       <TheoDoiChuyen c={c} onDoi={(r) => (r ? setC(r) : setLanTai((n) => n + 1))} />
 
       <h2>Lịch trình</h2>
-      <BanDoChuyen lichTrinh={c.lich_trinh} />
+      <Suspense fallback={<p className="phu">Đang tải bản đồ…</p>}>
+        <BanDoChuyen lichTrinh={c.lich_trinh} />
+      </Suspense>
       <table>
         <thead>
           <tr>
