@@ -105,10 +105,11 @@
 | UC-04 Tài xế (chép mẫu) | 2 | Xong | 10/10 | Tài review, merge vào `main` 25/10 (Tài cập nhật hộ) |
 | UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Xong | UC-02 11/11, UC-17 10/10, UC-18 11/11, UC-19 15/15, UC-20 16/16 | UC-02 (PR #5), UC-17 (PR #6), UC-18 (PR #13), UC-19 (PR #15), UC-20 (PR #16) đã gộp `dev`. UC-20 xong 05/11 (40 test, kèm 3 góp ý review #15: tối đa 5 ảnh, trần độ chính xác GPS, xin vị trí lúc bấm; Safari iPhone đã gửi vị trí), gộp `dev` (PR #16, 08/11). Vòng tối thiểu mốc 08/11 chạy trọn trên giao diện. BR-44 để hướng phát triển (Tài chốt). UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
 | Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Đang làm | UC-21 14/14, UC-23 14/14 | UC-23 Tạm ứng gộp `dev` 08/11 (PR #17). UC-21 Chi phí (kèm nhãn điểm "Đã lấy") gộp `dev` 10/11 (PR #29). Còn UC-33 báo sự cố, làm sau UC-24 |
-| UC-24, 25 | 7 | Đang làm | UC-25 10/10 | UC-25 Công nợ gộp `dev` 10/11 (PR #30). UC-24 Quyết toán bắt đầu 10/11 (mốc 29/11). Để sau: trang Công nợ cho Quản lý (góp ý của Tài, làm cùng giao diện UC-24) |
+| UC-24, 25 | 7 | Xong | UC-24 14/14, UC-25 10/10 | UC-25 Công nợ gộp `dev` 10/11 (PR #30). UC-24 Quyết toán gộp `dev` 10/11 (PR #33, sớm hơn mốc 29/11); trang Công nợ, Quyết toán cho Quản lý (chỉ xem) làm cùng UC-24 |
 | UC-26, 27, 34 (hiệu suất xe, ưu tiên S – thiếu giờ thì cắt trước), E2E | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Kiệt (mới nhất ở trên)
+- 10/11: Gộp #33 UC-24 Quyết toán (14/14 AC: duyệt / điều chỉnh / từ chối chi phí, bảng quyết toán, khóa sổ BR-29, link ảnh chứng từ ký HMAC 5 phút; 61 test, thử giao diện 12/12 ca; sửa góp ý Tài: ghi "tạm tính" cạnh lãi chuyến kết thúc do sự cố), gộp #35, #36 (ảnh thử UC-10, 22, 32), approve #34. Thử lại màn đăng nhập v2 (571d7f2) đạt.
 - 10/11: Tài gộp #29 UC-21 Chi phí (14/14 AC, 52 test, thử giao diện đạt) và #30 UC-25 Công nợ (10/10 AC, 26 test, thử giao diện đạt), 787 passed. 08–09/11: review, duyệt #19…#28 của Tài; thử giao diện UC-12, 15, 16 (PR #18). Tiếp theo: UC-24 Quyết toán.
 - 07/11: Đóng UC-23 (14/14 AC): thử giao diện 7/7 ca (cấp, vượt định mức, sửa, thu hồi, mở chốt bị chặn rồi được); sửa bước ô số tiền và câu báo khi sửa vượt định mức.
 - 07/11: UC-23 Tạm ứng: module `tien/tam_ung/` (cấp, sửa, thu hồi, xem; BR-53 kiểm ở mọi lần cấp và sửa, khóa dòng chuyến, nhật ký tiền BR-62, đã quyết toán → BR-29), thêm `GET /api/chuyen/{id}/tam-ung` (gợi ý số còn được cấp); trang Kế toán **Tạm ứng**; 49 test, toàn bộ 590 passed; 13/14 AC. PR #16 (UC-20) chờ Tài review.

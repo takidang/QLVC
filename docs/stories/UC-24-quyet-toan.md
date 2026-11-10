@@ -1,6 +1,6 @@
 # UC-24: Quyết toán chuyến
 
-- **Trạng thái:** Đã duyệt 10/11/2026 (Kiệt: "duyệt" – 9 quyết định như đề xuất)
+- **Trạng thái:** Hoàn thành 14/14 AC (10/11/2026, PR #33; duyệt 10/11/2026, Kiệt: "duyệt" – 9 quyết định như đề xuất)
 - **Tác nhân:** Kế toán (Quản lý xem)
 - **Đặc tả:** `docs/use-cases.md` UC-24 · `docs/api.md` mục 2.6 và 3.3 · `docs/so-do.md` mục 10 (sequence quyết toán) · `docs/nghiep-vu.md` mục 11 bước 7 (quyết toán C01) · `docs/security-rules.md` (bảng dữ liệu tiền: chi phí, quyết toán) · ca test `docs/ca-test-br.md` TC-BR29-02, TC-BR50-01/02, TC-BR51-01/02, TC-BR55-01…05
 - **Quy tắc nghiệp vụ liên quan:** BR-29 (khóa sau quyết toán), BR-50 (doanh thu tính cho chuyến giao thành công), BR-51 (lãi chuyến), BR-55 (điều kiện quyết toán, chênh lệch tạm ứng), BR-62 (nhật ký tiền), BR-68 (lương nhập tay khi kết thúc do sự cố), BR-71 (định mức, lương đã chốt), BR-57 (phân quyền)
