@@ -1,38 +1,371 @@
-/* Tối thiểu cho UC-01; giao diện thật làm theo mockup và skill impeccable */
+/* Giao diện v2 (docs/giao-dien.md): mới làm màn đăng nhập; các màn khác còn kiểu tối thiểu cũ */
+
+/* Be Vietnam Pro tự host (giấy phép OFL), chia hai tập ký tự như Google Fonts */
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/be-vietnam-pro-latin-300.woff2') format('woff2');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/be-vietnam-pro-vietnamese-300.woff2') format('woff2');
+  unicode-range:
+    U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301,
+    U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/be-vietnam-pro-latin-400.woff2') format('woff2');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/be-vietnam-pro-vietnamese-400.woff2') format('woff2');
+  unicode-range:
+    U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301,
+    U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/be-vietnam-pro-latin-500.woff2') format('woff2');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/be-vietnam-pro-vietnamese-500.woff2') format('woff2');
+  unicode-range:
+    U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301,
+    U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/be-vietnam-pro-latin-600.woff2') format('woff2');
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC,
+    U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Be Vietnam Pro';
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/be-vietnam-pro-vietnamese-600.woff2') format('woff2');
+  unicode-range:
+    U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301,
+    U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+
+/* Biến màu: bộ mặc định "Đá xám xanh"; đổi bộ bằng data-mau trên <html> (phần Cài đặt làm sau) */
+:root {
+  --font: 'Be Vietnam Pro', system-ui, sans-serif;
+  --da: #c4c8be;
+  --sang1: #e6e8e1;
+  --sang2: #d3d7cc;
+  --muc: #1b2420;
+  --phu: #47524b;
+  --o-liu: #56624a;
+  --cam: #c2410c;
+  --kinh: rgb(250 250 247 / 62%);
+  --kinh-dac: rgb(250 250 247 / 86%);
+  --vien-sang: rgb(255 255 255 / 70%);
+  --vien: color-mix(in srgb, var(--muc) 12%, transparent);
+  --chay: #1f6f8b;
+  --chot: #6a55b8;
+  --xong: #2f7d4f;
+  --do: #b3261e;
+  --xam: #6b736e;
+}
+:root[data-mau='suong'] {
+  --da: #c3cad3;
+  --sang1: #e6eaef;
+  --sang2: #d2d9e1;
+  --muc: #172030;
+  --phu: #44505f;
+  --o-liu: #3f5673;
+}
+:root[data-mau='cat'] {
+  --da: #d2cabb;
+  --sang1: #eee9df;
+  --sang2: #ddd6c8;
+  --muc: #261f17;
+  --phu: #574d40;
+  --o-liu: #6b5540;
+  --cam: #b4380f;
+}
+:root[data-mau='ngoc'] {
+  --da: #bfcbc8;
+  --sang1: #e3ebe9;
+  --sang2: #cfdad7;
+  --muc: #14231f;
+  --phu: #3f524d;
+  --o-liu: #2f5f58;
+}
+:root[data-mau='oai'] {
+  --da: #cac6cf;
+  --sang1: #eae7ee;
+  --sang2: #d8d4de;
+  --muc: #211d29;
+  --phu: #4f4959;
+  --o-liu: #54486e;
+}
+
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
+  font-family: var(--font);
   background: #f6f7f9;
   color: #1c2024;
 }
 
+/* Màn đăng nhập: khung kính hai nửa, nửa trái là khối nhấn có đường tuyến */
 .dang-nhap {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   place-items: center;
-  padding: 16px;
+  padding: 24px;
+  color: var(--muc);
+  line-height: 1.45;
+  background:
+    radial-gradient(900px 520px at 80% 6%, var(--sang1) 0%, transparent 62%),
+    radial-gradient(700px 520px at 6% 34%, var(--sang2) 0%, transparent 66%), var(--da);
+}
+.dang-nhap ::selection {
+  background: var(--muc);
+  color: #fff;
+}
+
+.dn-khung {
+  width: 100%;
+  max-width: 1040px;
+  min-height: min(640px, 100dvh - 48px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 14px;
+  background: var(--kinh);
+  border: 1px solid var(--vien-sang);
+  border-radius: 24px;
+  backdrop-filter: blur(18px);
+}
+
+.dn-hinh {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 40px;
+  border-radius: 16px;
+  background: var(--o-liu);
+  color: #fff;
+}
+.dn-hinh svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: var(--o-liu);
+  stroke: rgb(255 255 255 / 55%);
+  stroke-width: 1;
+}
+.dn-hinh svg path {
+  fill: none;
+  stroke: rgb(255 255 255 / 38%);
+}
+.dn-hinh svg .dang-toi {
+  fill: #ffb48a;
+  stroke: none;
+}
+.dn-hinh svg .vong {
+  fill: none;
+  stroke: #ffb48a;
+  stroke-opacity: 0.55;
+}
+.dn-hinh h2 {
+  position: relative;
+  margin: 0 0 12px;
+  font-size: 2.4rem;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+.dn-hinh p {
+  position: relative;
+  margin: 0;
+  max-width: 36ch;
+  color: rgb(255 255 255 / 84%);
 }
 
 .dang-nhap form {
-  width: 100%;
-  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  padding: 26px 56px 20px;
+}
+.dn-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.dn-logo svg {
+  width: 26px;
+  height: 26px;
+  fill: var(--muc);
+  stroke: var(--muc);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+.dn-logo svg path {
+  fill: none;
+}
+.dn-logo svg .dang-toi {
+  fill: var(--cam);
+  stroke: var(--cam);
+}
+.dn-giua {
+  margin-block: auto;
+  padding-block: 28px;
   display: grid;
-  gap: 14px;
-  background: #fff;
-  padding: 24px;
-  border-radius: 8px;
-  border: 1px solid #dfe3e8;
+  gap: 16px;
 }
-
 .dang-nhap h1 {
-  margin: 0 0 4px;
-  font-size: 1.25rem;
+  margin: 0;
+  font-size: 2.6rem;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
 }
-
+.dn-phu {
+  margin: -10px 0 10px;
+  color: var(--phu);
+}
 .dang-nhap label {
   display: grid;
   gap: 6px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  color: var(--phu);
+}
+.dn-o {
+  position: relative;
+  display: block;
+}
+.dn-o input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 14px 46px 14px 16px;
+  font-size: 1rem;
+  color: var(--muc);
+  caret-color: var(--cam);
+  background: rgb(255 255 255 / 66%);
+  border: 1px solid var(--vien);
+  border-radius: 12px;
+}
+.dn-o input:hover {
+  border-color: color-mix(in srgb, var(--muc) 32%, transparent);
+}
+.dn-o input:focus-visible {
+  outline: 2px solid var(--muc);
+  outline-offset: 1px;
+  background: rgb(255 255 255 / 92%);
+}
+.dn-o svg {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  width: 19px;
+  height: 19px;
+  translate: 0 -50%;
+  fill: none;
+  stroke: var(--phu);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.dang-nhap .loi {
+  padding: 10px 14px;
+  border-radius: 12px;
+  color: var(--do);
+  background: color-mix(in srgb, var(--do) 9%, transparent);
+}
+.dang-nhap button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  margin-top: 6px;
+  padding: 0 22px 0 26px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  background: var(--muc);
+  border: 0;
+  border-radius: 99px;
+  transition: background 0.15s ease-out;
+}
+.dang-nhap button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--muc) 86%, white);
+}
+.dang-nhap button:focus-visible {
+  outline: 2px solid var(--muc);
+  outline-offset: 3px;
+}
+.dang-nhap button svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.dn-chan {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--phu);
+}
+
+@media (max-width: 760px) {
+  .dang-nhap {
+    padding: 14px;
+  }
+  .dn-khung {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    padding: 0;
+  }
+  .dn-hinh {
+    display: none;
+  }
+  .dang-nhap form {
+    padding: 22px 20px 18px;
+  }
+  .dang-nhap h1 {
+    font-size: 2.1rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dang-nhap button {
+    transition: none;
+  }
 }
 
 input,

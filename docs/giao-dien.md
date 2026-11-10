@@ -2,7 +2,7 @@
 
 Tài chốt ngày 10/11/2026 trên nhánh `tai/thu-giao-dien-v2`. Mẫu xem được: mở `docs/mockup/giao-dien-v2.html` bằng trình duyệt (có thanh đổi 5 bộ màu ở đáy trang; dữ liệu trong mẫu là minh họa).
 
-Trạng thái: **mới có mẫu, chưa làm vào `frontend/`**. Khi làm, mọi màu khai báo một chỗ bằng biến CSS trong `frontend/src/index.css`, tên biến như bảng dưới.
+Trạng thái: biến màu và font đã có trong `frontend/src/index.css`; **mới làm màn đăng nhập (01)**, các màn khác còn kiểu tối thiểu cũ. Mọi màu khai báo một chỗ bằng biến CSS ở đầu `index.css`, tên biến như bảng dưới. Bộ mặc định là "Đá xám xanh"; bộ khác bật bằng `data-mau="suong" | "cat" | "ngoc" | "oai"` trên `<html>` (nút đổi trong Cài đặt làm sau).
 
 ## Phong cách
 
@@ -62,7 +62,11 @@ Viên thuốc nền trắng mờ, chữ mực, **biểu tượng mang màu và c
 
 ## Chữ
 
-- **Be Vietnam Pro**, tự host, độ đậm 300 / 400 / 500 / 600.
+- **Be Vietnam Pro**, tự host ở `frontend/public/fonts` (woff2, giấy phép OFL, tập ký tự latin + vietnamese), độ đậm 300 / 400 / 500 / 600.
+
+## Màn đăng nhập (01)
+
+Khung kính hai nửa: trái là khối `--o-liu` có đường tuyến mảnh và câu giới thiệu; phải là logo, tiêu đề, hai ô nhập có nhãn phía trên, câu lỗi nền đỏ nhạt, nút chính bo tròn có mũi tên. Dưới 760 px ẩn nửa trái, chỉ còn form. Hành vi và câu lỗi giữ nguyên như UC-01.
 - Tiêu đề trang 46 px, đậm 300, giãn chữ -0.03em. Số liệu lớn 32 px, đậm 300.
 - Chữ thường 14 px (điện thoại 15 px); chữ phụ 12.5–13.5 px.
 - Giờ, số, mã, biển số: `font-variant-numeric: tabular-nums`.
@@ -81,7 +85,6 @@ Viên thuốc nền trắng mờ, chữ mực, **biểu tượng mang màu và c
 
 ## Còn phải quyết khi làm vào code
 
-- Bộ màu mặc định (và có cho người dùng đổi bộ hay không).
-- Tải file font Be Vietnam Pro vào `frontend/public/fonts` (mẫu đang lấy từ Google Fonts, code thật không dùng CDN).
+- Nút đổi bộ màu trong Cài đặt (Tài làm sau).
 - Cột Điểm dừng ở bảng chuyến cần số điểm đã xong của từng chuyến; chưa kiểm API danh sách có trả hay chưa.
 - Thử trên máy chiếu trước buổi demo: tông nhạt, nét mảnh dễ bạc màu.
