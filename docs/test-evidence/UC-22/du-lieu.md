@@ -3,7 +3,7 @@
 > Tài ghi 08/11/2026. Thử trên `dev` sau khi PR #23 gộp. Ảnh lưu vào thư mục này, điền cột "Kết quả" rồi điền dòng AC12 trong `docs/stories/UC-22-xu-ly-don-that-bai.md`.
 
 ## Chuẩn bị (chạy trọn một chuyến có đơn thất bại, như lần thử UC-19, 20)
-- Điều phối: chuyến T01 ngày mai có 3 đơn: **A** (TP.HCM → Cần Thơ), **B** (TP.HCM → Tiền Giang), **C** (Long An → Cần Thơ). Chốt chuyến.
+- Điều phối: chuyến T01 **hôm nay** (tài xế chỉ bắt đầu được đúng ngày khởi hành, BR-26) có 3 đơn: **A** (TP.HCM → Cần Thơ), **B** (TP.HCM → Tiền Giang), **C** (Long An → Cần Thơ). Chốt chuyến.
 - Tài xế (`taixe` / `demo12345`, điện thoại hoặc 360 px): Bắt đầu chuyến; quét lấy **A**, **B**; **C** bấm Không lấy được (lý do phía khách + ảnh); **A** Giao không được, lý do "Người nhận vắng" (phía khách) + ảnh; **B** giao thành công; Kết thúc chuyến.
 - Kết quả cần có: A `THAT_BAI` đã lấy (1 lần giao thất bại phía khách), C `THAT_BAI` chưa lấy.
 

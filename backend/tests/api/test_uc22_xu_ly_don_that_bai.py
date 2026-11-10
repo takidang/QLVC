@@ -190,6 +190,17 @@ def test_uc22_ac10_danh_sach_can_xu_ly(client, db, kb, tb):
     assert not d1["cho_chuyen_xong"]
 
 
+# AC10 – đơn thất bại do kết thúc sự cố (BR-68): lý do gần nhất lấy từ lịch sử, không để trống
+def test_uc22_ac10_ly_do_ket_thuc_su_co(client, db, kb, tb):
+    sua(db, DonHang, kb["d2"], trang_thai="DA_GHEP")
+    db.add(Ghep(chuyen_id=tb["c01"], don_hang_id=kb["d2"], hieu_luc=True))
+    sua(db, Chuyen, tb["c01"], trang_thai="DANG_CHAY")
+    assert client.post(f"/api/chuyen/{tb['c01']}/ket-thuc-su-co", json={"ly_do": "hỏng hộp số"}).status_code == 200
+    ds = {d["id"]: d for d in client.get("/api/don/can-xu-ly").json()}
+    assert ds[kb["d2"]]["ly_do_cuoi"] == "Sự cố xe: hỏng hộp số"
+    assert ds[kb["d1"]]["ly_do_cuoi"] == "Người nhận vắng"  # không có lịch sử thì lấy từ lượt quét
+
+
 # AC11 – phân quyền
 @pytest.mark.parametrize(("vai_tro", "ma"), [("DIEU_PHOI", 200), ("QUAN_LY", 200), ("KE_TOAN", 403), ("TAI_XE", 403)])
 def test_uc22_ac11_phan_quyen(client, dang_nhap_voi, db, kb, tb, vai_tro, ma):

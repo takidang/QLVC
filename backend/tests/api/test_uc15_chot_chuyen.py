@@ -94,7 +94,7 @@ def test_uc15_ac4_lai_am_can_xac_nhan(client, dang_nhap_voi, db, kb):
     c01 = lap_c01(client, kb, "d8")
     r = chot(client, c01)
     assert (r.status_code, r.json()["ma"]) == (422, "BR-52")
-    assert "1.267.000" in r.json()["thong_diep"]
+    assert r.json()["thong_diep"] == "Lãi dự kiến âm (-1.267.000 đ), cần xác nhận"  # dấu phẩy trước "cần" giữ nguyên
     assert chuyen(db, c01).trang_thai == "LAP"
     assert chot(client, c01, xac_nhan_chay_rong=True).status_code == 422  # xác nhận chạy rỗng không thay lãi âm
 

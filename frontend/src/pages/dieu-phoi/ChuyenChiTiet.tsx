@@ -18,7 +18,7 @@ import {
   type XeKhaDung,
 } from '../../api/chuyen'
 import { ChonKhaDung, type KhaDung } from './ChuyenDanhSach'
-import type { Don } from '../../api/don'
+import { TEN_TRANG_THAI_DON, type Don } from '../../api/don'
 import BanDoChuyen from './BanDoChuyen'
 import TheoDoiChuyen from './TheoDoiChuyen'
 
@@ -44,6 +44,8 @@ const TEN_TRANG_THAI: Record<string, string> = {
   DA_QUYET_TOAN: 'Đã quyết toán',
   HUY: 'Hủy',
 }
+// Trễ so ETA kế hoạch: âm là đến sớm
+const tre = (phut: number) => (phut > 0 ? `${phut}′` : phut < 0 ? `Sớm ${-phut}′` : 'Đúng giờ')
 const XAC_NHAN: Record<string, keyof XacNhanChot> = {
   'BR-23': 'xac_nhan_chay_rong',
   'BR-52': 'xac_nhan_lai_am',
@@ -291,7 +293,7 @@ export default function ChuyenChiTiet() {
               )}
               {c.tien && (
                 <td className={d.tre_phut != null && d.tre_phut > 15 ? 'so loi' : 'so'}>
-                  {d.tre_phut != null ? `${d.tre_phut}′` : ''}
+                  {d.tre_phut != null ? tre(d.tre_phut) : ''}
                 </td>
               )}
             </tr>
@@ -307,8 +309,9 @@ export default function ChuyenChiTiet() {
       </table>
 
       <BangDon
-        tieu_de={`Đơn đang ghép (${c.don.length})`}
+        tieu_de={`${['HOAN_THANH', 'DA_QUYET_TOAN', 'HUY'].includes(c.trang_thai) ? 'Đơn của chuyến' : 'Đơn đang ghép'} (${c.don.length})`}
         ds={c.don}
+        hienTrangThai
         chon={dangLap ? chonGo : undefined}
         onChon={(x) => doi(chonGo, setChonGo, x)}
         nut={
@@ -346,13 +349,16 @@ function BangDon({
   chon,
   onChon,
   nut,
+  hienTrangThai = false,
 }: {
   tieu_de: string
   ds: Don[]
   chon?: number[]
   onChon: (id: number) => void
   nut: ReactNode
+  hienTrangThai?: boolean
 }) {
+  const soCot = 7 + (chon ? 1 : 0) + (hienTrangThai ? 1 : 0)
   return (
     <>
       <div className="thanh-cong-cu">
@@ -370,6 +376,7 @@ function BangDon({
             <th>Khung lấy</th>
             <th>Hạn giao</th>
             <th className="so">Cước (đ)</th>
+            {hienTrangThai && <th>Trạng thái</th>}
           </tr>
         </thead>
         <tbody>
@@ -396,11 +403,16 @@ function BangDon({
               <td>{d.lay_tu && d.lay_den ? `${gio(d.lay_tu)}–${gio(d.lay_den)}` : 'Cả ngày'}</td>
               <td>{lucVN(d.han_giao)}</td>
               <td className="so">{dong(d.cuoc_tinh)}</td>
+              {hienTrangThai && (
+                <td className={d.trang_thai === 'THAT_BAI' ? 'loi' : undefined}>
+                  {TEN_TRANG_THAI_DON[d.trang_thai] ?? d.trang_thai}
+                </td>
+              )}
             </tr>
           ))}
           {ds.length === 0 && (
             <tr>
-              <td colSpan={chon ? 8 : 7} className="trong">
+              <td colSpan={soCot} className="trong">
                 Không có đơn
               </td>
             </tr>

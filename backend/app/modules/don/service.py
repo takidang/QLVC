@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session, aliased
 
 from app.domain.cuoc import kiem_br31_don_hop_le, kl_quy_doi, kl_tinh_cuoc, tinh_cuoc
 from app.loi import LoiNghiepVu
-from app.models import DonHang, KhachHang, LichSuTrangThai, NguoiDung, Nut
+from app.models import Chuyen, DonHang, Ghep, KhachHang, LichSuTrangThai, NguoiDung, Nut
 from app.modules.danh_muc.bang_gia.service import tra_gia
 from app.modules.danh_muc.cau_hinh import service as cau_hinh
 from app.modules.don.schemas import DonVao
@@ -135,5 +135,18 @@ def danh_sach(
     if tim and (tim := tim.strip()):
         loc = loc.where(DonHang.ma_don.icontains(tim, autoescape=True))
     tong = db.scalar(select(func.count()).select_from(loc.subquery()))
-    dong = db.execute(loc.order_by(DonHang.tao_luc.desc(), DonHang.id.desc()).offset(pt.bo_qua).limit(pt.so_dong))
-    return [ra_don(d) for d in dong], tong
+    ra = [
+        ra_don(d)
+        for d in db.execute(loc.order_by(DonHang.tao_luc.desc(), DonHang.id.desc()).offset(pt.bo_qua).limit(pt.so_dong))
+    ]
+    # Trạng thái chuyến của đơn đang ghép: giao diện ẩn Sửa / Hủy khi chuyến không còn Đang lập (BR-33, 34)
+    chuyen = dict(
+        db.execute(
+            select(Ghep.don_hang_id, Chuyen.trang_thai)
+            .join(Chuyen, Chuyen.id == Ghep.chuyen_id)
+            .where(Ghep.hieu_luc, Ghep.don_hang_id.in_([d["id"] for d in ra]))
+        ).all()
+    )
+    for d in ra:
+        d["trang_thai_chuyen"] = chuyen.get(d["id"])
+    return ra, tong

@@ -14,6 +14,22 @@ from app.modules.danh_muc.cau_hinh import service as cau_hinh
 from app.thoi_gian import bay_gio
 
 PHIA = {"LAY": "LAY", "KHONG_LAY": "LAY", "GIAO": "GIAO", "GIAO_THAT_BAI": "GIAO"}  # lượt quét thuộc điểm nào
+# Dòng thời gian hiện chữ, không hiện mã
+TEN_TRANG_THAI = {
+    "LAP": "Đang lập",
+    "DA_CHOT": "Đã chốt",
+    "DANG_CHAY": "Đang chạy",
+    "HOAN_THANH": "Hoàn thành",
+    "DA_QUYET_TOAN": "Đã quyết toán",
+    "HUY": "Hủy",
+    "CHO_GHEP": "Chờ ghép",
+    "DA_GHEP": "Đã ghép",
+    "DA_LAY": "Đã lấy",
+    "DA_GIAO": "Đã giao",
+    "THAT_BAI": "Thất bại",
+    "TRA_HANG": "Trả hàng",
+}
+TEN_QUET = {"LAY": "Quét lấy", "KHONG_LAY": "Không lấy được", "GIAO": "Giao", "GIAO_THAT_BAI": "Giao không được"}
 
 
 def _ghep(db: Session, chuyen_id: int) -> list[tuple[Ghep, DonHang]]:
@@ -126,15 +142,15 @@ def _dong_thoi_gian(db: Session, c: Chuyen, ghep: list[tuple[Ghep, DonHang]]) ->
     )
     for x in ls:
         doi_tuong = f"Chuyến {c.ma_chuyen}" if x.doi_tuong == "CHUYEN" else f"Đơn {ma[x.doi_tuong_id]}"
-        cau = f"{doi_tuong}: {x.tu or 'mới'} → {x.sang}" + (f" ({x.ly_do})" if x.ly_do else "")
+        tu = TEN_TRANG_THAI.get(x.tu, x.tu) if x.tu else "Mới"
+        cau = f"{doi_tuong}: {tu} → {TEN_TRANG_THAI.get(x.sang, x.sang)}" + (f" ({x.ly_do})" if x.ly_do else "")
         su_kien.append({"luc": x.luc, "loai": "TRANG_THAI", "noi_dung": cau, "nguoi": ten.get(x.nguoi)})
     theo_ghep = {g.id: d.ma_don for g, d in ghep}
     if theo_ghep:
         for lq in db.scalars(select(LuotQuet).where(LuotQuet.ghep_id.in_(theo_ghep))):
             gps = " · thiếu GPS" if lq.thieu_gps else ""
-            su_kien.append(
-                {"luc": lq.thoi_gian, "loai": "QUET", "noi_dung": f"Quét {lq.loai} đơn {theo_ghep[lq.ghep_id]}{gps}"}
-            )
+            cau = f"{TEN_QUET[lq.loai]} đơn {theo_ghep[lq.ghep_id]}{gps}"
+            su_kien.append({"luc": lq.thoi_gian, "loai": "QUET", "noi_dung": cau})
     for sc in db.scalars(select(SuCo).where(SuCo.chuyen_id == c.id)):
         cau = f"Sự cố {sc.loai}" + (f": {sc.ghi_chu}" if sc.ghi_chu else "")
         su_kien.append({"luc": sc.luc, "loai": "SU_CO", "noi_dung": cau})

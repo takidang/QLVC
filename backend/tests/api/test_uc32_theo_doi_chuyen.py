@@ -142,6 +142,11 @@ def test_uc32_ac5_chi_tiet(client, db, kb, dang_chay):
     luc_su_kien = [s["luc"] for s in ct["dong_thoi_gian"]]
     assert luc_su_kien == sorted(luc_su_kien)
     assert [s["loai"] for s in ct["su_co"]] == ["KET_XE"]
+    # Dòng thời gian hiện chữ, không hiện mã trạng thái / mã quét
+    noi_dung = [s["noi_dung"] for s in ct["dong_thoi_gian"]]
+    assert "Quét lấy đơn DH-0004" in noi_dung
+    assert any("Đang lập → Đã chốt" in x for x in noi_dung)
+    assert not any(ma in x for x in noi_dung for ma in ("LAP", "DA_CHOT", "CHO_GHEP", "DA_GHEP", "Quét LAY"))
 
 
 # Bản đồ chi tiết chuyến: mỗi điểm mang tọa độ của nút; nút chưa có tọa độ thì null (giao diện bỏ qua)
