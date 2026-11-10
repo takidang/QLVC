@@ -137,6 +137,7 @@ body {
 
 /* Màn đăng nhập: khung kính hai nửa, nửa trái là khối nhấn có đường tuyến */
 .dang-nhap {
+  box-sizing: border-box; /* padding nằm trong 100dvh, không sinh thanh cuộn thừa */
   min-height: 100dvh;
   display: grid;
   place-items: center;
@@ -153,6 +154,7 @@ body {
 }
 
 .dn-khung {
+  box-sizing: border-box;
   width: 100%;
   max-width: 1040px;
   min-height: min(640px, 100dvh - 48px);
@@ -234,6 +236,11 @@ body {
   border: 1px solid var(--vien);
   border-radius: 12px;
 }
+/* Edge tự thêm con mắt hiện mật khẩu, chồng lên ổ khóa */
+.dn-o input::-ms-reveal,
+.dn-o input::-ms-clear {
+  display: none;
+}
 .dn-o input:hover {
   border-color: color-mix(in srgb, var(--muc) 32%, transparent);
 }
@@ -299,6 +306,12 @@ body {
   color: var(--phu);
 }
 
+/* Máy tính bảng dựng đứng: khung cao hết màn, không để trống trên dưới */
+@media (min-width: 761px) and (orientation: portrait) {
+  .dn-khung {
+    min-height: calc(100dvh - 48px);
+  }
+}
 @media (max-width: 760px) {
   .dang-nhap {
     padding: 14px;

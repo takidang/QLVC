@@ -9,6 +9,8 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
 
   async function gui(e: FormEvent) {
     e.preventDefault()
+    // Tự kiểm thay bong bóng của trình duyệt (theo ngôn ngữ trình duyệt, Edge tiếng Anh hiện tiếng Anh)
+    if (!ten.trim() || !matKhau) return setLoi('Vui lòng nhập đủ tên đăng nhập và mật khẩu')
     setLoi('')
     setDangGui(true)
     try {
@@ -34,7 +36,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
           </p>
         </section>
 
-        <form onSubmit={gui}>
+        <form onSubmit={gui} noValidate>
           <div className="dn-giua">
             <h1>Đăng nhập</h1>
             <p className="dn-phu">Hệ thống quản lý vận tải</p>
