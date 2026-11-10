@@ -75,24 +75,24 @@ Chuyến `HOAN_THANH` hiện ra ở trang **Quyết toán** của Kế toán. K�
 - File đã đổi: `backend/app/modules/tien/quyet_toan/` (router, schemas, service: duyệt / từ chối, bảng, quyết toán), `backend/app/modules/tep/router.py` (link ảnh ký HMAC 5 phút + mở ảnh), `backend/app/main.py` (2 router, theo chữ cái), `docs/api.md` (2.6, 3.3, tệp).
 - Test đã viết: `backend/tests/api/test_uc24_quyet_toan.py` 61 test (AC1–AC13). Thử phá 21 chỗ trong service (đổi điều kiện, bỏ kiểm tra): 21/21 bị test bắt (chỗ "tạm ứng đã thu hồi" lọt lần đầu, đã thêm test).
 - Kết quả 10/11: 61 passed; toàn bộ 848 passed.
-- Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/test_uc24_quyet_toan.py`
+- Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/api/test_uc24_quyet_toan.py`
 - Lệch đặc tả (nếu có) và đã sửa `docs/` chưa: đã sửa `api.md`: chi tiết duyệt / từ chối, QL xem GET quyết toán, endpoint mở ảnh `/api/tep/{id}/anh`. Nhỏ: `luc_xu_ly` nhận lệch 5 phút so với giờ máy chủ (máy Kế toán chạy nhanh); `luc_xu_ly` thiếu múi giờ → 400.
 
 ## Truy vết và kết quả
 
 | AC | Loại | Test / Bằng chứng | Kết quả | Ngày |
 |---|---|---|---|---|
-| UC-24-AC1 | API | | CHƯA KIỂM | |
-| UC-24-AC2 | API | | CHƯA KIỂM | |
-| UC-24-AC3 | API | | CHƯA KIỂM | |
-| UC-24-AC4 | Logic | | CHƯA KIỂM | |
-| UC-24-AC5 | Logic | | CHƯA KIỂM | |
-| UC-24-AC6 | API | | CHƯA KIỂM | |
-| UC-24-AC7 | API | | CHƯA KIỂM | |
-| UC-24-AC8 | API | | CHƯA KIỂM | |
-| UC-24-AC9 | API | | CHƯA KIỂM | |
-| UC-24-AC10 | API | | CHƯA KIỂM | |
-| UC-24-AC11 | API | | CHƯA KIỂM | |
-| UC-24-AC12 | API | | CHƯA KIỂM | |
-| UC-24-AC13 | API | | CHƯA KIỂM | |
-| UC-24-AC14 | UI | | CHƯA KIỂM | |
+| UC-24-AC1 | API | `backend/tests/api/test_uc24_quyet_toan.py::test_uc24_ac1_*` | Đạt (61 passed) | 10/11/2026 |
+| UC-24-AC2 | API | `backend/tests/api/test_uc24_quyet_toan.py::test_uc24_ac2_*` | Đạt (61 passed) | 10/11/2026 |
+| UC-24-AC3 | API | `backend/tests/api/test_uc24_quyet_toan.py::test_uc24_ac3_*` | Đạt (61 passed) | 10/11/2026 |
+| UC-24-AC4 | Logic | `backend/tests/api/test_uc24_quyet_toan.py::test_uc24_ac4_*` | Đạt (61 passed) | 10/11/2026 |
+| UC-24-AC5 | Logic | `backend/tests/api/test_uc24_quyet_toan.py::test_uc24_ac5_*` | Đạt (61 passed) | 10/11/2026 |
+| UC-24-AC6 | API | `backend/tests/api/test_uc24_quyet_toan.py::test_uc24_ac6_*` | Đạt (61 passed) | 10/11/2026 |
+| UC-24-AC7 | API | `backend/tests/api/test_uc24_quyet_toan.py::test_uc24_ac7_*` | Đạt (61 passed) | 10/11/2026 |
+| UC-24-AC8 | API | `backend/tests/api/test_uc24_quyet_toan.py::test_uc24_ac8_*` | Đạt (61 passed) | 10/11/2026 |
+| UC-24-AC9 | API | `backend/tests/api/test_uc24_quyet_toan.py::test_uc24_ac9_*` | Đạt (61 passed) | 10/11/2026 |
+| UC-24-AC10 | API | `backend/tests/api/test_uc24_quyet_toan.py::test_uc24_ac10_*` | Đạt (61 passed) | 10/11/2026 |
+| UC-24-AC11 | API | `backend/tests/api/test_uc24_quyet_toan.py::test_uc24_ac11_*` | Đạt (61 passed) | 10/11/2026 |
+| UC-24-AC12 | API | `backend/tests/api/test_uc24_quyet_toan.py::test_uc24_ac12_*` | Đạt (61 passed) | 10/11/2026 |
+| UC-24-AC13 | API | `backend/tests/api/test_uc24_quyet_toan.py::test_uc24_ac13_*` | Đạt (61 passed) | 10/11/2026 |
+| UC-24-AC14 | UI | Thử tay ca a–l theo `docs/test-evidence/UC-24/du-lieu.md`, ảnh `b`, `c`, `d`, `f`, `g`, `h`, `j`, `k`, `l` trong `docs/test-evidence/UC-24/`; Kiệt xác nhận | Đạt | 10/11/2026 |
