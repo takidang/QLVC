@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent, type InputHTMLAttributes } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type InputHTMLAttributes } from 'react'
 import { Link } from 'react-router-dom'
 import {
   danhSachDon,
@@ -9,6 +9,7 @@ import {
   taoDon,
   tinhCuoc,
   traHangDon,
+  TEN_TRANG_THAI_DON,
   type BaoGia,
   type Don,
   type DonThatBai,
@@ -33,15 +34,6 @@ const oGio = (iso: string | null) =>
     : ''
 // UC-10: sửa / hủy khi hàng chưa lấy (BR-33, 34)
 const SUA_DUOC = ['CHO_GHEP', 'DA_GHEP']
-const TEN_TRANG_THAI: Record<string, string> = {
-  CHO_GHEP: 'Chờ ghép',
-  DA_GHEP: 'Đã ghép',
-  DA_LAY: 'Đã lấy',
-  DA_GIAO: 'Đã giao',
-  THAT_BAI: 'Thất bại',
-  TRA_HANG: 'Trả hàng',
-  HUY: 'Hủy',
-}
 
 export default function DonDanhSach() {
   const [tim, setTim] = useState('')
@@ -95,7 +87,7 @@ export default function DonDanhSach() {
           }}
         >
           <option value="">Mọi trạng thái</option>
-          {Object.entries(TEN_TRANG_THAI).map(([ma, ten]) => (
+          {Object.entries(TEN_TRANG_THAI_DON).map(([ma, ten]) => (
             <option key={ma} value={ma}>
               {ten}
             </option>
@@ -155,17 +147,28 @@ export default function DonDanhSach() {
               </td>
               <td>{lucVN(d.han_giao)}</td>
               <td className="so">{dong(d.cuoc_tinh)}</td>
-              <td>{TEN_TRANG_THAI[d.trang_thai] ?? d.trang_thai}</td>
+              <td>{TEN_TRANG_THAI_DON[d.trang_thai] ?? d.trang_thai}</td>
               <td className="hanh-dong">
-                {SUA_DUOC.includes(d.trang_thai) && (
-                  <>
-                    <button className="phu" onClick={() => setDangSua(d)}>
-                      Sửa
-                    </button>
-                    <button className="phu" onClick={() => setDangHuy(d)}>
-                      Hủy
-                    </button>
-                  </>
+                {SUA_DUOC.includes(d.trang_thai) &&
+                d.trang_thai_chuyen &&
+                d.trang_thai_chuyen !== 'LAP' ? (
+                  <span
+                    className="ghi-chu"
+                    title="Chỉ sửa / hủy được khi chuyến Đang lập (BR-33, 34)"
+                  >
+                    {d.trang_thai_chuyen === 'DA_CHOT' ? 'Chuyến đã chốt' : 'Chuyến đã chạy'}
+                  </span>
+                ) : (
+                  SUA_DUOC.includes(d.trang_thai) && (
+                    <>
+                      <button className="phu" onClick={() => setDangSua(d)}>
+                        Sửa
+                      </button>
+                      <button className="phu" onClick={() => setDangHuy(d)}>
+                        Hủy
+                      </button>
+                    </>
+                  )
                 )}
               </td>
             </tr>
@@ -288,6 +291,11 @@ function FormTaoDon({
   const [loiTruong, setLoiTruong] = useState<Record<string, string>>({})
   const [loiChung, setLoiChung] = useState<string[]>([])
   const [dangGui, setDangGui] = useState(false)
+  // Hộp cao hơn màn hình: có lỗi chung (vd. BR-06) thì cuộn tới, không bắt người dùng tự tìm ở đáy
+  const oLoi = useRef<HTMLUListElement>(null)
+  useEffect(() => {
+    if (loiChung.length) oLoi.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+  }, [loiChung])
 
   useEffect(() => {
     // shortcut: tối đa 100 khách và 100 nút, đủ cho nhà xe nhỏ; nhiều hơn thì thêm ô tìm
@@ -461,7 +469,7 @@ function FormTaoDon({
         </div>
 
         {loiChung.length > 0 && (
-          <ul role="alert" className="loi">
+          <ul role="alert" className="loi" ref={oLoi}>
             {loiChung.map((x) => (
               <li key={x}>{x}</li>
             ))}

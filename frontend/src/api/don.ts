@@ -27,6 +27,17 @@ export type Don = {
   cuoc_tinh: number
   trang_thai: string
   tao_luc: string
+  trang_thai_chuyen?: string | null // chỉ có ở danh sách: chuyến của đơn đang ghép (BR-33, 34)
+}
+
+export const TEN_TRANG_THAI_DON: Record<string, string> = {
+  CHO_GHEP: 'Chờ ghép',
+  DA_GHEP: 'Đã ghép',
+  DA_LAY: 'Đã lấy',
+  DA_GIAO: 'Đã giao',
+  THAT_BAI: 'Thất bại',
+  TRA_HANG: 'Trả hàng',
+  HUY: 'Hủy',
 }
 
 export type DonVao = {

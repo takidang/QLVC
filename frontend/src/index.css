@@ -167,6 +167,15 @@ tr.mo td {
   gap: 6px;
 }
 
+/* Ô bảng giữ kiểu table-cell, không thì dòng không có nút bị hụt đường kẻ dưới */
+td.hanh-dong {
+  display: table-cell;
+}
+
+td.hanh-dong > * + * {
+  margin-left: 6px;
+}
+
 /* UC-21: danh sách khoản chi trong khối Chi phí */
 .ds-chi {
   list-style: none;
@@ -354,6 +363,11 @@ ul.loi {
 .nhan.xam {
   background: #eef0f3;
   color: #3d4650;
+}
+
+.nhan.do {
+  background: #fdecea;
+  color: #b42318;
 }
 
 @media (max-width: 520px) {
