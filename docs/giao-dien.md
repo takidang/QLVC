@@ -1,0 +1,87 @@
+# Giao diện v2 – phần chung (00)
+
+Tài chốt ngày 10/11/2026 trên nhánh `tai/thu-giao-dien-v2`. Mẫu xem được: mở `docs/mockup/giao-dien-v2.html` bằng trình duyệt (có thanh đổi 5 bộ màu ở đáy trang; dữ liệu trong mẫu là minh họa).
+
+Trạng thái: **mới có mẫu, chưa làm vào `frontend/`**. Khi làm, mọi màu khai báo một chỗ bằng biến CSS trong `frontend/src/index.css`, tên biến như bảng dưới.
+
+## Phong cách
+
+Sạch, nhạt, nét mảnh: nền xám pha một sắc màu, các khối là tấm kính mờ viền sáng, chữ mực đậm. Màu chỉ dùng để báo trạng thái; **cam là màu nhấn duy nhất**, dành cho việc cần chú ý (trễ, quá tải).
+
+## Năm bộ màu
+
+Mỗi bộ chỉ đổi 7 biến nền và mực; bố cục, chữ, màu trạng thái giữ nguyên.
+
+| Biến | Vai trò | Đá xám xanh | Sương xanh | Cát ấm | Ngọc xanh | Oải hương |
+|---|---|---|---|---|---|---|
+| `--da` | Nền trang | `#C4C8BE` | `#C3CAD3` | `#D2CABB` | `#BFCBC8` | `#CAC6CF` |
+| `--sang1` | Vệt sáng nền 1 | `#E6E8E1` | `#E6EAEF` | `#EEE9DF` | `#E3EBE9` | `#EAE7EE` |
+| `--sang2` | Vệt sáng nền 2 | `#D3D7CC` | `#D2D9E1` | `#DDD6C8` | `#CFDAD7` | `#D8D4DE` |
+| `--muc` | Chữ chính, nút chính | `#1B2420` | `#172030` | `#261F17` | `#14231F` | `#211D29` |
+| `--phu` | Chữ phụ | `#47524B` | `#44505F` | `#574D40` | `#3F524D` | `#4F4959` |
+| `--o-liu` | Khối nhấn (thẻ chuyến đang chạy trên điện thoại) | `#56624A` | `#3F5673` | `#6B5540` | `#2F5F58` | `#54486E` |
+| `--cam` | Màu nhấn: cần chú ý | `#C2410C` | `#C2410C` | `#B4380F` | `#C2410C` | `#C2410C` |
+
+Nền trang vẽ bằng hai vệt sáng tròn trên `--da`:
+
+```css
+background:
+  radial-gradient(900px 520px at 80% 6%, var(--sang1) 0%, transparent 62%),
+  radial-gradient(700px 520px at 6% 34%, var(--sang2) 0%, transparent 66%),
+  var(--da);
+```
+
+## Màu dùng chung cho cả năm bộ
+
+| Biến | Giá trị | Dùng cho |
+|---|---|---|
+| `--kinh` | `rgb(250 250 247 / 62%)` + `backdrop-filter: blur(18px)` | Tấm kính: khung nổi, thẻ |
+| `--kinh-dac` | `rgb(250 250 247 / 86%)` | Khung bảng (đặc hơn cho dễ đọc) |
+| `--vien-sang` | `rgb(255 255 255 / 70%)` | Viền tấm kính |
+| `--vien` | `--muc` ở 12% | Đường kẻ bảng, viền nút |
+| `--chay` | `#1F6F8B` | Đang chạy, điểm dừng đang tới |
+| `--chot` | `#6A55B8` | Đã chốt |
+| `--xong` | `#2F7D4F` | Hoàn thành, Đã quyết toán |
+| `--do` | `#B3261E` | Sự cố, chồng lịch, giao thất bại |
+| `--xam` | `#6B736E` | Đang lập, Hủy |
+
+## Nhãn trạng thái chuyến
+
+Viên thuốc nền trắng mờ, chữ mực, **biểu tượng mang màu và có hình riêng** (vẫn phân biệt được khi máy chiếu nhạt màu).
+
+| Trạng thái | Biểu tượng | Màu |
+|---|---|---|
+| `LAP` Đang lập | vòng nét đứt | `--xam` |
+| `DA_CHOT` Đã chốt | vòng có chấm giữa | `--chot` |
+| `DANG_CHAY` Đang chạy | vòng tô nửa | `--chay` |
+| `HOAN_THANH` Hoàn thành | vòng đặc có dấu tích | `--xong` |
+| `DA_QUYET_TOAN` Đã quyết toán | như Hoàn thành, **nhãn tô đặc** `--xong`, chữ trắng | `--xong` |
+| `HUY` Hủy | vòng có dấu x; dòng trong bảng gạch ngang, chữ phụ | `--xam` |
+| Cờ Trễ | đồng hồ, nhãn tô đặc, chữ trắng | `--cam` |
+| Cờ Chồng lịch, Sự cố | tam giác cảnh báo, nhãn tô đặc, chữ trắng | `--do` |
+
+## Chữ
+
+- **Be Vietnam Pro**, tự host, độ đậm 300 / 400 / 500 / 600.
+- Tiêu đề trang 46 px, đậm 300, giãn chữ -0.03em. Số liệu lớn 32 px, đậm 300.
+- Chữ thường 14 px (điện thoại 15 px); chữ phụ 12.5–13.5 px.
+- Giờ, số, mã, biển số: `font-variant-numeric: tabular-nums`.
+
+## Khung và thành phần
+
+- **Thanh trên:** logo trái, menu viên thuốc ở giữa (tối đa 5–6 mục, gộp mục danh mục), người dùng bên phải. Không có menu trái.
+- **Đầu trang "Chuyến hôm nay":** tiêu đề to, hàng vạch đứng (mỗi vạch một chuyến theo giờ đi), số liệu, nút chính; bên phải là khung kính "Cần chú ý". Các màn danh mục dùng phần đầu thấp hơn.
+- **Bảng:** nằm trong khung kính đặc, đường kẻ mảnh, không tô nền tiêu đề cột; cột Giờ đi đứng đầu; tab lọc trạng thái dạng viên thuốc kèm số đếm.
+- **Nút:** bo tròn hết cỡ. Nút chính nền `--muc` chữ trắng; nút phụ nền trắng mờ viền `--vien`.
+- **Điểm dừng:** dãy đoạn ngang cao 5 px: đã xong `--muc`, đang tới `--chay`, thất bại `--do`, chưa tới mực 16%.
+- **Độ đầy:** thanh 5 px + số %; trên 95% đổi sang `--cam`.
+- **Biển số:** khung viền mảnh; chưa gán thì viền nét đứt.
+- **Bo góc:** tấm kính 16 px, thẻ chính điện thoại 20 px, nhãn / nút / menu bo tròn hết cỡ. Phân lớp bằng viền, không đổ bóng.
+- **Điện thoại 360 px:** chuyến đang chạy là khối `--o-liu` chữ trắng với nút trắng cao 52 px; lịch trình dạng dòng thời gian; menu dưới là viên thuốc nổi nền `--muc`.
+
+## Còn phải quyết khi làm vào code
+
+- Bộ màu mặc định (và có cho người dùng đổi bộ hay không).
+- Tải file font Be Vietnam Pro vào `frontend/public/fonts` (mẫu đang lấy từ Google Fonts, code thật không dùng CDN).
+- Cột Điểm dừng ở bảng chuyến cần số điểm đã xong của từng chuyến; chưa kiểm API danh sách có trả hay chưa.
+- Thử trên máy chiếu trước buổi demo: tông nhạt, nét mảnh dễ bạc màu.
