@@ -29,16 +29,28 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
     <main className="dang-nhap">
       <div className="dn-khung">
         <section className="dn-hinh">
-          {/* Đường tuyến mảnh: mỗi chấm là một điểm dừng, chấm sáng là xe đang tới */}
+          {/* Tự vẽ: đường tuyến có các điểm dừng (chấm sáng là điểm đang tới) và xe tải nét mảnh */}
           <svg viewBox="0 0 480 600" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-            <path d="M-20 90C120 70 150 190 260 200s150-90 250-60M-20 330c110 10 160-70 250-60s120 90 270 50" />
+            <path d="M-20 90C120 70 150 190 260 200s150-90 250-60" />
             <circle cx="119" cy="125" r="4" />
             <circle cx="260" cy="200" r="4" />
-            <circle cx="421" cy="146" r="4" />
-            <circle cx="101" cy="305" r="4" />
-            <circle cx="366" cy="323" r="4" />
-            <circle className="dang-toi" cx="230" cy="270" r="5" />
-            <circle className="vong" cx="230" cy="270" r="13" />
+            <circle className="dang-toi" cx="421" cy="146" r="5" />
+            <circle className="vong" cx="421" cy="146" r="13" />
+            <path d="M-20 366h520" />
+            <g className="xe" transform="translate(0 -36)">
+              <path className="mo" d="M34 300h44M18 326h60M46 352h32" />
+              <rect className="than" x="100" y="268" width="190" height="112" rx="6" />
+              <path className="mo" d="M148 280v88M196 280v88M244 280v88" />
+              <path
+                className="than"
+                d="M298 380v-68a6 6 0 0 1 6-6h34a8 8 0 0 1 6.500 3.300L370 342l10 5a6 6 0 0 1 4 5.600V380z"
+              />
+              <path d="M310 318h25l17 23h-42zM366 358h10M100 380h284" />
+              <circle cx="150" cy="384" r="18" />
+              <circle cx="150" cy="384" r="6" />
+              <circle cx="340" cy="384" r="18" />
+              <circle cx="340" cy="384" r="6" />
+            </g>
           </svg>
           <h2>Chuyến xe là trung tâm</h2>
           <p>

@@ -198,6 +198,21 @@ body {
   stroke: #ffb48a;
   stroke-opacity: 0.55;
 }
+.dn-hinh .xe {
+  stroke: rgb(255 255 255 / 88%);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.dn-hinh .xe path {
+  stroke: inherit;
+}
+.dn-hinh .xe .than {
+  fill: color-mix(in srgb, #fff 9%, var(--o-liu));
+}
+.dn-hinh .xe .mo {
+  stroke: rgb(255 255 255 / 34%);
+}
 .dn-hinh h2 {
   position: relative;
   margin: 0 0 12px;
