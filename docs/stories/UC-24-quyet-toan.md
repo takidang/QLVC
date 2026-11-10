@@ -72,10 +72,11 @@ Chuyến `HOAN_THANH` hiện ra ở trang **Quyết toán** của Kế toán. K�
 | UC-24-AC14 | Giao diện Kế toán: danh sách chuyến chờ, bảng quyết toán, duyệt / điều chỉnh / từ chối, xem ảnh, quyết toán có hỏi xác nhận, chuyến đã quyết toán chỉ xem; Quản lý thấy menu Công nợ và Quyết toán nhưng không có nút thao tác. Thử tay theo `docs/test-evidence/UC-24/du-lieu.md`, ảnh chụp | UI | BR-29, 55 |
 
 ## Ghi chú triển khai
-- File đã đổi:
-- Test đã viết:
+- File đã đổi: `backend/app/modules/tien/quyet_toan/` (router, schemas, service: duyệt / từ chối, bảng, quyết toán), `backend/app/modules/tep/router.py` (link ảnh ký HMAC 5 phút + mở ảnh), `backend/app/main.py` (2 router, theo chữ cái), `docs/api.md` (2.6, 3.3, tệp).
+- Test đã viết: `backend/tests/api/test_uc24_quyet_toan.py` 61 test (AC1–AC13). Thử phá 21 chỗ trong service (đổi điều kiện, bỏ kiểm tra): 21/21 bị test bắt (chỗ "tạm ứng đã thu hồi" lọt lần đầu, đã thêm test).
+- Kết quả 10/11: 61 passed; toàn bộ 848 passed.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/test_uc24_quyet_toan.py`
-- Lệch đặc tả (nếu có) và đã sửa `docs/` chưa: thêm vào `api.md` chi tiết duyệt / từ chối (khoảng số, đổi quyết định), quyền QL xem GET quyết toán, endpoint mở ảnh của link ký.
+- Lệch đặc tả (nếu có) và đã sửa `docs/` chưa: đã sửa `api.md`: chi tiết duyệt / từ chối, QL xem GET quyết toán, endpoint mở ảnh `/api/tep/{id}/anh`. Nhỏ: `luc_xu_ly` nhận lệch 5 phút so với giờ máy chủ (máy Kế toán chạy nhanh); `luc_xu_ly` thiếu múi giờ → 400.
 
 ## Truy vết và kết quả
 
