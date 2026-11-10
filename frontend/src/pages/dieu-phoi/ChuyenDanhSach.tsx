@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   danhSachChuyen,
@@ -11,9 +11,16 @@ import {
   type TaiXeKhaDung,
   type XeKhaDung,
 } from '../../api/chuyen'
+import { donCanXuLy } from '../../api/don'
 import { kemMaBr, LoiApi, loiTheoTruong } from '../../api/goi'
+import { danhSachTaiXe } from '../../api/taiXe'
 import { danhSachTuyen, type Tuyen } from '../../api/tuyen'
+import { danhSachXe } from '../../api/xe'
 import { Ic, Nhan } from '../../nhan'
+import LichGio from './LichGio'
+
+// Bản đồ (leaflet + css) tải riêng, chỉ khi ngày đang xem có chuyến
+const BanDoNgay = lazy(() => import('./BanDoNgay'))
 
 const SO_DONG = 20
 const homNay = () => new Date().toLocaleDateString('sv-SE')
@@ -32,6 +39,58 @@ const TEN_TRANG_THAI: Record<string, string> = {
 }
 // Cờ đưa lên khung "Cần chú ý" (Chưa quyết toán là việc của kế toán, không phải việc gấp của điều phối)
 const CO_CHU_Y = ['TRE', 'SU_CO', 'THAT_BAI', 'CHONG_LICH']
+// Việc khác của hôm nay trên khung "Cần chú ý": đơn thất bại chờ xử lý, giấy tờ sắp hết hạn (BR-21)
+type Viec = { den: string; nang: boolean; chinh: string; phu: string }
+// shortcut: CFG-02 (số ngày báo trước) chỉ Quản lý đọc được nên dùng mặc định 30;
+// thay bằng GET /api/canh-bao khi làm UC-27
+const NGAY_BAO_TRUOC = 30
+const ngayVN = (ymd: string) => ymd.split('-').reverse().join('/')
+async function viecHomNay(): Promise<Viec[]> {
+  const nay = homNay()
+  const moc = new Date(Date.now() + NGAY_BAO_TRUOC * 86_400_000).toLocaleDateString('sv-SE')
+  // Mỗi nguồn hỏng riêng thì bỏ qua nguồn đó, không làm mất cả khung
+  const [don, xe, taiXe] = await Promise.all([
+    donCanXuLy().catch(() => []),
+    danhSachXe({ trang_thai: 'HOAT_DONG', so_dong: 100 })
+      .then((r) => r.du_lieu)
+      .catch(() => []),
+    danhSachTaiXe({ trang_thai: 'HOAT_DONG', so_dong: 100 })
+      .then((r) => r.du_lieu)
+      .catch(() => []),
+  ])
+  const giay = (ten: string, loai: string, han: string, den: string): Viec[] =>
+    han > moc
+      ? []
+      : [
+          {
+            den,
+            nang: han < nay,
+            chinh: `${ten} · ${loai} ${han < nay ? 'đã hết hạn' : 'sắp hết hạn'}`,
+            phu: `Hạn ${ngayVN(han)}`,
+          },
+        ]
+  return [
+    ...(don.length
+      ? [
+          {
+            den: '../don',
+            nang: true,
+            chinh: `${don.length} đơn thất bại chờ xử lý`,
+            phu:
+              don
+                .slice(0, 3)
+                .map((d) => d.ma_don)
+                .join(', ') + (don.length > 3 ? '…' : ''),
+          },
+        ]
+      : []),
+    ...xe.flatMap((x) => [
+      ...giay(x.bien_so, 'đăng kiểm', x.han_dang_kiem, '../xe'),
+      ...giay(x.bien_so, 'bảo hiểm', x.han_bao_hiem, '../xe'),
+    ]),
+    ...taiXe.flatMap((t) => giay(t.ho_ten, 'GPLX', t.han_gplx, '../tai-xe')),
+  ]
+}
 // Mỗi vi phạm hiện kèm mã quy tắc (NFR-USA-02)
 const cauLoi = (ly_do: LyDo[]) => ly_do.map((v) => kemMaBr(v.thong_diep, v.ma))
 // Vạch của một chuyến trên dải đầu trang: xong đặc, đang chạy xanh, trễ cam, hủy rỗng
@@ -56,6 +115,10 @@ export default function ChuyenDanhSach() {
   const [moForm, setMoForm] = useState(false)
   const [vuaLap, setVuaLap] = useState<Chuyen | null>(null)
   const [lanTai, setLanTai] = useState(0)
+  const [viec, setViec] = useState<Viec[]>([])
+  useEffect(() => {
+    viecHomNay().then(setViec)
+  }, [])
 
   // Xem theo ngày: lấy cả ngày một lượt để đếm theo trạng thái, lọc trạng thái tại chỗ.
   // shortcut: tối đa 100 chuyến một ngày, đủ cho nhà xe nhỏ. Mọi ngày: máy chủ lọc và phân trang như cũ.
@@ -99,6 +162,8 @@ export default function ChuyenDanhSach() {
     ? caNgay.filter((c) => !trangThai || c.trang_thai === trangThai)
     : (ds?.du_lieu ?? [])
   const canChuY = caNgay.filter((c) => c.theo_doi?.co.some((x) => CO_CHU_Y.includes(x)))
+  const viecKhac = ngay === homNay() ? viec : []
+  const soViec = canChuY.length + viecKhac.length
   const soTrang = Math.max(1, Math.ceil((ds?.tong ?? 0) / SO_DONG))
   const soCot = ngay ? 7 : 5
 
@@ -158,7 +223,7 @@ export default function ChuyenDanhSach() {
         </div>
         {ngay && (
           <aside className="kinh chu-y">
-            <h2>Cần chú ý {canChuY.length > 0 && <em>{canChuY.length} chuyến</em>}</h2>
+            <h2>Cần chú ý {soViec > 0 && <em>{soViec} việc</em>}</h2>
             {canChuY.map((c) => {
               const co = c.theo_doi!.co.filter((x) => CO_CHU_Y.includes(x))
               const nang = co.some((x) => x !== 'TRE')
@@ -180,12 +245,30 @@ export default function ChuyenDanhSach() {
                 </Link>
               )
             })}
-            {canChuY.length === 0 && (
-              <p>{ds ? 'Không có chuyến nào trễ, sự cố hay chồng lịch.' : 'Đang tải…'}</p>
-            )}
+            {viecKhac.map((v) => (
+              <Link key={v.chinh} to={v.den} className={v.nang ? 'do' : undefined}>
+                <Ic ten={v.nang ? 'canh-bao' : 'dong-ho'} />
+                <span>
+                  <strong>{v.chinh}</strong>
+                  <small>{v.phu}</small>
+                </span>
+                <Ic ten="phai" />
+              </Link>
+            ))}
+            {soViec === 0 && <p>{ds ? 'Không có việc nào cần chú ý.' : 'Đang tải…'}</p>}
           </aside>
         )}
       </div>
+      {caNgay.length > 0 && (
+        <div className="hai-khoi">
+          <LichGio ds={caNgay} ten={TEN_TRANG_THAI} />
+          <Suspense
+            fallback={<section className="kinh ban-do-ngay ghi-chu">Đang tải bản đồ…</section>}
+          >
+            <BanDoNgay ds={caNgay} ten={TEN_TRANG_THAI} />
+          </Suspense>
+        </div>
+      )}
       {vuaLap && (
         <p className="thanh-cong">
           Đã lập chuyến <strong>{vuaLap.ma_chuyen}</strong> ({vuaLap.ma_tuyen}, {vuaLap.bien_so},{' '}

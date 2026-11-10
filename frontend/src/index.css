@@ -924,8 +924,10 @@ p.thanh-cong {
   padding: 9px 20px 9px 16px;
 }
 .chu-y {
+  max-height: 336px;
   margin-top: 8px;
   padding: 6px 0;
+  overflow-y: auto;
 }
 .chu-y h2 {
   display: flex;
@@ -970,6 +972,156 @@ p.thanh-cong {
 .chu-y p {
   margin: 0;
   padding: 4px 18px 12px;
+}
+
+/* Hàng giữa: lịch xe theo giờ (trái) và bản đồ tuyến trong ngày (phải) */
+.hai-khoi {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.lich-gio,
+.ban-do-ngay {
+  padding: 14px 18px 16px;
+}
+.lich-gio h2,
+.ban-do-ngay h2 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.lg-hang {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  border-top: 1px solid var(--vien);
+}
+.lg-hang .bien {
+  justify-self: start;
+}
+.lg-dau {
+  border-top: 0;
+}
+/* Vạch giờ kẻ bằng nền lặp; bề rộng một ô đặt trong LichGio.tsx */
+.lg-duong {
+  position: relative;
+  height: 38px;
+  background-image: linear-gradient(to right, var(--vien) 1px, transparent 1px);
+}
+.lg-dau .lg-duong {
+  height: 22px;
+  background: none;
+}
+.lg-dau small {
+  position: absolute;
+  top: 0;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--phu);
+}
+.lg-thanh {
+  position: absolute;
+  top: 6px;
+  height: 26px;
+  min-width: 8px;
+  padding: 0 8px;
+  overflow: hidden;
+  font-size: 12.5px;
+  font-weight: 500;
+  line-height: 24px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 7px;
+}
+.lg-thanh:hover {
+  z-index: 2;
+  box-shadow: 0 0 0 1px var(--muc);
+}
+.lg-thanh.lap {
+  background: rgb(255 255 255 / 70%);
+  border: 1px dashed color-mix(in srgb, var(--muc) 45%, transparent);
+}
+.lg-thanh.chot {
+  background: color-mix(in srgb, var(--chot) 16%, #fff);
+  border-color: color-mix(in srgb, var(--chot) 45%, transparent);
+}
+.lg-thanh.chay {
+  color: #fff;
+  background: var(--chay);
+}
+.lg-thanh.xong {
+  color: #fff;
+  background: var(--muc);
+}
+.lg-thanh.huy {
+  color: var(--xam);
+  text-decoration: line-through;
+  border: 1px dashed color-mix(in srgb, var(--muc) 30%, transparent);
+}
+.lg-thanh.tre {
+  color: #fff;
+  background: var(--cam);
+  border-color: var(--cam);
+}
+/* Vạch "bây giờ" */
+.lg-nay {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  width: 2px;
+  background: var(--muc);
+}
+.ban-do-ngay {
+  display: flex;
+  flex-direction: column;
+}
+.ban-do-ngay .ban-do {
+  flex: 1;
+  height: auto;
+  min-height: 260px;
+  margin: 0;
+}
+.ban-do-ngay .ghi-chu {
+  margin: 8px 0 0;
+}
+/* Leaflet đặt màu bằng thuộc tính; CSS ở đây đè lên để theo bộ màu */
+.bd-tuyen {
+  fill: none;
+  stroke: var(--xam);
+  stroke-width: 4;
+  stroke-opacity: 0.9;
+}
+.bd-tuyen.lap {
+  stroke-dasharray: 6 8;
+}
+.bd-tuyen.chot {
+  stroke: var(--chot);
+}
+.bd-tuyen.chay {
+  stroke: var(--chay);
+  stroke-width: 5;
+}
+.bd-tuyen.xong {
+  stroke: var(--muc);
+}
+.bd-tuyen.huy {
+  stroke-dasharray: 2 8;
+  stroke-opacity: 0.6;
+}
+.bd-tuyen.tre {
+  stroke: var(--cam);
+  stroke-width: 5;
+}
+.bd-nut {
+  fill: #fff;
+  fill-opacity: 1;
+  stroke: var(--muc);
+  stroke-width: 2;
 }
 
 .bang-khung {
@@ -1243,6 +1395,9 @@ tr.hang.mo .gio b {
   }
 }
 @media (max-width: 1000px) {
+  .hai-khoi {
+    grid-template-columns: 1fr;
+  }
   .mo-dau {
     grid-template-columns: 1fr;
     gap: 22px;

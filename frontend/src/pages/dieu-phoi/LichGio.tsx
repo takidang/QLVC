@@ -1,0 +1,69 @@
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import type { Chuyen } from '../../api/chuyen'
+
+const GIO = 3_600_000
+const gio = (ms: number | string) =>
+  new Date(ms).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+const LOP: Record<string, string> = {
+  LAP: 'lap',
+  DA_CHOT: 'chot',
+  DANG_CHAY: 'chay',
+  HOAN_THANH: 'xong',
+  DA_QUYET_TOAN: 'xong',
+  HUY: 'huy',
+}
+
+// Lịch xe theo giờ: mỗi xe một hàng, mỗi chuyến một thanh từ giờ đi tới giờ kết thúc dự kiến.
+// `ds` đã xếp theo giờ đi; `ten` là tên trạng thái để ghi vào chú thích khi rê chuột.
+export default function LichGio({ ds, ten }: { ds: Chuyen[]; ten: Record<string, string> }) {
+  const dau = Math.floor(Math.min(...ds.map((c) => Date.parse(c.khoi_hanh_du_kien))) / GIO) * GIO
+  const cuoi = Math.ceil(Math.max(...ds.map((c) => Date.parse(c.ket_thuc_du_kien))) / GIO) * GIO
+  const soGio = (cuoi - dau) / GIO
+  const buoc = soGio > 12 ? 2 : 1 // khoảng dài thì kẻ vạch 2 giờ một
+  const soVach = Math.ceil(soGio / buoc)
+  const pt = (ms: number) => `${((ms - dau) / (cuoi - dau)) * 100}%`
+  const xe = [...new Set(ds.map((c) => c.bien_so))]
+  const [nay] = useState(Date.now) // lấy một lần lúc mở, không đổi giữa các lần vẽ lại
+
+  return (
+    <section className="kinh lich-gio">
+      <h2>Lịch xe theo giờ</h2>
+      <div className="lg-hang lg-dau" aria-hidden="true">
+        <span />
+        <div className="lg-duong">
+          {Array.from({ length: soVach }, (_, i) => dau + i * buoc * GIO).map((v) => (
+            <small key={v} style={{ left: pt(v) }}>
+              {gio(v)}
+            </small>
+          ))}
+        </div>
+      </div>
+      {xe.map((b) => (
+        <div className="lg-hang" key={b}>
+          <span className="bien">{b}</span>
+          <div className="lg-duong" style={{ backgroundSize: `${(buoc / soGio) * 100}% 100%` }}>
+            {nay > dau && nay < cuoi && <i className="lg-nay" style={{ left: pt(nay) }} />}
+            {ds
+              .filter((c) => c.bien_so === b)
+              .map((c) => {
+                const di = Date.parse(c.khoi_hanh_du_kien)
+                const den = Date.parse(c.ket_thuc_du_kien)
+                return (
+                  <Link
+                    key={c.id}
+                    to={String(c.id)}
+                    className={`lg-thanh ${LOP[c.trang_thai] ?? 'lap'}${c.theo_doi?.co.includes('TRE') ? ' tre' : ''}`}
+                    style={{ left: pt(di), width: `${((den - di) / (cuoi - dau)) * 100}%` }}
+                    title={`${c.ma_chuyen} · ${c.ten_tuyen} · ${gio(di)} → ${gio(den)} · ${c.ten_tai_xe} · ${ten[c.trang_thai] ?? c.trang_thai}`}
+                  >
+                    {c.ten_tuyen}
+                  </Link>
+                )
+              })}
+          </div>
+        </div>
+      ))}
+    </section>
+  )
+}
