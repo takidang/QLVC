@@ -15,7 +15,8 @@ const homNay = () => new Date().toLocaleDateString('sv-SE') // YYYY-MM-DD
 const ngayVN = (iso: string) => iso.split('-').reverse().join('/')
 
 // UC-25: nợ theo khách → chọn khách → tích các khoản chưa thu → ngày thu → đánh dấu đã thu (một phiếu thu, BR-56)
-export default function CongNo() {
+// chiXem: Quản lý xem, không đánh dấu đã thu (góp ý của Tài 10/11)
+export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
   const [no, setNo] = useState<NoTheoKhach[]>([])
   const [khach, setKhach] = useState<NoTheoKhach | null>(null)
   const [xem, setXem] = useState<'CHUA_THU' | 'DA_THU'>('CHUA_THU')
@@ -150,7 +151,7 @@ export default function CongNo() {
           <table>
             <thead>
               <tr>
-                {xem === 'CHUA_THU' && <th></th>}
+                {!chiXem && xem === 'CHUA_THU' && <th></th>}
                 <th>Mã đơn</th>
                 <th>Giao lúc</th>
                 <th>Số tiền</th>
@@ -160,7 +161,7 @@ export default function CongNo() {
             <tbody>
               {khoan.map((k) => (
                 <tr key={k.id}>
-                  {xem === 'CHUA_THU' && (
+                  {!chiXem && xem === 'CHUA_THU' && (
                     <td>
                       <input
                         type="checkbox"
@@ -189,7 +190,7 @@ export default function CongNo() {
               )}
             </tbody>
           </table>
-          {xem === 'CHUA_THU' && khoan.length > 0 && (
+          {!chiXem && xem === 'CHUA_THU' && khoan.length > 0 && (
             <div className="o-nhap">
               <p>
                 Đã chọn <strong>{chon.size}</strong> khoản · <strong>{dong(tongChon)}</strong>
