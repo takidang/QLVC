@@ -10,7 +10,7 @@
 | Nền móng: models, migration, đăng nhập, khung frontend | 18/10 | Xong 16/10 |
 | UC-03 mẫu + docs/mau-use-case.md | 25/10 | Xong 24/10 |
 | Vòng tối thiểu: tạo đơn → ghép → chốt → quét → giao | 08/11 | Xong 08/11 (gộp UC-20, PR #16) |
-| Quyết toán chạy được | 29/11 | Chưa bắt đầu |
+| Quyết toán chạy được | 29/11 | Xong 10/11 (gộp UC-24, PR #33) |
 | UC-30 dự đoán trễ (phần AI) | 06/12 | Chưa bắt đầu |
 | Nộp LMS | 21–27/12 | |
 
