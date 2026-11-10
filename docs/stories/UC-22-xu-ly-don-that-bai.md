@@ -66,4 +66,4 @@ Sau khi chuyến kết thúc, đơn `THAT_BAI` hiện trong danh sách cần x�
 | UC-22-AC9 | API | `test_uc22_ac9_lich_su` | Đạt | 08/11/2026 |
 | UC-22-AC10 | API | `test_uc22_ac10_danh_sach_can_xu_ly` | Đạt | 08/11/2026 |
 | UC-22-AC11 | API | `test_uc22_ac11_* (5 ca)` | Đạt | 08/11/2026 |
-| UC-22-AC12 | UI | Chờ thử (`docs/test-evidence/UC-22/du-lieu.md`) | CHƯA KIỂM | |
+| UC-22-AC12 | UI | Kiệt thử 10/11, ca a–d đạt, e chưa thử (`docs/test-evidence/UC-22/`) | Đạt | 10/11/2026 |
