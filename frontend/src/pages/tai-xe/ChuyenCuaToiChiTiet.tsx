@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { LoiApi } from '../../api/goi'
+import { Nhan } from '../../nhan'
 import {
   TEN_TRANG_THAI,
   chuyenCuaToiChiTiet,
@@ -64,9 +65,7 @@ export default function ChuyenCuaToiChiTiet() {
         <>
           <div className="the-dau">
             <h1>{c.ma_chuyen}</h1>
-            <span className={c.trang_thai === 'DANG_CHAY' ? 'nhan' : 'nhan xam'}>
-              {TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}
-            </span>
+            <Nhan loai={c.trang_thai}>{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</Nhan>
           </div>
           <p>
             {c.ma_tuyen} – {c.ten_tuyen}

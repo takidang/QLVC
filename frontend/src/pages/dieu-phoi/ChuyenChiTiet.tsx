@@ -19,6 +19,7 @@ import {
 } from '../../api/chuyen'
 import { ChonKhaDung, type KhaDung } from './ChuyenDanhSach'
 import type { Don } from '../../api/don'
+import { Nhan } from '../../nhan'
 import TheoDoiChuyen from './TheoDoiChuyen'
 
 // Bản đồ (leaflet + css) tải riêng khi mở chi tiết chuyến, không kéo theo vào màn đăng nhập
@@ -158,7 +159,7 @@ export default function ChuyenChiTiet() {
       <Link to="..">← Danh sách chuyến</Link>
       <div className="thanh-cong-cu">
         <h1>Chuyến {c.ma_chuyen}</h1>
-        <span className="nhan">{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</span>
+        <Nhan loai={c.trang_thai}>{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</Nhan>
         {dangLap && lyDoHuy === null && (
           <button disabled={dangGui} onClick={() => lam('chot')}>
             Chốt chuyến
@@ -264,7 +265,7 @@ export default function ChuyenChiTiet() {
       <TheoDoiChuyen c={c} onDoi={(r) => (r ? setC(r) : setLanTai((n) => n + 1))} />
 
       <h2>Lịch trình</h2>
-      <Suspense fallback={<p className="phu">Đang tải bản đồ…</p>}>
+      <Suspense fallback={<p className="ghi-chu">Đang tải bản đồ…</p>}>
         <BanDoChuyen lichTrinh={c.lich_trinh} />
       </Suspense>
       <table>

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { dongSuCo, ketThucSuCo, TEN_CO, type ChuyenChiTiet } from '../../api/chuyen'
 import { kemMaBr, LoiApi } from '../../api/goi'
+import { Nhan } from '../../nhan'
 
 const dong = (n: number) => `${n.toLocaleString('vi-VN')} đ`
 const lucVN = (iso: string) =>
@@ -21,9 +22,9 @@ export default function TheoDoiChuyen({
       {(c.co?.length ?? 0) > 0 && (
         <p>
           {c.co!.map((x) => (
-            <span key={x} className="nhan do">
+            <Nhan key={x} loai={x}>
               {TEN_CO[x] ?? x}
-            </span>
+            </Nhan>
           ))}
         </p>
       )}

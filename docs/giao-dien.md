@@ -2,7 +2,7 @@
 
 Tài chốt ngày 10/11/2026 trên nhánh `tai/thu-giao-dien-v2`. Mẫu xem được: mở `docs/mockup/giao-dien-v2.html` bằng trình duyệt (có thanh đổi 5 bộ màu ở đáy trang; dữ liệu trong mẫu là minh họa).
 
-Trạng thái: biến màu và font đã có trong `frontend/src/index.css`; **mới làm màn đăng nhập (01)**, các màn khác còn kiểu tối thiểu cũ. Mọi màu khai báo một chỗ bằng biến CSS ở đầu `index.css`, tên biến như bảng dưới. Bộ mặc định là "Đá xám xanh"; bộ khác bật bằng `data-mau="suong" | "cat" | "ngoc" | "oai"` trên `<html>` (nút đổi trong Cài đặt làm sau).
+Trạng thái (10/11/2026): đã vào code phần chung (nền, nút, ô nhập, bảng, hộp thoại, nhãn), khung trang, **màn đăng nhập (01)** và **chuyến trong ngày (02)**. Các màn khác mới ăn theo phần chung, chưa có bố cục riêng. Mọi màu khai báo một chỗ bằng biến CSS ở đầu `index.css`, tên biến như bảng dưới. Bộ mặc định là "Đá xám xanh"; bộ khác bật bằng `data-mau="suong" | "cat" | "ngoc" | "oai"` trên `<html>` (nút đổi trong Cài đặt làm sau).
 
 ## Phong cách
 
@@ -92,8 +92,17 @@ Khi có nút đổi bộ màu trong Cài đặt, lựa chọn đã lưu của ng
 - **Bo góc:** tấm kính 16 px, thẻ chính điện thoại 20 px, nhãn / nút / menu bo tròn hết cỡ. Phân lớp bằng viền, không đổ bóng.
 - **Điện thoại 360 px:** chuyến đang chạy là khối `--o-liu` chữ trắng với nút trắng cao 52 px; lịch trình dạng dòng thời gian; menu dưới là viên thuốc nổi nền `--muc`.
 
+## Khung trang và màn Chuyến trong ngày (02), đã vào code
+
+- **Khung trang** (`KhungTrang` trong `App.tsx`): tên hệ thống bên trái (tạm "Quản lý vận tải", chờ tên mới), menu viên thuốc ở giữa, tên người dùng + vòng tên tắt + Đăng xuất bên phải. Mục có `nhom: true` trong `TRANG_CON` (Xe, Tài xế, Nút, Tuyến) gộp vào mục xổ xuống "Danh mục". Chỉ có một mục (tài xế) thì ẩn menu.
+- **Điều phối đăng nhập vào thẳng màn Chuyến**, mặc định lọc **hôm nay**; nút "Mọi ngày" trả về danh sách đủ mọi ngày, phân trang như trước.
+- **Xem theo ngày:** lấy cả ngày một lượt (tối đa 100 chuyến), xếp theo giờ đi, lọc trạng thái tại chỗ nên tab có số đếm. Đầu trang có dải vạch (mỗi vạch một chuyến), 4 số đếm, khung "Cần chú ý" (cờ Trễ, Sự cố, Đơn thất bại, Chồng lịch; bấm vào mở chi tiết chuyến).
+- **Bảng:** Giờ đi (giờ đến nhỏ bên dưới, đổi cam khi trễ) · Tuyến + mã chuyến · biển số + tài xế · Điểm dừng (mỗi đoạn một điểm, API chỉ trả số điểm xong / tổng nên chưa tô được điểm thất bại) · Độ đầy · nhãn trạng thái + cờ. Bấm cả dòng để mở chuyến.
+- **Nhãn** dùng chung ở `frontend/src/nhan.tsx` (`<Nhan loai="DANG_CHAY">`, nhận mã trạng thái chuyến hoặc mã cờ). Cờ "Chưa quyết toán" là nhãn thường, không tô đặc.
+- Mẫu tham khảo 02 (ngoài repo, `tham-khao-ui/02-bang-chuyen-trong-ngay`): lấy thanh menu trên, tab lọc có số đếm, bảng trong khung, phần đầu có số liệu + nút chính. Chưa làm lịch chuyến dạng thanh ngang theo giờ (Gantt) như mẫu "Dispatch Schedule".
+
 ## Còn phải quyết khi làm vào code
 
 - Nút đổi bộ màu trong Cài đặt (Tài làm sau).
-- Cột Điểm dừng ở bảng chuyến cần số điểm đã xong của từng chuyến; chưa kiểm API danh sách có trả hay chưa.
+- Thanh `<meter>` tải / thể tích ở chi tiết chuyến còn màu mặc định của trình duyệt (làm ở 03).
 - Thử trên máy chiếu trước buổi demo: tông nhạt, nét mảnh dễ bạc màu.

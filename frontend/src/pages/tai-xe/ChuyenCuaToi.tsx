@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { LoiApi } from '../../api/goi'
+import { Nhan } from '../../nhan'
 import {
   TEN_TRANG_THAI,
   chuyenCuaToi,
@@ -74,9 +75,7 @@ export default function ChuyenCuaToi() {
             <Link to={String(c.id)} className="the">
               <div className="the-dau">
                 <strong>{c.ma_chuyen}</strong>
-                <span className={c.trang_thai === 'DANG_CHAY' ? 'nhan' : 'nhan xam'}>
-                  {TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}
-                </span>
+                <Nhan loai={c.trang_thai}>{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</Nhan>
               </div>
               <div>
                 {c.ma_tuyen} – {c.ten_tuyen}

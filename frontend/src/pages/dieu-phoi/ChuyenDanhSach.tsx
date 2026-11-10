@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   danhSachChuyen,
   TEN_CO,
@@ -13,10 +13,13 @@ import {
 } from '../../api/chuyen'
 import { kemMaBr, LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachTuyen, type Tuyen } from '../../api/tuyen'
+import { Ic, Nhan } from '../../nhan'
 
 const SO_DONG = 20
-const lucVN = (iso: string) =>
-  new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' })
+const homNay = () => new Date().toLocaleDateString('sv-SE')
+const gio = (iso: string) =>
+  new Date(iso).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+const ngayThang = (iso: string) => new Date(iso).toLocaleDateString('en-GB').slice(0, 5) // dd/mm
 // Ô datetime-local không có múi giờ; nhà xe ở Việt Nam nên gắn +07:00 (API bắt buộc có múi giờ)
 const coMuiGio = (v: string) => `${v}:00+07:00`
 const TEN_TRANG_THAI: Record<string, string> = {
@@ -27,65 +30,161 @@ const TEN_TRANG_THAI: Record<string, string> = {
   DA_QUYET_TOAN: 'Đã quyết toán',
   HUY: 'Hủy',
 }
+// Cờ đưa lên khung "Cần chú ý" (Chưa quyết toán là việc của kế toán, không phải việc gấp của điều phối)
+const CO_CHU_Y = ['TRE', 'SU_CO', 'THAT_BAI', 'CHONG_LICH']
 // Mỗi vi phạm hiện kèm mã quy tắc (NFR-USA-02)
 const cauLoi = (ly_do: LyDo[]) => ly_do.map((v) => kemMaBr(v.thong_diep, v.ma))
+// Vạch của một chuyến trên dải đầu trang: xong đặc, đang chạy xanh, trễ cam, hủy rỗng
+const lopVach = (c: Chuyen) =>
+  c.trang_thai === 'HUY'
+    ? 'h'
+    : c.theo_doi?.co.includes('TRE')
+      ? 't'
+      : c.trang_thai === 'DANG_CHAY'
+        ? 'c'
+        : c.trang_thai === 'HOAN_THANH' || c.trang_thai === 'DA_QUYET_TOAN'
+          ? 'x'
+          : undefined
 
 export default function ChuyenDanhSach() {
-  const [ngay, setNgay] = useState('')
+  const dieuHuong = useNavigate()
+  const [ngay, setNgay] = useState(homNay) // '' = mọi ngày
   const [trangThai, setTrangThai] = useState('')
   const [trang, setTrang] = useState(1)
-  const [ds, setDs] = useState<{ du_lieu: Chuyen[]; tong: number }>({ du_lieu: [], tong: 0 })
+  const [ds, setDs] = useState<{ du_lieu: Chuyen[]; tong: number } | null>(null) // null = đang tải
   const [loiTai, setLoiTai] = useState('')
   const [moForm, setMoForm] = useState(false)
   const [vuaLap, setVuaLap] = useState<Chuyen | null>(null)
   const [lanTai, setLanTai] = useState(0)
 
+  // Xem theo ngày: lấy cả ngày một lượt để đếm theo trạng thái, lọc trạng thái tại chỗ.
+  // shortcut: tối đa 100 chuyến một ngày, đủ cho nhà xe nhỏ. Mọi ngày: máy chủ lọc và phân trang như cũ.
+  const locMayChu = ngay ? '' : trangThai
+  const trangMayChu = ngay ? 1 : trang
   useEffect(() => {
     let bo = false // yêu cầu cũ về muộn thì bỏ
-    danhSachChuyen({ ngay, trang_thai: trangThai, trang, so_dong: SO_DONG })
+    danhSachChuyen(
+      ngay
+        ? { ngay, so_dong: 100 }
+        : { trang_thai: locMayChu, trang: trangMayChu, so_dong: SO_DONG },
+    )
       .then((r) => {
         if (bo) return
         setDs(r)
         setLoiTai('')
       })
       .catch((e) => {
-        if (!bo) setLoiTai(e instanceof LoiApi ? e.message : 'Không tải được danh sách chuyến')
+        if (bo) return
+        setDs({ du_lieu: [], tong: 0 })
+        setLoiTai(e instanceof LoiApi ? e.message : 'Không tải được danh sách chuyến')
       })
     return () => {
       bo = true
     }
-  }, [ngay, trangThai, trang, lanTai])
+  }, [ngay, locMayChu, trangMayChu, lanTai])
 
-  const soTrang = Math.max(1, Math.ceil(ds.tong / SO_DONG))
+  const chonNgay = (v: string) => {
+    setNgay(v)
+    setTrang(1)
+    setDs(null)
+  }
+  // Cả ngày, xếp theo giờ đi (máy chủ trả mới nhất trước)
+  const caNgay = ngay
+    ? [...(ds?.du_lieu ?? [])].sort(
+        (a, b) => Date.parse(a.khoi_hanh_du_kien) - Date.parse(b.khoi_hanh_du_kien),
+      )
+    : []
+  const dem = (...tt: string[]) => caNgay.filter((c) => tt.includes(c.trang_thai)).length
+  const dong = ngay
+    ? caNgay.filter((c) => !trangThai || c.trang_thai === trangThai)
+    : (ds?.du_lieu ?? [])
+  const canChuY = caNgay.filter((c) => c.theo_doi?.co.some((x) => CO_CHU_Y.includes(x)))
+  const soTrang = Math.max(1, Math.ceil((ds?.tong ?? 0) / SO_DONG))
+  const soCot = ngay ? 7 : 5
+
   return (
     <section className="noi-dung">
-      <div className="thanh-cong-cu">
-        <h1>Chuyến</h1>
-        <input
-          type="date"
-          aria-label="Ngày khởi hành"
-          value={ngay}
-          onChange={(e) => {
-            setNgay(e.target.value)
-            setTrang(1)
-          }}
-        />
-        <select
-          aria-label="Lọc trạng thái"
-          value={trangThai}
-          onChange={(e) => {
-            setTrangThai(e.target.value)
-            setTrang(1)
-          }}
-        >
-          <option value="">Mọi trạng thái</option>
-          {Object.entries(TEN_TRANG_THAI).map(([ma, ten]) => (
-            <option key={ma} value={ma}>
-              {ten}
-            </option>
-          ))}
-        </select>
-        <button onClick={() => setMoForm(true)}>Lập chuyến</button>
+      <div className="mo-dau">
+        <div>
+          <h1>
+            {!ngay
+              ? 'Tất cả chuyến'
+              : ngay === homNay()
+                ? 'Chuyến hôm nay'
+                : `Chuyến ngày ${ngayThang(`${ngay}T00:00`)}`}
+          </h1>
+          <p className="ngay">
+            {ngay
+              ? new Date(`${ngay}T00:00`).toLocaleDateString('vi-VN', { dateStyle: 'full' })
+              : 'Mọi ngày khởi hành, mới nhất trước'}
+          </p>
+          {caNgay.length > 0 && (
+            <div className="vach" role="img" aria-label={`${caNgay.length} chuyến theo giờ đi`}>
+              {caNgay.map((c) => (
+                <i
+                  key={c.id}
+                  className={lopVach(c)}
+                  title={`${gio(c.khoi_hanh_du_kien)} · ${c.ma_chuyen} · ${TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}`}
+                />
+              ))}
+            </div>
+          )}
+          <div className="so-lieu">
+            {caNgay.length > 0 && (
+              <>
+                <div>
+                  <b>{caNgay.length}</b>
+                  <span>chuyến</span>
+                </div>
+                <div>
+                  <b>{dem('DANG_CHAY')}</b>
+                  <span>đang chạy</span>
+                </div>
+                <div>
+                  <b>{dem('LAP', 'DA_CHOT')}</b>
+                  <span>chưa xuất phát</span>
+                </div>
+                <div>
+                  <b>{dem('HOAN_THANH', 'DA_QUYET_TOAN')}</b>
+                  <span>đã xong</span>
+                </div>
+              </>
+            )}
+            <button onClick={() => setMoForm(true)}>
+              <Ic ten="cong" />
+              Lập chuyến
+            </button>
+          </div>
+        </div>
+        {ngay && (
+          <aside className="kinh chu-y">
+            <h2>Cần chú ý {canChuY.length > 0 && <em>{canChuY.length} chuyến</em>}</h2>
+            {canChuY.map((c) => {
+              const co = c.theo_doi!.co.filter((x) => CO_CHU_Y.includes(x))
+              const nang = co.some((x) => x !== 'TRE')
+              return (
+                <Link key={c.id} to={String(c.id)} className={nang ? 'do' : undefined}>
+                  <Ic ten={nang ? 'canh-bao' : 'dong-ho'} />
+                  <span>
+                    <strong>
+                      {c.ma_chuyen} · {co.map((x) => TEN_CO[x] ?? x).join(', ')}
+                    </strong>
+                    <small>
+                      {c.ten_tuyen} ·{' '}
+                      {co.includes('CHONG_LICH')
+                        ? `trùng ${c.theo_doi!.chong.join(', ')}`
+                        : `${c.bien_so}, ${c.ten_tai_xe}`}
+                    </small>
+                  </span>
+                  <Ic ten="phai" />
+                </Link>
+              )
+            })}
+            {canChuY.length === 0 && (
+              <p>{ds ? 'Không có chuyến nào trễ, sự cố hay chồng lịch.' : 'Đang tải…'}</p>
+            )}
+          </aside>
+        )}
       </div>
       {vuaLap && (
         <p className="thanh-cong">
@@ -99,76 +198,179 @@ export default function ChuyenDanhSach() {
         </p>
       )}
 
-      <table>
-        <thead>
-          <tr>
-            <th>Mã chuyến</th>
-            <th>Tuyến</th>
-            <th>Xe</th>
-            <th>Tài xế</th>
-            <th>Khởi hành</th>
-            <th>Kết thúc dự kiến</th>
-            <th>Trạng thái</th>
-            {ngay && <th>Tiến độ</th>}
-            {ngay && <th className="so">Đầy</th>}
-            {ngay && <th>Cờ</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {ds.du_lieu.map((c) => (
-            <tr key={c.id}>
-              <td className="bien-so">
-                <Link to={String(c.id)}>{c.ma_chuyen}</Link>
-              </td>
-              <td>
-                {c.ma_tuyen} – {c.ten_tuyen}
-              </td>
-              <td className="bien-so">{c.bien_so}</td>
-              <td>{c.ten_tai_xe}</td>
-              <td>{lucVN(c.khoi_hanh_du_kien)}</td>
-              <td>{lucVN(c.ket_thuc_du_kien)}</td>
-              <td>{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</td>
-              {ngay && c.theo_doi && (
-                <>
-                  <td>
-                    {c.theo_doi.xong}/{c.theo_doi.tong} điểm
-                  </td>
-                  <td className="so">{Math.round(Number(c.theo_doi.ty_le_lap_day) * 100)}%</td>
-                  <td>
-                    {c.theo_doi.co.map((x) => (
-                      <span
-                        key={x}
-                        className="nhan do"
-                        title={x === 'CHONG_LICH' ? c.theo_doi!.chong.join(', ') : ''}
-                      >
-                        {TEN_CO[x] ?? x}
-                      </span>
-                    ))}
-                  </td>
-                </>
-              )}
-            </tr>
-          ))}
-          {ds.du_lieu.length === 0 && (
+      <div className="kinh bang-khung">
+        <div className="cong-cu">
+          <div className="vien-thuoc" role="group" aria-label="Lọc trạng thái">
+            {[['', 'Tất cả'], ...Object.entries(TEN_TRANG_THAI)].map(([ma, ten]) => (
+              <button
+                key={ma}
+                aria-pressed={trangThai === ma}
+                onClick={() => {
+                  setTrangThai(ma)
+                  setTrang(1)
+                }}
+              >
+                {ten}
+                {ngay && ds && <em>{ma ? dem(ma) : caNgay.length}</em>}
+              </button>
+            ))}
+          </div>
+          <div className="loc-ngay">
+            <input
+              type="date"
+              aria-label="Ngày khởi hành"
+              value={ngay}
+              onChange={(e) => chonNgay(e.target.value)}
+            />
+            {ngay !== homNay() && (
+              <button className="phu" onClick={() => chonNgay(homNay())}>
+                Hôm nay
+              </button>
+            )}
+            {ngay && (
+              <button className="phu" onClick={() => chonNgay('')}>
+                Mọi ngày
+              </button>
+            )}
+          </div>
+        </div>
+        <table>
+          <thead>
             <tr>
-              <td colSpan={ngay ? 10 : 7} className="trong">
-                Chưa có chuyến nào phù hợp
-              </td>
+              <th>Giờ đi</th>
+              <th>Tuyến</th>
+              <th>Xe · Tài xế</th>
+              {ngay && <th>Điểm dừng</th>}
+              {ngay && <th>Độ đầy</th>}
+              <th>Trạng thái</th>
+              <th>
+                <span className="an-chu">Mở chuyến</span>
+              </th>
             </tr>
-          )}
-        </tbody>
-      </table>
-      <div className="phan-trang">
-        <button className="phu" disabled={trang <= 1} onClick={() => setTrang(trang - 1)}>
-          Trước
-        </button>
-        <span>
-          Trang {trang}/{soTrang} · {ds.tong} chuyến
-        </span>
-        <button className="phu" disabled={trang >= soTrang} onClick={() => setTrang(trang + 1)}>
-          Sau
-        </button>
+          </thead>
+          <tbody>
+            {dong.map((c) => {
+              const td = c.theo_doi
+              const day = td ? Math.round(Number(td.ty_le_lap_day) * 100) : 0
+              const denKhacNgay = ngayThang(c.ket_thuc_du_kien) !== ngayThang(c.khoi_hanh_du_kien)
+              return (
+                <tr
+                  key={c.id}
+                  className={c.trang_thai === 'HUY' ? 'hang mo' : 'hang'}
+                  onClick={() => dieuHuong(String(c.id))}
+                >
+                  <td className="gio">
+                    <b>{gio(c.khoi_hanh_du_kien)}</b>
+                    <small className={td?.co.includes('TRE') ? 'tre' : undefined}>
+                      {!ngay && `${ngayThang(c.khoi_hanh_du_kien)} `}→ {gio(c.ket_thuc_du_kien)}
+                      {denKhacNgay && ` (${ngayThang(c.ket_thuc_du_kien)})`}
+                    </small>
+                  </td>
+                  <td>
+                    <div className="tuyen">{c.ten_tuyen}</div>
+                    <span className="ma">
+                      <Link to={String(c.id)} onClick={(e) => e.stopPropagation()}>
+                        {c.ma_chuyen}
+                      </Link>{' '}
+                      · {c.ma_tuyen}
+                    </span>
+                  </td>
+                  <td>
+                    <span className="bien">{c.bien_so}</span>
+                    <small>{c.ten_tai_xe}</small>
+                  </td>
+                  {ngay && (
+                    <td>
+                      {td && (
+                        <div className="tien-do">
+                          <div className="doan">
+                            {Array.from({ length: td.tong }, (_, i) => (
+                              <i
+                                key={i}
+                                className={
+                                  i < td.xong
+                                    ? 'x'
+                                    : i === td.xong && c.trang_thai === 'DANG_CHAY'
+                                      ? 'c'
+                                      : undefined
+                                }
+                              />
+                            ))}
+                          </div>
+                          <small>
+                            {td.xong} / {td.tong} điểm
+                          </small>
+                        </div>
+                      )}
+                    </td>
+                  )}
+                  {ngay && (
+                    <td>
+                      {td && (
+                        <div className={day > 95 ? 'day cao' : 'day'}>
+                          <span>
+                            <i style={{ width: `${Math.min(day, 100)}%` }} />
+                          </span>
+                          {day}%
+                        </div>
+                      )}
+                    </td>
+                  )}
+                  <td>
+                    <div className="tt">
+                      <Nhan loai={c.trang_thai}>
+                        {TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}
+                      </Nhan>
+                      {td?.co.map((x) => (
+                        <Nhan
+                          key={x}
+                          loai={x}
+                          title={x === 'CHONG_LICH' ? td.chong.join(', ') : undefined}
+                        >
+                          {TEN_CO[x] ?? x}
+                        </Nhan>
+                      ))}
+                    </div>
+                  </td>
+                  <td className="mui">
+                    <Ic ten="phai" />
+                  </td>
+                </tr>
+              )
+            })}
+            {dong.length === 0 && (
+              <tr>
+                <td colSpan={soCot} className="trong">
+                  {!ds
+                    ? 'Đang tải…'
+                    : ngay && !trangThai && !loiTai
+                      ? 'Chưa có chuyến nào khởi hành ngày này. Bấm “Mọi ngày” để xem các ngày khác.'
+                      : 'Chưa có chuyến nào phù hợp'}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
+      {ngay ? (
+        (ds?.tong ?? 0) > caNgay.length && (
+          <p className="ghi-chu">
+            Đang hiện {caNgay.length} / {ds!.tong} chuyến của ngày này.
+          </p>
+        )
+      ) : (
+        <div className="phan-trang">
+          <button className="phu" disabled={trang <= 1} onClick={() => setTrang(trang - 1)}>
+            Trước
+          </button>
+          <span>
+            Trang {trang}/{soTrang} · {ds?.tong ?? 0} chuyến
+          </span>
+          <button className="phu" disabled={trang >= soTrang} onClick={() => setTrang(trang + 1)}>
+            Sau
+          </button>
+        </div>
+      )}
 
       {moForm && (
         <FormLapChuyen
