@@ -1,4 +1,4 @@
-import { useState, type CSSProperties, type FormEvent } from 'react'
+import { useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import { dangNhap, LoiApi, type NguoiDung } from '../api/auth'
 import { NEN } from '../nen'
 
@@ -7,6 +7,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
   const [matKhau, setMatKhau] = useState('')
   const [loi, setLoi] = useState('')
   const [dangGui, setDangGui] = useState(false)
+  const oMatKhau = useRef<HTMLInputElement>(null)
 
   async function gui(e: FormEvent) {
     e.preventDefault()
@@ -23,6 +24,8 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
           ? err.message
           : 'Vui lòng nhập đủ tên đăng nhập và mật khẩu',
       )
+      // Nút bị khóa lúc gửi làm mất focus; đưa về ô mật khẩu để gõ lại ngay
+      oMatKhau.current?.focus()
     } finally {
       setDangGui(false)
     }
@@ -54,6 +57,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
               Mật khẩu
               <span className="dn-o">
                 <input
+                  ref={oMatKhau}
                   type="password"
                   value={matKhau}
                   onChange={(e) => setMatKhau(e.target.value)}

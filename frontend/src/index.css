@@ -226,7 +226,7 @@ body {
   color: var(--muc);
   caret-color: var(--cam);
   background: rgb(255 255 255 / 66%);
-  border: 1px solid color-mix(in srgb, var(--muc) 40%, transparent); /* ≥ 3:1 với nền */
+  border: 1px solid color-mix(in srgb, var(--muc) 62%, transparent); /* ≥ 3:1 với nền trang */
   border-radius: 12px;
 }
 /* Edge tự thêm con mắt hiện mật khẩu, chồng lên ổ khóa */
@@ -235,7 +235,7 @@ body {
   display: none;
 }
 .dn-o input:hover {
-  border-color: color-mix(in srgb, var(--muc) 60%, transparent);
+  border-color: var(--muc);
 }
 .dn-o input:focus-visible {
   outline: 2px solid var(--muc);
@@ -302,7 +302,7 @@ body {
 }
 
 /* Hẹp: ảnh thành dải trên đầu, form bên dưới */
-@media (max-width: 860px) {
+@media (max-width: 760px) {
   .dang-nhap {
     padding: 10px;
   }
@@ -312,7 +312,7 @@ body {
   }
   .dn-hinh {
     order: -1;
-    min-height: 190px;
+    min-height: clamp(96px, 24dvh, 190px); /* máy thấp vẫn thấy nút không phải cuộn */
     padding: 22px;
     border-radius: 16px;
   }
