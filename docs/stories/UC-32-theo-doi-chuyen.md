@@ -58,4 +58,4 @@
 | UC-32-AC8 | API | `test_uc32_ac8_giai_phong_lich` | Đạt | 08/11/2026 |
 | UC-32-AC9 | API | `test_uc32_ac9_dong_su_co` | Đạt | 08/11/2026 |
 | UC-32-AC10 | API | `test_uc32_ac10_* (5 ca)` | Đạt | 08/11/2026 |
-| UC-32-AC11 | UI | Chờ thử (`docs/test-evidence/UC-32/du-lieu.md`) | CHƯA KIỂM | |
+| UC-32-AC11 | UI | Kiệt thử 10/11, ca a, b, d đạt (b, d thử lại trên PR #34); c, e chưa thử (`docs/test-evidence/UC-32/`) | Đạt | 10/11/2026 |
