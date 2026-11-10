@@ -61,4 +61,4 @@
 | UC-10-AC9 | API | `test_uc10_ac9_* (4 ca)` | Đạt | 08/11/2026 |
 | UC-10-AC10 | API | `test_uc10_ac10_huy_va_ghep_dong_thoi` | Đạt | 08/11/2026 |
 | UC-10-AC11 | API | `test_uc10_ac11_* (5 ca)` | Đạt | 08/11/2026 |
-| UC-10-AC12 | UI | Chờ thử (`docs/test-evidence/UC-10/du-lieu.md`) | CHƯA KIỂM | |
+| UC-10-AC12 | UI | Kiệt thử 10/11, 7/7 ca a–g, c và g thử lại trên PR #34 (`docs/test-evidence/UC-10/`) | Đạt | 10/11/2026 |

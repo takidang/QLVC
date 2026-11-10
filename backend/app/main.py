@@ -20,6 +20,10 @@ from app.modules.danh_muc.xe.router import router as xe_router
 from app.modules.don.router import router as don_router
 from app.modules.nguoi_dung.router import router as nguoi_dung_router
 from app.modules.quet.router import router as quet_router
+from app.modules.tep.router import router as tep_router
+from app.modules.tien.chi_phi.router import router as chi_phi_router
+from app.modules.tien.cong_no.router import router as cong_no_router
+from app.modules.tien.quyet_toan.router import router as quyet_toan_router
 from app.modules.tien.tam_ung.router import router as tam_ung_router
 from app.modules.toi.router import router as toi_router
 
@@ -35,16 +39,20 @@ app = FastAPI(title="QLVC", lifespan=lifespan)
 app.include_router(auth_router)
 app.include_router(bang_gia_router)
 app.include_router(cau_hinh_router)
+app.include_router(chi_phi_router)
 app.include_router(chuyen_router)
+app.include_router(cong_no_router)
 app.include_router(don_router)
 app.include_router(khach_hang_router)
 app.include_router(ly_do_router)
 app.include_router(nguoi_dung_router)
 app.include_router(nut_router)
 app.include_router(quet_router)
+app.include_router(quyet_toan_router)
 app.include_router(su_co_router)
 app.include_router(tai_xe_router)
 app.include_router(tam_ung_router)
+app.include_router(tep_router)
 app.include_router(toi_router)
 app.include_router(tuyen_router)
 app.include_router(xe_router)

@@ -183,6 +183,16 @@ def test_uc10_ac8_chuyen_da_chot(client, dang_nhap_voi, db, kb):
     assert chuyen(db, c01).trang_thai == "DA_CHOT"
 
 
+def test_uc10_ac8_danh_sach_kem_trang_thai_chuyen(client, dang_nhap_voi, db, kb):
+    """Danh sách đơn trả trạng thái chuyến để giao diện ẩn Sửa / Hủy khi chuyến đã chốt (BR-33, 34)."""
+    dang_nhap_voi("DIEU_PHOI")
+    c01 = lap_c01(client, kb, "d1", "d4")
+    tt = lambda: {d["id"]: d["trang_thai_chuyen"] for d in client.get("/api/don").json()["du_lieu"]}  # noqa: E731
+    assert (tt()[kb["d4"]], tt()[kb["d2"]]) == ("LAP", None)
+    chot(client, c01)
+    assert tt()[kb["d4"]] == "DA_CHOT"
+
+
 # AC9 – hủy sai trạng thái
 @pytest.mark.parametrize("tt", ["DA_LAY", "DA_GIAO", "TRA_HANG"])
 def test_uc10_ac9_trang_thai_khong_huy_duoc(client, dang_nhap_voi, db, kb, tt):

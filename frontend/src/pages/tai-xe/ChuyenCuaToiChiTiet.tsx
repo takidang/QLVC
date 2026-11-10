@@ -12,6 +12,7 @@ import {
   type KetQuaQuet,
 } from '../../api/toi'
 import { nenAnh } from '../../nenAnh'
+import { ChiPhi } from './ChiPhi'
 import { GiaoHang } from './GiaoHang'
 import { KhongLay, QuetLay } from './QuetLay'
 
@@ -22,8 +23,10 @@ const NHAN_DIEM: Record<'LAY' | 'GIAO', Record<string, string>> = {
   LAY: { DA_GHEP: 'Chờ lấy', DA_LAY: 'Đã lấy', DA_GIAO: 'Đã lấy', TRA_HANG: 'Đã lấy' },
   GIAO: { DA_GHEP: 'Chưa lấy hàng', DA_LAY: 'Chờ giao', DA_GIAO: 'Đã giao', TRA_HANG: 'Trả hàng' },
 }
-const nhanDiem = (viec: 'LAY' | 'GIAO', tt: string) =>
-  NHAN_DIEM[viec][tt] ?? (tt === 'THAT_BAI' ? 'Thất bại' : tt)
+// Đơn thất bại: điểm Lấy là "Đã lấy" nếu chuyến này đã quét lấy (thất bại khi giao), không thì "Thất bại"
+const nhanDiem = (viec: 'LAY' | 'GIAO', tt: string, daLay: boolean) =>
+  NHAN_DIEM[viec][tt] ??
+  (tt === 'THAT_BAI' ? (viec === 'LAY' && daLay ? 'Đã lấy' : 'Thất bại') : tt)
 
 // UC-17: lịch trình cho tài xế – từng điểm dừng, đơn, địa chỉ, gọi điện. Không có cước (quyết định số 3)
 // UC-18: chuyến chờ chạy có ô Bắt đầu, chuyến đang chạy có ô Kết thúc (km + ảnh đồng hồ)
@@ -93,6 +96,9 @@ export default function ChuyenCuaToiChiTiet() {
           {(c.trang_thai === 'DA_CHOT' || c.trang_thai === 'DANG_CHAY') && (
             <FormKm key={c.trang_thai} c={c} onXong={setC} />
           )}
+          {['DANG_CHAY', 'HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai) && (
+            <ChiPhi chuyenId={c.id} ghiDuoc={c.trang_thai !== 'DA_QUYET_TOAN'} />
+          )}
 
           <h2>Lịch trình</h2>
           {c.lich_trinh.length === 0 && <p className="trong">Chuyến chạy rỗng – không có đơn</p>}
@@ -103,7 +109,7 @@ export default function ChuyenCuaToiChiTiet() {
                   <strong>
                     {p.thu_tu}. {gio(p.eta)} · {p.viec === 'LAY' ? 'Lấy' : 'Giao'} tại {p.nut}
                   </strong>
-                  <span className="nhan xam">{nhanDiem(p.viec, p.trang_thai_don)}</span>
+                  <span className="nhan xam">{nhanDiem(p.viec, p.trang_thai_don, p.da_lay)}</span>
                 </div>
                 <div>
                   <span className="bien-so">{p.ma_don}</span> · {p.ten_khach}

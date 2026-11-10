@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.domain.cuoc import kiem_br31_don_hop_le
 from app.loi import LoiNghiepVu
-from app.models import DonHang, Ghep, LuotQuet, LyDo, NguoiDung, Nut
+from app.models import DonHang, Ghep, LichSuTrangThai, LuotQuet, LyDo, NguoiDung, Nut
 from app.modules.chuyen.service import _doi_trang_thai
 from app.modules.danh_muc.cau_hinh import service as cau_hinh
 from app.modules.don import service
@@ -98,7 +98,17 @@ def can_xu_ly(db: Session) -> list[dict]:
     ra = []
     for d in dong:
         don_id = d[0].id
+        # Lý do của lần vào THAT_BAI gần nhất: quét thất bại ghi tên lý do, kết thúc do sự cố ghi "Sự cố xe: …"
         cuoi = db.scalar(
+            select(LichSuTrangThai.ly_do)
+            .where(
+                LichSuTrangThai.doi_tuong == "DON",
+                LichSuTrangThai.doi_tuong_id == don_id,
+                LichSuTrangThai.sang == "THAT_BAI",
+            )
+            .order_by(LichSuTrangThai.id.desc())
+            .limit(1)
+        ) or db.scalar(
             _quet_cua(don_id)
             .with_only_columns(LyDo.ten)
             .join(LyDo, LyDo.id == LuotQuet.ly_do_id)

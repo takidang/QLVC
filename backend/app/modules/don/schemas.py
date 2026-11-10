@@ -156,6 +156,7 @@ class DonRa(BaseModel):
     cuoc_tinh: int
     trang_thai: str
     tao_luc: datetime
+    trang_thai_chuyen: str | None = None  # chỉ có ở danh sách: chuyến của đơn đang ghép (BR-33, 34)
 
 
 class DonCanXuLyRa(DonRa):

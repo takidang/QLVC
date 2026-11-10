@@ -24,6 +24,8 @@ import TuyenDanhSach from './pages/dieu-phoi/TuyenDanhSach'
 import TaiXeDanhSach from './pages/dieu-phoi/TaiXeDanhSach'
 import XeDanhSach from './pages/dieu-phoi/XeDanhSach'
 import ChiPhiCoDinh from './pages/ke-toan/ChiPhiCoDinh'
+import CongNo from './pages/ke-toan/CongNo'
+import QuyetToan from './pages/ke-toan/QuyetToan'
 import TamUng from './pages/ke-toan/TamUng'
 import ChuyenCuaToi from './pages/tai-xe/ChuyenCuaToi'
 import ChuyenCuaToiChiTiet from './pages/tai-xe/ChuyenCuaToiChiTiet'
@@ -62,12 +64,17 @@ const TRANG_CON: Partial<
   ],
   KE_TOAN: [
     { duong_dan: 'chi-phi-xe', ten: 'Chi phí cố định xe', trang: <ChiPhiCoDinh /> },
+    { duong_dan: 'cong-no', ten: 'Công nợ', trang: <CongNo /> },
+    { duong_dan: 'quyet-toan', ten: 'Quyết toán', trang: <QuyetToan /> },
     { duong_dan: 'tam-ung', ten: 'Tạm ứng', trang: <TamUng /> },
   ],
   QUAN_LY: [
-    { duong_dan: 'nguoi-dung', ten: 'Người dùng', trang: <NguoiDungDanhSach /> },
-    { duong_dan: 'bang-gia', ten: 'Bảng giá', trang: <BangGiaDanhSach /> },
-    { duong_dan: 'cau-hinh', ten: 'Cấu hình', trang: <CauHinh /> },
+    { duong_dan: 'nguoi-dung', ten: 'Người dùng', trang: <NguoiDungDanhSach />, nhom: true },
+    { duong_dan: 'bang-gia', ten: 'Bảng giá', trang: <BangGiaDanhSach />, nhom: true },
+    { duong_dan: 'cau-hinh', ten: 'Cấu hình', trang: <CauHinh />, nhom: true },
+    // Quản lý chỉ xem tiền (nghiep-vu.md mục 8): ẩn nút ghi; quyền thật do máy chủ kiểm
+    { duong_dan: 'cong-no', ten: 'Công nợ', trang: <CongNo chiXem /> },
+    { duong_dan: 'quyet-toan', ten: 'Quyết toán', trang: <QuyetToan chiXem /> },
   ],
   TAI_XE: [
     { duong_dan: 'chuyen', ten: 'Chuyến của tôi', trang: <ChuyenCuaToi /> },

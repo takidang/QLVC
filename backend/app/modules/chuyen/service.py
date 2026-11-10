@@ -599,7 +599,7 @@ def chot(db: Session, chuyen_id: int, xac_nhan_chay_rong: bool, xac_nhan_lai_am:
     else:  # chuyến rỗng luôn lãi âm, xác nhận chạy rỗng là đủ (quyết định UC-15 số 2)
         lai = lai_du_kien([d.cuoc_tinh for d in don], t.dm_dau + t.dm_cau_duong + t.dm_boc_xep, t.dm_luong_tai_xe)
         if lai < 0 and not xac_nhan_lai_am:
-            raise LoiNghiepVu("BR-52", f"Lãi dự kiến âm ({lai:,} đ), cần xác nhận".replace(",", "."))
+            raise LoiNghiepVu("BR-52", f"Lãi dự kiến âm ({lai:,} đ)".replace(",", ".") + ", cần xác nhận")
 
     # Lưu định mức, lương của tuyến và ETA kế hoạch từng điểm (BR-71)
     c.dm_dau_chot, c.dm_cau_duong_chot, c.dm_boc_xep_chot = t.dm_dau, t.dm_cau_duong, t.dm_boc_xep
