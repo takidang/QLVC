@@ -35,15 +35,6 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
         </section>
 
         <form onSubmit={gui}>
-          <div className="dn-logo">
-            <svg viewBox="0 0 26 26" aria-hidden="true">
-              <path d="M4 20C9 20 8 6 13 6s4 14 9 14" />
-              <circle cx="4" cy="20" r="1.8" />
-              <circle className="dang-toi" cx="22" cy="20" r="1.8" />
-            </svg>
-            QLVC
-          </div>
-
           <div className="dn-giua">
             <h1>Đăng nhập</h1>
             <p className="dn-phu">Hệ thống quản lý vận tải</p>

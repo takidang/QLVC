@@ -196,28 +196,6 @@ body {
   flex-direction: column;
   padding: 26px 56px 20px;
 }
-.dn-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-}
-.dn-logo svg {
-  width: 26px;
-  height: 26px;
-  fill: var(--muc);
-  stroke: var(--muc);
-  stroke-width: 1.6;
-  stroke-linecap: round;
-}
-.dn-logo svg path {
-  fill: none;
-}
-.dn-logo svg .dang-toi {
-  fill: var(--cam);
-  stroke: var(--cam);
-}
 .dn-giua {
   margin-block: auto;
   padding-block: 28px;
