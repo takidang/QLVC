@@ -31,12 +31,6 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
   return (
     <main className="dang-nhap">
       <div className="dn-khung">
-        <section className="dn-hinh" style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}>
-          <p>
-            Lập chuyến, theo dõi từng điểm dừng, giao hàng bằng quét mã và quyết toán theo chuyến.
-          </p>
-        </section>
-
         <form onSubmit={gui} noValidate>
           <div className="dn-giua">
             <h1>Đăng nhập</h1>
@@ -87,6 +81,12 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
 
           <p className="dn-chan">Đồ án chuyên ngành · Nhóm 8</p>
         </form>
+
+        <section className="dn-hinh" style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}>
+          <p>
+            Lập chuyến, theo dõi từng điểm dừng, giao hàng bằng quét mã và quyết toán theo chuyến.
+          </p>
+        </section>
       </div>
     </main>
   )

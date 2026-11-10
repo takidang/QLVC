@@ -66,7 +66,7 @@ Viên thuốc nền trắng mờ, chữ mực, **biểu tượng mang màu và c
 
 ## Màn đăng nhập (01)
 
-Khung kính hai nửa: trái là ảnh xe tải phủ màu `--o-liu` đậm dần xuống dưới, có một dòng mô tả hệ thống; phải là tiêu đề, hai ô nhập có nhãn phía trên, câu lỗi nền đỏ nhạt, nút chính bo tròn có mũi tên. Dưới 760 px ẩn nửa trái, chỉ còn form. Hành vi và câu lỗi giữ nguyên như UC-01.
+Cả trang chia đôi (không khung nổi): trái là form trên nền trang (rộng tối đa 400 px, giữa cột) gồm tiêu đề, hai ô nhập có nhãn phía trên, câu lỗi nền đỏ nhạt, nút chính bo tròn có mũi tên; phải là ảnh xe tải cao hết trang, bo 20 px, phủ màu `--o-liu` đậm dần xuống dưới, có một dòng mô tả hệ thống. Dưới 860 px ảnh thành dải cao 190 px trên đầu, form bên dưới. Hành vi và câu lỗi giữ nguyên như UC-01.
 
 **Mỗi lần mở web** (`frontend/src/nen.ts`) chọn ngẫu nhiên một trong hai ảnh, kèm bộ màu hợp ảnh, áp cho cả app:
 

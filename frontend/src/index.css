@@ -135,13 +135,12 @@ body {
   color: #1c2024;
 }
 
-/* Màn đăng nhập: khung kính hai nửa, nửa trái là khối nhấn có đường tuyến */
+/* Màn đăng nhập: cả trang chia đôi, form trái trên nền trang, ảnh phải phủ hết chiều cao */
 .dang-nhap {
   box-sizing: border-box; /* padding nằm trong 100dvh, không sinh thanh cuộn thừa */
   min-height: 100dvh;
   display: grid;
-  place-items: center;
-  padding: 24px;
+  padding: 14px;
   color: var(--muc);
   line-height: 1.45;
   background:
@@ -154,26 +153,17 @@ body {
 }
 
 .dn-khung {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: 1040px;
-  min-height: min(640px, 100dvh - 48px);
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 14px;
-  background: var(--kinh);
-  border: 1px solid var(--vien-sang);
-  border-radius: 24px;
-  backdrop-filter: blur(18px);
+  grid-template-columns: minmax(400px, 5fr) 7fr;
 }
 
-/* Ảnh: Josiah Farrow / Unsplash (giấy phép Unsplash), đã cắt vuông quanh xe; phủ màu khối nhấn đậm dần xuống chỗ có chữ */
+/* Ảnh chọn ở nen.ts (nguồn ghi ở docs/giao-dien.md); phủ màu khối nhấn đậm dần xuống chỗ có chữ */
 .dn-hinh {
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  padding: 40px;
-  border-radius: 16px;
+  padding: 44px;
+  border-radius: 20px;
   color: #fff;
   background:
     linear-gradient(
@@ -196,10 +186,13 @@ body {
 .dang-nhap form {
   display: flex;
   flex-direction: column;
-  padding: 26px 56px 20px;
+  padding: 26px 56px 14px;
 }
 .dn-giua {
-  margin-block: auto;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 400px;
+  margin: auto;
   padding-block: 28px;
   display: grid;
   gap: 16px;
@@ -233,7 +226,7 @@ body {
   color: var(--muc);
   caret-color: var(--cam);
   background: rgb(255 255 255 / 66%);
-  border: 1px solid var(--vien);
+  border: 1px solid color-mix(in srgb, var(--muc) 40%, transparent); /* ≥ 3:1 với nền */
   border-radius: 12px;
 }
 /* Edge tự thêm con mắt hiện mật khẩu, chồng lên ổ khóa */
@@ -242,7 +235,7 @@ body {
   display: none;
 }
 .dn-o input:hover {
-  border-color: color-mix(in srgb, var(--muc) 32%, transparent);
+  border-color: color-mix(in srgb, var(--muc) 60%, transparent);
 }
 .dn-o input:focus-visible {
   outline: 2px solid var(--muc);
@@ -280,7 +273,7 @@ body {
   font-weight: 500;
   color: #fff;
   background: var(--muc);
-  border: 0;
+  border: 1px solid transparent; /* hiện khung khi bật tương phản cao */
   border-radius: 99px;
   transition: background 0.15s ease-out;
 }
@@ -301,31 +294,33 @@ body {
   stroke-linejoin: round;
 }
 .dn-chan {
-  margin: 0;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
   font-size: 0.8rem;
   color: var(--phu);
 }
 
-/* Máy tính bảng dựng đứng: khung cao hết màn, không để trống trên dưới */
-@media (min-width: 761px) and (orientation: portrait) {
-  .dn-khung {
-    min-height: calc(100dvh - 48px);
-  }
-}
-@media (max-width: 760px) {
+/* Hẹp: ảnh thành dải trên đầu, form bên dưới */
+@media (max-width: 860px) {
   .dang-nhap {
-    padding: 14px;
+    padding: 10px;
   }
   .dn-khung {
     grid-template-columns: 1fr;
-    min-height: 0;
-    padding: 0;
+    grid-template-rows: auto 1fr;
   }
   .dn-hinh {
+    order: -1;
+    min-height: 190px;
+    padding: 22px;
+    border-radius: 16px;
+  }
+  .dn-hinh p {
     display: none;
   }
   .dang-nhap form {
-    padding: 22px 20px 18px;
+    padding: 8px 14px 6px;
   }
   .dang-nhap h1 {
     font-size: 2.1rem;
