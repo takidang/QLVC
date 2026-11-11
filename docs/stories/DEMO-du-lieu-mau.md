@@ -1,6 +1,6 @@
 # DEMO: Dữ liệu mẫu cho buổi demo
 
-- **Trạng thái:** Đang làm – AC1–AC5 đạt, AC6 chờ Kiệt làm thử (Đã duyệt 11/11/2026 – Tài: đồng ý 6 AC và 5 quyết định)
+- **Trạng thái:** Hoàn thành 11/11/2026 – 6/6 AC đạt (Đã duyệt 11/11/2026 – Tài: đồng ý 6 AC và 5 quyết định)
 - **Tác nhân:** Nhóm (chạy trước buổi demo)
 - **Đặc tả:** `docs/kien-truc.md` (thư mục `backend/seed/`), `docs/nghiep-vu.md` mục triển khai ("bản demo seed vài trăm đơn")
 - **Quy tắc nghiệp vụ liên quan:** dùng lại toàn bộ service đã có, không thêm quy tắc mới
@@ -46,4 +46,4 @@ Một lệnh nạp dữ liệu mẫu tính theo **ngày chạy lệnh**, để s
 | DEMO-AC3 | API | `test_demo_ac3_ngay_truoc_va_viec_cho` | Đạt | 11/11/2026 |
 | DEMO-AC4 | API | `test_demo_ac4_so_lieu_khop` | Đạt | 11/11/2026 |
 | DEMO-AC5 | API | `test_demo_ac5_khong_nap_chong_va_ngay_moi`, `test_demo_chi_chay_o_dev`, `test_demo_ngoai_khung_gio`, `test_demo_tra_lai_dong_ho` | Đạt | 11/11/2026 |
-| DEMO-AC6 | Tài liệu | `docs/cai-moi-truong.md` mục 8; Kiệt làm theo trên máy mình | CHƯA KIỂM | |
+| DEMO-AC6 | Tài liệu | Kiệt làm theo mục 8 trên máy mình 11/11: tạo `qlvc_demo`, nạp không lỗi (15 chuyến đã quyết toán 7 ngày trước; hôm nay đang chạy trễ, đang chạy có sự cố, chờ quyết toán, đã chốt, đang lập, hủy; 52 đơn). Nạp sau 18:00 nên gọi `nap(bay_gio=17:00)` | Đạt | 11/11/2026 |

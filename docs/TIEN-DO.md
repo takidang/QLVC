@@ -48,11 +48,12 @@
 | UC-06…09 Đơn tối thiểu | 3–4 | Xong | UC-06 6/6, UC-07 9/9, UC-08 11/11 | UC-08-AC11 Kiệt thử 25/10; UC-09 bỏ ở 0.5; phiếu QR làm cùng UC-19 |
 | UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Xong | 9/9 | AC9 Kiệt thử 25/10 |
 | UC-11…13, 15 Chuyến tối thiểu | 3–4 | Xong | UC-11 12/12, UC-12 5/5, UC-13 13/13, UC-15 11/11 | Đóng UC-12, 15 ngày 08/11 theo kết quả Kiệt thử (PR #18); còn sửa lỗi nhỏ danh sách xe UC-12 |
-| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Đang làm | UC-16 10/10, UC-10 12/12, UC-22 11/12, UC-32 10/11 | UC-16 xong 08/11, UC-10 xong 10/11. Còn thiếu: UC-22 AC12 ca e (cần 3 chuyến); UC-32 AC11 ca c (cùng xe, tài xế khác) và ca e (chờ UC-33 của Kiệt). Bản đồ chi tiết chuyến (Leaflet + OSM) đã vào `dev` (PR #25) |
-| UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
+| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Đang làm | UC-16 10/10, UC-10 12/12, UC-22 11/12, UC-32 14/15 | UC-16 xong 08/11, UC-10 xong 10/11. UC-32 thêm AC12–15 cho giao diện v2 (PR #41, 11/11). Còn thiếu: UC-22 AC12 ca e (cần 3 chuyến); UC-32 AC11 ca c (cùng xe, tài xế khác) và ca e (UC-33 đã vào `dev`, thử được). Bản đồ chi tiết chuyến (Leaflet + OSM) đã vào `dev` (PR #25) |
+| UC-28, triển khai demo | 7 | Đang làm | UC-28 6/7, DEMO 6/6 | UC-28 backend gộp 11/11 (PR #42), còn AC7 trang tra cứu (giao diện v2). Dữ liệu demo `python -m seed.demo` xong 11/11 (PR #46, Kiệt nạp thành công trên máy demo). Lên Render chưa làm |
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 11/11: Gộp #41 UC-32 AC12–15 (trạng thái điểm, trễ, vị trí quét, tìm chuyến), #42 UC-28 Tra cứu đơn, #46 dữ liệu demo; gộp của Kiệt #43 UC-26, #47 UC-34 (mở lại #45), #44 UC-27, #39 UC-33 (gỡ xung đột `main.py`). Sửa góp ý review: NFC cho `tu_khoa`, cờ `--proxy-headers` khi lên Render, seed chỉ chạy ở `APP_ENV=dev`.
 - 10/11: Gộp #34 sửa góp ý Kiệt thử UC-10, 22, 32 (dòng thời gian bằng chữ, lý do gần nhất "Sự cố xe", ẩn Sửa/Hủy khi chuyến đã chốt, BR-52 dấu phẩy; 789 passed) và #35 skill "Bước tiếp"; Kiệt gộp #36 ảnh bằng chứng. Đóng UC-10 (12/12). Review, approve #33 UC-24 của Kiệt.
 - 10/11: Review và gộp #29 UC-21 Chi phí (kèm nhãn điểm Lấy `da_lay`), #30 UC-25 Công nợ của Kiệt (gỡ xung đột 1 dòng `main.py`, 787 passed); gộp #28 CI chạy một lần mỗi PR, bỏ qua PR tài liệu.
 - 09/11: Gộp #25 bản đồ chi tiết chuyến (tọa độ điểm dừng, khóa vùng đất liền VN; ghi giấy phép gói trong PR) và #26 quy ước mới: PR code không sửa TIEN-DO, người gộp cập nhật một lần bằng PR riêng.
