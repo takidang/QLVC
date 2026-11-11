@@ -15,6 +15,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 from sqlalchemy.orm import sessionmaker
 
+from app.config import get_settings
 from app.db import get_engine
 from app.main import app
 from app.models import Chuyen, SuCo
@@ -565,6 +566,10 @@ def danh_dau_da_thu(kt: TestClient, truoc: date) -> None:
 
 
 def nap(ngay_moi: bool = False, bay_gio: datetime | None = None) -> str:
+    # Mật khẩu chung demo12345 ai cũng biết: chỉ nạp trên máy dev / máy demo local, không bao giờ trên Render
+    # (APP_ENV=demo phải đặt mật khẩu riêng qua app.tai_khoan_demo – góp ý Kiệt review #46)
+    if get_settings().app_env != "dev":
+        raise LoiNap(f"Chỉ chạy khi APP_ENV=dev (đang là {get_settings().app_env}): dữ liệu demo dùng mật khẩu chung")
     bay_gio = (bay_gio or datetime.now(GIO_VN)).astimezone(GIO_VN)
     nay = bay_gio.date()
     t = bay_gio.hour * 60 + bay_gio.minute // 10 * 10

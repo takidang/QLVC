@@ -103,6 +103,14 @@ def test_demo_ac5_khong_nap_chong_va_ngay_moi(da_nap, monkeypatch, tmp_path):
     assert len(ds) == 7
 
 
+def test_demo_chi_chay_o_dev(db, monkeypatch):
+    """Không nạp trên bản demo (Render): mật khẩu demo12345 ai cũng biết (góp ý review #46)."""
+    monkeypatch.setattr(demo, "get_settings", lambda: type("S", (), {"app_env": "demo"})())
+    with pytest.raises(demo.LoiNap, match="APP_ENV=dev"):
+        demo.nap(bay_gio=LUC)
+    assert dem(db, Chuyen) == 0 and dem(db, NguoiDung) == 0
+
+
 def test_demo_ngoai_khung_gio(db):
     with pytest.raises(demo.LoiNap, match="7:00–18:00"):
         demo.nap(bay_gio=LUC.replace(hour=5))
