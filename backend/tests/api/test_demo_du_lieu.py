@@ -51,6 +51,9 @@ def test_demo_ac2_hom_nay(da_nap):
     assert {c["trang_thai"] for c in ds} == {"LAP", "DA_CHOT", "DANG_CHAY", "HOAN_THANH", "DA_QUYET_TOAN", "HUY"}
     co = {x for c in ds for x in c["theo_doi"]["co"]}
     assert {"TRE", "SU_CO", "THAT_BAI", "CHUA_QUYET_TOAN"} <= co
+    # Sự cố do tài xế báo qua API UC-33 (có ảnh), không ghi thẳng CSDL
+    su_co = [s for c in ds for s in may("dieuphoi").get(f"/api/chuyen/{c['id']}").json()["su_co"] or []]
+    assert [s["trang_thai"] for s in su_co] == ["MO"] and su_co[0]["loai"] == "HONG_XE"
     dang_chay = [c["theo_doi"] for c in ds if c["trang_thai"] == "DANG_CHAY"]
     if "vi_tri" in dang_chay[0]:  # trường thêm ở UC-32-AC14 (PR #41)
         assert all(td["vi_tri"] for td in dang_chay)

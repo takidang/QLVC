@@ -18,7 +18,7 @@ from sqlalchemy.orm import sessionmaker
 from app.config import get_settings
 from app.db import get_engine
 from app.main import app
-from app.models import Chuyen, SuCo
+from app.models import Chuyen
 from app.tai_khoan_demo import MAT_KHAU_DEV, tao_tai_khoan_demo
 from app.thoi_gian import GIO_VN
 from seed import dong_ho
@@ -536,19 +536,11 @@ def hom_nay(m: dict, dm: DanhMuc, ngay: date, t: int, so: list[int]) -> None:
 
 
 def _bao_su_co(m: dict, chuyen_id: int, luc_bao: datetime) -> None:
-    # API báo sự cố của tài xế (UC-33) chưa vào dev thì ghi thẳng một sự cố mở, như tài xế đã báo
-    with sessionmaker(get_engine())() as db:
-        c = db.get(Chuyen, chuyen_id)
-        db.add(
-            SuCo(
-                chuyen_id=c.id,
-                tai_xe_id=c.tai_xe_id,
-                loai="HONG_XE",
-                ghi_chu="Xe báo đèn nhiệt độ máy, đang tấp vào trạm dừng kiểm tra",
-                luc=luc_bao,
-            )
-        )
-        db.commit()
+    """Tài xế của chuyến báo sự cố qua API UC-33 (kiểm chuyến đang chạy, ghi chú bắt buộc)."""
+    ten = next(t for t, _ in TAI_XE if t in m and m[t].get(f"/api/toi/chuyen/{chuyen_id}").status_code == 200)
+    dong_ho.dat(luc_bao)
+    data = {"loai": "HONG_XE", "ghi_chu": "Xe báo đèn nhiệt độ máy, đang tấp vào trạm dừng kiểm tra"}
+    _kiem(m[ten].post(f"/api/toi/chuyen/{chuyen_id}/su-co", data=data, files=[("anh", ("a.jpg", JPG, "image/jpeg"))]))
 
 
 def danh_dau_da_thu(kt: TestClient, truoc: date) -> None:

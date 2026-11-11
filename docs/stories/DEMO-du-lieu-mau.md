@@ -31,7 +31,8 @@ Một lệnh nạp dữ liệu mẫu tính theo **ngày chạy lệnh**, để s
 - File đã đổi: `backend/seed/{__init__,dong_ho,demo}.py` (mới), `docs/cai-moi-truong.md` mục 8.
 - Cách làm: mọi thao tác qua API thật bằng `TestClient` đăng nhập đúng vai trò (Điều phối, Kế toán, Quản lý, từng tài xế). `dong_ho.gia()` thay `bay_gio` / `hom_nay_vn` trong các module `app.*` và điền giờ giả cho cột `server_default=now()` trước khi flush; ra khỏi khối thì trả lại như cũ. Đăng nhập dùng giờ thật.
 - Lịch: 7 ngày trước mỗi ngày 2 chuyến đã quyết toán (T01, T03); hôm nay quanh giờ chạy lệnh T: hoàn thành có 1 đơn giao không được + 1 đơn không lấy được + chi phí chờ duyệt (T−5h), đã quyết toán (T−4h), đang chạy trễ (T−150′), đang chạy có sự cố mở (T−70′), đã chốt (T+1h), đang lập (T+2h), đã hủy (T+3h), 4 đơn chờ ghép. Đơn giao trước 3 ngày đánh dấu đã thu (theo từng khách, BR-56).
-- Shortcut: sự cố tài xế báo ghi thẳng bảng `su_co` (API UC-33 ở PR #39 chưa vào `dev`); đổi sang API khi #39 gộp.
+- Sự cố "tài xế báo" đi qua API UC-33 (`POST /api/toi/chuyen/{id}/su-co`, có ảnh) sau khi #39 gộp (góp ý 2 review #46).
+- Chỉ chạy khi `APP_ENV=dev`: mật khẩu chung `demo12345` không bao giờ được nạp lên bản Render (góp ý 1 review #46, test `test_demo_chi_chay_o_dev`).
 - Test đã viết: `backend/tests/api/test_demo_du_lieu.py` (7 ca, khoảng 2 phút vì mỗi ca nạp lại). Thử làm hỏng 3 chỗ (quét cả điểm sau giờ chạy lệnh, bỏ chặn nạp chồng, không trả đồng hồ) → test đỏ đúng chỗ.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/api/test_demo_du_lieu.py`
 - Lệch đặc tả: tạm ứng 80% định mức tuyến (lần đầu thử 1.500.000 bị BR-53 chặn đúng). `vi_tri` chỉ kiểm khi có trường (PR #41).
@@ -44,5 +45,5 @@ Một lệnh nạp dữ liệu mẫu tính theo **ngày chạy lệnh**, để s
 | DEMO-AC2 | API | `test_demo_ac2_hom_nay` (cờ, đủ 6 trạng thái, không quét sau giờ chạy lệnh); `vi_tri` chờ #41 | Đạt | 11/11/2026 |
 | DEMO-AC3 | API | `test_demo_ac3_ngay_truoc_va_viec_cho` | Đạt | 11/11/2026 |
 | DEMO-AC4 | API | `test_demo_ac4_so_lieu_khop` | Đạt | 11/11/2026 |
-| DEMO-AC5 | API | `test_demo_ac5_khong_nap_chong_va_ngay_moi`, `test_demo_ngoai_khung_gio`, `test_demo_tra_lai_dong_ho` | Đạt | 11/11/2026 |
+| DEMO-AC5 | API | `test_demo_ac5_khong_nap_chong_va_ngay_moi`, `test_demo_chi_chay_o_dev`, `test_demo_ngoai_khung_gio`, `test_demo_tra_lai_dong_ho` | Đạt | 11/11/2026 |
 | DEMO-AC6 | Tài liệu | `docs/cai-moi-truong.md` mục 8; Kiệt làm theo trên máy mình | CHƯA KIỂM | |
