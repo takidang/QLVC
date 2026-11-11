@@ -156,6 +156,15 @@ Khi có nút đổi bộ màu trong Cài đặt, lựa chọn đã lưu của ng
 - **Công nợ:** hàng số tổng nợ chưa thu, số khoản, số khách còn nợ; khung khoản của khách có tab Chưa thu / Đã thu; form đánh dấu đã thu trong khung riêng.
 - Hành vi, quyền (Quản lý chỉ xem), câu lỗi giữ nguyên như Kiệt làm.
 
+## Thư viện giao diện (Tài đồng ý cài 12/11/2026)
+
+Theo gợi ý video Tài xem: không chuyển sang shadcn/ui (phải thêm Tailwind và viết lại mọi màn ngay trước demo); chỉ thêm hai gói nhỏ, ghi phiên bản cố định:
+
+- **Sonner 2.0.8** (`frontend/src/thongBao.tsx`): `KhungThongBao` đặt ở gốc `App.tsx` (góc phải dưới, nền sáng, viền `--vien-dam`, bo 16 px, font của app); `<ThongBao chu={...} />` hiện thông báo **thành công** dạng toast tự biến mất, thay cho dòng chữ xanh giữa trang (lập chuyến, tạo / sửa / hủy đơn, chi phí cố định, công nợ, quyết toán, tạm ứng, chi phí và sự cố của tài xế). **Lỗi vẫn hiện tại chỗ**, cạnh chỗ cần sửa. Kết quả quét mã của tài xế vẫn hiện tại chỗ vì kèm cảnh báo.
+- **NumberFlow 0.6.2**: mỗi trang tối đa một điểm động. Tổng quan: các số tiền chạy khi đổi tháng. Màn Chuyến: bốn số đếm chạy khi đổi ngày. Tự tắt khi máy bật giảm chuyển động.
+- Không dùng: Vaul (để sau nếu form tài xế khó dùng), cmdk, Magic UI, Aceternity.
+- Gói JS chính tăng từ khoảng 412 KB lên 536 KB (gzip 159 KB) sau khi thêm hai gói và các màn mới.
+
 ## Còn phải quyết khi làm vào code
 
 - Nút đổi bộ màu trong Cài đặt (Tài làm sau).

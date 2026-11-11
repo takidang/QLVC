@@ -9,6 +9,7 @@ import {
   type LaiLo,
 } from '../api/baoCao'
 import { LoiApi } from '../api/goi'
+import NumberFlow from '@number-flow/react'
 
 // Trang Tổng quan của Quản lý và Kế toán (UC-26 lãi lỗ, UC-34 hiệu suất xe).
 // Biểu đồ vẽ SVG tay theo skill dataviz: lãi xanh, lỗ cam (cặp đã chạy validate_palette.js, đạt cả mù màu),
@@ -190,7 +191,7 @@ function SoLieu({
     <div>
       <small>{nhan}</small>
       <b className={lai && so !== undefined && so < 0 ? 'tq-am' : undefined}>
-        {so === undefined ? '–' : dong(so)}
+        {so === undefined ? '–' : <NumberFlow value={so} locales="vi-VN" suffix=" đ" />}
       </b>
       {lai && so !== undefined && so < 0 && <em>Lỗ trong tháng</em>}
       {phu && <em>{phu}</em>}

@@ -8,6 +8,7 @@ import {
 } from '../../api/congNo'
 import { LoiApi } from '../../api/goi'
 import { ngayGio } from '../../api/toi'
+import { ThongBao } from '../../thongBao'
 
 const dong = (so: number) => `${so.toLocaleString('vi-VN')} đ`
 // Ngày theo giờ máy người dùng (Việt Nam), không theo UTC: sáng sớm không bị lùi một ngày
@@ -97,7 +98,7 @@ export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
         Mỗi đơn giao xong sinh một khoản phải thu bằng cước. Khách trả thì chọn các khoản của khách
         đó và đánh dấu đã thu: hệ thống lập một phiếu thu, trạng thái đơn không đổi (BR-56).
       </p>
-      {thongBao && <p className="thanh-cong">{thongBao}</p>}
+      <ThongBao chu={thongBao} />
       {loi && (
         <p role="alert" className="loi">
           {loi}

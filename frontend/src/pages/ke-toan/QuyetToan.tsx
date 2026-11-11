@@ -14,6 +14,7 @@ import {
 } from '../../api/quyetToan'
 import { TEN_HINH_THUC, type HinhThuc } from '../../api/tamUng'
 import { ngayGio } from '../../api/toi'
+import { ThongBao } from '../../thongBao'
 
 const dong = (so: number) => `${so.toLocaleString('vi-VN')} đ`
 const lit = (s: string | null) => (s === null ? '–' : `${Number(s).toLocaleString('vi-VN')} lít`)
@@ -153,7 +154,7 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
         </aside>
 
         <div className="qt-ct">
-          {thongBao && <p className="thanh-cong">{thongBao}</p>}
+          <ThongBao chu={thongBao} />
           {loi && (
             <p role="alert" className="loi">
               {loi}

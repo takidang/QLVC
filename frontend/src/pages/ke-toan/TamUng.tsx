@@ -14,6 +14,7 @@ import {
 import { ngayGio, TEN_TRANG_THAI } from '../../api/toi'
 import { Ic, Nhan } from '../../nhan'
 import { DauDanhMuc } from '../danh-muc'
+import { ThongBao } from '../../thongBao'
 
 // Cấp mới khi chuyến đã chốt / đang chạy (BR-53); sửa, thu hồi tới khi quyết toán (UC-23 quyết định 3)
 const CAP_DUOC = ['DA_CHOT', 'DANG_CHAY']
@@ -196,7 +197,7 @@ export default function TamUng() {
             Chọn chuyến đã chốt hoặc đang chạy để cấp; chuyến đã về để sửa hoặc thu hồi.
           </p>
         )}
-        {thongBao && <p className="thanh-cong">{thongBao}</p>}
+        <ThongBao chu={thongBao} />
         {loi && (
           <p role="alert" className="loi">
             {loi}

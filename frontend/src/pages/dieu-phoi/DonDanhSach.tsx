@@ -19,6 +19,7 @@ import { danhSachKhachHang, type KhachHang } from '../../api/khachHang'
 import { danhSachNut, type Nut } from '../../api/tuyen'
 import { Nhan } from '../../nhan'
 import { DauDanhMuc, LocTrangThai, OTim } from '../danh-muc'
+import { ThongBao } from '../../thongBao'
 
 const SO_DONG = 20
 const dong = (n: number) => n.toLocaleString('vi-VN')
@@ -90,12 +91,12 @@ export default function DonDanhSach() {
         nut="Tạo đơn"
         onNut={() => setMoForm(true)}
       />
-      {vuaTao && (
-        <p className="thanh-cong">
-          Đã tạo đơn <strong>{vuaTao.ma_don}</strong>, cước {dong(vuaTao.cuoc_tinh)} đ (đã chốt).
-        </p>
-      )}
-      {thongBao && <p className="thanh-cong">{thongBao}</p>}
+      <ThongBao
+        chu={
+          vuaTao ? `Đã tạo đơn ${vuaTao.ma_don}, cước ${dong(vuaTao.cuoc_tinh)} đ (đã chốt)` : ''
+        }
+      />
+      <ThongBao chu={thongBao} />
       <DonThatBaiCanXuLy
         lanTai={lanTai}
         onHuy={setDangHuy}

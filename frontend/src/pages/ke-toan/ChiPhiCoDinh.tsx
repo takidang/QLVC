@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachXe, datChiPhiCoDinh, xemChiPhiCoDinh, type Xe } from '../../api/xe'
 import { DauDanhMuc } from '../danh-muc'
+import { ThongBao } from '../../thongBao'
 
 // Tháng theo giờ máy người dùng (Việt Nam), không theo UTC: đầu tháng không bị chọn nhầm tháng trước
 const thangNay = () => new Date().toLocaleDateString('sv-SE').slice(0, 7) // YYYY-MM
@@ -122,7 +123,7 @@ export default function ChiPhiCoDinh() {
             </div>
           </div>
         )}
-        {thongBao && <p className="thanh-cong">{thongBao}</p>}
+        <ThongBao chu={thongBao} />
         {loi && (
           <p role="alert" className="loi">
             {loi}

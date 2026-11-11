@@ -19,6 +19,8 @@ import { TEN_LOAI_SU_CO, type LoaiSuCo } from '../../api/suCo'
 import { danhSachTuyen, type Tuyen } from '../../api/tuyen'
 import { Ic, Nhan } from '../../nhan'
 import LichGio from './LichGio'
+import { ThongBao } from '../../thongBao'
+import NumberFlow from '@number-flow/react'
 
 const SO_DONG = 20
 const homNay = () => new Date().toLocaleDateString('sv-SE')
@@ -256,19 +258,27 @@ export default function ChuyenDanhSach() {
               {caNgay.length > 0 && (
                 <>
                   <div>
-                    <b>{caNgay.length}</b>
+                    <b>
+                      <NumberFlow value={caNgay.length} />
+                    </b>
                     <span>chuyến</span>
                   </div>
                   <div>
-                    <b>{dem('DANG_CHAY')}</b>
+                    <b>
+                      <NumberFlow value={dem('DANG_CHAY')} />
+                    </b>
                     <span>đang chạy</span>
                   </div>
                   <div>
-                    <b>{dem('LAP', 'DA_CHOT')}</b>
+                    <b>
+                      <NumberFlow value={dem('LAP', 'DA_CHOT')} />
+                    </b>
                     <span>chưa xuất phát</span>
                   </div>
                   <div>
-                    <b>{dem('HOAN_THANH', 'DA_QUYET_TOAN')}</b>
+                    <b>
+                      <NumberFlow value={dem('HOAN_THANH', 'DA_QUYET_TOAN')} />
+                    </b>
                     <span>đã xong</span>
                   </div>
                 </>
@@ -328,12 +338,13 @@ export default function ChuyenDanhSach() {
         )}
       </div>
       {caNgay.length > 0 && <LichGio ds={caNgay} ten={TEN_TRANG_THAI} />}
-      {vuaLap && (
-        <p className="thanh-cong">
-          Đã lập chuyến <strong>{vuaLap.ma_chuyen}</strong> ({vuaLap.ma_tuyen}, {vuaLap.bien_so},{' '}
-          {vuaLap.ten_tai_xe}).
-        </p>
-      )}
+      <ThongBao
+        chu={
+          vuaLap
+            ? `Đã lập chuyến ${vuaLap.ma_chuyen} (${vuaLap.ma_tuyen}, ${vuaLap.bien_so}, ${vuaLap.ten_tai_xe})`
+            : ''
+        }
+      />
       {loiTai && (
         <p role="alert" className="loi">
           {loiTai}

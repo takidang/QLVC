@@ -14,6 +14,7 @@ import {
 import { LoiApi, loiTheoTruong } from '../../api/goi'
 import { nenAnh } from '../../nenAnh'
 import { LOI_MANG, SO_ANH_TOI_DA } from './QuetLay'
+import { ThongBao } from '../../thongBao'
 
 const dong = (so: number) => `${so.toLocaleString('vi-VN')} đ`
 const thongBaoLoi = (err: unknown) => {
@@ -66,7 +67,7 @@ export function ChiPhi({ chuyenId, ghiDuoc }: { chuyenId: number; ghiDuoc: boole
           <strong>{dong(cp.tong_da_khai)}</strong>
         </p>
       )}
-      {thongBao && <p className="thanh-cong">{thongBao}</p>}
+      <ThongBao chu={thongBao} />
       {loi && (
         <p role="alert" className="loi">
           {loi}

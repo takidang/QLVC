@@ -10,6 +10,7 @@ import {
 } from 'react-router-dom'
 import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
 import { Ic } from './nhan'
+import { KhungThongBao } from './thongBao'
 import DangNhap from './pages/DangNhap'
 import BangGiaDanhSach from './pages/quan-ly/BangGiaDanhSach'
 import CauHinh from './pages/quan-ly/CauHinh'
@@ -213,6 +214,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <KhungThongBao />
       <Routes>
         {/* UC-28: trang công khai cho khách, không cần đăng nhập */}
         <Route path="/tra-cuu" element={<TraCuu />} />
