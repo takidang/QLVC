@@ -10,7 +10,7 @@
 | Nền móng: models, migration, đăng nhập, khung frontend | 18/10 | Xong 16/10 |
 | UC-03 mẫu + docs/mau-use-case.md | 25/10 | Xong 24/10 |
 | Vòng tối thiểu: tạo đơn → ghép → chốt → quét → giao | 08/11 | Xong 08/11 (gộp UC-20, PR #16) |
-| Quyết toán chạy được | 29/11 | Chưa bắt đầu |
+| Quyết toán chạy được | 29/11 | Xong 10/11 (gộp UC-24, PR #33) |
 | UC-30 dự đoán trễ (phần AI) | 06/12 | Chưa bắt đầu |
 | Nộp LMS | 21–27/12 | |
 
@@ -48,11 +48,12 @@
 | UC-06…09 Đơn tối thiểu | 3–4 | Xong | UC-06 6/6, UC-07 9/9, UC-08 11/11 | UC-08-AC11 Kiệt thử 25/10; UC-09 bỏ ở 0.5; phiếu QR làm cùng UC-19 |
 | UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Xong | 9/9 | AC9 Kiệt thử 25/10 |
 | UC-11…13, 15 Chuyến tối thiểu | 3–4 | Xong | UC-11 12/12, UC-12 5/5, UC-13 13/13, UC-15 11/11 | Đóng UC-12, 15 ngày 08/11 theo kết quả Kiệt thử (PR #18); còn sửa lỗi nhỏ danh sách xe UC-12 |
-| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Đang làm | UC-16 10/10, UC-10 11/12, UC-22 11/12, UC-32 10/11 | UC-16 xong 08/11. UC-10, 22 (PR #23), UC-32 (PR #24) đã vào `dev` 09/11, chờ Kiệt thử giao diện (AC12 UC-10, 22; AC11 UC-32). Bản đồ chi tiết chuyến (Leaflet + OSM) đã vào `dev` (PR #25) |
+| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Đang làm | UC-16 10/10, UC-10 12/12, UC-22 11/12, UC-32 10/11 | UC-16 xong 08/11, UC-10 xong 10/11. Còn thiếu: UC-22 AC12 ca e (cần 3 chuyến); UC-32 AC11 ca c (cùng xe, tài xế khác) và ca e (chờ UC-33 của Kiệt). Bản đồ chi tiết chuyến (Leaflet + OSM) đã vào `dev` (PR #25) |
 | UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 10/11: Gộp #34 sửa góp ý Kiệt thử UC-10, 22, 32 (dòng thời gian bằng chữ, lý do gần nhất "Sự cố xe", ẩn Sửa/Hủy khi chuyến đã chốt, BR-52 dấu phẩy; 789 passed) và #35 skill "Bước tiếp"; Kiệt gộp #36 ảnh bằng chứng. Đóng UC-10 (12/12). Review, approve #33 UC-24 của Kiệt.
 - 10/11: Review và gộp #29 UC-21 Chi phí (kèm nhãn điểm Lấy `da_lay`), #30 UC-25 Công nợ của Kiệt (gỡ xung đột 1 dòng `main.py`, 787 passed); gộp #28 CI chạy một lần mỗi PR, bỏ qua PR tài liệu.
 - 09/11: Gộp #25 bản đồ chi tiết chuyến (tọa độ điểm dừng, khóa vùng đất liền VN; ghi giấy phép gói trong PR) và #26 quy ước mới: PR code không sửa TIEN-DO, người gộp cập nhật một lần bằng PR riêng.
 - 09/11: Gộp #19…#24 sau khi Kiệt duyệt (gỡ xung đột TIEN-DO ở #23, #24); `dev` có UC-10, 22, 32.
