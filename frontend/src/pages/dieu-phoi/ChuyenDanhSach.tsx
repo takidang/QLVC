@@ -230,7 +230,7 @@ export default function ChuyenDanhSach() {
           Mỗi cột tự xếp chồng nên không có khoảng trống do cột kia cao hơn */}
       <div className={ngay ? 'dau-luoi' : 'dau-luoi mot-cot'}>
         <div className="dau-cot">
-          <div className="mo-dau">
+          <div className="kinh mo-dau">
             <h1>
               {!ngay
                 ? 'Tất cả chuyến'

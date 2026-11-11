@@ -1031,7 +1031,11 @@ tr.giu-cho {
 }
 .dau-luoi .mo-dau {
   display: block;
-  padding: 14px 0 6px;
+  flex: 1; /* khối số liệu và Cần chú ý cao bằng nhau, mép trên thẳng nhau */
+  padding: 18px 22px;
+}
+.dau-luoi .mo-dau h1 {
+  font-size: 40px;
 }
 .dau-luoi .chu-y {
   margin-top: 0;
