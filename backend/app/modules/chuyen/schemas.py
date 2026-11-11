@@ -99,6 +99,13 @@ class DiemRa(BaseModel):
     lng: Decimal | None = None
 
 
+class ViTriQuet(BaseModel):
+    lat: Decimal
+    lng: Decimal
+    luc: datetime
+    nut: str | None
+
+
 class TheoDoi(BaseModel):
     """Một dòng của bảng chuyến trong ngày (UC-32 bước 1)."""
 
@@ -107,6 +114,9 @@ class TheoDoi(BaseModel):
     ty_le_lap_day: Decimal
     co: list[str]  # TRE|SU_CO|THAT_BAI|CHUA_QUYET_TOAN|CHONG_LICH
     chong: list[str]  # mã chuyến kế tiếp bị chồng (BR-73)
+    diem: list[str]  # XONG|THAT_BAI|DANG_TOI|CHUA từng điểm dừng theo thứ tự lịch trình
+    tre_phut: int | None  # trễ của lượt quét gần nhất, âm là sớm; chưa quét thì null
+    vi_tri: ViTriQuet | None  # lượt quét mới nhất có GPS
 
 
 class ChuyenNgay(ChuyenRa):
