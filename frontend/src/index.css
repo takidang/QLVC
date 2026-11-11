@@ -947,6 +947,8 @@ p.thanh-cong {
   margin-top: 8px;
   padding: 6px 0;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--muc) 25%, transparent) transparent;
 }
 .chu-y h2 {
   display: flex;
@@ -1010,29 +1012,22 @@ p.thanh-cong {
   gap: 16px;
   min-width: 0;
 }
-/* Cột trái ngắn hơn thì lịch xe giãn hàng cho đủ chiều cao, không để khoảng trống dưới lịch */
-.dau-cot .lich-gio {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-.dau-cot .lich-gio .lg-hang:not(.lg-dau) {
-  flex: 1;
-  align-items: stretch;
-}
-.dau-cot .lich-gio .lg-hang:not(.lg-dau) .bien {
-  align-self: center;
-}
-.dau-cot .lich-gio .lg-hang:not(.lg-dau) .lg-duong {
-  height: auto;
-  min-height: 38px;
-}
-.dau-cot .lich-gio .lg-thanh {
-  top: 50%;
-  translate: 0 -50%;
-}
-.dau-cot .ban-do-ngay .ban-do {
+/* Cần chú ý cao đúng bằng khối số liệu bên trái, phần dư cuộn trong khung */
+.dau-cot .chu-y {
+  flex: 1 1 0;
   min-height: 220px;
+  max-height: none;
+}
+/* Bảng chuyến theo ngày: cột cố định, lọc không làm đổi độ rộng */
+table.bang-ngay {
+  table-layout: fixed;
+}
+table.bang-ngay td {
+  overflow-wrap: anywhere;
+}
+/* Dòng không khớp lọc: ẩn nhưng giữ chỗ (không bấm, không Tab tới được) */
+tr.giu-cho {
+  visibility: hidden;
 }
 .dau-luoi .mo-dau {
   display: block;
@@ -1041,19 +1036,12 @@ p.thanh-cong {
 .dau-luoi .chu-y {
   margin-top: 0;
 }
-/* Hàng giữa: lịch xe theo giờ (trái) và bản đồ tuyến trong ngày (phải) */
-.hai-khoi {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 420px;
-  gap: 16px;
+/* Lịch xe theo giờ: trải hết bề rộng dưới hàng số liệu */
+.lich-gio {
   margin-bottom: 16px;
-}
-.lich-gio,
-.ban-do-ngay {
   padding: 14px 18px 16px;
 }
-.lich-gio h2,
-.ban-do-ngay h2 {
+.lich-gio h2 {
   margin: 0 0 10px;
   font-size: 14px;
   font-weight: 600;
@@ -1142,59 +1130,6 @@ p.thanh-cong {
   z-index: 1;
   width: 2px;
   background: var(--muc);
-}
-.ban-do-ngay {
-  display: flex;
-  flex-direction: column;
-}
-.ban-do-ngay .ban-do {
-  flex: 1;
-  height: auto;
-  min-height: 260px;
-  margin: 0;
-}
-.ban-do-ngay .ghi-chu {
-  margin: 8px 0 0;
-}
-/* Leaflet đặt màu bằng thuộc tính; CSS ở đây đè lên để theo bộ màu */
-.bd-tuyen {
-  fill: none;
-  stroke: var(--xam);
-  stroke-width: 4;
-  stroke-opacity: 0.9;
-}
-.bd-tuyen.lap {
-  stroke-dasharray: 6 8;
-}
-.bd-tuyen.chot {
-  stroke: var(--chot);
-}
-.bd-tuyen.chay {
-  stroke: var(--chay);
-  stroke-width: 5;
-}
-.bd-tuyen.xong {
-  stroke: var(--muc);
-}
-.bd-tuyen.huy {
-  stroke-dasharray: 2 8;
-  stroke-opacity: 0.6;
-}
-.bd-tuyen.tre {
-  stroke: var(--cam);
-  stroke-width: 5;
-}
-.bd-xe {
-  fill: var(--chay);
-  fill-opacity: 1;
-  stroke: #fff;
-  stroke-width: 3;
-}
-.bd-nut {
-  fill: #fff;
-  fill-opacity: 1;
-  stroke: var(--muc);
-  stroke-width: 2;
 }
 
 .bang-khung {
@@ -1488,7 +1423,7 @@ input[type='file']::file-selector-button {
   }
 }
 @media (max-width: 1000px) {
-  /* Một cột, thứ tự: số liệu → Cần chú ý → lịch xe → bản đồ */
+  /* Một cột: số liệu rồi Cần chú ý */
   .dau-luoi {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1500,15 +1435,7 @@ input[type='file']::file-selector-button {
   }
   .dau-luoi .chu-y {
     order: 2;
-  }
-  .dau-luoi .lich-gio {
-    order: 3;
-  }
-  .dau-luoi .ban-do-ngay {
-    order: 4;
-  }
-  .hai-khoi {
-    grid-template-columns: 1fr;
+    max-height: 300px;
   }
   .mo-dau {
     grid-template-columns: 1fr;

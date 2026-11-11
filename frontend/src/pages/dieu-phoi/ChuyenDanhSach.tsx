@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   danhSachChuyen,
@@ -19,9 +19,6 @@ import { TEN_LOAI_SU_CO, type LoaiSuCo } from '../../api/suCo'
 import { danhSachTuyen, type Tuyen } from '../../api/tuyen'
 import { Ic, Nhan } from '../../nhan'
 import LichGio from './LichGio'
-
-// Bản đồ (leaflet + css) tải riêng, chỉ khi ngày đang xem có chuyến
-const BanDoNgay = lazy(() => import('./BanDoNgay'))
 
 const SO_DONG = 20
 const homNay = () => new Date().toLocaleDateString('sv-SE')
@@ -211,9 +208,13 @@ export default function ChuyenDanhSach() {
       )
     : []
   const dem = (...tt: string[]) => caNgay.filter((c) => tt.includes(c.trang_thai)).length
+  const khop = (c: Chuyen) => !trangThai || c.trang_thai === trangThai
+  // Xem theo ngày: vẽ đủ mọi chuyến của ngày, dòng khớp lọc lên đầu, dòng không khớp ẩn nhưng giữ chỗ
+  // → bảng luôn cao bằng cả ngày, bấm lọc trang không bị đẩy xuống cuối, cột không đổi độ rộng
   const dong = ngay
-    ? caNgay.filter((c) => !trangThai || c.trang_thai === trangThai)
+    ? [...caNgay.filter(khop), ...caNgay.filter((c) => !khop(c))]
     : (ds?.du_lieu ?? [])
+  const soKhop = ngay ? caNgay.filter(khop).length : dong.length
   const canChuY = caNgay.filter((c) => c.theo_doi?.co.some((x) => CO_CHU_Y.includes(x)))
   const viecKhac =
     ngay === homNay() ? viec.filter((v) => !v.ma || !caNgay.some((c) => c.ma_chuyen === v.ma)) : []
@@ -278,7 +279,6 @@ export default function ChuyenDanhSach() {
               </button>
             </div>
           </div>
-          {caNgay.length > 0 && <LichGio ds={caNgay} ten={TEN_TRANG_THAI} />}
         </div>
         {ngay && (
           <div className="dau-cot">
@@ -324,16 +324,10 @@ export default function ChuyenDanhSach() {
               ))}
               {soViec === 0 && <p>{ds ? 'Không có việc nào cần chú ý.' : 'Đang tải…'}</p>}
             </aside>
-            {caNgay.length > 0 && (
-              <Suspense
-                fallback={<section className="kinh ban-do-ngay ghi-chu">Đang tải bản đồ…</section>}
-              >
-                <BanDoNgay ds={caNgay} ten={TEN_TRANG_THAI} />
-              </Suspense>
-            )}
           </div>
         )}
       </div>
+      {caNgay.length > 0 && <LichGio ds={caNgay} ten={TEN_TRANG_THAI} />}
       {vuaLap && (
         <p className="thanh-cong">
           Đã lập chuyến <strong>{vuaLap.ma_chuyen}</strong> ({vuaLap.ma_tuyen}, {vuaLap.bien_so},{' '}
@@ -346,6 +340,7 @@ export default function ChuyenDanhSach() {
         </p>
       )}
 
+      {/* Khi lọc trạng thái, khung giữ chiều cao của cả ngày để trang không nhảy xuống cuối */}
       <div className="kinh bang-khung">
         <div className="cong-cu">
           <div className="vien-thuoc" role="group" aria-label="Lọc trạng thái">
@@ -390,7 +385,18 @@ export default function ChuyenDanhSach() {
             )}
           </div>
         </div>
-        <table>
+        <table className={ngay ? 'bang-ngay' : undefined}>
+          {ngay && (
+            <colgroup>
+              <col style={{ width: '9%' }} />
+              <col style={{ width: '19%' }} />
+              <col style={{ width: '15%' }} />
+              <col style={{ width: '14%' }} />
+              <col style={{ width: '11%' }} />
+              <col />
+              <col style={{ width: 34 }} />
+            </colgroup>
+          )}
           <thead>
             <tr>
               <th>Giờ đi</th>
@@ -405,6 +411,18 @@ export default function ChuyenDanhSach() {
             </tr>
           </thead>
           <tbody>
+            {/* Không dòng nào khớp lọc: câu báo đứng đầu bảng (các dòng giữ chỗ nằm dưới) */}
+            {soKhop === 0 && (
+              <tr>
+                <td colSpan={soCot} className="trong">
+                  {!ds
+                    ? 'Đang tải…'
+                    : ngay && !trangThai && !loiTai
+                      ? 'Chưa có chuyến nào khởi hành ngày này. Bấm “Mọi ngày” để xem các ngày khác.'
+                      : 'Chưa có chuyến nào phù hợp'}
+                </td>
+              </tr>
+            )}
             {dong.map((c) => {
               const td = c.theo_doi
               const day = td ? Math.round(Number(td.ty_le_lap_day) * 100) : 0
@@ -412,7 +430,8 @@ export default function ChuyenDanhSach() {
               return (
                 <tr
                   key={c.id}
-                  className={c.trang_thai === 'HUY' ? 'hang mo' : 'hang'}
+                  className={`hang${c.trang_thai === 'HUY' ? ' mo' : ''}${khop(c) ? '' : ' giu-cho'}`}
+                  aria-hidden={khop(c) ? undefined : true}
                   onClick={() => dieuHuong(String(c.id))}
                 >
                   <td className="gio">
@@ -492,17 +511,6 @@ export default function ChuyenDanhSach() {
                 </tr>
               )
             })}
-            {dong.length === 0 && (
-              <tr>
-                <td colSpan={soCot} className="trong">
-                  {!ds
-                    ? 'Đang tải…'
-                    : ngay && !trangThai && !loiTai
-                      ? 'Chưa có chuyến nào khởi hành ngày này. Bấm “Mọi ngày” để xem các ngày khác.'
-                      : 'Chưa có chuyến nào phù hợp'}
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>
