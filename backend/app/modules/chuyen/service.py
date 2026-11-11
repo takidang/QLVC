@@ -1,3 +1,4 @@
+import unicodedata
 from dataclasses import dataclass, replace
 from datetime import date, datetime, time, timedelta
 from decimal import Decimal
@@ -243,7 +244,12 @@ def lay(db: Session, chuyen_id: int) -> dict:
 
 
 def danh_sach(
-    db: Session, pt: PhanTrang, trang_thai: str | None, ngay: date | None, tuyen_id: int | None
+    db: Session,
+    pt: PhanTrang,
+    trang_thai: str | None,
+    ngay: date | None,
+    tuyen_id: int | None,
+    tu_khoa: str | None = None,
 ) -> tuple[list[dict], int]:
     loc = truy_van_chuyen()
     if trang_thai:
@@ -253,6 +259,15 @@ def danh_sach(
         loc = loc.where(Chuyen.khoi_hanh_du_kien >= dau, Chuyen.khoi_hanh_du_kien < dau + timedelta(days=1))
     if tuyen_id:
         loc = loc.where(Chuyen.tuyen_id == tuyen_id)
+    # UC-32-AC15: mã chuyến, biển số, tên tài xế; NFC để "Bình" gõ kiểu tổ hợp (Unikey, macOS) vẫn khớp
+    if tu_khoa and (tu_khoa := unicodedata.normalize("NFC", tu_khoa).strip()):
+        loc = loc.where(
+            or_(
+                Chuyen.ma_chuyen.icontains(tu_khoa, autoescape=True),
+                Xe.bien_so.icontains(tu_khoa, autoescape=True),
+                NguoiDung.ho_ten.icontains(tu_khoa, autoescape=True),
+            )
+        )
     tong = db.scalar(select(func.count()).select_from(loc.subquery()))
     dong = db.execute(
         loc.order_by(Chuyen.khoi_hanh_du_kien.desc(), Chuyen.id.desc()).offset(pt.bo_qua).limit(pt.so_dong)

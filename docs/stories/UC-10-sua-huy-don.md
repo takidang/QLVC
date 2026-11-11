@@ -1,6 +1,6 @@
 # UC-10: Sửa / hủy đơn
 
-- **Trạng thái:** Đang làm – AC1–AC11 đạt, AC12 giao diện đã làm, chờ thử (Đã duyệt 08/11/2026 – Tài: đồng ý cả 9 quyết định)
+- **Trạng thái:** Hoàn thành 10/11/2026 – 12/12 AC đạt (Đã duyệt 08/11/2026 – Tài: đồng ý cả 9 quyết định)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa)
 - **Đặc tả:** `docs/use-cases.md` mục 2 (UC-10) · `docs/api.md` mục 2.3 (`PATCH /api/don/{id}`, `POST /api/don/{id}/huy`) · `docs/nghiep-vu.md` BR-30…34, 46…48, 62, 67, mục 5.2 · ca test `docs/ca-test-br.md` (TC-BR33-01, 02, TC-BR34-01, 03)
 - **Quy tắc nghiệp vụ liên quan:** BR-30 (lịch sử), BR-31 (đơn hợp lệ), BR-32, 33 (sửa, cước từ bản sao), BR-34 (hủy), BR-46…48 (cước), BR-57 (phân quyền), BR-62 (nhật ký tiền), BR-67 (kiểm lại cả chuyến)
