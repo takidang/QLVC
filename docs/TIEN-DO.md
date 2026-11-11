@@ -49,7 +49,7 @@
 | UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Xong | 9/9 | AC9 Kiệt thử 25/10 |
 | UC-11…13, 15 Chuyến tối thiểu | 3–4 | Xong | UC-11 12/12, UC-12 5/5, UC-13 13/13, UC-15 11/11 | Đóng UC-12, 15 ngày 08/11 theo kết quả Kiệt thử (PR #18); còn sửa lỗi nhỏ danh sách xe UC-12 |
 | UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Đang làm | UC-16 10/10, UC-10 12/12, UC-22 11/12, UC-32 14/15 | UC-16 xong 08/11, UC-10 xong 10/11. UC-32 thêm AC12–15 cho giao diện v2 (PR #41, 11/11). Còn thiếu: UC-22 AC12 ca e (cần 3 chuyến); UC-32 AC11 ca c (cùng xe, tài xế khác) và ca e (UC-33 đã vào `dev`, thử được). Bản đồ chi tiết chuyến (Leaflet + OSM) đã vào `dev` (PR #25) |
-| UC-28, triển khai demo | 7 | Đang làm | UC-28 6/7, DEMO 5/6 | UC-28 backend gộp 11/11 (PR #42), còn AC7 trang tra cứu (giao diện v2). Dữ liệu demo `python -m seed.demo` gộp 11/11 (PR #46), còn AC6 Kiệt làm theo trên máy demo. Lên Render chưa làm |
+| UC-28, triển khai demo | 7 | Đang làm | UC-28 6/7, DEMO 6/6 | UC-28 backend gộp 11/11 (PR #42), còn AC7 trang tra cứu (giao diện v2). Dữ liệu demo `python -m seed.demo` xong 11/11 (PR #46, Kiệt nạp thành công trên máy demo). Lên Render chưa làm |
 | UC-30 AI | 8 | Chưa bắt đầu | | |
 
 ### Nhật ký Tài (mới nhất ở trên)
