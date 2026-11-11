@@ -173,6 +173,12 @@ Theo gợi ý video Tài xem: không chuyển sang shadcn/ui (phải thêm Tailw
 - **Menu tài khoản** (`MenuTaiKhoan.tsx`, bấm vòng tên tắt góc phải, mọi vai trò): họ tên, vai trò, **chọn bộ màu** (Ngẫu nhiên theo ảnh / 5 bộ màu), nút Đăng xuất. Bộ màu lưu trên trình duyệt (`localStorage` khóa `qlvc-bo-mau`, `nen.ts`), thắng bộ màu ngẫu nhiên. Đổi mật khẩu thêm vào đây khi backend có UC-35. (Dùng nút `aria-pressed` thay ô radio: radio ẩn trong `<details>` làm trình duyệt kiểm thử bị sập khi chọn.)
 - **Chuông thông báo** (`ChuongThongBao.tsx`, Điều phối và Quản lý): số việc từ `GET /api/canh-bao` (UC-27), mở ra là các nhóm (sự cố mở, chuyến trễ / chồng lịch, đơn quá / sắp tới hạn, giấy tờ, thiếu GPS) kèm số, bấm để tới màn tương ứng; tải lại khi đổi trang và mỗi 2 phút. Thay bằng `GET /api/thong-bao` (UC-37) khi có, lúc đó mới có chuông cho Kế toán và Tài xế.
 
+## Tìm chung (UC-36) và đổi mật khẩu (UC-35), giao diện (12/11/2026)
+
+- **Ô tìm chung** (`TimChung.tsx`) trên thanh đầu, bên phải, mọi vai trò: gọi `GET /api/tim?q=` khi đủ 2 ký tự, chờ 250 ms sau khi ngừng gõ, hủy yêu cầu cũ. Kết quả xổ xuống theo nhóm (Chuyến, Đơn hàng, Xe, Tài xế, Khách hàng; ẩn nhóm rỗng), mỗi nhóm ghi "5 / tổng" khi có nhiều hơn 5. Bấm dẫn tới: chuyến → chi tiết chuyến (tài xế: chuyến của mình; kế toán: Quyết toán); đơn → phiếu đơn (kế toán: Công nợ); xe, tài xế, khách → màn danh mục. Esc hoặc bấm ra ngoài để đóng. Dưới 760 px ẩn ô này.
+- **Đổi mật khẩu** trong menu tài khoản: nút "Đổi mật khẩu" mở form (hiện tại, mới, nhập lại); kiểm tại chỗ ≥ 8 ký tự và nhập lại khớp; lỗi máy chủ hiện trong form (sai mật khẩu hiện tại, trùng mật khẩu cũ, khóa tạm 15 phút); xong thì toast "Đã đổi mật khẩu", phiên vẫn dùng tiếp. Menu đóng khi bấm / Tab ra ngoài (không dựa vào blur vì nút bị khóa lúc gửi làm mất focus).
+- Đã thử bằng phản hồi giả lập đúng dạng PR #50; chờ backend gộp `dev` để thử thật.
+
 ## Còn phải quyết khi làm vào code
 
 - Nút đổi bộ màu trong Cài đặt (Tài làm sau).

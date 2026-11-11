@@ -13,6 +13,7 @@ import { Ic } from './nhan'
 import { KhungThongBao } from './thongBao'
 import ChuongThongBao from './ChuongThongBao'
 import MenuTaiKhoan from './MenuTaiKhoan'
+import TimChung from './TimChung'
 import DangNhap from './pages/DangNhap'
 import BangGiaDanhSach from './pages/quan-ly/BangGiaDanhSach'
 import CauHinh from './pages/quan-ly/CauHinh'
@@ -165,6 +166,7 @@ function KhungTrang({
           )}
         </nav>
         <div className="ben-phai">
+          <TimChung vaiTro={nd.vai_tro} />
           <span className="ten">
             {nd.ho_ten} · {TEN_VAI_TRO[nd.vai_tro]}
           </span>

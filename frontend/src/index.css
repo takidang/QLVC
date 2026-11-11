@@ -3413,6 +3413,117 @@ body {
   justify-self: start;
 }
 
+/* ----- Ô tìm chung (UC-36) và form đổi mật khẩu (UC-35) trên thanh đầu ----- */
+.tim-chung {
+  position: relative;
+}
+.tim-o {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 260px;
+  padding: 0 12px;
+  color: var(--phu);
+  background: rgb(255 255 255 / 60%);
+  border: 1px solid var(--vien-dam);
+  border-radius: 99px;
+}
+.tim-o:focus-within {
+  background: rgb(255 255 255 / 92%);
+  border-color: var(--muc);
+}
+.tim-o input {
+  flex: 1;
+  min-width: 0;
+  padding: 8px 0;
+  font-size: 13.5px;
+  background: none;
+  border: 0;
+  outline: none;
+}
+.tim-o input:enabled:hover {
+  border: 0;
+}
+.tim-hop {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 20;
+  display: grid;
+  gap: 6px;
+  width: 380px;
+  max-height: 70dvh;
+  padding: 10px;
+  overflow-y: auto;
+  font-size: 13.5px;
+  white-space: normal;
+  color: var(--muc);
+  background: #fbfbf9;
+  border: 1px solid var(--vien-dam);
+  border-radius: 16px;
+}
+.tim-hop h3 {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 8px 2px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--phu);
+}
+.tim-hop h3 em {
+  font-style: normal;
+  font-weight: 400;
+}
+.tim-hop a {
+  display: grid;
+  gap: 1px;
+  padding: 7px 8px;
+  text-decoration: none;
+  border-radius: 10px;
+}
+.tim-hop a:hover,
+.tim-hop a:focus-visible {
+  background: color-mix(in srgb, var(--muc) 7%, transparent);
+}
+.tim-hop a small {
+  font-size: 12px;
+  color: var(--phu);
+}
+.tim-hop p {
+  margin: 0;
+  padding: 6px 8px;
+  color: var(--phu);
+}
+.tim-hop .tim-them {
+  font-size: 12px;
+  border-top: 1px solid var(--vien);
+}
+.menu-tk-mk {
+  display: grid;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--vien);
+}
+.menu-tk-mk label {
+  display: grid;
+  gap: 4px;
+  font-size: 12.5px;
+  color: var(--phu);
+}
+.menu-tk-hop > button.phu + button.phu {
+  margin-top: -4px;
+}
+@media (max-width: 1240px) {
+  .tim-o {
+    width: 200px;
+  }
+}
+@media (max-width: 760px) {
+  .tim-chung {
+    display: none;
+  }
+}
+
 /* ----- Màn của Kiệt: 04, 05, 06, 08 ----- */
 
 /* Đầu trang danh mục (06): thấp hơn màn Chuyến, tiêu đề + một dòng phụ, nút chính bên phải */
