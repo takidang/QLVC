@@ -1,6 +1,6 @@
 # UC-32: Theo dõi chuyến
 
-- **Trạng thái:** Đang làm – AC1–AC10 đạt, AC11 giao diện đã làm, chờ thử (Tài giao "làm xong hết" 08/11/2026; quyết định dưới đây Claude đề xuất, Tài xem lại khi review PR)
+- **Trạng thái:** Đang làm – AC1–AC10 đạt; AC11 đạt ca a, b, d, còn ca c (tài xế khác) và e (chờ UC-33) (Tài giao "làm xong hết" 08/11/2026; quyết định dưới đây Claude đề xuất, Tài xem lại khi review PR)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa); Kế toán xem
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-32) · `docs/api.md` mục 2.4 (`GET /api/chuyen?ngay=`, `GET /api/chuyen/{id}`, `ket-thuc-su-co`, `POST /api/su-co/{id}/dong`) · `docs/nghiep-vu.md` BR-36, 68, 70, 73, mục 2.1 · ca test `docs/ca-test-br.md` (TC-BR68-01…04, TC-BR73-01…03)
 - **Quy tắc nghiệp vụ liên quan:** BR-30 (lịch sử), BR-36, BR-57 (phân quyền), BR-68 (kết thúc do sự cố), BR-70 (km), BR-71 (ETA kế hoạch), BR-73 (trễ, chồng lịch)
@@ -58,4 +58,4 @@
 | UC-32-AC8 | API | `test_uc32_ac8_giai_phong_lich` | Đạt | 08/11/2026 |
 | UC-32-AC9 | API | `test_uc32_ac9_dong_su_co` | Đạt | 08/11/2026 |
 | UC-32-AC10 | API | `test_uc32_ac10_* (5 ca)` | Đạt | 08/11/2026 |
-| UC-32-AC11 | UI | Kiệt thử 10/11, ca a, b, d đạt (b, d thử lại trên PR #34); c, e chưa thử (`docs/test-evidence/UC-32/`) | Đạt | 10/11/2026 |
+| UC-32-AC11 | UI | Kiệt thử 10/11, ca a, b, d đạt (b, d thử lại trên PR #34); c, e chưa thử (`docs/test-evidence/UC-32/`) | CHƯA KIỂM (ca c, e) | 10/11/2026 |
