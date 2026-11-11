@@ -365,6 +365,12 @@ export default function ChuyenDanhSach() {
                 </Link>
               ))}
               {soViec === 0 && <p>{ds ? 'Không có việc nào cần chú ý.' : 'Đang tải…'}</p>}
+              {soViec > 0 && caNgay.length > canChuY.length && (
+                <p className="chu-y-het">
+                  Hết việc cần chú ý · {caNgay.length - canChuY.length} chuyến khác trong ngày không
+                  có vấn đề
+                </p>
+              )}
             </aside>
           </div>
         )}
@@ -537,7 +543,11 @@ export default function ChuyenDanhSach() {
                       {td?.co.map((x) => (
                         <Nhan
                           key={x}
-                          loai={x}
+                          loai={
+                            x === 'TRE' && ['HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai)
+                              ? 'TRE_XONG'
+                              : x
+                          }
                           title={x === 'CHONG_LICH' ? td.chong.join(', ') : undefined}
                         >
                           {x === 'TRE' && (td.tre_phut ?? 0) > 0

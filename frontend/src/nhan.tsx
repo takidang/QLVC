@@ -75,6 +75,8 @@ const LOAI: Record<string, [string, string]> = {
   DA_QUYET_TOAN: ['xong', 'qt'],
   HUY: ['huy', ''],
   TRE: ['tre', 'tre'],
+  // Trễ của chuyến đã xong: chỉ là thông tin, không tô đặc để khỏi báo động sai
+  TRE_XONG: ['tre', 'tre-nhe'],
   SU_CO: ['suco', 'suco'],
   THAT_BAI: ['suco', 'suco'],
   CHONG_LICH: ['suco', 'suco'],

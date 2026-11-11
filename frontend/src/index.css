@@ -985,6 +985,18 @@ p.thanh-cong {
   display: block;
   font-weight: 500;
 }
+.chu-y p.chu-y-het {
+  padding: 14px 20px 8px;
+  border-top: 1px solid var(--vien);
+}
+.nhan.tre-nhe {
+  color: var(--cam);
+  background: rgb(255 255 255 / 72%);
+  border-color: color-mix(in srgb, var(--cam) 45%, transparent);
+}
+.nhan.tre-nhe svg {
+  color: var(--cam);
+}
 /* Trong lưới đầu màn Chuyến: khung cao suốt cột trái, chữ to hơn một bậc */
 .dau-cot .chu-y a {
   padding: 13px 20px;
@@ -1472,7 +1484,17 @@ input[type='file']::file-selector-button {
   .trang > header .vien-thuoc {
     grid-row: 2;
     grid-column: 1 / -1;
-    justify-self: start;
+    justify-self: stretch;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  /* 1. Lịch xe: điện thoại cuộn ngang, giữ đủ rộng để nhãn giờ không đè nhau */
+  .lich-gio {
+    overflow-x: auto;
+  }
+  .lich-gio .lg-hang {
+    min-width: 680px;
   }
   .noi-dung {
     padding-top: 20px;
