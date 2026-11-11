@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Annotated
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from pydantic import AwareDatetime
 from sqlalchemy.orm import Session
 
@@ -59,8 +59,9 @@ def danh_sach(
     trang_thai: TrangThaiChuyen | None = None,
     ngay: date | None = None,
     tuyen_id: int | None = None,
+    tu_khoa: Annotated[str | None, Query(max_length=100)] = None,
 ):
-    du_lieu, tong = service.danh_sach(db, pt, trang_thai, ngay, tuyen_id)
+    du_lieu, tong = service.danh_sach(db, pt, trang_thai, ngay, tuyen_id, tu_khoa)
     if ngay:  # bảng chuyến trong ngày: tiến độ, % đầy, cờ (UC-32)
         du_lieu = theo_doi.bang_ngay(db, du_lieu)
     return {"du_lieu": du_lieu, "tong": tong}
