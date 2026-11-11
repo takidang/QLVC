@@ -102,7 +102,7 @@ Khi có nút đổi bộ màu trong Cài đặt, lựa chọn đã lưu của ng
 - **Nhãn** dùng chung ở `frontend/src/nhan.tsx` (`<Nhan loai="DANG_CHAY">`, nhận mã trạng thái chuyến hoặc mã cờ). Cờ "Chưa quyết toán" là nhãn thường, không tô đặc.
 - **Lịch xe theo giờ** (`LichGio.tsx`): mỗi xe một hàng, mỗi chuyến một thanh từ giờ đi tới giờ kết thúc dự kiến, màu theo trạng thái (đang lập nét đứt, đã chốt tím nhạt, đang chạy xanh, trễ cam, xong mực, hủy gạch ngang), có vạch "bây giờ". Bấm thanh để mở chuyến.
 - **Bản đồ tuyến trong ngày** (`BanDoNgay.tsx`, tải riêng): ghép `tuyen_id` của chuyến với danh sách tuyến và tọa độ nút; đường nối thẳng các nút, màu theo trạng thái chuyến "nóng" nhất của tuyến. Chưa có vị trí xe (API chưa trả vị trí quét gần nhất).
-- **Khung "Cần chú ý" khi xem hôm nay** có thêm: số đơn thất bại chờ xử lý (`GET /api/don/can-xu-ly`), giấy tờ xe và GPLX hết hạn trong 30 ngày (tính từ danh sách xe, tài xế; tạm thay UC-27, số 30 là mặc định của CFG-02 vì điều phối không đọc được cấu hình).
+- **Khung "Cần chú ý" khi xem hôm nay** có thêm, lấy từ bảng cảnh báo UC-27 (`GET /api/canh-bao`): sự cố đang mở, chuyến trễ / chồng lịch của ngày khác, đơn chờ ghép đã quá hoặc sắp tới hạn (CFG-10), lượt quét thiếu GPS, giấy tờ xe và GPLX sắp hết hạn (CFG-02); cộng số đơn thất bại chờ xử lý (`GET /api/don/can-xu-ly`). Chuyến đã có trong danh sách ngày đang xem không lặp lại.
 - Mẫu tham khảo 02 (ngoài repo, `tham-khao-ui/02-bang-chuyen-trong-ngay`): lấy thanh menu trên, tab lọc có số đếm, bảng trong khung, phần đầu có số liệu + nút chính, lịch theo giờ, bản đồ.
 - Biểu đồ doanh thu, nhiên liệu, hiệu suất, vị trí xe: chờ backend, danh sách ở `..\ghi-chu6-11-10-backend-can-them-cho-giao-dien-v2.md` (ngoài repo).
 
@@ -119,6 +119,7 @@ Khi có nút đổi bộ màu trong Cài đặt, lựa chọn đã lưu của ng
 - **Chuyến của tôi:** dòng ngày, tiêu đề 32 px, thẻ chọn Cần làm / Đã xong. Chuyến **đang chạy** là khối `--o-liu` chữ trắng (mã, nhãn, tuyến, biển số, giờ, số đơn) với nút trắng cao 52 px "Mở lịch trình, quét mã"; chuyến khác là dòng gọn: giờ đi | tuyến + mã · biển số · số đơn | nhãn.
 - **Lịch trình chuyến:** khối chính đậm khi đang chạy (nhạt khi chờ chạy / đã xong): tuyến, biển số, giờ, lương chuyến, dải đoạn tiến độ (xong trắng, đang tới cam nhạt, thất bại đỏ nhạt), **Điểm kế tiếp** (việc, giờ dự kiến, nơi, địa chỉ, kiện, mã đơn) và nút "Gọi …". Dưới là khối Lấy hàng (quét QR), Bắt đầu / Kết thúc chuyến, rồi lịch trình dạng dòng thời gian (mỗi điểm một thẻ; điểm đã xong thu gọn hai dòng; điểm đang tới viền xanh), cuối cùng là Chi phí.
 - Không làm menu dưới như mockup: tài xế chỉ có một màn, quét mã nằm ngay trong lịch trình.
+- **Báo sự cố (UC-33):** khối Sự cố (của Kiệt) ở cuối trang; khối chính có nút viền "Gặp sự cố trên đường" nhảy thẳng tới khối này.
 
 ## Trang tra cứu đơn cho khách (UC-28), đã vào code
 

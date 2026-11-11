@@ -14,6 +14,7 @@ import {
 } from '../../api/toi'
 import { nenAnh } from '../../nenAnh'
 import { ChiPhi } from './ChiPhi'
+import { SuCoChuyen } from './SuCo'
 import { GiaoHang } from './GiaoHang'
 import { KhongLay, QuetLay } from './QuetLay'
 
@@ -67,6 +68,12 @@ export default function ChuyenCuaToiChiTiet() {
   // Còn điểm lấy chưa quét thì mới cần khối Lấy hàng (quét lấy); lấy hết rồi thì giao ở từng điểm
   const conLay = !!c?.lich_trinh.some((p) => p.viec === 'LAY' && p.trang_thai_don === 'DA_GHEP')
   const idDiem = (p: ChiTiet['lich_trinh'][number]) => `diem-${p.viec}-${p.don_id}`
+  // Cuộn tới một khối; máy bật giảm chuyển động thì nhảy thẳng
+  const toi = (id: string) =>
+    document.getElementById(id)?.scrollIntoView({
+      behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      block: 'start',
+    })
 
   return (
     <section className="noi-dung dien-thoai">
@@ -133,24 +140,15 @@ export default function ChuyenCuaToiChiTiet() {
                   {keTiep.dia_chi} · {keTiep.so_kien} kiện · {keTiep.ma_don}
                 </p>
                 <div className="ke-nut">
-                  <button
-                    type="button"
-                    className="nut-to"
-                    onClick={() =>
-                      document.getElementById(idDiem(keTiep))?.scrollIntoView({
-                        // Máy bật giảm chuyển động thì nhảy thẳng, không cuộn trượt
-                        behavior: matchMedia('(prefers-reduced-motion: reduce)').matches
-                          ? 'auto'
-                          : 'smooth',
-                        block: 'start',
-                      })
-                    }
-                  >
+                  <button type="button" className="nut-to" onClick={() => toi(idDiem(keTiep))}>
                     {keTiep.viec === 'LAY' ? 'Tới điểm lấy' : 'Tới điểm, giao hàng'}
                   </button>
                   <a className="nut-vien" href={`tel:${keTiep.sdt}`}>
                     Gọi {keTiep.nguoi_lien_he ?? keTiep.sdt}
                   </a>
+                  <button type="button" className="nut-vien" onClick={() => toi('khoi-su-co')}>
+                    Gặp sự cố trên đường
+                  </button>
                 </div>
               </div>
             )}
@@ -238,6 +236,11 @@ export default function ChuyenCuaToiChiTiet() {
 
           {['DANG_CHAY', 'HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai) && (
             <ChiPhi chuyenId={c.id} ghiDuoc={c.trang_thai !== 'DA_QUYET_TOAN'} />
+          )}
+          {['DANG_CHAY', 'HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai) && (
+            <div id="khoi-su-co" className="neo">
+              <SuCoChuyen chuyenId={c.id} baoDuoc={c.trang_thai === 'DANG_CHAY'} />
+            </div>
           )}
         </>
       )}

@@ -1978,8 +1978,15 @@ input[type='file']::file-selector-button {
   border: 1px solid rgb(255 255 255 / 55%);
   border-radius: 99px;
 }
-.lt-dt li {
+.lt-dt li,
+.neo {
   scroll-margin-top: 12px;
+}
+.ke-nut button.nut-vien {
+  width: 100%;
+  font: inherit;
+  font-weight: 500;
+  background: none;
 }
 .the-chinh.nhat {
   color: var(--muc);

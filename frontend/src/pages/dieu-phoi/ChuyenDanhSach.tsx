@@ -12,11 +12,11 @@ import {
   type TaiXeKhaDung,
   type XeKhaDung,
 } from '../../api/chuyen'
+import { canhBao } from '../../api/canhBao'
 import { donCanXuLy } from '../../api/don'
 import { kemMaBr, LoiApi, loiTheoTruong } from '../../api/goi'
-import { danhSachTaiXe } from '../../api/taiXe'
+import { TEN_LOAI_SU_CO, type LoaiSuCo } from '../../api/suCo'
 import { danhSachTuyen, type Tuyen } from '../../api/tuyen'
-import { danhSachXe } from '../../api/xe'
 import { Ic, Nhan } from '../../nhan'
 import LichGio from './LichGio'
 
@@ -47,56 +47,92 @@ const DOAN: Record<string, string | undefined> = {
 }
 // Cờ đưa lên khung "Cần chú ý" (Chưa quyết toán là việc của kế toán, không phải việc gấp của điều phối)
 const CO_CHU_Y = ['TRE', 'SU_CO', 'THAT_BAI', 'CHONG_LICH']
-// Việc khác của hôm nay trên khung "Cần chú ý": đơn thất bại chờ xử lý, giấy tờ sắp hết hạn (BR-21)
-type Viec = { den: string; nang: boolean; chinh: string; phu: string }
-// shortcut: CFG-02 (số ngày báo trước) chỉ Quản lý đọc được nên dùng mặc định 30;
-// thay bằng GET /api/canh-bao khi làm UC-27
-const NGAY_BAO_TRUOC = 30
-const ngayVN = (ymd: string) => ymd.split('-').reverse().join('/')
+// Việc khác của hôm nay trên khung "Cần chú ý": lấy từ bảng cảnh báo UC-27 (GET /api/canh-bao)
+// và đơn thất bại chờ xử lý (UC-22). Chuyến trễ / chồng lịch của ngày đang xem đã có ở danh sách chuyến
+type Viec = { den: string; nang: boolean; chinh: string; phu: string; ma?: string }
+const ngayVN = (ymd: string) => ymd.slice(0, 10).split('-').reverse().join('/')
+const TEN_GIAY: Record<string, string> = {
+  DANG_KIEM: 'đăng kiểm',
+  BAO_HIEM: 'bảo hiểm',
+  GPLX: 'GPLX',
+}
 async function viecHomNay(): Promise<Viec[]> {
-  const nay = homNay()
-  const moc = new Date(Date.now() + NGAY_BAO_TRUOC * 86_400_000).toLocaleDateString('sv-SE')
   // Mỗi nguồn hỏng riêng thì bỏ qua nguồn đó, không làm mất cả khung
-  const [don, xe, taiXe] = await Promise.all([
-    donCanXuLy().catch(() => []),
-    danhSachXe({ trang_thai: 'HOAT_DONG', so_dong: 100 })
-      .then((r) => r.du_lieu)
-      .catch(() => []),
-    danhSachTaiXe({ trang_thai: 'HOAT_DONG', so_dong: 100 })
-      .then((r) => r.du_lieu)
-      .catch(() => []),
-  ])
-  const giay = (ten: string, loai: string, han: string, den: string): Viec[] =>
-    han > moc
-      ? []
-      : [
-          {
-            den,
-            nang: han < nay,
-            chinh: `${ten} · ${loai} ${han < nay ? 'đã hết hạn' : 'sắp hết hạn'}`,
-            phu: `Hạn ${ngayVN(han)}`,
-          },
-        ]
+  const [cb, don] = await Promise.all([canhBao().catch(() => null), donCanXuLy().catch(() => [])])
+  const ds = (n: number, ma: string[]) => ma.slice(0, 3).join(', ') + (n > 3 ? '…' : '')
+  const quaHan = cb?.don_sap_qua_han.filter((d) => d.qua_han) ?? []
+  const sapHan = cb?.don_sap_qua_han.filter((d) => !d.qua_han) ?? []
   return [
+    ...(cb?.su_co_mo ?? []).map((x) => ({
+      ma: x.ma_chuyen,
+      den: String(x.chuyen_id),
+      nang: true,
+      chinh: `${x.ma_chuyen} · Sự cố ${TEN_LOAI_SU_CO[x.loai as LoaiSuCo]?.toLowerCase() ?? x.loai}`,
+      phu: `${x.bien_so}, ${x.ten_tai_xe}${x.ghi_chu ? ` · ${x.ghi_chu}` : ''}`,
+    })),
+    // Chuyến trễ: chuyến đã có trong danh sách ngày đang xem bị lọc bỏ lúc vẽ (trường `ma`)
+    ...(cb?.chuyen_tre ?? []).map((x) => ({
+      ma: x.ma_chuyen,
+      den: String(x.chuyen_id),
+      nang: x.chong.length > 0,
+      chinh: `${x.ma_chuyen} · ${x.tre_phut ? `Trễ ${phutDoc(x.tre_phut)}` : 'Chồng lịch'}`,
+      phu: `${x.bien_so}, ${x.ten_tai_xe}${x.chong.length ? ` · trùng ${x.chong.join(', ')}` : ''}`,
+    })),
     ...(don.length
       ? [
           {
             den: '../don',
             nang: true,
             chinh: `${don.length} đơn thất bại chờ xử lý`,
-            phu:
-              don
-                .slice(0, 3)
-                .map((d) => d.ma_don)
-                .join(', ') + (don.length > 3 ? '…' : ''),
+            phu: ds(
+              don.length,
+              don.map((d) => d.ma_don),
+            ),
           },
         ]
       : []),
-    ...xe.flatMap((x) => [
-      ...giay(x.bien_so, 'đăng kiểm', x.han_dang_kiem, '../xe'),
-      ...giay(x.bien_so, 'bảo hiểm', x.han_bao_hiem, '../xe'),
-    ]),
-    ...taiXe.flatMap((t) => giay(t.ho_ten, 'GPLX', t.han_gplx, '../tai-xe')),
+    ...(quaHan.length
+      ? [
+          {
+            den: '../don',
+            nang: true,
+            chinh: `${quaHan.length} đơn chờ ghép đã quá hạn giao`,
+            phu: ds(
+              quaHan.length,
+              quaHan.map((d) => d.ma_don),
+            ),
+          },
+        ]
+      : []),
+    ...(sapHan.length
+      ? [
+          {
+            den: '../don',
+            nang: false,
+            chinh: `${sapHan.length} đơn chờ ghép sắp tới hạn giao`,
+            phu: `Còn dưới ${cb!.cau_hinh.gio_cho_ghep} giờ · ${ds(
+              sapHan.length,
+              sapHan.map((d) => d.ma_don),
+            )}`,
+          },
+        ]
+      : []),
+    ...(cb?.thieu_gps.length
+      ? [
+          {
+            den: '../chuyen',
+            nang: false,
+            chinh: `${cb.thieu_gps.length} lượt quét thiếu GPS`,
+            phu: 'Tài xế quét khi điện thoại chưa bật định vị (BR-43)',
+          },
+        ]
+      : []),
+    ...(cb?.giay_to ?? []).map((g) => ({
+      den: g.doi_tuong === 'XE' ? '../xe' : '../tai-xe',
+      nang: g.het_han,
+      chinh: `${g.ten} · ${TEN_GIAY[g.loai] ?? g.loai} ${g.het_han ? 'đã hết hạn' : 'sắp hết hạn'}`,
+      phu: `Hạn ${ngayVN(g.han)}${g.het_han ? '' : ` · còn ${g.con_ngay} ngày`}`,
+    })),
   ]
 }
 // Mỗi vi phạm hiện kèm mã quy tắc (NFR-USA-02)
@@ -179,7 +215,8 @@ export default function ChuyenDanhSach() {
     ? caNgay.filter((c) => !trangThai || c.trang_thai === trangThai)
     : (ds?.du_lieu ?? [])
   const canChuY = caNgay.filter((c) => c.theo_doi?.co.some((x) => CO_CHU_Y.includes(x)))
-  const viecKhac = ngay === homNay() ? viec : []
+  const viecKhac =
+    ngay === homNay() ? viec.filter((v) => !v.ma || !caNgay.some((c) => c.ma_chuyen === v.ma)) : []
   const soViec = canChuY.length + viecKhac.length
   const soTrang = Math.max(1, Math.ceil((ds?.tong ?? 0) / SO_DONG))
   const soCot = ngay ? 7 : 5

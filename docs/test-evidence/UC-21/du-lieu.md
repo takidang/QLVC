@@ -16,15 +16,15 @@ Tab ẩn danh, `F12` → `Ctrl + Shift + M`, rộng 360. Đăng nhập `an` → 
 
 | Ca | Làm gì | Kết quả đúng | Ảnh | Kết quả |
 |---|---|---|---|---|
-| a | Xem khối Chi phí | "Tạm ứng đã nhận 1.000.000 đ · Đã khai 0 đ", "Chưa ghi khoản chi nào"; form có Loại chi = **Dầu** và ô **Số lít**; không cuộn ngang | `a-khoi-chi-phi.png` || Đạt |
-| b | Đổi Loại chi sang **Cầu đường** rồi về **Dầu** | Ô Số lít biến mất khi chọn Cầu đường, hiện lại khi chọn Dầu | `b-mat-so-lit.png` || Đạt |
-| c | Dầu, `520000`, `26` lít, **để trống ghi chú** (hoặc chỉ gõ dấu cách), chọn ảnh → **Ghi chi phí** | Đỏ "Chi phí cần có ghi chú (BR-54)", chưa có khoản nào | `c-thieu-ghi-chu.png` || Đạt |
-| d | **F5** cho form trống (Chrome giữ ảnh đã chọn khi mở hộp chọn tệp rồi bấm Hủy, nên không bỏ ảnh được bằng cách đó) → Dầu, `520000`, `26`, ghi chú `Đổ dầu Cai Lậy`, **không chọn ảnh** → **Ghi chi phí** | Đỏ "Chi phí cần có ảnh chứng từ (BR-54)", chưa có khoản nào | `d-thieu-anh.png` || Đạt |
-| e | Dầu, `520000`, `26`, ghi chú, 1 ảnh → **Ghi chi phí** | Xanh "Đã ghi dầu 520.000 đ, chờ Kế toán duyệt"; khoản "Dầu · 520.000 đ · 26 lít" nhãn **Chờ duyệt**, "1 ảnh"; "Đã khai 520.000 đ"; form trống lại | `e-da-ghi.png` || Đạt |
-| f | Ghi **Cầu đường** `230000`, ghi chú `Trạm BOT`, 1 ảnh | Khoản thứ hai, không có số lít; đã khai 750.000 đ | `f-cau-duong.png` || Đạt |
-| g | Khoản dầu → **Sửa** → bấm **Lưu** ngay (chưa đổi gì) → rồi đổi số tiền `500000` → **Lưu** | Lần đầu đỏ "Không có gì thay đổi"; lần sau xanh "Đã sửa khoản chi", khoản còn 500.000 đ, vẫn 26 lít, vẫn 1 ảnh; đã khai 730.000 đ | `g-da-sua.png` || Đạt |
-| g2 | Khoản dầu → **Sửa** → Loại chi **Cầu đường** (ô số lít biến mất) → **Thôi** | Form sửa đóng, khoản vẫn là Dầu 500.000 đ (Thôi không lưu gì) | – || Đạt |
-| h | Khoản cầu đường → **Xóa** → hộp hỏi "Xóa khoản cầu đường 230.000 đ?" → **Hủy** trước, rồi **Xóa** lại → **OK** | Bấm Hủy thì khoản còn nguyên; bấm OK thì khoản biến mất, xanh "Đã xóa khoản chi"; đã khai 500.000 đ | `h-da-xoa.png` || Đạt |
+| a | Xem khối Chi phí | "Tạm ứng đã nhận 1.000.000 đ · Đã khai 0 đ", "Chưa ghi khoản chi nào"; form có Loại chi = **Dầu** và ô **Số lít**; không cuộn ngang | `a-khoi-chi-phi.png` | Đạt |
+| b | Đổi Loại chi sang **Cầu đường** rồi về **Dầu** | Ô Số lít biến mất khi chọn Cầu đường, hiện lại khi chọn Dầu | `b-mat-so-lit.png` | Đạt |
+| c | Dầu, `520000`, `26` lít, **để trống ghi chú** (hoặc chỉ gõ dấu cách), chọn ảnh → **Ghi chi phí** | Đỏ "Chi phí cần có ghi chú (BR-54)", chưa có khoản nào | `c-thieu-ghi-chu.png` | Đạt |
+| d | **F5** cho form trống (Chrome giữ ảnh đã chọn khi mở hộp chọn tệp rồi bấm Hủy, nên không bỏ ảnh được bằng cách đó) → Dầu, `520000`, `26`, ghi chú `Đổ dầu Cai Lậy`, **không chọn ảnh** → **Ghi chi phí** | Đỏ "Chi phí cần có ảnh chứng từ (BR-54)", chưa có khoản nào | `d-thieu-anh.png` | Đạt |
+| e | Dầu, `520000`, `26`, ghi chú, 1 ảnh → **Ghi chi phí** | Xanh "Đã ghi dầu 520.000 đ, chờ Kế toán duyệt"; khoản "Dầu · 520.000 đ · 26 lít" nhãn **Chờ duyệt**, "1 ảnh"; "Đã khai 520.000 đ"; form trống lại | `e-da-ghi.png` | Đạt |
+| f | Ghi **Cầu đường** `230000`, ghi chú `Trạm BOT`, 1 ảnh | Khoản thứ hai, không có số lít; đã khai 750.000 đ | `f-cau-duong.png` | Đạt |
+| g | Khoản dầu → **Sửa** → bấm **Lưu** ngay (chưa đổi gì) → rồi đổi số tiền `500000` → **Lưu** | Lần đầu đỏ "Không có gì thay đổi"; lần sau xanh "Đã sửa khoản chi", khoản còn 500.000 đ, vẫn 26 lít, vẫn 1 ảnh; đã khai 730.000 đ | `g-da-sua.png` | Đạt |
+| g2 | Khoản dầu → **Sửa** → Loại chi **Cầu đường** (ô số lít biến mất) → **Thôi** | Form sửa đóng, khoản vẫn là Dầu 500.000 đ (Thôi không lưu gì) | – | Đạt |
+| h | Khoản cầu đường → **Xóa** → hộp hỏi "Xóa khoản cầu đường 230.000 đ?" → **Hủy** trước, rồi **Xóa** lại → **OK** | Bấm Hủy thì khoản còn nguyên; bấm OK thì khoản biến mất, xanh "Đã xóa khoản chi"; đã khai 500.000 đ | `h-da-xoa.png` | Đạt |
 
 ## Phần 2 – iPhone thật qua Cloudflare Tunnel (AC14)
 
@@ -33,7 +33,7 @@ Tab ẩn danh, `F12` → `Ctrl + Shift + M`, rộng 360. Đăng nhập `an` → 
 
 | Ca | Làm gì | Kết quả đúng | Ảnh | Kết quả |
 |---|---|---|---|---|
-| i | **Bốc xếp** `300000`, ghi chú `Bốc xếp Cần Thơ`, ô ảnh → **Chụp ảnh** hóa đơn bằng camera (cho phép camera nếu Safari hỏi) → **Ghi chi phí** | Ghi được, khoản "Bốc xếp · 300.000 đ" có "1 ảnh", không có số lít; đã khai 800.000 đ; khối Chi phí và các ô nhập không tràn khung | `i-iphone.png` || Đạt |
+| i | **Bốc xếp** `300000`, ghi chú `Bốc xếp Cần Thơ`, ô ảnh → **Chụp ảnh** hóa đơn bằng camera (cho phép camera nếu Safari hỏi) → **Ghi chi phí** | Ghi được, khoản "Bốc xếp · 300.000 đ" có "1 ảnh", không có số lít; đã khai 800.000 đ; khối Chi phí và các ô nhập không tràn khung | `i-iphone.png` | Đạt |
 
 ## Không thử tay (có test tự động)
 
