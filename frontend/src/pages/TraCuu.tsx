@@ -1,8 +1,8 @@
-import { useRef, useState, type FormEvent } from 'react'
+import { useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { LoiApi } from '../api/goi'
 import { traCuu, type KetQuaTraCuu } from '../api/traCuu'
-import { Nhan } from '../nhan'
+import { NEN } from '../nen'
 
 // Tên trạng thái đơn viết cho khách (không dùng từ nội bộ như "ghép", "thất bại")
 const TEN_CHO_KHACH: Record<string, string> = {
@@ -13,26 +13,6 @@ const TEN_CHO_KHACH: Record<string, string> = {
   THAT_BAI: 'Giao chưa thành công, đang chờ giao lại',
   TRA_HANG: 'Đang hoàn trả hàng',
   HUY: 'Đơn đã hủy',
-}
-// Chữ ngắn trên nhãn, cạnh câu đầy đủ
-const TEN_NGAN: Record<string, string> = {
-  CHO_GHEP: 'Tiếp nhận',
-  DA_GHEP: 'Đã xếp chuyến',
-  DA_LAY: 'Đang chở',
-  DA_GIAO: 'Đã giao',
-  THAT_BAI: 'Chờ giao lại',
-  TRA_HANG: 'Hoàn trả',
-  HUY: 'Đã hủy',
-}
-// Hình nhãn dùng chung với nhãn chuyến (nhan.tsx)
-const NHAN: Record<string, string> = {
-  CHO_GHEP: 'LAP',
-  DA_GHEP: 'DA_CHOT',
-  DA_LAY: 'DANG_CHAY',
-  DA_GIAO: 'HOAN_THANH',
-  THAT_BAI: 'TRE',
-  TRA_HANG: 'HUY',
-  HUY: 'HUY',
 }
 const luc = (iso: string) =>
   new Date(iso).toLocaleString('vi-VN', {
@@ -81,76 +61,102 @@ export default function TraCuu() {
 
   // Mốc mới nhất trên cùng; mốc đầu là trạng thái hiện tại
   const moc = kq ? [...kq.moc].reverse() : []
+  const traKhac = () => {
+    setKq(null)
+    setSo('')
+    requestAnimationFrame(() => oMa.current?.select())
+  }
+
   return (
     <main className="tra-cuu">
-      <header>
-        <span className="thuong-hieu">Quản lý vận tải</span>
-        <Link to="/dang-nhap">Nhân viên đăng nhập</Link>
-      </header>
+      <div className="tc-trai">
+        <header>
+          <span className="thuong-hieu">Quản lý vận tải</span>
+          <Link to="/dang-nhap">Nhân viên đăng nhập</Link>
+        </header>
 
-      <section className="kinh tc-khung">
-        <h1>Tra cứu đơn hàng</h1>
-        <p className="tc-phu">
-          Mã đơn in trên phiếu gửi hàng, ví dụ <span className="ma-nguyen">DH-KTD27M</span>.
-        </p>
-        <form onSubmit={gui} noValidate>
-          <label>
-            Mã đơn
-            <input
-              ref={oMa}
-              value={ma}
-              onChange={(e) => setMa(e.target.value)}
-              autoCapitalize="characters"
-              autoComplete="off"
-              spellCheck={false}
-              maxLength={20}
-              required
-            />
-          </label>
-          <label>
-            4 số cuối điện thoại
-            <input
-              value={so}
-              onChange={(e) => setSo(e.target.value.replace(/\D/g, '').slice(0, 4))}
-              inputMode="numeric"
-              autoComplete="off"
-              placeholder="vd 6789"
-              maxLength={4}
-              required
-            />
-            <small>Của người gửi hoặc người nhận</small>
-          </label>
-          <button disabled={dangGui}>{dangGui ? 'Đang tra cứu…' : 'Tra cứu'}</button>
-        </form>
-        {loi && (
-          <p role="alert" className="loi">
-            {loi}
-          </p>
+        {kq ? (
+          // Có kết quả: form thu thành một dòng để trạng thái nổi lên đầu
+          <div className="kinh tc-gon">
+            <span>
+              <strong>{kq.ma_don}</strong> · số cuối {so}
+            </span>
+            <button type="button" className="phu" onClick={traKhac}>
+              Tra đơn khác
+            </button>
+          </div>
+        ) : (
+          <section className="kinh tc-khung">
+            <h1>Tra cứu đơn hàng</h1>
+            <p className="tc-phu">
+              Mã đơn in trên phiếu gửi hàng, ví dụ <span className="ma-nguyen">DH-KTD27M</span>.
+            </p>
+            <form onSubmit={gui} noValidate>
+              <label>
+                Mã đơn
+                <input
+                  ref={oMa}
+                  value={ma}
+                  onChange={(e) => setMa(e.target.value)}
+                  autoCapitalize="characters"
+                  autoComplete="off"
+                  spellCheck={false}
+                  maxLength={20}
+                  required
+                />
+              </label>
+              <label>
+                4 số cuối điện thoại
+                <input
+                  value={so}
+                  onChange={(e) => setSo(e.target.value.replace(/\D/g, '').slice(0, 4))}
+                  inputMode="numeric"
+                  autoComplete="off"
+                  placeholder="vd 6789"
+                  maxLength={4}
+                  required
+                />
+                <small>Của người gửi hoặc người nhận</small>
+              </label>
+              <button disabled={dangGui}>{dangGui ? 'Đang tra cứu…' : 'Tra cứu'}</button>
+            </form>
+            {loi && (
+              <p role="alert" className="loi">
+                {loi}
+              </p>
+            )}
+          </section>
         )}
-      </section>
 
-      {kq && (
-        <section className="kinh tc-khung tc-kq" aria-live="polite">
-          <span className="ma">Đơn {kq.ma_don}</span>
-          <h2 ref={oKq} tabIndex={-1}>
-            <Nhan loai={NHAN[kq.trang_thai] ?? 'LAP'}>
-              {TEN_NGAN[kq.trang_thai] ?? kq.trang_thai}
-            </Nhan>
-            {TEN_CHO_KHACH[kq.trang_thai] ?? kq.trang_thai}
-          </h2>
-          <ol className="lt">
-            {moc.map((m, i) => (
-              <li key={`${m.trang_thai}-${m.luc}`} className={i === 0 ? 'toi' : 'xong'}>
-                <i aria-hidden="true" />
-                <div>
-                  <strong>{TEN_CHO_KHACH[m.trang_thai] ?? m.trang_thai}</strong>
-                  <small>{luc(m.luc)}</small>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </section>
-      )}
+        {kq && (
+          <section className="kinh tc-khung tc-kq" aria-live="polite">
+            <h2 ref={oKq} tabIndex={-1}>
+              {TEN_CHO_KHACH[kq.trang_thai] ?? kq.trang_thai}
+            </h2>
+            <ol className="lt">
+              {moc.map((m, i) => (
+                <li key={`${m.trang_thai}-${m.luc}`} className={i === 0 ? 'toi' : 'xong'}>
+                  <i aria-hidden="true" />
+                  <div>
+                    {/* Mốc mới nhất chính là trạng thái ở dòng tiêu đề: chỉ ghi "Hiện tại" */}
+                    <strong>
+                      {i === 0 ? 'Hiện tại' : (TEN_CHO_KHACH[m.trang_thai] ?? m.trang_thai)}
+                    </strong>
+                    <small>{luc(m.luc)}</small>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+      </div>
+
+      {/* Máy tính: ảnh xe bên phải như màn đăng nhập (cùng ảnh, cùng bộ màu); điện thoại ẩn */}
+      <section
+        className="dn-hinh tc-hinh"
+        aria-hidden="true"
+        style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}
+      />
     </main>
   )
 }

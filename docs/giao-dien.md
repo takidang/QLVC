@@ -122,8 +122,8 @@ Khi có nút đổi bộ màu trong Cài đặt, lựa chọn đã lưu của ng
 ## Trang tra cứu đơn cho khách (UC-28), đã vào code
 
 - Đường dẫn công khai `/tra-cuu` (không đăng nhập); `?ma=DH-…` điền sẵn mã đơn để điều phối gửi link cho khách. Màn đăng nhập có dòng "Khách hàng? Tra cứu đơn hàng".
-- Một cột tối đa 480 px (khách mở bằng điện thoại): tiêu đề 32 px, ô mã đơn, ô 4 số cuối điện thoại (chỉ nhận chữ số), nút Tra cứu cao 48 px.
-- Kết quả: trạng thái hiện tại bằng **lời cho khách** (vd "Giao chưa thành công, đang chờ giao lại", không dùng từ nội bộ "ghép", "thất bại") kèm nhãn ngắn; dưới là các mốc dạng dòng thời gian, mới nhất trên cùng. Có kết quả thì focus chuyển tới dòng trạng thái.
+- Điện thoại: một cột tối đa 480 px; tiêu đề 32 px, ô mã đơn, ô 4 số cuối điện thoại (chỉ nhận chữ số), nút Tra cứu cao 48 px. Từ 900 px: chia đôi như màn đăng nhập, cột trái là form và kết quả, phải là ảnh xe (cùng ảnh và bộ màu ngẫu nhiên của `nen.ts`).
+- Kết quả: form thu thành một dòng "mã · số cuối · Tra đơn khác"; trạng thái hiện tại là dòng chữ lớn bằng **lời cho khách** (vd "Giao chưa thành công, đang chờ giao lại", không dùng từ nội bộ "ghép", "thất bại"); dưới là các mốc dạng dòng thời gian, mới nhất trên cùng và ghi "Hiện tại". Có kết quả thì focus chuyển tới dòng trạng thái.
 - Lỗi: 404 hướng dẫn kiểm lại mã trên phiếu và 4 số của người gửi hoặc người nhận; 429 hiện câu của máy chủ.
 
 ## Còn phải quyết khi làm vào code

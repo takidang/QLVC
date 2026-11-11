@@ -2035,19 +2035,18 @@ input[type='file']::file-selector-button {
 
 /* ----- Trang tra cứu đơn cho khách (UC-28) ----- */
 .tra-cuu {
-  max-width: 480px;
+  box-sizing: border-box;
   min-height: 100dvh;
-  margin: 0 auto;
   padding: 16px 16px 40px;
   font-size: 15px;
 }
-.tra-cuu > header {
+.tc-trai > header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 4px 0 28px;
 }
-.tra-cuu > header a {
+.tc-trai > header a {
   padding: 10px 0;
   font-size: 13px;
   color: var(--phu);
@@ -2116,6 +2115,41 @@ input[type='file']::file-selector-button {
 .tc-kq h2:focus-visible {
   outline: 2px solid var(--muc);
   outline-offset: 4px;
+}
+.tc-trai {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.tc-hinh {
+  display: none;
+}
+/* Form thu gọn khi đã có kết quả */
+.tc-gon {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 12px 14px 12px 20px;
+  font-variant-numeric: tabular-nums;
+}
+@media (min-width: 900px) {
+  .tra-cuu {
+    display: grid;
+    grid-template-columns: minmax(420px, 5fr) 7fr;
+    gap: 14px;
+    max-width: none;
+    padding: 14px;
+  }
+  .tc-trai {
+    padding-top: 12px;
+  }
+  .tc-hinh {
+    display: flex;
+    min-height: calc(100dvh - 28px);
+  }
 }
 .tc-kq .lt li {
   grid-template-columns: 16px 1fr;
