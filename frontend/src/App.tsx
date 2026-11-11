@@ -11,6 +11,8 @@ import {
 import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
 import { Ic } from './nhan'
 import { KhungThongBao } from './thongBao'
+import ChuongThongBao from './ChuongThongBao'
+import MenuTaiKhoan from './MenuTaiKhoan'
 import DangNhap from './pages/DangNhap'
 import BangGiaDanhSach from './pages/quan-ly/BangGiaDanhSach'
 import CauHinh from './pages/quan-ly/CauHinh'
@@ -166,17 +168,10 @@ function KhungTrang({
           <span className="ten">
             {nd.ho_ten} · {TEN_VAI_TRO[nd.vai_tro]}
           </span>
-          <span className="tron" aria-hidden="true">
-            {nd.ho_ten
-              .split(' ')
-              .slice(-2)
-              .map((x) => x[0])
-              .join('')
-              .toUpperCase()}
-          </span>
-          <button className="phu" onClick={onThoat}>
-            Đăng xuất
-          </button>
+          {(nd.vai_tro === 'DIEU_PHOI' || nd.vai_tro === 'QUAN_LY') && (
+            <ChuongThongBao goc={TRANG_CHU.DIEU_PHOI} />
+          )}
+          <MenuTaiKhoan nd={nd} tenVaiTro={TEN_VAI_TRO[nd.vai_tro]} onThoat={onThoat} />
         </div>
       </header>
       {loiThoat && (

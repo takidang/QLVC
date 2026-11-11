@@ -3266,6 +3266,153 @@ body {
   background-attachment: fixed;
 }
 
+/* ----- Chuông thông báo và menu tài khoản trên thanh đầu ----- */
+.chuong,
+.menu-tk {
+  position: relative;
+}
+.chuong summary,
+.menu-tk summary {
+  list-style: none;
+  cursor: pointer;
+}
+.chuong summary::-webkit-details-marker,
+.menu-tk summary::-webkit-details-marker {
+  display: none;
+}
+.chuong summary {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  color: var(--muc);
+  background: rgb(255 255 255 / 60%);
+  border: 1px solid var(--vien-dam);
+  border-radius: 50%;
+}
+.chuong summary:hover {
+  background: rgb(255 255 255 / 92%);
+}
+.chuong summary em {
+  position: absolute;
+  top: -5px;
+  right: -6px;
+  min-width: 18px;
+  padding: 1px 5px;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 16px;
+  text-align: center;
+  color: #fff;
+  background: var(--cam);
+  border: 2px solid var(--da);
+  border-radius: 99px;
+}
+.chuong-hop,
+.menu-tk-hop {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 20;
+  display: grid;
+  gap: 2px;
+  width: 300px;
+  padding: 10px;
+  font-size: 13.5px;
+  color: var(--muc);
+  background: #fbfbf9;
+  border: 1px solid var(--vien-dam);
+  border-radius: 16px;
+}
+.chuong-hop > strong {
+  padding: 4px 8px 6px;
+  font-size: 14px;
+}
+.chuong-hop a {
+  display: grid;
+  grid-template-columns: 34px 1fr 18px;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 10px;
+}
+.chuong-hop a:hover {
+  background: color-mix(in srgb, var(--muc) 6%, transparent);
+}
+.chuong-hop a b {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  color: var(--cam);
+}
+.chuong-hop a.do b {
+  color: var(--do);
+}
+.chuong-hop p {
+  margin: 0;
+  padding: 6px 8px 8px;
+  color: var(--phu);
+}
+.menu-tk-hop {
+  gap: 10px;
+  width: 280px;
+  padding: 14px;
+}
+.menu-tk-dau {
+  display: grid;
+  gap: 2px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--vien);
+}
+.menu-tk-dau small {
+  color: var(--phu);
+}
+.menu-tk-mau {
+  display: grid;
+  gap: 2px;
+}
+.menu-tk-mau small {
+  margin-bottom: 6px;
+  font-size: 12.5px;
+  color: var(--phu);
+}
+.menu-tk-mau button {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 7px 8px;
+  font-weight: 400;
+  text-align: left;
+  color: var(--muc);
+  background: none;
+  border: 0;
+  border-radius: 10px;
+}
+.menu-tk-mau button:enabled:hover,
+.menu-tk-mau button[aria-pressed='true'] {
+  background: color-mix(in srgb, var(--muc) 7%, transparent);
+}
+.o-mau {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--vien-dam);
+  border-radius: 50%;
+}
+.o-mau.ngau-nhien {
+  background: conic-gradient(#c4c8be 0 20%, #c3cad3 0 40%, #d2cabb 0 60%, #bfcbc8 0 80%, #cac6cf 0);
+}
+.menu-tk-mau button[aria-pressed='true'] .o-mau {
+  outline: 2px solid var(--muc);
+  outline-offset: 2px;
+}
+.menu-tk-hop > button {
+  justify-self: start;
+}
+
 /* ----- Màn của Kiệt: 04, 05, 06, 08 ----- */
 
 /* Đầu trang danh mục (06): thấp hơn màn Chuyến, tiêu đề + một dòng phụ, nút chính bên phải */

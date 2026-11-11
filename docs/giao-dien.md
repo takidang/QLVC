@@ -168,6 +168,11 @@ Theo gợi ý video Tài xem: không chuyển sang shadcn/ui (phải thêm Tailw
 - Không dùng: Vaul (để sau nếu form tài xế khó dùng), cmdk, Magic UI, Aceternity.
 - Gói JS chính tăng từ khoảng 412 KB lên 536 KB (gzip 159 KB) sau khi thêm hai gói và các màn mới.
 
+## Chuông thông báo và menu tài khoản (12/11/2026)
+
+- **Menu tài khoản** (`MenuTaiKhoan.tsx`, bấm vòng tên tắt góc phải, mọi vai trò): họ tên, vai trò, **chọn bộ màu** (Ngẫu nhiên theo ảnh / 5 bộ màu), nút Đăng xuất. Bộ màu lưu trên trình duyệt (`localStorage` khóa `qlvc-bo-mau`, `nen.ts`), thắng bộ màu ngẫu nhiên. Đổi mật khẩu thêm vào đây khi backend có UC-35. (Dùng nút `aria-pressed` thay ô radio: radio ẩn trong `<details>` làm trình duyệt kiểm thử bị sập khi chọn.)
+- **Chuông thông báo** (`ChuongThongBao.tsx`, Điều phối và Quản lý): số việc từ `GET /api/canh-bao` (UC-27), mở ra là các nhóm (sự cố mở, chuyến trễ / chồng lịch, đơn quá / sắp tới hạn, giấy tờ, thiếu GPS) kèm số, bấm để tới màn tương ứng; tải lại khi đổi trang và mỗi 2 phút. Thay bằng `GET /api/thong-bao` (UC-37) khi có, lúc đó mới có chuông cho Kế toán và Tài xế.
+
 ## Còn phải quyết khi làm vào code
 
 - Nút đổi bộ màu trong Cài đặt (Tài làm sau).
