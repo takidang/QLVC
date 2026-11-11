@@ -1,6 +1,6 @@
 # UC-33: Báo sự cố
 
-- **Trạng thái:** Chờ review – 9/9 AC đạt (đã duyệt 10/11/2026 (Kiệt: "duyệt bỏ 7" – quyết định 1–6, 8 như đề xuất, bỏ quyết định 7))
+- **Trạng thái:** Hoàn thành 9/9 AC (11/11/2026, PR #39 gộp `dev`; đã duyệt 10/11/2026 (Kiệt: "duyệt bỏ 7" – quyết định 1–6, 8 như đề xuất, bỏ quyết định 7))
 - **Tác nhân:** Tài xế (điện thoại)
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-33) · `docs/nghiep-vu.md` (thuật ngữ "Sự cố", mục 10 tình huống xe hỏng) · `docs/api.md` mục 2.5 (`POST /api/toi/chuyen/{id}/su-co`) · `docs/security-rules.md` (upload) · bảng `SU_CO`, `TEP` trong `docs/so-do.md`
 - **Quy tắc nghiệp vụ liên quan:** BR-58 (chỉ chuyến của mình), BR-57 (chỉ tài xế), NFR-PER-03 (ảnh ≤ 500 KB, nén trên trình duyệt). Phía Điều phối (cờ `SU_CO`, xem, đóng sự cố, kết thúc do sự cố BR-68) đã làm ở UC-32 của Tài.
