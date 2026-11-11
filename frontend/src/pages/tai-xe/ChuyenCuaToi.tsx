@@ -5,7 +5,8 @@ import { Ic, Nhan } from '../../nhan'
 import {
   TEN_TRANG_THAI,
   chuyenCuaToi,
-  ngayGio,
+  khoangGio,
+  ngayThang,
   type ChuyenCuaToi as Chuyen,
   type NhomChuyen,
 } from '../../api/toi'
@@ -89,7 +90,7 @@ export default function ChuyenCuaToi() {
               <h2>{c.ten_tuyen}</h2>
               <div className="mo-chu">
                 <span className="bien">{c.bien_so}</span>
-                {ngayGio(c.khoi_hanh_du_kien)} → {ngayGio(c.ket_thuc_du_kien)}
+                {khoangGio(c.khoi_hanh_du_kien, c.ket_thuc_du_kien)}
               </div>
               <div className="mo-chu">{c.so_don} đơn</div>
             </div>
@@ -107,16 +108,21 @@ export default function ChuyenCuaToi() {
             <li key={c.id}>
               <Link to={String(c.id)} className="the hang-dt">
                 <span className="gio">
-                  <b>{ngayGio(c.khoi_hanh_du_kien).split(' ')[0]}</b>
-                  <small>{ngayGio(c.khoi_hanh_du_kien).split(' ')[1]}</small>
+                  <b>
+                    {new Date(c.khoi_hanh_du_kien).toLocaleTimeString('vi-VN', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </b>
+                  <small>{ngayThang(new Date(c.khoi_hanh_du_kien))}</small>
                 </span>
                 <span>
                   <span className="tuyen">{c.ten_tuyen}</span>
                   <small>
                     {c.ma_chuyen} · {c.bien_so} · {c.so_don} đơn
                   </small>
+                  <Nhan loai={c.trang_thai}>{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</Nhan>
                 </span>
-                <Nhan loai={c.trang_thai}>{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</Nhan>
               </Link>
             </li>
           ))}

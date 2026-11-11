@@ -1308,6 +1308,25 @@ tr.hang.mo .gio b {
   padding: 8px 18px;
   background: none;
 }
+/* Màn cảm ứng giữ trạng thái hover sau khi chạm: tab không được đổi sang nền nút chính */
+.the-chon button:enabled:hover {
+  background: rgb(255 255 255 / 88%);
+}
+.the-chon button.phu:enabled:hover {
+  background: rgb(255 255 255 / 40%);
+}
+/* Nút chọn tệp (ảnh đồng hồ, hóa đơn, ảnh giao hàng) theo kiểu nút phụ */
+input[type='file']::file-selector-button {
+  margin-right: 10px;
+  padding: 6px 14px;
+  font: inherit;
+  font-weight: 500;
+  color: var(--muc);
+  background: #fff;
+  border: 1px solid var(--vien-dam);
+  border-radius: 99px;
+  cursor: pointer;
+}
 .ds-the {
   list-style: none;
   display: grid;
@@ -1877,8 +1896,31 @@ tr.hang.mo .gio b {
   background: #fff;
   border-radius: 99px;
 }
-.nut-to:focus-visible {
+.nut-to {
+  width: 100%;
+  border: 0;
+}
+.nut-to:focus-visible,
+.nut-vien:focus-visible {
   outline-color: #fff;
+}
+.ke-nut {
+  display: grid;
+  gap: 8px;
+}
+.nut-vien {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 500;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid rgb(255 255 255 / 55%);
+  border-radius: 99px;
+}
+.lt-dt li {
+  scroll-margin-top: 12px;
 }
 .the-chinh.nhat {
   color: var(--muc);
@@ -1926,6 +1968,9 @@ tr.hang.mo .gio b {
   display: block;
   font-size: 12.5px;
   color: var(--phu);
+}
+.hang-dt .nhan {
+  margin-top: 6px;
 }
 /* Lịch trình tài xế: dòng thời gian, mỗi điểm một thẻ đủ địa chỉ, gọi điện, nút giao */
 .lt-dt li {

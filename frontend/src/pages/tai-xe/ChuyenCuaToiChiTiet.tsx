@@ -6,6 +6,7 @@ import {
   TEN_TRANG_THAI,
   chuyenCuaToiChiTiet,
   ghiKm,
+  khoangGio,
   ngayGio,
   thongBaoQuet,
   type ChuyenCuaToiChiTiet as ChiTiet,
@@ -63,6 +64,9 @@ export default function ChuyenCuaToiChiTiet() {
       ? c.lich_trinh.find((p) => !xongDiem(p) && nhan(p) !== 'Thất bại')
       : undefined
   const soXong = c ? c.lich_trinh.filter(xongDiem).length : 0
+  // Còn điểm lấy chưa quét thì mới cần khối Lấy hàng (quét lấy); lấy hết rồi thì giao ở từng điểm
+  const conLay = !!c?.lich_trinh.some((p) => p.viec === 'LAY' && p.trang_thai_don === 'DA_GHEP')
+  const idDiem = (p: ChiTiet['lich_trinh'][number]) => `diem-${p.viec}-${p.don_id}`
 
   return (
     <section className="noi-dung dien-thoai">
@@ -87,7 +91,7 @@ export default function ChuyenCuaToiChiTiet() {
               <h1>{c.ten_tuyen}</h1>
               <div className="mo-chu">
                 <span className="bien">{c.bien_so}</span>
-                {ngayGio(c.khoi_hanh_du_kien)} → {ngayGio(c.ket_thuc_du_kien)}
+                {khoangGio(c.khoi_hanh_du_kien, c.ket_thuc_du_kien)}
               </div>
               <div className="mo-chu">
                 {c.so_don} đơn
@@ -128,9 +132,22 @@ export default function ChuyenCuaToiChiTiet() {
                 <p>
                   {keTiep.dia_chi} · {keTiep.so_kien} kiện · {keTiep.ma_don}
                 </p>
-                <a className="nut-to" href={`tel:${keTiep.sdt}`}>
-                  Gọi {keTiep.nguoi_lien_he ?? keTiep.sdt}
-                </a>
+                <div className="ke-nut">
+                  <button
+                    type="button"
+                    className="nut-to"
+                    onClick={() =>
+                      document
+                        .getElementById(idDiem(keTiep))
+                        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    }
+                  >
+                    {keTiep.viec === 'LAY' ? 'Tới điểm lấy' : 'Tới điểm, giao hàng'}
+                  </button>
+                  <a className="nut-vien" href={`tel:${keTiep.sdt}`}>
+                    Gọi {keTiep.nguoi_lien_he ?? keTiep.sdt}
+                  </a>
+                </div>
               </div>
             )}
           </section>
@@ -145,11 +162,9 @@ export default function ChuyenCuaToiChiTiet() {
               ))}
             </div>
           )}
-          {c.trang_thai === 'DANG_CHAY' && <QuetLay onXong={xongQuet} />}
+          {c.trang_thai === 'DANG_CHAY' && conLay && <QuetLay onXong={xongQuet} />}
 
-          {(c.trang_thai === 'DA_CHOT' || c.trang_thai === 'DANG_CHAY') && (
-            <FormKm key={c.trang_thai} c={c} onXong={setC} />
-          )}
+          {c.trang_thai === 'DA_CHOT' && <FormKm key={c.trang_thai} c={c} onXong={setC} />}
 
           <h2>Lịch trình</h2>
           {c.lich_trinh.length === 0 && <p className="trong">Chuyến chạy rỗng – không có đơn</p>}
@@ -157,6 +172,7 @@ export default function ChuyenCuaToiChiTiet() {
             {c.lich_trinh.map((p) => (
               <li
                 key={`${p.viec}-${p.don_id}`}
+                id={idDiem(p)}
                 className={
                   xongDiem(p)
                     ? 'xong'
@@ -212,6 +228,9 @@ export default function ChuyenCuaToiChiTiet() {
               </li>
             ))}
           </ol>
+
+          {/* Kết thúc nằm sau lịch trình: còn điểm chưa xong thì không đứng chắn ở đầu trang */}
+          {c.trang_thai === 'DANG_CHAY' && <FormKm key={c.trang_thai} c={c} onXong={setC} />}
 
           {['DANG_CHAY', 'HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai) && (
             <ChiPhi chuyenId={c.id} ghiDuoc={c.trang_thai !== 'DA_QUYET_TOAN'} />
