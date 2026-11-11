@@ -2850,6 +2850,279 @@ rect.chon {
   }
 }
 
+/* ----- Chi tiết chuyến bố cục 2 (theo ảnh mẫu 03, Tài duyệt 12/11): chuyến cùng ngày bên trái ----- */
+.ct2-luoi {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.ct2-ds {
+  position: sticky;
+  top: 12px;
+  padding: 12px;
+}
+.chi-tiet .ct2-ds h2 {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 6px 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.ct2-ds h2 em {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--phu);
+}
+.ct2-ds ul {
+  list-style: none;
+  display: grid;
+  gap: 6px;
+  max-height: calc(100dvh - 120px);
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.ct2-ds button {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  padding: 12px;
+  text-align: left;
+  font-weight: 400;
+  color: var(--muc);
+  background: rgb(255 255 255 / 45%);
+  border: 1px solid transparent;
+  border-radius: 14px;
+}
+.ct2-ds button:enabled:hover {
+  background: rgb(255 255 255 / 80%);
+}
+/* Chuyến đang xem: khối đậm như thẻ được chọn trong ảnh mẫu */
+.ct2-ds button[aria-current='page'],
+.ct2-ds button[aria-current='page']:hover {
+  color: #fff;
+  background: var(--muc);
+  cursor: default;
+}
+.ct2-ds-dau {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+}
+.ct2-ds-tuyen {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13.5px;
+}
+.ct2-ds-tuyen span:last-child {
+  text-align: right;
+}
+.ct2-ds small {
+  font-size: 12px;
+  color: var(--phu);
+  font-variant-numeric: tabular-nums;
+}
+.ct2-ds button[aria-current='page'] small {
+  color: rgb(255 255 255 / 75%);
+}
+.ct2-ds button[aria-current='page'] .nhan {
+  color: #fff;
+  background: rgb(255 255 255 / 16%);
+  border-color: rgb(255 255 255 / 30%);
+}
+.ct2-ds button[aria-current='page'] .nhan svg {
+  --nen: var(--muc);
+  color: #fff;
+}
+.ct2-ds button[aria-current='page'] .doan i {
+  background: rgb(255 255 255 / 28%);
+}
+.ct2-ds button[aria-current='page'] .doan i.x {
+  background: #fff;
+}
+.ct2-ds button[aria-current='page'] .doan i.c {
+  background: var(--tren-dam-toi);
+}
+.ct2-ds button[aria-current='page'] .doan i.f {
+  background: var(--tren-dam-loi);
+}
+.ct2-chinh {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+.ct2-chinh > .ct-dau {
+  margin: 0;
+}
+.chi-tiet .ct2-dau h1 {
+  font-size: 34px;
+}
+.ct2-so {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 0;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--phu);
+}
+.ct2-so li + li::before {
+  content: '·';
+  margin: 0 8px;
+}
+.ct2-hang {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: stretch; /* hai khối cạnh nhau cao bằng nhau, không hở */
+}
+.ct2-hang > :only-child {
+  grid-column: 1 / -1;
+}
+/* Bản đồ lớn bên trái, lịch trình bên phải; cao bằng nhau, lịch trình dài thì cuộn trong khung */
+.ct2-hang-ban-do {
+  grid-template-columns: minmax(0, 3fr) minmax(300px, 2fr);
+  align-items: stretch;
+}
+.ct2-ban-do .ban-do {
+  height: 100%;
+  min-height: 380px;
+  margin: 0;
+}
+.ct2-hang-ban-do .ct-khoi {
+  max-height: 460px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.ct2 .xh {
+  margin: 0;
+}
+.bd-xe {
+  fill: var(--chay);
+  fill-opacity: 1;
+  stroke: #fff;
+  stroke-width: 3;
+}
+/* Khối Xe & tài xế */
+.kx-so {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--vien);
+}
+.kx-so small {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  color: var(--phu);
+}
+.kx-so strong {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.kx-han {
+  list-style: none;
+  display: grid;
+  gap: 14px;
+  margin: 14px 0 0;
+  padding: 0;
+}
+.kx-han li {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  padding-left: 18px;
+}
+.kx-han li::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  background: var(--xong);
+  border-radius: 50%;
+}
+.kx-han li.sap::before {
+  background: var(--cam);
+}
+.kx-han li.het::before {
+  background: var(--do);
+}
+.kx-dong {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.kx-dong strong {
+  font-weight: 500;
+}
+.kx-dong span {
+  font-variant-numeric: tabular-nums;
+}
+.kx-han li.sap .kx-dong span {
+  font-weight: 600;
+  color: var(--cam);
+}
+.kx-han li.het .kx-dong span {
+  font-weight: 600;
+  color: var(--do);
+}
+.kx-han small {
+  font-size: 12.5px;
+  color: var(--phu);
+}
+.kx-thanh {
+  display: block;
+  height: 5px;
+  margin-top: 6px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--muc) 12%, transparent);
+  border-radius: 99px;
+}
+.kx-thanh i {
+  display: block;
+  height: 100%;
+  background: var(--muc);
+}
+.kx-han li.sap .kx-thanh i {
+  background: var(--cam);
+}
+.kx-han li.het .kx-thanh i {
+  background: var(--do);
+}
+@media (max-width: 1100px) {
+  .ct2-luoi {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  /* Màn hẹp: bỏ cột chuyến cùng ngày, dùng nút "← Danh sách chuyến" */
+  .ct2-ds {
+    display: none;
+  }
+  .ct2-hang,
+  .ct2-hang-ban-do {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ct2-ban-do .ban-do {
+    min-height: 300px;
+  }
+  .kx-so {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1101px) {
+  .ct2 > .ct-ve {
+    display: none;
+  }
+}
+
 /* ----- Màn của Kiệt: 04, 05, 06, 08 ----- */
 
 /* Đầu trang danh mục (06): thấp hơn màn Chuyến, tiêu đề + một dòng phụ, nút chính bên phải */

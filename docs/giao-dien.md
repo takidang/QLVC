@@ -116,6 +116,15 @@ Khi có nút đổi bộ màu trong Cài đặt, lựa chọn đã lưu của ng
 - **Đơn của chuyến** trong khung bảng, trạng thái đơn dùng nhãn có hình như màn Đơn hàng.
 - Màn Chuyến trong ngày: cờ Trễ chỉ tô cam thanh lịch và đường bản đồ khi chuyến **còn đang chạy**; chuyến đã xong giữ màu trạng thái, nhãn Trễ vẫn ở bảng.
 
+## Chi tiết chuyến bố cục 2 (theo ảnh mẫu 03 Fleetlog, Tài duyệt 12/11)
+
+- **Cột trái (300 px) "Chuyến ngày …":** các chuyến cùng ngày khởi hành dạng thẻ (mã + nhãn, nơi đi → nơi đến, dải điểm dừng theo `theo_doi.diem`, giờ đi → đến, biển số); chuyến đang xem tô đậm `--muc` chữ trắng; bấm thẻ khác là chuyển chuyến. Dưới 1100 px ẩn cột này, hiện lại "← Danh sách chuyến".
+- **Đầu chi tiết:** tên tuyến 34 px, mã · mã tuyến, nhãn, cờ; một dòng số: kg / tải trọng, số điểm dừng, km tuyến (`GET /api/tuyen/{id}`), khởi hành, kết thúc (đang trễ thì cam, BR-73); nút Chốt / Mở chốt / Hủy bên phải.
+- **Hàng bản đồ:** bản đồ lớn (đoạn đã đi nét liền, còn lại nét đứt) có chấm vị trí xe lúc quét gần nhất khi chuyến đang chạy (lấy `theo_doi.vi_tri` từ danh sách cùng ngày); bên phải là lịch trình dọc, dài thì cuộn trong khung.
+- **Xếp hàng lên xe** cả bề rộng.
+- **Xe & tài xế** (`KhoiXe.tsx`, thay "Vehicle Information" của ảnh mẫu, chỉ dữ liệu thật từ `GET /api/xe/{id}`, `GET /api/tai-xe/{id}`): biển số, tải trọng, thể tích, km đồng hồ; thanh "còn N ngày" tới hạn đăng kiểm, bảo hiểm, GPLX (đầy khi còn ≥ 1 năm; chấm xanh / cam ≤ 30 ngày / đỏ hết hạn), số điện thoại tài xế bấm gọi. Cạnh là khối Tiền; dưới là Dòng thời gian và Sự cố. Khối cạnh nhau cao bằng nhau.
+- Không lấy từ ảnh mẫu: gợi ý tuyến AI, nhiệt độ, bảo dưỡng phanh / lốp (không có dữ liệu), màu xanh dương chủ đạo.
+
 ## Màn Tài xế điện thoại (07), đã vào code
 
 - **Chuyến của tôi:** dòng ngày, tiêu đề 32 px, thẻ chọn Cần làm / Đã xong. Chuyến **đang chạy** là khối `--o-liu` chữ trắng (mã, nhãn, tuyến, biển số, giờ, số đơn) với nút trắng cao 52 px "Mở lịch trình, quét mã"; chuyến khác là dòng gọn: giờ đi | tuyến + mã · biển số · số đơn | nhãn.
