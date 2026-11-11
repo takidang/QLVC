@@ -137,9 +137,13 @@ export default function ChuyenCuaToiChiTiet() {
                     type="button"
                     className="nut-to"
                     onClick={() =>
-                      document
-                        .getElementById(idDiem(keTiep))
-                        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                      document.getElementById(idDiem(keTiep))?.scrollIntoView({
+                        // Máy bật giảm chuyển động thì nhảy thẳng, không cuộn trượt
+                        behavior: matchMedia('(prefers-reduced-motion: reduce)').matches
+                          ? 'auto'
+                          : 'smooth',
+                        block: 'start',
+                      })
                     }
                   >
                     {keTiep.viec === 'LAY' ? 'Tới điểm lấy' : 'Tới điểm, giao hàng'}

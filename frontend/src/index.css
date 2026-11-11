@@ -96,6 +96,9 @@
   --xong: #2f7d4f;
   --do: #b3261e;
   --xam: #6b736e;
+  /* Đoạn tiến độ trên khối đậm (--o-liu): đang tới, thất bại; sáng để nổi trên nền tối */
+  --tren-dam-toi: #ffb48a;
+  --tren-dam-loi: #ff8a80;
 }
 :root[data-mau='suong'] {
   --da: #c3cad3;
@@ -1454,7 +1457,7 @@ input[type='file']::file-selector-button {
     min-height: 44px;
   }
   button.phu {
-    min-height: 40px;
+    min-height: 44px;
   }
 }
 @media (max-width: 520px) {
@@ -1482,8 +1485,16 @@ input[type='file']::file-selector-button {
 
 /* ----- Màn Chi tiết chuyến (03) ----- */
 .ct-ve {
+  display: inline-block;
+  padding: 12px 0; /* vùng chạm đủ cao cho ngón tay */
   font-size: 13px;
   color: var(--phu);
+}
+/* Số điện thoại trong thẻ điểm dừng: bấm là gọi, vùng chạm cao 44 px */
+.lt-dt .the a[href^='tel:'] {
+  display: inline-block;
+  padding: 12px 0;
+  margin: -12px 0;
 }
 .ct-dau {
   display: flex;
@@ -1855,10 +1866,10 @@ input[type='file']::file-selector-button {
   background: #fff;
 }
 .the-chinh .doan i.c {
-  background: #ffb48a;
+  background: var(--tren-dam-toi);
 }
 .the-chinh .doan i.f {
-  background: #ff8a80;
+  background: var(--tren-dam-loi);
 }
 .the-chinh .ke {
   display: grid;
@@ -1898,7 +1909,32 @@ input[type='file']::file-selector-button {
 }
 .nut-to {
   width: 100%;
-  border: 0;
+  border: 1px solid transparent; /* hiện khung khi bật tương phản cao */
+}
+/* Tương phản cao: trình duyệt bỏ màu nền, nên dải tiến độ và chấm điểm dừng dùng màu hệ thống */
+@media (forced-colors: active) {
+  .doan i,
+  .the-chinh .doan i,
+  .lt i {
+    forced-color-adjust: none;
+    background: Canvas;
+    border: 1px solid CanvasText;
+  }
+  .doan i.x,
+  .the-chinh .doan i.x,
+  .lt li.xong i,
+  .lt li.hong i {
+    background: CanvasText;
+  }
+  .doan i.c,
+  .the-chinh .doan i.c,
+  .lt li.toi i {
+    background: Highlight;
+    border-color: Highlight;
+  }
+  .the-chinh {
+    border: 1px solid CanvasText;
+  }
 }
 .nut-to:focus-visible,
 .nut-vien:focus-visible {
