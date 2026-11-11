@@ -223,113 +223,117 @@ export default function ChuyenDanhSach() {
 
   return (
     <section className="noi-dung">
-      <div className="mo-dau">
-        <div>
-          <h1>
-            {!ngay
-              ? 'Tất cả chuyến'
-              : ngay === homNay()
-                ? 'Chuyến hôm nay'
-                : `Chuyến ngày ${ngayThang(`${ngay}T00:00`)}`}
-          </h1>
-          <p className="ngay">
-            {ngay
-              ? new Date(`${ngay}T00:00`).toLocaleDateString('vi-VN', { dateStyle: 'full' })
-              : 'Mọi ngày khởi hành, mới nhất trước'}
-          </p>
-          {caNgay.length > 0 && (
-            <div className="vach" role="img" aria-label={`${caNgay.length} chuyến theo giờ đi`}>
-              {caNgay.map((c) => (
-                <i
-                  key={c.id}
-                  className={lopVach(c)}
-                  title={`${gio(c.khoi_hanh_du_kien)} · ${c.ma_chuyen} · ${TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}`}
-                />
-              ))}
-            </div>
-          )}
-          <div className="so-lieu">
+      {/* Hai cột độc lập: trái là tiêu đề, số liệu, lịch xe; phải là Cần chú ý, bản đồ.
+          Mỗi cột tự xếp chồng nên không có khoảng trống do cột kia cao hơn */}
+      <div className={ngay ? 'dau-luoi' : 'dau-luoi mot-cot'}>
+        <div className="dau-cot">
+          <div className="mo-dau">
+            <h1>
+              {!ngay
+                ? 'Tất cả chuyến'
+                : ngay === homNay()
+                  ? 'Chuyến hôm nay'
+                  : `Chuyến ngày ${ngayThang(`${ngay}T00:00`)}`}
+            </h1>
+            <p className="ngay">
+              {ngay
+                ? new Date(`${ngay}T00:00`).toLocaleDateString('vi-VN', { dateStyle: 'full' })
+                : 'Mọi ngày khởi hành, mới nhất trước'}
+            </p>
             {caNgay.length > 0 && (
-              <>
-                <div>
-                  <b>{caNgay.length}</b>
-                  <span>chuyến</span>
-                </div>
-                <div>
-                  <b>{dem('DANG_CHAY')}</b>
-                  <span>đang chạy</span>
-                </div>
-                <div>
-                  <b>{dem('LAP', 'DA_CHOT')}</b>
-                  <span>chưa xuất phát</span>
-                </div>
-                <div>
-                  <b>{dem('HOAN_THANH', 'DA_QUYET_TOAN')}</b>
-                  <span>đã xong</span>
-                </div>
-              </>
+              <div className="vach" role="img" aria-label={`${caNgay.length} chuyến theo giờ đi`}>
+                {caNgay.map((c) => (
+                  <i
+                    key={c.id}
+                    className={lopVach(c)}
+                    title={`${gio(c.khoi_hanh_du_kien)} · ${c.ma_chuyen} · ${TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}`}
+                  />
+                ))}
+              </div>
             )}
-            <button onClick={() => setMoForm(true)}>
-              <Ic ten="cong" />
-              Lập chuyến
-            </button>
+            <div className="so-lieu">
+              {caNgay.length > 0 && (
+                <>
+                  <div>
+                    <b>{caNgay.length}</b>
+                    <span>chuyến</span>
+                  </div>
+                  <div>
+                    <b>{dem('DANG_CHAY')}</b>
+                    <span>đang chạy</span>
+                  </div>
+                  <div>
+                    <b>{dem('LAP', 'DA_CHOT')}</b>
+                    <span>chưa xuất phát</span>
+                  </div>
+                  <div>
+                    <b>{dem('HOAN_THANH', 'DA_QUYET_TOAN')}</b>
+                    <span>đã xong</span>
+                  </div>
+                </>
+              )}
+              <button onClick={() => setMoForm(true)}>
+                <Ic ten="cong" />
+                Lập chuyến
+              </button>
+            </div>
           </div>
+          {caNgay.length > 0 && <LichGio ds={caNgay} ten={TEN_TRANG_THAI} />}
         </div>
         {ngay && (
-          <aside className="kinh chu-y">
-            <h2>Cần chú ý {soViec > 0 && <em>{soViec} việc</em>}</h2>
-            {canChuY.map((c) => {
-              const co = c.theo_doi!.co.filter((x) => CO_CHU_Y.includes(x))
-              const nang = co.some((x) => x !== 'TRE')
-              return (
-                <Link key={c.id} to={String(c.id)} className={nang ? 'do' : undefined}>
-                  <Ic ten={nang ? 'canh-bao' : 'dong-ho'} />
+          <div className="dau-cot">
+            <aside className="kinh chu-y">
+              <h2>Cần chú ý {soViec > 0 && <em>{soViec} việc</em>}</h2>
+              {canChuY.map((c) => {
+                const co = c.theo_doi!.co.filter((x) => CO_CHU_Y.includes(x))
+                const nang = co.some((x) => x !== 'TRE')
+                return (
+                  <Link key={c.id} to={String(c.id)} className={nang ? 'do' : undefined}>
+                    <Ic ten={nang ? 'canh-bao' : 'dong-ho'} />
+                    <span>
+                      <strong>
+                        {c.ma_chuyen} ·{' '}
+                        {co
+                          .map((x) =>
+                            x === 'TRE' && (c.theo_doi!.tre_phut ?? 0) > 0
+                              ? `Trễ ${phutDoc(c.theo_doi!.tre_phut!)}`
+                              : (TEN_CO[x] ?? x),
+                          )
+                          .join(', ')}
+                      </strong>
+                      <small>
+                        {c.ten_tuyen} ·{' '}
+                        {co.includes('CHONG_LICH')
+                          ? `trùng ${c.theo_doi!.chong.join(', ')}`
+                          : `${c.bien_so}, ${c.ten_tai_xe}`}
+                      </small>
+                    </span>
+                    <Ic ten="phai" />
+                  </Link>
+                )
+              })}
+              {viecKhac.map((v) => (
+                <Link key={v.chinh} to={v.den} className={v.nang ? 'do' : undefined}>
+                  <Ic ten={v.nang ? 'canh-bao' : 'dong-ho'} />
                   <span>
-                    <strong>
-                      {c.ma_chuyen} ·{' '}
-                      {co
-                        .map((x) =>
-                          x === 'TRE' && (c.theo_doi!.tre_phut ?? 0) > 0
-                            ? `Trễ ${phutDoc(c.theo_doi!.tre_phut!)}`
-                            : (TEN_CO[x] ?? x),
-                        )
-                        .join(', ')}
-                    </strong>
-                    <small>
-                      {c.ten_tuyen} ·{' '}
-                      {co.includes('CHONG_LICH')
-                        ? `trùng ${c.theo_doi!.chong.join(', ')}`
-                        : `${c.bien_so}, ${c.ten_tai_xe}`}
-                    </small>
+                    <strong>{v.chinh}</strong>
+                    <small>{v.phu}</small>
                   </span>
                   <Ic ten="phai" />
                 </Link>
-              )
-            })}
-            {viecKhac.map((v) => (
-              <Link key={v.chinh} to={v.den} className={v.nang ? 'do' : undefined}>
-                <Ic ten={v.nang ? 'canh-bao' : 'dong-ho'} />
-                <span>
-                  <strong>{v.chinh}</strong>
-                  <small>{v.phu}</small>
-                </span>
-                <Ic ten="phai" />
-              </Link>
-            ))}
-            {soViec === 0 && <p>{ds ? 'Không có việc nào cần chú ý.' : 'Đang tải…'}</p>}
-          </aside>
+              ))}
+              {soViec === 0 && <p>{ds ? 'Không có việc nào cần chú ý.' : 'Đang tải…'}</p>}
+            </aside>
+            {caNgay.length > 0 && (
+              <Suspense
+                fallback={<section className="kinh ban-do-ngay ghi-chu">Đang tải bản đồ…</section>}
+              >
+                <BanDoNgay ds={caNgay} ten={TEN_TRANG_THAI} />
+              </Suspense>
+            )}
+          </div>
         )}
       </div>
-      {caNgay.length > 0 && (
-        <div className="hai-khoi">
-          <LichGio ds={caNgay} ten={TEN_TRANG_THAI} />
-          <Suspense
-            fallback={<section className="kinh ban-do-ngay ghi-chu">Đang tải bản đồ…</section>}
-          >
-            <BanDoNgay ds={caNgay} ten={TEN_TRANG_THAI} />
-          </Suspense>
-        </div>
-      )}
       {vuaLap && (
         <p className="thanh-cong">
           Đã lập chuyến <strong>{vuaLap.ma_chuyen}</strong> ({vuaLap.ma_tuyen}, {vuaLap.bien_so},{' '}

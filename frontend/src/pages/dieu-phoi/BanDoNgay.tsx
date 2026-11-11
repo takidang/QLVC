@@ -129,10 +129,7 @@ export default function BanDoNgay({ ds, ten }: { ds: Chuyen[]; ten: Record<strin
           ))}
         </MapContainer>
       )}
-      <p className="ghi-chu">
-        Đường nối thẳng các nút của tuyến, màu theo trạng thái chuyến. Chấm xanh là vị trí xe lúc
-        quét mã gần nhất (không theo dõi liên tục).
-      </p>
+      <p className="ghi-chu">Đường thẳng nối các nút · chấm xanh: vị trí xe lúc quét mã gần nhất</p>
     </section>
   )
 }

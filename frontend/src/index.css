@@ -464,7 +464,7 @@ button:has(> svg.ic) {
 /* ----- Khung trang: thanh trên (tên, menu viên thuốc, người dùng) ----- */
 .trang {
   min-height: 100dvh;
-  max-width: 1400px;
+  max-width: 1680px;
   margin: 0 auto;
   padding: 16px 28px 48px;
 }
@@ -943,7 +943,7 @@ p.thanh-cong {
   padding: 9px 20px 9px 16px;
 }
 .chu-y {
-  max-height: 336px;
+  max-height: 300px;
   margin-top: 8px;
   padding: 6px 0;
   overflow-y: auto;
@@ -993,6 +993,54 @@ p.thanh-cong {
   padding: 4px 18px 12px;
 }
 
+/* Màn Chuyến: hai cột độc lập (trái: tiêu đề, số liệu, lịch xe; phải: Cần chú ý, bản đồ) */
+.dau-luoi {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: 16px 32px;
+  align-items: stretch;
+  margin-bottom: 16px;
+}
+.dau-luoi.mot-cot {
+  grid-template-columns: minmax(0, 1fr);
+}
+.dau-cot {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+/* Cột trái ngắn hơn thì lịch xe giãn hàng cho đủ chiều cao, không để khoảng trống dưới lịch */
+.dau-cot .lich-gio {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.dau-cot .lich-gio .lg-hang:not(.lg-dau) {
+  flex: 1;
+  align-items: stretch;
+}
+.dau-cot .lich-gio .lg-hang:not(.lg-dau) .bien {
+  align-self: center;
+}
+.dau-cot .lich-gio .lg-hang:not(.lg-dau) .lg-duong {
+  height: auto;
+  min-height: 38px;
+}
+.dau-cot .lich-gio .lg-thanh {
+  top: 50%;
+  translate: 0 -50%;
+}
+.dau-cot .ban-do-ngay .ban-do {
+  min-height: 220px;
+}
+.dau-luoi .mo-dau {
+  display: block;
+  padding: 14px 0 6px;
+}
+.dau-luoi .chu-y {
+  margin-top: 0;
+}
 /* Hàng giữa: lịch xe theo giờ (trái) và bản đồ tuyến trong ngày (phải) */
 .hai-khoi {
   display: grid;
@@ -1440,6 +1488,25 @@ input[type='file']::file-selector-button {
   }
 }
 @media (max-width: 1000px) {
+  /* Một cột, thứ tự: số liệu → Cần chú ý → lịch xe → bản đồ */
+  .dau-luoi {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dau-cot {
+    display: contents;
+  }
+  .dau-luoi .mo-dau {
+    order: 1;
+  }
+  .dau-luoi .chu-y {
+    order: 2;
+  }
+  .dau-luoi .lich-gio {
+    order: 3;
+  }
+  .dau-luoi .ban-do-ngay {
+    order: 4;
+  }
   .hai-khoi {
     grid-template-columns: 1fr;
   }
