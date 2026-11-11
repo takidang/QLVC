@@ -113,6 +113,12 @@ Khi có nút đổi bộ màu trong Cài đặt, lựa chọn đã lưu của ng
 - **Đơn của chuyến** trong khung bảng, trạng thái đơn dùng nhãn có hình như màn Đơn hàng.
 - Màn Chuyến trong ngày: cờ Trễ chỉ tô cam thanh lịch và đường bản đồ khi chuyến **còn đang chạy**; chuyến đã xong giữ màu trạng thái, nhãn Trễ vẫn ở bảng.
 
+## Màn Tài xế điện thoại (07), đã vào code
+
+- **Chuyến của tôi:** dòng ngày, tiêu đề 32 px, thẻ chọn Cần làm / Đã xong. Chuyến **đang chạy** là khối `--o-liu` chữ trắng (mã, nhãn, tuyến, biển số, giờ, số đơn) với nút trắng cao 52 px "Mở lịch trình, quét mã"; chuyến khác là dòng gọn: giờ đi | tuyến + mã · biển số · số đơn | nhãn.
+- **Lịch trình chuyến:** khối chính đậm khi đang chạy (nhạt khi chờ chạy / đã xong): tuyến, biển số, giờ, lương chuyến, dải đoạn tiến độ (xong trắng, đang tới cam nhạt, thất bại đỏ nhạt), **Điểm kế tiếp** (việc, giờ dự kiến, nơi, địa chỉ, kiện, mã đơn) và nút "Gọi …". Dưới là khối Lấy hàng (quét QR), Bắt đầu / Kết thúc chuyến, rồi lịch trình dạng dòng thời gian (mỗi điểm một thẻ; điểm đã xong thu gọn hai dòng; điểm đang tới viền xanh), cuối cùng là Chi phí.
+- Không làm menu dưới như mockup: tài xế chỉ có một màn, quét mã nằm ngay trong lịch trình.
+
 ## Còn phải quyết khi làm vào code
 
 - Nút đổi bộ màu trong Cài đặt (Tài làm sau).

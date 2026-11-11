@@ -1760,6 +1760,198 @@ tr.hang.mo .gio b {
   }
 }
 
+/* ----- Màn Tài xế điện thoại (07) ----- */
+.dt-ngay {
+  margin: 0 0 2px;
+  font-size: 13.5px;
+  color: var(--phu);
+}
+.dt-ngay::first-letter {
+  text-transform: uppercase;
+}
+.dien-thoai h1 {
+  font-size: 32px;
+}
+.dien-thoai > h2 {
+  margin-top: 22px;
+}
+/* Khối chính: chuyến đang chạy nền khối nhấn chữ trắng; .nhat là chuyến chờ chạy / đã xong */
+.the-chinh {
+  display: grid;
+  gap: 14px;
+  margin: 8px 0 14px;
+  padding: 18px;
+  color: #fff;
+  background: var(--o-liu);
+  border-radius: 20px;
+}
+.the-chinh .dong {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.the-chinh .ma {
+  margin-right: auto;
+  font-size: 13px;
+  color: rgb(255 255 255 / 82%);
+}
+.the-chinh .nhan {
+  color: #fff;
+  background: rgb(255 255 255 / 16%);
+  border-color: rgb(255 255 255 / 30%);
+}
+.the-chinh .nhan svg {
+  --nen: var(--o-liu);
+  color: #fff;
+}
+.the-chinh h1,
+.the-chinh h2 {
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+.the-chinh .mo-chu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  align-items: center;
+  font-size: 13.5px;
+  color: rgb(255 255 255 / 82%);
+}
+.the-chinh .bien {
+  color: #fff;
+  border-color: rgb(255 255 255 / 55%);
+}
+.the-chinh .doan {
+  margin-bottom: 7px;
+}
+.the-chinh .doan i {
+  height: 6px;
+  background: rgb(255 255 255 / 28%);
+}
+.the-chinh .doan i.x {
+  background: #fff;
+}
+.the-chinh .doan i.c {
+  background: #ffb48a;
+}
+.the-chinh .doan i.f {
+  background: #ff8a80;
+}
+.the-chinh .ke {
+  display: grid;
+  gap: 4px;
+  padding-top: 14px;
+  border-top: 1px solid rgb(255 255 255 / 24%);
+}
+.the-chinh .ke .luc {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 13.5px;
+  color: rgb(255 255 255 / 82%);
+}
+.the-chinh .ke strong {
+  font-size: 19px;
+  font-weight: 500;
+}
+.the-chinh .ke p {
+  margin: 0 0 6px;
+  font-size: 13.5px;
+  color: rgb(255 255 255 / 82%);
+}
+/* Nút to trong khối đậm: nền trắng, cao 52 px cho ngón tay */
+.nut-to {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 18px;
+  font-weight: 500;
+  color: var(--muc);
+  text-decoration: none;
+  background: #fff;
+  border-radius: 99px;
+}
+.nut-to:focus-visible {
+  outline-color: #fff;
+}
+.the-chinh.nhat {
+  color: var(--muc);
+  background: var(--kinh-dac);
+  border: 1px solid var(--vien-sang);
+}
+.the-chinh.nhat .ma,
+.the-chinh.nhat .mo-chu {
+  color: var(--phu);
+}
+.the-chinh.nhat .nhan {
+  color: var(--muc);
+  background: rgb(255 255 255 / 72%);
+  border-color: var(--vien);
+}
+.the-chinh.nhat .nhan svg {
+  --nen: #fff;
+  color: var(--mau);
+}
+.the-chinh.nhat .bien {
+  color: var(--muc);
+  border-color: color-mix(in srgb, var(--muc) 35%, transparent);
+}
+.the-chinh.nhat .doan i {
+  background: color-mix(in srgb, var(--muc) 16%, transparent);
+}
+.the-chinh.nhat .doan i.x {
+  background: var(--muc);
+}
+.the-chinh.nhat .doan i.f {
+  background: var(--do);
+}
+/* Dòng chuyến gọn: giờ đi | tuyến + mã | nhãn */
+.hang-dt {
+  grid-template-columns: auto 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+.hang-dt .gio b {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+}
+.hang-dt small {
+  display: block;
+  font-size: 12.5px;
+  color: var(--phu);
+}
+/* Lịch trình tài xế: dòng thời gian, mỗi điểm một thẻ đủ địa chỉ, gọi điện, nút giao */
+.lt-dt li {
+  gap: 10px;
+  padding-bottom: 10px;
+}
+.lt-dt li > i {
+  margin-top: 16px;
+}
+.lt-dt li::before {
+  top: 34px;
+}
+.lt-dt .the {
+  font-size: 14px;
+}
+.lt-dt li.xong .the {
+  background: rgb(250 250 247 / 55%);
+}
+/* Điểm đã xong chỉ giữ dòng giờ + việc và dòng mã đơn, để điểm cần làm nổi lên */
+.lt-dt li.xong .the > :nth-child(n + 3) {
+  display: none;
+}
+.lt-dt li.toi .the {
+  border-color: var(--chay);
+}
+
 /* ----- Màn của Kiệt: 04, 05, 06, 08 ----- */
 
 /* Đầu trang danh mục (06): thấp hơn màn Chuyến, tiêu đề + một dòng phụ, nút chính bên phải */

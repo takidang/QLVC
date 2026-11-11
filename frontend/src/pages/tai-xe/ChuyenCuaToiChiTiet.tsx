@@ -27,6 +27,8 @@ const NHAN_DIEM: Record<'LAY' | 'GIAO', Record<string, string>> = {
 const nhanDiem = (viec: 'LAY' | 'GIAO', tt: string, daLay: boolean) =>
   NHAN_DIEM[viec][tt] ??
   (tt === 'THAT_BAI' ? (viec === 'LAY' && daLay ? 'Đã lấy' : 'Thất bại') : tt)
+// Nhãn tính là điểm đã xong (chấm đặc trên dòng thời gian)
+const XONG = ['Đã lấy', 'Đã giao', 'Trả hàng']
 
 // UC-17: lịch trình cho tài xế – từng điểm dừng, đơn, địa chỉ, gọi điện. Không có cước (quyết định số 3)
 // UC-18: chuyến chờ chạy có ô Bắt đầu, chuyến đang chạy có ô Kết thúc (km + ảnh đồng hồ)
@@ -53,9 +55,18 @@ export default function ChuyenCuaToiChiTiet() {
       .catch((e) => setLoi(e instanceof LoiApi ? e.message : 'Không tải được chuyến'))
   }, [id])
 
+  // Trạng thái từng điểm cho dòng thời gian: xong / thất bại / đang tới (điểm đầu chưa xong khi đang chạy)
+  const nhan = (p: ChiTiet['lich_trinh'][number]) => nhanDiem(p.viec, p.trang_thai_don, p.da_lay)
+  const xongDiem = (p: ChiTiet['lich_trinh'][number]) => XONG.includes(nhan(p))
+  const keTiep =
+    c?.trang_thai === 'DANG_CHAY'
+      ? c.lich_trinh.find((p) => !xongDiem(p) && nhan(p) !== 'Thất bại')
+      : undefined
+  const soXong = c ? c.lich_trinh.filter(xongDiem).length : 0
+
   return (
     <section className="noi-dung dien-thoai">
-      <Link to=".." relative="path">
+      <Link to=".." relative="path" className="ct-ve">
         ← Chuyến của tôi
       </Link>
       {loi && (
@@ -66,20 +77,63 @@ export default function ChuyenCuaToiChiTiet() {
       {!c && !loi && <p className="ghi-chu">Đang tải…</p>}
       {c && (
         <>
-          <div className="the-dau">
-            <h1>{c.ma_chuyen}</h1>
-            <Nhan loai={c.trang_thai}>{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</Nhan>
-          </div>
-          <p>
-            {c.ma_tuyen} – {c.ten_tuyen}
-            <br />
-            Xe <span className="bien-so">{c.bien_so}</span> · {ngayGio(c.khoi_hanh_du_kien)} →{' '}
-            {ngayGio(c.ket_thuc_du_kien)}
-            <br />
-            {c.so_don} đơn
-            {c.luong_tai_xe_chot !== null &&
-              ` · Lương chuyến ${c.luong_tai_xe_chot.toLocaleString('vi-VN')} đ`}
-          </p>
+          {/* Khối chính: đậm khi đang chạy (điểm kế tiếp + tiến độ), nhạt khi chờ chạy / đã xong */}
+          <section className={c.trang_thai === 'DANG_CHAY' ? 'the-chinh' : 'the-chinh nhat'}>
+            <div className="dong">
+              <span className="ma">{c.ma_chuyen}</span>
+              <Nhan loai={c.trang_thai}>{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</Nhan>
+            </div>
+            <div>
+              <h1>{c.ten_tuyen}</h1>
+              <div className="mo-chu">
+                <span className="bien">{c.bien_so}</span>
+                {ngayGio(c.khoi_hanh_du_kien)} → {ngayGio(c.ket_thuc_du_kien)}
+              </div>
+              <div className="mo-chu">
+                {c.so_don} đơn
+                {c.luong_tai_xe_chot !== null &&
+                  ` · Lương chuyến ${c.luong_tai_xe_chot.toLocaleString('vi-VN')} đ`}
+              </div>
+            </div>
+            {c.lich_trinh.length > 0 && (
+              <div>
+                <div className="doan" aria-hidden="true">
+                  {c.lich_trinh.map((p) => (
+                    <i
+                      key={`${p.viec}-${p.don_id}`}
+                      className={
+                        xongDiem(p)
+                          ? 'x'
+                          : nhan(p) === 'Thất bại'
+                            ? 'f'
+                            : p === keTiep
+                              ? 'c'
+                              : undefined
+                      }
+                    />
+                  ))}
+                </div>
+                <div className="mo-chu">
+                  Xong {soXong} / {c.lich_trinh.length} điểm
+                </div>
+              </div>
+            )}
+            {keTiep && (
+              <div className="ke">
+                <div className="luc">
+                  <span>Điểm kế tiếp · {keTiep.viec === 'LAY' ? 'Lấy hàng' : 'Giao hàng'}</span>
+                  <span>dự kiến {gio(keTiep.eta)}</span>
+                </div>
+                <strong>{keTiep.nut}</strong>
+                <p>
+                  {keTiep.dia_chi} · {keTiep.so_kien} kiện · {keTiep.ma_don}
+                </p>
+                <a className="nut-to" href={`tel:${keTiep.sdt}`}>
+                  Gọi {keTiep.nguoi_lien_he ?? keTiep.sdt}
+                </a>
+              </div>
+            )}
+          </section>
 
           {tb && (
             <div role="status">
@@ -96,55 +150,72 @@ export default function ChuyenCuaToiChiTiet() {
           {(c.trang_thai === 'DA_CHOT' || c.trang_thai === 'DANG_CHAY') && (
             <FormKm key={c.trang_thai} c={c} onXong={setC} />
           )}
-          {['DANG_CHAY', 'HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai) && (
-            <ChiPhi chuyenId={c.id} ghiDuoc={c.trang_thai !== 'DA_QUYET_TOAN'} />
-          )}
 
           <h2>Lịch trình</h2>
           {c.lich_trinh.length === 0 && <p className="trong">Chuyến chạy rỗng – không có đơn</p>}
-          <ol className="ds-the">
+          <ol className="lt lt-dt">
             {c.lich_trinh.map((p) => (
-              <li key={`${p.viec}-${p.don_id}`} className="the">
-                <div className="the-dau">
-                  <strong>
-                    {p.thu_tu}. {gio(p.eta)} · {p.viec === 'LAY' ? 'Lấy' : 'Giao'} tại {p.nut}
-                  </strong>
-                  <span className="nhan xam">{nhanDiem(p.viec, p.trang_thai_don, p.da_lay)}</span>
+              <li
+                key={`${p.viec}-${p.don_id}`}
+                className={
+                  xongDiem(p)
+                    ? 'xong'
+                    : nhan(p) === 'Thất bại'
+                      ? 'hong'
+                      : p === keTiep
+                        ? 'toi'
+                        : undefined
+                }
+              >
+                <i aria-hidden="true" />
+                <div className="the">
+                  <div className="the-dau">
+                    <strong>
+                      {gio(p.eta)} · {p.viec === 'LAY' ? 'Lấy' : 'Giao'} tại {p.nut}
+                    </strong>
+                    <span className="nhan xam">{nhan(p)}</span>
+                  </div>
+                  <div>
+                    <span className="bien-so">{p.ma_don}</span> · {p.ten_khach}
+                    {p.mo_ta && ` · ${p.mo_ta}`}
+                  </div>
+                  <div className="ghi-chu">
+                    {Number(p.kg).toLocaleString('vi-VN')} kg ·{' '}
+                    {Number(p.m3).toLocaleString('vi-VN')} m³ · {p.so_kien} kiện
+                  </div>
+                  <div>{p.dia_chi}</div>
+                  <div>
+                    {p.nguoi_lien_he && `${p.nguoi_lien_he} · `}
+                    <a href={`tel:${p.sdt}`}>{p.sdt}</a>
+                  </div>
+                  <div className="ghi-chu">
+                    {p.viec === 'GIAO'
+                      ? `Hạn giao ${ngayGio(p.han_giao)}`
+                      : p.lay_tu && p.lay_den
+                        ? `Khung lấy ${gio(p.lay_tu)}–${gio(p.lay_den)}`
+                        : 'Lấy cả ngày'}
+                  </div>
+                  {c.trang_thai === 'DANG_CHAY' &&
+                    p.viec === 'LAY' &&
+                    p.trang_thai_don === 'DA_GHEP' && (
+                      <KhongLay maDon={p.ma_don} onXong={xongQuet} />
+                    )}
+                  {c.trang_thai === 'DANG_CHAY' &&
+                    p.viec === 'GIAO' &&
+                    p.trang_thai_don === 'DA_LAY' && (
+                      <div className="giao-nut">
+                        <GiaoHang maDon={p.ma_don} onXong={xongQuet} />
+                        <KhongLay maDon={p.ma_don} viec="GIAO" onXong={xongQuet} />
+                      </div>
+                    )}
                 </div>
-                <div>
-                  <span className="bien-so">{p.ma_don}</span> · {p.ten_khach}
-                  {p.mo_ta && ` · ${p.mo_ta}`}
-                </div>
-                <div className="ghi-chu">
-                  {Number(p.kg).toLocaleString('vi-VN')} kg · {Number(p.m3).toLocaleString('vi-VN')}{' '}
-                  m³ · {p.so_kien} kiện
-                </div>
-                <div>{p.dia_chi}</div>
-                <div>
-                  {p.nguoi_lien_he && `${p.nguoi_lien_he} · `}
-                  <a href={`tel:${p.sdt}`}>{p.sdt}</a>
-                </div>
-                <div className="ghi-chu">
-                  {p.viec === 'GIAO'
-                    ? `Hạn giao ${ngayGio(p.han_giao)}`
-                    : p.lay_tu && p.lay_den
-                      ? `Khung lấy ${gio(p.lay_tu)}–${gio(p.lay_den)}`
-                      : 'Lấy cả ngày'}
-                </div>
-                {c.trang_thai === 'DANG_CHAY' &&
-                  p.viec === 'LAY' &&
-                  p.trang_thai_don === 'DA_GHEP' && <KhongLay maDon={p.ma_don} onXong={xongQuet} />}
-                {c.trang_thai === 'DANG_CHAY' &&
-                  p.viec === 'GIAO' &&
-                  p.trang_thai_don === 'DA_LAY' && (
-                    <div className="giao-nut">
-                      <GiaoHang maDon={p.ma_don} onXong={xongQuet} />
-                      <KhongLay maDon={p.ma_don} viec="GIAO" onXong={xongQuet} />
-                    </div>
-                  )}
               </li>
             ))}
           </ol>
+
+          {['DANG_CHAY', 'HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai) && (
+            <ChiPhi chuyenId={c.id} ghiDuoc={c.trang_thai !== 'DA_QUYET_TOAN'} />
+          )}
         </>
       )}
     </section>
