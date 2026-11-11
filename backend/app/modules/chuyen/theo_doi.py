@@ -101,14 +101,51 @@ def _theo_doi(db: Session, c: Chuyen, nguong: int) -> dict:
         )
         if chong:
             co.append("CHONG_LICH")
+    gan_nhat = max(tre, key=lambda p: p["thuc_te"], default=None)
     return {
         "diem": diem,
+        "tre_phut": gan_nhat["tre_phut"] if gan_nhat else None,  # lượt quét gần nhất, âm là sớm (BR-73)
         "xong": xong,
         "tong": len(diem),
         "co": co,
         "chong": chong,
         "ket_thuc_dang_chay": ket_thuc_dang_chay,
     }
+
+
+def _trang_thai_diem(c: Chuyen, ct: dict, diem: dict) -> list[str]:
+    """Trạng thái từng điểm dừng theo thứ tự lịch trình (UC-32-AC12)."""
+    don_tb = {d["id"] for d in ct["don"] if d["trang_thai"] == "THAT_BAI"}
+    dang_toi = c.trang_thai == "DANG_CHAY"
+    ra = []
+    for p in ct["lich_trinh"]:
+        kq = diem.get((p["don_id"], p["viec"]), {}).get("ket_qua")
+        if kq in ("LAY", "GIAO"):
+            ra.append("XONG")
+        elif kq or p["don_id"] in don_tb:  # KHONG_LAY, GIAO_THAT_BAI, BO; hoặc thất bại do kết thúc sự cố
+            ra.append("THAT_BAI")
+        elif dang_toi:
+            ra.append("DANG_TOI")
+            dang_toi = False
+        else:
+            ra.append("CHUA")
+    return ra
+
+
+def _vi_tri(db: Session, c: Chuyen, ct: dict) -> dict | None:
+    """Lượt quét mới nhất có GPS (UC-32-AC14); không theo dõi liên tục, chỉ là vị trí lúc quét."""
+    dong = db.execute(
+        select(LuotQuet, Ghep.don_hang_id)
+        .join(Ghep, Ghep.id == LuotQuet.ghep_id)
+        .where(Ghep.chuyen_id == c.id, LuotQuet.lat.is_not(None), LuotQuet.lng.is_not(None))
+        .order_by(LuotQuet.thoi_gian.desc(), LuotQuet.id.desc())
+        .limit(1)
+    ).first()
+    if dong is None:
+        return None
+    lq, don_id = dong
+    nut = next((p["nut"] for p in ct["lich_trinh"] if (p["don_id"], p["viec"]) == (don_id, PHIA[lq.loai])), None)
+    return {"lat": lq.lat, "lng": lq.lng, "luc": lq.thoi_gian, "nut": nut}
 
 
 def bang_ngay(db: Session, ds: list[dict]) -> list[dict]:
@@ -124,6 +161,9 @@ def bang_ngay(db: Session, ds: list[dict]) -> list[dict]:
             "ty_le_lap_day": ct["ty_le_lap_day"],
             "co": td["co"],
             "chong": td["chong"],
+            "diem": _trang_thai_diem(c, ct, td["diem"]),
+            "tre_phut": td["tre_phut"],
+            "vi_tri": _vi_tri(db, c, ct),
         }
     return ds
 

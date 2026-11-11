@@ -271,3 +271,73 @@ def test_uc32_ac10_phan_quyen(client, dang_nhap_voi, db, kb, dang_chay, vai_tro,
 def test_uc32_ac10_chua_dang_nhap(client, kb):
     assert client.post("/api/chuyen/1/ket-thuc-su-co", json={"ly_do": "x"}).status_code == 401
     assert client.post("/api/su-co/1/dong", json={"cach_xu_ly": "x"}).status_code == 401
+
+
+# AC12 – trạng thái từng điểm dừng (giao diện v2)
+def test_uc32_ac12_trang_thai_diem(client, db, kb, dang_chay, monkeypatch):
+    c01 = dang_chay["c01"]
+    lt = [(p["ma_don"], p["viec"]) for p in chi_tiet(client, c01)["lich_trinh"]]
+    assert bang(client, c01)["diem"] == ["DANG_TOI"] + ["CHUA"] * 5
+
+    quet(db, kb, c01, "d4", "LAY", trang_thai_moi="DA_LAY")
+    quet(db, kb, c01, "d2", "KHONG_LAY", trang_thai_moi="THAT_BAI")  # điểm giao Đ2 bị bỏ → cũng THAT_BAI
+    ma = {kb[k]: db.get(DonHang, kb[k]).ma_don for k in ("d1", "d2", "d4")}
+    xong, tb = (ma[kb["d4"]], "LAY"), ma[kb["d2"]]
+    mong = []
+    for p in lt:
+        if p == xong:
+            mong.append("XONG")
+        elif p[0] == tb:
+            mong.append("THAT_BAI")
+        else:
+            mong.append("CHUA" if "DANG_TOI" in mong else "DANG_TOI")
+    assert bang(client, c01)["diem"] == mong
+
+    # Kết thúc do sự cố: điểm chưa làm của đơn thất bại thành THAT_BAI, không còn DANG_TOI
+    monkeypatch.setattr(theo_doi, "bay_gio", lambda: luc(10))
+    assert client.post(f"/api/chuyen/{c01}/ket-thuc-su-co", json={"ly_do": "hỏng xe"}).status_code == 200
+    assert bang(client, c01)["diem"] == ["XONG" if p == xong else "THAT_BAI" for p in lt]
+
+
+# AC13 – số phút trễ của lượt quét gần nhất
+def test_uc32_ac13_tre_phut(client, db, kb, dang_chay):
+    c01 = dang_chay["c01"]
+    assert bang(client, c01)["tre_phut"] is None
+    quet(db, kb, c01, "d4", "LAY", tre_phut=25, trang_thai_moi="DA_LAY")
+    assert bang(client, c01)["tre_phut"] == 25
+    quet(db, kb, c01, "d4", "GIAO", tre_phut=-4, trang_thai_moi="DA_GIAO")  # quét sau, đến sớm
+    assert bang(client, c01)["tre_phut"] == -4
+
+
+# AC14 – vị trí lượt quét mới nhất có GPS
+def test_uc32_ac14_vi_tri(client, db, kb, dang_chay):
+    c01 = dang_chay["c01"]
+    assert bang(client, c01)["vi_tri"] is None
+    g = ghep_cua(db, c01, kb["d4"])
+    lat, lng = Decimal("10.776889"), Decimal("106.700806")
+    db.add(LuotQuet(ghep_id=g.id, tai_xe_id=kb["an"], loai="LAY", thoi_gian=luc(6, 10), lat=lat, lng=lng))
+    # Lượt sau thiếu GPS (BR-43) bị bỏ qua
+    db.add(LuotQuet(ghep_id=g.id, tai_xe_id=kb["an"], loai="GIAO", thoi_gian=luc(8), thieu_gps=True))
+    db.commit()
+    vt = bang(client, c01)["vi_tri"]
+    assert (Decimal(vt["lat"]), Decimal(vt["lng"]), vt["nut"]) == (lat, lng, "TP.HCM")
+    assert datetime.fromisoformat(vt["luc"]) == luc(6, 10)
+
+
+# AC15 – tìm chuyến theo mã, biển số, tên tài xế
+def test_uc32_ac15_tu_khoa(client, db, kb, dang_chay):
+    c01 = dang_chay["c01"]
+    ct = chi_tiet(client, c01)
+
+    def tim(tu_khoa, **gt):
+        r = client.get("/api/chuyen", params={"tu_khoa": tu_khoa, **gt})
+        assert r.status_code == 200
+        return {x["id"] for x in r.json()["du_lieu"]}
+
+    assert c01 in tim(ct["ma_chuyen"][-3:].lower())
+    assert c01 in tim(ct["bien_so"][2:6])
+    assert c01 in tim(ct["ten_tai_xe"].split()[-1].upper())
+    assert c01 in tim(ct["ma_chuyen"], ngay=NGAY.isoformat())
+    assert tim(ct["ma_chuyen"], ngay=(NGAY + timedelta(days=1)).isoformat()) == set()
+    assert tim("%") == set() and tim("_") == set()  # ký tự đại diện không khớp tất cả
+    assert c01 in tim("   ")  # chỉ khoảng trắng: bỏ qua bộ lọc
