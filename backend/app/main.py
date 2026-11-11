@@ -7,6 +7,7 @@ from fastapi.responses import JSONResponse
 from app.auth.router import router as auth_router
 from app.config import get_settings
 from app.loi import LoiNghiepVu
+from app.modules.bao_cao.router import router as bao_cao_router
 from app.modules.canh_bao.router import router as canh_bao_router
 from app.modules.chuyen.router import router as chuyen_router
 from app.modules.chuyen.router import router_su_co as su_co_router
@@ -27,6 +28,7 @@ from app.modules.tien.cong_no.router import router as cong_no_router
 from app.modules.tien.quyet_toan.router import router as quyet_toan_router
 from app.modules.tien.tam_ung.router import router as tam_ung_router
 from app.modules.toi.router import router as toi_router
+from app.modules.tra_cuu.router import router as tra_cuu_router
 
 
 @asynccontextmanager
@@ -39,6 +41,7 @@ app = FastAPI(title="QLVC", lifespan=lifespan)
 # Xếp theo chữ cái: thêm router mới chèn đúng chỗ, hai người thêm cùng lúc ít khi đụng nhau (docs/nhanh-git.md mục 4)
 app.include_router(auth_router)
 app.include_router(bang_gia_router)
+app.include_router(bao_cao_router)
 app.include_router(canh_bao_router)
 app.include_router(cau_hinh_router)
 app.include_router(chi_phi_router)
@@ -56,6 +59,7 @@ app.include_router(tai_xe_router)
 app.include_router(tam_ung_router)
 app.include_router(tep_router)
 app.include_router(toi_router)
+app.include_router(tra_cuu_router)
 app.include_router(tuyen_router)
 app.include_router(xe_router)
 
