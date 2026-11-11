@@ -118,6 +118,7 @@ Khi có nút đổi bộ màu trong Cài đặt, lựa chọn đã lưu của ng
 
 ## Chi tiết chuyến bố cục 2 (theo ảnh mẫu 03 Fleetlog, Tài duyệt 12/11)
 
+- **Căn mép như ảnh mẫu 01 (Tài góp ý 12/11):** trang tràn hết bề rộng (khung trang không giới hạn bề rộng, chỉ có lề); cột trái cao suốt màn hình (sticky, danh sách cuộn bên trong); khối đầu (tên, nhãn, số liệu, nút, cảnh báo chồng lịch, nút kết thúc do sự cố, form hủy) là một khối có viền, mép trên thẳng với cột trái; các khối bên dưới cùng lề trái phải, khối cạnh nhau cao bằng nhau; hình xe ở Xếp hàng cao tối đa 260 px, canh trái.
 - **Cột trái (300 px) "Chuyến ngày …":** các chuyến cùng ngày khởi hành dạng thẻ (mã + nhãn, nơi đi → nơi đến, dải điểm dừng theo `theo_doi.diem`, giờ đi → đến, biển số); chuyến đang xem tô đậm `--muc` chữ trắng; bấm thẻ khác là chuyển chuyến. Dưới 1100 px ẩn cột này, hiện lại "← Danh sách chuyến".
 - **Đầu chi tiết:** tên tuyến 34 px, mã · mã tuyến, nhãn, cờ; một dòng số: kg / tải trọng, số điểm dừng, km tuyến (`GET /api/tuyen/{id}`), khởi hành, kết thúc (đang trễ thì cam, BR-73); nút Chốt / Mở chốt / Hủy bên phải.
 - **Hàng bản đồ:** bản đồ lớn (đoạn đã đi nét liền, còn lại nét đứt) có chấm vị trí xe lúc quét gần nhất khi chuyến đang chạy (lấy `theo_doi.vi_tri` từ danh sách cùng ngày); bên phải là lịch trình dọc, dài thì cuộn trong khung.

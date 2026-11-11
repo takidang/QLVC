@@ -68,6 +68,7 @@ export default function XepHang({
         </h2>
         <svg
           viewBox="0 0 600 214"
+          preserveAspectRatio="xMinYMid meet"
           role="img"
           aria-label={`Xe ${c.bien_so} đã dùng ${so(m3)} / ${so(m3Max)} m³ và ${so(kg)} / ${so(kgMax)} kg, ${ds.length} đơn`}
         >

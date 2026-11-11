@@ -464,7 +464,7 @@ button:has(> svg.ic) {
 /* ----- Khung trang: thanh trên (tên, menu viên thuốc, người dùng) ----- */
 .trang {
   min-height: 100dvh;
-  max-width: 1680px;
+  max-width: none; /* tràn viền như ảnh mẫu 01; lề hai bên do padding */
   margin: 0 auto;
   padding: 16px 28px 48px;
 }
@@ -2860,6 +2860,9 @@ rect.chon {
 .ct2-ds {
   position: sticky;
   top: 12px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100dvh - 24px);
   padding: 12px;
 }
 .chi-tiet .ct2-ds h2 {
@@ -2877,8 +2880,10 @@ rect.chon {
 .ct2-ds ul {
   list-style: none;
   display: grid;
+  align-content: start;
   gap: 6px;
-  max-height: calc(100dvh - 120px);
+  flex: 1;
+  min-height: 0;
   margin: 0;
   padding: 0;
   overflow-y: auto;
@@ -2955,7 +2960,17 @@ rect.chon {
   gap: 16px;
   min-width: 0;
 }
-.ct2-chinh > .ct-dau {
+.ct2-dau-khung {
+  display: grid;
+  gap: 12px;
+  padding: 18px 22px;
+}
+.ct2-dau-khung .ct-dau {
+  margin: 0;
+}
+.ct2-dau-khung > p,
+.ct2-dau-khung > form,
+.ct2-dau-khung > div {
   margin: 0;
 }
 .chi-tiet .ct2-dau h1 {
@@ -3002,6 +3017,15 @@ rect.chon {
 }
 .ct2 .xh {
   margin: 0;
+}
+/* Hình xe trải theo nửa trái của khối nhưng không cao quá 260 px (màn rộng), canh trái */
+.ct2 .xh-xe svg {
+  max-width: none;
+  max-height: 260px;
+}
+.ct2 .xh-thanh,
+.ct2 .xh-chon {
+  max-width: none;
 }
 .bd-xe {
   fill: var(--chay);

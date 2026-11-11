@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { dongSuCo, ketThucSuCo, type ChuyenChiTiet } from '../../api/chuyen'
 import { kemMaBr, LoiApi } from '../../api/goi'
 import { Nhan } from '../../nhan'
+import { TEN_LOAI_SU_CO, type LoaiSuCo } from '../../api/suCo'
 
 const dong = (n: number) => `${n.toLocaleString('vi-VN')} đ`
 const lucVN = (iso: string) =>
@@ -74,7 +75,7 @@ export function KhoiSuCo({ c, onDoi }: { c: ChuyenChiTiet; onDoi: () => void }) 
           <li key={s.id} className="the">
             <div className="the-dau">
               <strong>
-                {s.loai} · {lucVN(s.luc)}
+                {TEN_LOAI_SU_CO[s.loai as LoaiSuCo] ?? s.loai} · {lucVN(s.luc)}
               </strong>
               <Nhan loai={s.trang_thai === 'MO' ? 'SU_CO' : 'HOAN_THANH'}>
                 {s.trang_thai === 'MO' ? 'Đang mở' : 'Đã đóng'}

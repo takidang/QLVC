@@ -287,125 +287,128 @@ export default function ChuyenChiTiet() {
 
         <div className="ct2-chinh">
           {/* Đầu chi tiết gọn một dòng: tên, mã, nhãn, số chính; hành động bên phải */}
-          <div className="ct-dau ct2-dau">
-            <div>
-              <h1>{c.ten_tuyen}</h1>
-              <div className="ct-nhan">
-                <span className="ma">
-                  {c.ma_chuyen} · {c.ma_tuyen}
-                </span>
-                <Nhan loai={c.trang_thai}>{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</Nhan>
-                {c.co?.map((x) => (
-                  <Nhan
-                    key={x}
-                    loai={x}
-                    title={x === 'CHONG_LICH' ? c.chong?.join(', ') : undefined}
-                  >
-                    {TEN_CO[x] ?? x}
-                  </Nhan>
-                ))}
+          {/* Khối đầu có viền như ảnh mẫu 01: tên, mã, nhãn, số liệu, nút; cảnh báo và form hủy nằm trong khối */}
+          <section className="kinh ct2-dau-khung">
+            <div className="ct-dau ct2-dau">
+              <div>
+                <h1>{c.ten_tuyen}</h1>
+                <div className="ct-nhan">
+                  <span className="ma">
+                    {c.ma_chuyen} · {c.ma_tuyen}
+                  </span>
+                  <Nhan loai={c.trang_thai}>{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</Nhan>
+                  {c.co?.map((x) => (
+                    <Nhan
+                      key={x}
+                      loai={x}
+                      title={x === 'CHONG_LICH' ? c.chong?.join(', ') : undefined}
+                    >
+                      {TEN_CO[x] ?? x}
+                    </Nhan>
+                  ))}
+                </div>
+                <ul className="ct2-so">
+                  <li>
+                    {so(c.tai_trong.da_dung_kg)} / {dong(c.tai_trong.toi_da_kg)} kg
+                  </li>
+                  <li>{c.lich_trinh.length} điểm dừng</li>
+                  {km !== null && <li>{dong(km)} km</li>}
+                  <li>Khởi hành {lucVN(c.khoi_hanh_du_kien)}</li>
+                  <li className={c.ket_thuc_dang_chay ? 'ct-tre' : undefined}>
+                    {c.ket_thuc_dang_chay ? 'Dự kiến xong (đang trễ) ' : 'Kết thúc dự kiến '}
+                    {lucVN(c.ket_thuc_dang_chay ?? c.ket_thuc_du_kien)}
+                  </li>
+                  {dangLap && c.canh_bao_lai_am && (
+                    <li className="ct-tre">Lãi dự kiến âm, phải xác nhận khi chốt</li>
+                  )}
+                  {c.chay_rong && <li>Chạy rỗng (đã xác nhận)</li>}
+                </ul>
               </div>
-              <ul className="ct2-so">
-                <li>
-                  {so(c.tai_trong.da_dung_kg)} / {dong(c.tai_trong.toi_da_kg)} kg
-                </li>
-                <li>{c.lich_trinh.length} điểm dừng</li>
-                {km !== null && <li>{dong(km)} km</li>}
-                <li>Khởi hành {lucVN(c.khoi_hanh_du_kien)}</li>
-                <li className={c.ket_thuc_dang_chay ? 'ct-tre' : undefined}>
-                  {c.ket_thuc_dang_chay ? 'Dự kiến xong (đang trễ) ' : 'Kết thúc dự kiến '}
-                  {lucVN(c.ket_thuc_dang_chay ?? c.ket_thuc_du_kien)}
-                </li>
-                {dangLap && c.canh_bao_lai_am && (
-                  <li className="ct-tre">Lãi dự kiến âm, phải xác nhận khi chốt</li>
+              <div className="ct-hanh-dong">
+                {dangLap && lyDoHuy === null && (
+                  <button disabled={dangGui} onClick={() => lam('chot')}>
+                    Chốt chuyến
+                  </button>
                 )}
-                {c.chay_rong && <li>Chạy rỗng (đã xác nhận)</li>}
-              </ul>
+                {c.trang_thai === 'DA_CHOT' && lyDoHuy === null && (
+                  <button className="phu" disabled={dangGui} onClick={() => lam('mo-chot')}>
+                    Mở chốt
+                  </button>
+                )}
+                {(dangLap || c.trang_thai === 'DA_CHOT') && lyDoHuy === null && (
+                  <button className="phu" disabled={dangGui} onClick={() => setLyDoHuy('')}>
+                    Hủy chuyến
+                  </button>
+                )}
+              </div>
             </div>
-            <div className="ct-hanh-dong">
-              {dangLap && lyDoHuy === null && (
-                <button disabled={dangGui} onClick={() => lam('chot')}>
-                  Chốt chuyến
-                </button>
-              )}
-              {c.trang_thai === 'DA_CHOT' && lyDoHuy === null && (
-                <button className="phu" disabled={dangGui} onClick={() => lam('mo-chot')}>
-                  Mở chốt
-                </button>
-              )}
-              {(dangLap || c.trang_thai === 'DA_CHOT') && lyDoHuy === null && (
-                <button className="phu" disabled={dangGui} onClick={() => setLyDoHuy('')}>
-                  Hủy chuyến
-                </button>
-              )}
-            </div>
-          </div>
-          {lyDoHuy !== null && (
-            <form
-              className="thanh-cong-cu canh-bao"
-              onSubmit={(e) => {
-                e.preventDefault()
-                lam('huy')
-              }}
-            >
-              <label>
-                Lý do hủy
-                <input
-                  required
-                  autoFocus
-                  maxLength={300}
-                  value={lyDoHuy}
-                  onChange={(e) => setLyDoHuy(e.target.value)}
-                />
-              </label>
-              <button disabled={dangGui || !lyDoHuy.trim()}>Xác nhận hủy</button>
-              <button
-                type="button"
-                className="phu"
-                disabled={dangGui}
-                onClick={() => setLyDoHuy(null)}
+            {lyDoHuy !== null && (
+              <form
+                className="thanh-cong-cu canh-bao"
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  lam('huy')
+                }}
               >
-                Thôi
-              </button>
-            </form>
-          )}
-          {loi && (
-            <div role="alert" className="canh-bao">
-              <strong className="loi">{loi}</strong>
-              {viPham.length > 0 && (
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Đơn</th>
-                      <th>Quy tắc</th>
-                      <th>Nội dung</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {viPham.map((v, i) => (
-                      <tr key={i}>
-                        <td className="bien-so">
-                          {v.don_id ? (maDon.get(v.don_id) ?? v.don_id) : 'Cả chuyến'}
-                        </td>
-                        <td>{v.ma}</td>
-                        <td>{kemMaBr(v.thong_diep, v.ma)}</td>
+                <label>
+                  Lý do hủy
+                  <input
+                    required
+                    autoFocus
+                    maxLength={300}
+                    value={lyDoHuy}
+                    onChange={(e) => setLyDoHuy(e.target.value)}
+                  />
+                </label>
+                <button disabled={dangGui || !lyDoHuy.trim()}>Xác nhận hủy</button>
+                <button
+                  type="button"
+                  className="phu"
+                  disabled={dangGui}
+                  onClick={() => setLyDoHuy(null)}
+                >
+                  Thôi
+                </button>
+              </form>
+            )}
+            <CanhBaoTheoDoi c={c} onDoi={setC} />
+            {loi && (
+              <div role="alert" className="canh-bao">
+                <strong className="loi">{loi}</strong>
+                {viPham.length > 0 && (
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Đơn</th>
+                        <th>Quy tắc</th>
+                        <th>Nội dung</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
-          )}
-          {dangLap && (
-            <DoiXeTaiXe
-              c={c}
-              onLuu={(r) => {
-                setC(r)
-                setLanTai((n) => n + 1)
-              }}
-            />
-          )}
-          <CanhBaoTheoDoi c={c} onDoi={setC} />
+                    </thead>
+                    <tbody>
+                      {viPham.map((v, i) => (
+                        <tr key={i}>
+                          <td className="bien-so">
+                            {v.don_id ? (maDon.get(v.don_id) ?? v.don_id) : 'Cả chuyến'}
+                          </td>
+                          <td>{v.ma}</td>
+                          <td>{kemMaBr(v.thong_diep, v.ma)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            )}
+            {dangLap && (
+              <DoiXeTaiXe
+                c={c}
+                onLuu={(r) => {
+                  setC(r)
+                  setLanTai((n) => n + 1)
+                }}
+              />
+            )}
+          </section>
 
           {/* Hàng 1: bản đồ lớn và lịch trình dọc */}
           <div className="ct2-hang ct2-hang-ban-do">
