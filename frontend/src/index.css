@@ -370,9 +370,12 @@ svg.ic {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-/* Chữ chỉ dành cho trình đọc màn hình */
+/* Chữ chỉ dành cho trình đọc màn hình. Ghim góc trên trái của khối định vị gần nhất:
+   để nguyên chỗ thì nằm trong cột cuối của bảng cuộn ngang, thoát khỏi khung và làm cả trang cuộn ngang */
 .an-chu {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 1px;
   height: 1px;
   overflow: hidden;
@@ -1139,6 +1142,7 @@ p.thanh-cong {
 
 .bang-khung {
   padding: 16px 6px 6px;
+  overflow-x: auto; /* màn hẹp: bảng cuộn ngang trong khung, không tràn ra ngoài */
   background: var(--kinh-dac);
 }
 .bang-khung table {
@@ -1375,23 +1379,6 @@ tr.hang.mo .gio b {
   touch-action: none; /* vẽ không làm cuộn trang */
 }
 
-/* UC-19-AC14: phiếu gửi hàng, in bằng Ctrl+P (chỉ in phần phiếu) */
-.phieu-dau {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-}
-.phieu-ma {
-  margin: 4px 0;
-  font: 700 1.6rem monospace;
-}
-.phieu-noi-dung dt {
-  font-weight: 600;
-}
-.phieu-noi-dung dd {
-  margin: 0 0 8px;
-}
-
 /* Bản đồ chi tiết chuyến (Leaflet) */
 .ban-do {
   z-index: 0;
@@ -1472,10 +1459,6 @@ tr.hang.mo .gio b {
   .khong-in {
     display: none !important;
   }
-  .phieu-noi-dung {
-    border: 1px solid #000;
-    box-shadow: none;
-  }
 }
 
 /* ----- Màn của Kiệt: 04, 05, 06, 08 ----- */
@@ -1519,10 +1502,7 @@ tr.hang.mo .gio b {
 .bang-khung td.hanh-dong {
   width: 1%;
 }
-/* Bảng danh mục cuộn ngang trong khung trên màn hẹp, số không xuống dòng */
-.bang-khung.dm {
-  overflow-x: auto;
-}
+/* Số không xuống dòng (cuộn ngang trong khung đã có ở .bang-khung chung) */
 .bang-khung.dm td.so {
   white-space: nowrap;
 }
