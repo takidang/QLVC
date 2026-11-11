@@ -2481,6 +2481,122 @@ rect.chon {
   }
 }
 
+/* ----- Màn Quyết toán (UC-24): danh sách chuyến trái, bảng quyết toán phải ----- */
+.qt-luoi {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.qt-ds {
+  position: sticky;
+  top: 12px;
+  padding: 12px;
+}
+.qt-ds .vien-thuoc {
+  margin-bottom: 10px;
+}
+.qt-ds ul {
+  list-style: none;
+  display: grid;
+  gap: 4px;
+  max-height: 70dvh;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+}
+.qt-ds li.ghi-chu {
+  padding: 10px 8px;
+}
+.qt-ds ul button {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  color: var(--muc);
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 12px;
+}
+.qt-ds ul button:enabled:hover {
+  background: rgb(255 255 255 / 55%);
+}
+.qt-ds ul button[aria-pressed='true'],
+.qt-ds ul button[aria-pressed='true']:hover {
+  background: rgb(255 255 255 / 92%);
+  border-color: var(--vien-dam);
+}
+.qt-ds ul button span {
+  font-weight: 400;
+}
+.qt-ds ul button small {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--phu);
+}
+.qt-ct {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+}
+.qt-dau h2 {
+  margin: 0 0 6px;
+  font-size: 24px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+.qt-so {
+  margin-bottom: 0;
+}
+.qt-khoi {
+  padding: 14px 18px 16px;
+  overflow-x: auto;
+}
+.quyet-toan .qt-khoi h3 {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.qt-khoi table {
+  background: none;
+  border-color: var(--vien);
+}
+.qt-khoi .ghi-chu {
+  margin: 8px 0 0;
+}
+/* Dòng tổng, dòng lãi trong thân bảng: đậm như số, không mờ như tiêu đề cột */
+.qt-khoi tbody th {
+  padding-block: 11px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muc);
+  border-top: 1px solid var(--vien-dam);
+}
+/* Form quyết toán ở cuối: một khung riêng */
+.qt-ct > .o-nhap {
+  padding: 16px 18px;
+  background: var(--kinh-dac);
+  border: 1px solid var(--vien-sang);
+  border-radius: 16px;
+}
+.qt-trong {
+  padding: 28px;
+  text-align: center;
+  color: var(--phu);
+}
+@media (max-width: 1000px) {
+  .qt-luoi {
+    grid-template-columns: 1fr;
+  }
+  .qt-ds {
+    position: static;
+  }
+  .qt-ds ul {
+    max-height: 260px;
+  }
+}
+
 /* ----- Màn của Kiệt: 04, 05, 06, 08 ----- */
 
 /* Đầu trang danh mục (06): thấp hơn màn Chuyến, tiêu đề + một dòng phụ, nút chính bên phải */

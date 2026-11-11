@@ -102,276 +102,345 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
   const tamTinh = bang?.can_luong_tay && bang.trang_thai === 'HOAN_THANH'
 
   return (
-    <section className="noi-dung">
+    <section className="noi-dung quyet-toan">
       <h1>Quyết toán chuyến</h1>
       <p className="ghi-chu">
         Duyệt từng khoản chi tài xế khai, ghi cách xử lý chênh lệch tạm ứng rồi quyết toán. Quyết
         toán xong, mọi số tiền của chuyến chỉ còn xem (BR-29).
       </p>
-      <div className="hanh-dong">
-        {(['HOAN_THANH', 'DA_QUYET_TOAN'] as const).map((tt) => (
-          <button
-            key={tt}
-            className={loc === tt ? '' : 'phu'}
-            onClick={() => {
-              setLoc(tt)
-              chonChuyen('')
-            }}
-          >
-            {tt === 'HOAN_THANH' ? 'Chờ quyết toán' : 'Đã quyết toán'}
-          </button>
-        ))}
+      <div className="qt-luoi">
+        {/* Danh sách chuyến bên trái (thay ô chọn): bấm để mở bảng quyết toán bên phải */}
+        <aside className="kinh qt-ds">
+          <div className="vien-thuoc" role="group" aria-label="Lọc chuyến">
+            {(['HOAN_THANH', 'DA_QUYET_TOAN'] as const).map((tt) => (
+              <button
+                key={tt}
+                aria-pressed={loc === tt}
+                onClick={() => {
+                  setLoc(tt)
+                  chonChuyen('')
+                }}
+              >
+                {tt === 'HOAN_THANH' ? 'Chờ quyết toán' : 'Đã quyết toán'}
+                {loc === tt && <em>{dsChuyen.length}</em>}
+              </button>
+            ))}
+          </div>
+          <ul>
+            {dsChuyen.map((c) => (
+              <li key={c.id}>
+                <button
+                  type="button"
+                  aria-pressed={chuyenId === String(c.id)}
+                  onClick={() => chonChuyen(String(c.id))}
+                >
+                  <strong>{c.ma_chuyen}</strong>
+                  <span>{c.ten_tuyen}</span>
+                  <small>
+                    {c.bien_so} · {c.ten_tai_xe} · {ngayGio(c.khoi_hanh_du_kien)}
+                  </small>
+                </button>
+              </li>
+            ))}
+            {dsChuyen.length === 0 && (
+              <li className="ghi-chu">
+                {loc === 'HOAN_THANH'
+                  ? 'Không có chuyến nào chờ quyết toán'
+                  : 'Chưa có chuyến nào đã quyết toán'}
+              </li>
+            )}
+          </ul>
+        </aside>
+
+        <div className="qt-ct">
+          {thongBao && <p className="thanh-cong">{thongBao}</p>}
+          {loi && (
+            <p role="alert" className="loi">
+              {loi}
+            </p>
+          )}
+
+          {bang && (
+            <>
+              <div className="qt-dau">
+                <h2>
+                  {bang.ma_chuyen} · {bang.ten_tuyen}
+                </h2>
+                <span className="bien">{bang.bien_so}</span> {bang.ten_tai_xe}
+              </div>
+              <div className="kinh tq-so qt-so">
+                <div>
+                  <small>Doanh thu</small>
+                  <b>{dong(bang.doanh_thu)}</b>
+                </div>
+                <div>
+                  <small>Chi phí đã duyệt</small>
+                  <b>{dong(bang.tong_chi)}</b>
+                  <em>định mức {dong(bang.dinh_muc)}</em>
+                </div>
+                <div>
+                  <small>Lương tài xế</small>
+                  <b>{dong(bang.luong_tai_xe)}</b>
+                </div>
+                <div>
+                  <small>Lãi chuyến{tamTinh ? ' (tạm tính)' : ''}</small>
+                  <b className={bang.lai < 0 ? 'tq-am' : undefined}>{dong(bang.lai)}</b>
+                  <em>dự kiến lúc chốt {dong(bang.lai_du_kien)}</em>
+                </div>
+                <div>
+                  <small>Chênh lệch tạm ứng</small>
+                  <b>{dong(Math.abs(bang.chenh_lech_tam_ung))}</b>
+                  <em>
+                    {bang.chenh_lech_tam_ung > 0
+                      ? 'tài xế nộp lại'
+                      : bang.chenh_lech_tam_ung < 0
+                        ? 'công ty trả thêm'
+                        : 'không chênh'}
+                  </em>
+                </div>
+              </div>
+              {bang.ket_thuc_bat_thuong && (
+                <p className="canh-bao">
+                  Chuyến kết thúc do sự cố: {bang.ly_do_ket_thuc ?? 'không ghi lý do'}. Lương tài xế
+                  nhập tay (BR-68).
+                </p>
+              )}
+
+              <section className="kinh qt-khoi">
+                <h3>Doanh thu {dong(bang.doanh_thu)}</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Đơn</th>
+                      <th>Khách</th>
+                      <th>Cước</th>
+                      <th>Doanh thu ghi nhận</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[...bang.don_giao, ...bang.don_that_bai].map((d) => {
+                      const giao = bang.don_giao.includes(d)
+                      return (
+                        <tr key={d.id}>
+                          <td className="bien-so">{d.ma_don}</td>
+                          <td>{d.ten_khach}</td>
+                          <td>{dong(d.cuoc)}</td>
+                          <td>
+                            {giao ? dong(d.cuoc) : <span className="loi">0 – giao thất bại</span>}
+                          </td>
+                        </tr>
+                      )
+                    })}
+                    {bang.don_giao.length + bang.don_that_bai.length === 0 && (
+                      <tr>
+                        <td colSpan={4} className="trong">
+                          Chuyến chạy rỗng
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </section>
+
+              <section className="kinh qt-khoi">
+                <h3>Chi phí so với định mức</h3>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Loại</th>
+                      <th>Định mức</th>
+                      <th>Thực tế (đã duyệt)</th>
+                      <th>Chênh lệch</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bang.chi_theo_loai.map((x) => (
+                      <tr key={x.loai}>
+                        <td>{TEN_LOAI_CHI[x.loai]}</td>
+                        <td>{dong(x.dinh_muc)}</td>
+                        <td>{dong(x.thuc_te)}</td>
+                        <td className={x.chenh_lech > 0 ? 'loi' : ''}>
+                          {x.chenh_lech > 0 ? '+' : ''}
+                          {dong(x.chenh_lech)}
+                        </td>
+                      </tr>
+                    ))}
+                    <tr>
+                      <th>Tổng</th>
+                      <th>{dong(bang.dinh_muc)}</th>
+                      <th>{dong(bang.tong_chi)}</th>
+                      <th>
+                        {bang.tong_chi > bang.dinh_muc ? '+' : ''}
+                        {dong(bang.tong_chi - bang.dinh_muc)}
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
+                <p className="ghi-chu">
+                  Dầu: {bang.km === null ? 'chưa có km' : `${bang.km} km`} · tham khảo{' '}
+                  {lit(bang.dau_tham_khao_lit)} · thực tế {lit(bang.dau_thuc_te_lit)} (chỉ để xem)
+                </p>
+              </section>
+
+              <section className="kinh qt-khoi">
+                <h3>Khoản chi tài xế khai</h3>
+                {bang.so_cho_duyet > 0 && (
+                  <p className="canh-bao">Còn {bang.so_cho_duyet} khoản chờ duyệt.</p>
+                )}
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Loại</th>
+                      <th>Ghi chú</th>
+                      <th>Số khai</th>
+                      <th>Số duyệt</th>
+                      <th>Trạng thái</th>
+                      <th>Ảnh</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bang.khoan.map((k) =>
+                      dangXet === k.id ? (
+                        <XetKhoan
+                          key={k.id}
+                          k={k}
+                          dangGui={dangGui}
+                          onDuyet={(so, lyDo) =>
+                            lam(() => duyetChi(k.id, so, lyDo), `Đã duyệt ${dong(so)}`)
+                          }
+                          onTuChoi={(lyDo) =>
+                            lam(() => tuChoiChi(k.id, lyDo), 'Đã từ chối khoản chi')
+                          }
+                          onThoi={() => setDangXet(null)}
+                        />
+                      ) : (
+                        <tr key={k.id}>
+                          <td>
+                            {TEN_LOAI_CHI[k.loai]}
+                            {k.so_lit !== null && ` · ${lit(k.so_lit)}`}
+                          </td>
+                          <td>{k.ghi_chu}</td>
+                          <td>{dong(k.so_tien_khai)}</td>
+                          <td>{k.so_tien_duyet === null ? '–' : dong(k.so_tien_duyet)}</td>
+                          <td>{TEN_TRANG_THAI_CHI[k.trang_thai]}</td>
+                          <td className="hanh-dong">
+                            {k.anh.map((t, i) => (
+                              <button key={t} className="phu" onClick={() => void xemAnh(t)}>
+                                Ảnh {i + 1}
+                              </button>
+                            ))}
+                          </td>
+                          <td className="hanh-dong">
+                            {ghiDuoc && (
+                              <button
+                                className={k.trang_thai === 'CHO_DUYET' ? '' : 'phu'}
+                                disabled={dangGui}
+                                onClick={() => setDangXet(k.id)}
+                              >
+                                {k.trang_thai === 'CHO_DUYET' ? 'Xét' : 'Đổi'}
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      ),
+                    )}
+                    {bang.khoan.length === 0 && (
+                      <tr>
+                        <td colSpan={7} className="trong">
+                          Tài xế không khai khoản chi nào
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </section>
+
+              <section className="kinh qt-khoi">
+                <h3>Kết quả</h3>
+                <table>
+                  <tbody>
+                    <tr>
+                      <td>Doanh thu</td>
+                      <td>{dong(bang.doanh_thu)}</td>
+                    </tr>
+                    <tr>
+                      <td>Chi phí đã duyệt</td>
+                      <td>− {dong(bang.tong_chi)}</td>
+                    </tr>
+                    <tr>
+                      <td>
+                        Lương tài xế{' '}
+                        {bang.luong_tai_xe !== bang.luong_chot ? '(nhập tay)' : '(đã chốt)'}
+                        {bang.ly_do_luong_tay && ` – ${bang.ly_do_luong_tay}`}
+                      </td>
+                      <td>− {dong(bang.luong_tai_xe)}</td>
+                    </tr>
+                    <tr>
+                      <th>
+                        Lãi chuyến
+                        {/* Kết thúc do sự cố: lương thật nhập lúc quyết toán (BR-68), giờ tạm lấy lương đã chốt */}
+                        {tamTinh && (
+                          <span className="ghi-chu"> (tạm tính, lương nhập lúc quyết toán)</span>
+                        )}
+                      </th>
+                      <th className={bang.lai < 0 ? 'loi' : ''}>{dong(bang.lai)}</th>
+                    </tr>
+                    <tr>
+                      <td>Lãi dự kiến lúc chốt</td>
+                      <td>{dong(bang.lai_du_kien)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                {bang.ly_do_lech.length > 0 && (
+                  <ul className="ghi-chu">
+                    {bang.ly_do_lech.map((x) => (
+                      <li key={x.mo_ta}>
+                        {x.mo_ta}: {x.so_tien > 0 ? '+' : ''}
+                        {dong(x.so_tien)}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <p>
+                  Tạm ứng còn hiệu lực <strong>{dong(bang.tong_tam_ung_hieu_luc)}</strong> · Chênh
+                  lệch <strong>{dong(bang.chenh_lech_tam_ung)}</strong>:{' '}
+                  {bang.chenh_lech_tam_ung > 0
+                    ? `tài xế nộp lại ${dong(bang.chenh_lech_tam_ung)}`
+                    : bang.chenh_lech_tam_ung < 0
+                      ? `công ty trả thêm ${dong(-bang.chenh_lech_tam_ung)}`
+                      : 'không chênh'}
+                </p>
+              </section>
+
+              {bang.trang_thai === 'DA_QUYET_TOAN' && (
+                <p className="thanh-cong">
+                  Đã quyết toán {bang.luc_quyet_toan && ngayGio(bang.luc_quyet_toan)} ·{' '}
+                  {bang.xu_ly_chenh_lech && TEN_XU_LY[bang.xu_ly_chenh_lech]}
+                  {bang.hinh_thuc && ` · ${TEN_HINH_THUC[bang.hinh_thuc]}`}
+                  {bang.luc_xu_ly && ` lúc ${ngayGio(bang.luc_xu_ly)}`}
+                </p>
+              )}
+              {ghiDuoc && (
+                <FormQuyetToan
+                  key={bang.chuyen_id}
+                  bang={bang}
+                  dangGui={dangGui}
+                  onGui={(vao) =>
+                    lam(
+                      () => quyetToan(bang.chuyen_id, vao),
+                      `Đã quyết toán ${bang.ma_chuyen}`,
+                    ).then((xong) => xong && taiDs())
+                  }
+                />
+              )}
+            </>
+          )}
+          {!bang && !loi && (
+            <p className="kinh qt-trong">Chọn một chuyến bên trái để xem bảng quyết toán.</p>
+          )}
+        </div>
       </div>
-      <label className="o-nhap">
-        Chuyến
-        <select value={chuyenId} onChange={(e) => chonChuyen(e.target.value)}>
-          <option value="">
-            {dsChuyen.length ? '– Chọn chuyến –' : '– Không có chuyến nào –'}
-          </option>
-          {dsChuyen.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.ma_chuyen} · {c.ma_tuyen} · {c.bien_so} · {c.ten_tai_xe}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      {thongBao && <p className="thanh-cong">{thongBao}</p>}
-      {loi && (
-        <p role="alert" className="loi">
-          {loi}
-        </p>
-      )}
-
-      {bang && (
-        <>
-          <p>
-            <strong>{bang.ma_chuyen}</strong> · {bang.ten_tuyen} · Xe {bang.bien_so} · Tài xế{' '}
-            {bang.ten_tai_xe}
-          </p>
-          {bang.ket_thuc_bat_thuong && (
-            <p className="canh-bao">
-              Chuyến kết thúc do sự cố: {bang.ly_do_ket_thuc ?? 'không ghi lý do'}. Lương tài xế
-              nhập tay (BR-68).
-            </p>
-          )}
-
-          <h2>Doanh thu {dong(bang.doanh_thu)}</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Đơn</th>
-                <th>Khách</th>
-                <th>Cước</th>
-                <th>Doanh thu ghi nhận</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[...bang.don_giao, ...bang.don_that_bai].map((d) => {
-                const giao = bang.don_giao.includes(d)
-                return (
-                  <tr key={d.id}>
-                    <td className="bien-so">{d.ma_don}</td>
-                    <td>{d.ten_khach}</td>
-                    <td>{dong(d.cuoc)}</td>
-                    <td>{giao ? dong(d.cuoc) : <span className="loi">0 – giao thất bại</span>}</td>
-                  </tr>
-                )
-              })}
-              {bang.don_giao.length + bang.don_that_bai.length === 0 && (
-                <tr>
-                  <td colSpan={4} className="trong">
-                    Chuyến chạy rỗng
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-
-          <h2>Chi phí so với định mức</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Loại</th>
-                <th>Định mức</th>
-                <th>Thực tế (đã duyệt)</th>
-                <th>Chênh lệch</th>
-              </tr>
-            </thead>
-            <tbody>
-              {bang.chi_theo_loai.map((x) => (
-                <tr key={x.loai}>
-                  <td>{TEN_LOAI_CHI[x.loai]}</td>
-                  <td>{dong(x.dinh_muc)}</td>
-                  <td>{dong(x.thuc_te)}</td>
-                  <td className={x.chenh_lech > 0 ? 'loi' : ''}>
-                    {x.chenh_lech > 0 ? '+' : ''}
-                    {dong(x.chenh_lech)}
-                  </td>
-                </tr>
-              ))}
-              <tr>
-                <th>Tổng</th>
-                <th>{dong(bang.dinh_muc)}</th>
-                <th>{dong(bang.tong_chi)}</th>
-                <th>
-                  {bang.tong_chi > bang.dinh_muc ? '+' : ''}
-                  {dong(bang.tong_chi - bang.dinh_muc)}
-                </th>
-              </tr>
-            </tbody>
-          </table>
-          <p className="ghi-chu">
-            Dầu: {bang.km === null ? 'chưa có km' : `${bang.km} km`} · tham khảo{' '}
-            {lit(bang.dau_tham_khao_lit)} · thực tế {lit(bang.dau_thuc_te_lit)} (chỉ để xem)
-          </p>
-
-          <h2>Khoản chi tài xế khai</h2>
-          {bang.so_cho_duyet > 0 && (
-            <p className="canh-bao">Còn {bang.so_cho_duyet} khoản chờ duyệt.</p>
-          )}
-          <table>
-            <thead>
-              <tr>
-                <th>Loại</th>
-                <th>Ghi chú</th>
-                <th>Số khai</th>
-                <th>Số duyệt</th>
-                <th>Trạng thái</th>
-                <th>Ảnh</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {bang.khoan.map((k) =>
-                dangXet === k.id ? (
-                  <XetKhoan
-                    key={k.id}
-                    k={k}
-                    dangGui={dangGui}
-                    onDuyet={(so, lyDo) =>
-                      lam(() => duyetChi(k.id, so, lyDo), `Đã duyệt ${dong(so)}`)
-                    }
-                    onTuChoi={(lyDo) => lam(() => tuChoiChi(k.id, lyDo), 'Đã từ chối khoản chi')}
-                    onThoi={() => setDangXet(null)}
-                  />
-                ) : (
-                  <tr key={k.id}>
-                    <td>
-                      {TEN_LOAI_CHI[k.loai]}
-                      {k.so_lit !== null && ` · ${lit(k.so_lit)}`}
-                    </td>
-                    <td>{k.ghi_chu}</td>
-                    <td>{dong(k.so_tien_khai)}</td>
-                    <td>{k.so_tien_duyet === null ? '–' : dong(k.so_tien_duyet)}</td>
-                    <td>{TEN_TRANG_THAI_CHI[k.trang_thai]}</td>
-                    <td className="hanh-dong">
-                      {k.anh.map((t, i) => (
-                        <button key={t} className="phu" onClick={() => void xemAnh(t)}>
-                          Ảnh {i + 1}
-                        </button>
-                      ))}
-                    </td>
-                    <td className="hanh-dong">
-                      {ghiDuoc && (
-                        <button
-                          className={k.trang_thai === 'CHO_DUYET' ? '' : 'phu'}
-                          disabled={dangGui}
-                          onClick={() => setDangXet(k.id)}
-                        >
-                          {k.trang_thai === 'CHO_DUYET' ? 'Xét' : 'Đổi'}
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ),
-              )}
-              {bang.khoan.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="trong">
-                    Tài xế không khai khoản chi nào
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-
-          <h2>Kết quả</h2>
-          <table>
-            <tbody>
-              <tr>
-                <td>Doanh thu</td>
-                <td>{dong(bang.doanh_thu)}</td>
-              </tr>
-              <tr>
-                <td>Chi phí đã duyệt</td>
-                <td>− {dong(bang.tong_chi)}</td>
-              </tr>
-              <tr>
-                <td>
-                  Lương tài xế {bang.luong_tai_xe !== bang.luong_chot ? '(nhập tay)' : '(đã chốt)'}
-                  {bang.ly_do_luong_tay && ` – ${bang.ly_do_luong_tay}`}
-                </td>
-                <td>− {dong(bang.luong_tai_xe)}</td>
-              </tr>
-              <tr>
-                <th>
-                  Lãi chuyến
-                  {/* Kết thúc do sự cố: lương thật nhập lúc quyết toán (BR-68), giờ tạm lấy lương đã chốt */}
-                  {tamTinh && (
-                    <span className="ghi-chu"> (tạm tính, lương nhập lúc quyết toán)</span>
-                  )}
-                </th>
-                <th className={bang.lai < 0 ? 'loi' : ''}>{dong(bang.lai)}</th>
-              </tr>
-              <tr>
-                <td>Lãi dự kiến lúc chốt</td>
-                <td>{dong(bang.lai_du_kien)}</td>
-              </tr>
-            </tbody>
-          </table>
-          {bang.ly_do_lech.length > 0 && (
-            <ul className="ghi-chu">
-              {bang.ly_do_lech.map((x) => (
-                <li key={x.mo_ta}>
-                  {x.mo_ta}: {x.so_tien > 0 ? '+' : ''}
-                  {dong(x.so_tien)}
-                </li>
-              ))}
-            </ul>
-          )}
-          <p>
-            Tạm ứng còn hiệu lực <strong>{dong(bang.tong_tam_ung_hieu_luc)}</strong> · Chênh lệch{' '}
-            <strong>{dong(bang.chenh_lech_tam_ung)}</strong>:{' '}
-            {bang.chenh_lech_tam_ung > 0
-              ? `tài xế nộp lại ${dong(bang.chenh_lech_tam_ung)}`
-              : bang.chenh_lech_tam_ung < 0
-                ? `công ty trả thêm ${dong(-bang.chenh_lech_tam_ung)}`
-                : 'không chênh'}
-          </p>
-
-          {bang.trang_thai === 'DA_QUYET_TOAN' && (
-            <p className="thanh-cong">
-              Đã quyết toán {bang.luc_quyet_toan && ngayGio(bang.luc_quyet_toan)} ·{' '}
-              {bang.xu_ly_chenh_lech && TEN_XU_LY[bang.xu_ly_chenh_lech]}
-              {bang.hinh_thuc && ` · ${TEN_HINH_THUC[bang.hinh_thuc]}`}
-              {bang.luc_xu_ly && ` lúc ${ngayGio(bang.luc_xu_ly)}`}
-            </p>
-          )}
-          {ghiDuoc && (
-            <FormQuyetToan
-              key={bang.chuyen_id}
-              bang={bang}
-              dangGui={dangGui}
-              onGui={(vao) =>
-                lam(() => quyetToan(bang.chuyen_id, vao), `Đã quyết toán ${bang.ma_chuyen}`).then(
-                  (xong) => xong && taiDs(),
-                )
-              }
-            />
-          )}
-        </>
-      )}
 
       {anh && (
         <div className="nen-mo" onClick={() => setAnh(null)}>
