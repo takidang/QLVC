@@ -1,5 +1,6 @@
 import { useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import { dangNhap, LoiApi, type NguoiDung } from '../api/auth'
+import { Link } from 'react-router-dom'
 import { NEN } from '../nen'
 
 export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }) {
@@ -83,7 +84,9 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
             </button>
           </div>
 
-          <p className="dn-chan">Đồ án chuyên ngành · Nhóm 8</p>
+          <p className="dn-chan">
+            Khách hàng? <Link to="/tra-cuu">Tra cứu đơn hàng</Link> · Đồ án chuyên ngành · Nhóm 8
+          </p>
         </form>
 
         <section className="dn-hinh" style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}>

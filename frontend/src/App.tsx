@@ -29,6 +29,7 @@ import QuyetToan from './pages/ke-toan/QuyetToan'
 import TamUng from './pages/ke-toan/TamUng'
 import ChuyenCuaToi from './pages/tai-xe/ChuyenCuaToi'
 import ChuyenCuaToiChiTiet from './pages/tai-xe/ChuyenCuaToiChiTiet'
+import TraCuu from './pages/TraCuu'
 
 const TRANG_CHU: Record<VaiTro, string> = {
   QUAN_LY: '/quan-ly',
@@ -205,6 +206,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* UC-28: trang công khai cho khách, không cần đăng nhập */}
+        <Route path="/tra-cuu" element={<TraCuu />} />
         <Route
           path="/dang-nhap"
           element={

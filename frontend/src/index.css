@@ -2033,6 +2033,94 @@ input[type='file']::file-selector-button {
   border-color: var(--chay);
 }
 
+/* ----- Trang tra cứu đơn cho khách (UC-28) ----- */
+.tra-cuu {
+  max-width: 480px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+  font-size: 15px;
+}
+.tra-cuu > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0 28px;
+}
+.tra-cuu > header a {
+  padding: 10px 0;
+  font-size: 13px;
+  color: var(--phu);
+}
+.tc-khung {
+  margin-bottom: 16px;
+  padding: 22px 20px;
+}
+.tc-khung h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.tc-phu {
+  margin: 6px 0 18px;
+  font-size: 13.5px;
+  color: var(--phu);
+}
+.tc-khung form {
+  display: grid;
+  gap: 14px;
+}
+.tc-khung label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--phu);
+}
+.tc-khung label small {
+  font-size: 12.5px;
+}
+.tc-khung input {
+  padding: 12px 14px;
+  font-size: 16px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+.tc-khung button {
+  min-height: 48px;
+  margin-top: 4px;
+}
+.tc-khung .loi {
+  margin-top: 14px;
+}
+.tc-kq .ma {
+  font-size: 13px;
+}
+.tc-kq h2 {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+  margin: 8px 0 20px;
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.ma-nguyen {
+  white-space: nowrap;
+}
+.tc-kq h2:focus {
+  outline: none;
+}
+.tc-kq h2:focus-visible {
+  outline: 2px solid var(--muc);
+  outline-offset: 4px;
+}
+.tc-kq .lt li {
+  grid-template-columns: 16px 1fr;
+}
+
 /* ----- Màn của Kiệt: 04, 05, 06, 08 ----- */
 
 /* Đầu trang danh mục (06): thấp hơn màn Chuyến, tiêu đề + một dòng phụ, nút chính bên phải */

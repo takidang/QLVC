@@ -119,6 +119,13 @@ Khi có nút đổi bộ màu trong Cài đặt, lựa chọn đã lưu của ng
 - **Lịch trình chuyến:** khối chính đậm khi đang chạy (nhạt khi chờ chạy / đã xong): tuyến, biển số, giờ, lương chuyến, dải đoạn tiến độ (xong trắng, đang tới cam nhạt, thất bại đỏ nhạt), **Điểm kế tiếp** (việc, giờ dự kiến, nơi, địa chỉ, kiện, mã đơn) và nút "Gọi …". Dưới là khối Lấy hàng (quét QR), Bắt đầu / Kết thúc chuyến, rồi lịch trình dạng dòng thời gian (mỗi điểm một thẻ; điểm đã xong thu gọn hai dòng; điểm đang tới viền xanh), cuối cùng là Chi phí.
 - Không làm menu dưới như mockup: tài xế chỉ có một màn, quét mã nằm ngay trong lịch trình.
 
+## Trang tra cứu đơn cho khách (UC-28), đã vào code
+
+- Đường dẫn công khai `/tra-cuu` (không đăng nhập); `?ma=DH-…` điền sẵn mã đơn để điều phối gửi link cho khách. Màn đăng nhập có dòng "Khách hàng? Tra cứu đơn hàng".
+- Một cột tối đa 480 px (khách mở bằng điện thoại): tiêu đề 32 px, ô mã đơn, ô 4 số cuối điện thoại (chỉ nhận chữ số), nút Tra cứu cao 48 px.
+- Kết quả: trạng thái hiện tại bằng **lời cho khách** (vd "Giao chưa thành công, đang chờ giao lại", không dùng từ nội bộ "ghép", "thất bại") kèm nhãn ngắn; dưới là các mốc dạng dòng thời gian, mới nhất trên cùng. Có kết quả thì focus chuyển tới dòng trạng thái.
+- Lỗi: 404 hướng dẫn kiểm lại mã trên phiếu và 4 số của người gửi hoặc người nhận; 429 hiện câu của máy chủ.
+
 ## Còn phải quyết khi làm vào code
 
 - Nút đổi bộ màu trong Cài đặt (Tài làm sau).
