@@ -1576,3 +1576,42 @@ tr.hang.mo .gio b {
   width: 100%;
   min-width: 0;
 }
+
+/* Đơn hàng (04): mã đơn đậm như mã chuyến; đơn hủy gạch ngang */
+.ma-don {
+  font-weight: 600;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+tr.huy .ma-don {
+  text-decoration: line-through;
+}
+/* Khung "Đơn thất bại cần xử lý": khung kính như "Cần chú ý" ở màn Chuyến */
+.dm-chu-y {
+  margin-bottom: 18px;
+  padding: 14px 6px 6px;
+  overflow-x: auto;
+}
+.dm-chu-y-dau {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px 10px;
+}
+.dm-chu-y-dau h2 {
+  margin: 0;
+  font-size: 15px;
+}
+.dm-chu-y-dau span {
+  font-size: 13px;
+  color: var(--phu);
+}
+.dm-chu-y table {
+  background: none;
+  border: 0;
+  border-radius: 0;
+}
+.bang-khung td.gio small.tre {
+  font-weight: 600;
+  color: var(--cam);
+}
