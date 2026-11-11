@@ -91,7 +91,7 @@ export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
   }
 
   return (
-    <section className="noi-dung">
+    <section className="noi-dung quyet-toan">
       <h1>Công nợ khách hàng</h1>
       <p className="ghi-chu">
         Mỗi đơn giao xong sinh một khoản phải thu bằng cước. Khách trả thì chọn các khoản của khách
@@ -104,114 +104,130 @@ export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
         </p>
       )}
 
-      <h2>Nợ theo khách</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Khách</th>
-            <th>Số khoản chưa thu</th>
-            <th>Tổng nợ</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {no.map((k) => (
-            <tr key={k.khach_hang_id}>
-              <td>{k.ten_khach}</td>
-              <td>{k.so_khoan}</td>
-              <td>{dong(k.tong_no)}</td>
-              <td>
-                <button className="phu" onClick={() => chonKhach(k)}>
-                  Xem
-                </button>
-              </td>
-            </tr>
-          ))}
-          {no.length === 0 && (
-            <tr>
-              <td colSpan={4} className="trong">
-                Không khách nào còn nợ
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+      <div className="kinh tq-so cn-so">
+        <div>
+          <small>Tổng nợ chưa thu</small>
+          <b>{dong(no.reduce((t, k) => t + k.tong_no, 0))}</b>
+        </div>
+        <div>
+          <small>Số khoản chưa thu</small>
+          <b>{no.reduce((t, k) => t + k.so_khoan, 0)}</b>
+        </div>
+        <div>
+          <small>Khách còn nợ</small>
+          <b>{no.length}</b>
+        </div>
+      </div>
 
-      {khach && (
-        <>
-          <h2>Khoản của {khach.ten_khach}</h2>
-          <div className="hanh-dong">
-            <button className={xem === 'CHUA_THU' ? '' : 'phu'} onClick={() => setXem('CHUA_THU')}>
-              Chưa thu
-            </button>
-            <button className={xem === 'DA_THU' ? '' : 'phu'} onClick={() => setXem('DA_THU')}>
-              Đã thu
-            </button>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                {!chiXem && xem === 'CHUA_THU' && <th></th>}
-                <th>Mã đơn</th>
-                <th>Giao lúc</th>
-                <th>Số tiền</th>
-                {xem === 'DA_THU' && <th>Phiếu thu</th>}
-              </tr>
-            </thead>
-            <tbody>
-              {khoan.map((k) => (
-                <tr key={k.id}>
-                  {!chiXem && xem === 'CHUA_THU' && (
-                    <td>
-                      <input
-                        type="checkbox"
-                        aria-label={`Chọn ${k.ma_don}`}
-                        checked={chon.has(k.id)}
-                        onChange={() => tich(k.id)}
-                      />
-                    </td>
-                  )}
-                  <td className="bien-so">{k.ma_don}</td>
-                  <td>{k.ngay_giao ? ngayGio(k.ngay_giao) : '–'}</td>
-                  <td>{dong(k.so_tien)}</td>
-                  {xem === 'DA_THU' && (
-                    <td>
-                      #{k.phieu_thu_id} · {k.ngay_thu && ngayVN(k.ngay_thu)}
-                    </td>
-                  )}
-                </tr>
+      <div className="qt-luoi">
+        {/* Khách còn nợ bên trái, nhiều nợ trước; bấm để xem các khoản bên phải */}
+        <aside className="kinh qt-ds">
+          <h2>Nợ theo khách</h2>
+          <ul>
+            {[...no]
+              .sort((a, b) => b.tong_no - a.tong_no)
+              .map((k) => (
+                <li key={k.khach_hang_id}>
+                  <button
+                    type="button"
+                    aria-pressed={khach?.khach_hang_id === k.khach_hang_id}
+                    onClick={() => chonKhach(k)}
+                  >
+                    <strong>{k.ten_khach}</strong>
+                    <span className="cn-tien">{dong(k.tong_no)}</span>
+                    <small>{k.so_khoan} khoản chưa thu</small>
+                  </button>
+                </li>
               ))}
-              {khoan.length === 0 && (
-                <tr>
-                  <td colSpan={5} className="trong">
-                    {xem === 'CHUA_THU' ? 'Không còn khoản chưa thu' : 'Chưa thu khoản nào'}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-          {!chiXem && xem === 'CHUA_THU' && khoan.length > 0 && (
-            <div className="o-nhap">
-              <p>
-                Đã chọn <strong>{chon.size}</strong> khoản · <strong>{dong(tongChon)}</strong>
-              </p>
-              <label>
-                Ngày thu
-                <input
-                  type="date"
-                  value={ngay}
-                  max={homNay()}
-                  required
-                  onChange={(e) => setNgay(e.target.value)}
-                />
-              </label>
-              <button disabled={dangGui || !chon.size || !ngay} onClick={() => void danhDau()}>
-                {dangGui ? 'Đang lưu…' : 'Đánh dấu đã thu'}
-              </button>
-            </div>
+            {no.length === 0 && <li className="ghi-chu">Không khách nào còn nợ</li>}
+          </ul>
+        </aside>
+
+        <div className="qt-ct">
+          {!khach && (
+            <p className="kinh qt-trong">Chọn một khách bên trái để xem các khoản phải thu.</p>
           )}
-        </>
-      )}
+          {khach && (
+            <>
+              <section className="kinh qt-khoi">
+                <div className="cn-dau">
+                  <h3>Khoản của {khach.ten_khach}</h3>
+                  <div className="vien-thuoc" role="group" aria-label="Lọc khoản">
+                    <button aria-pressed={xem === 'CHUA_THU'} onClick={() => setXem('CHUA_THU')}>
+                      Chưa thu
+                    </button>
+                    <button aria-pressed={xem === 'DA_THU'} onClick={() => setXem('DA_THU')}>
+                      Đã thu
+                    </button>
+                  </div>
+                </div>
+                <table>
+                  <thead>
+                    <tr>
+                      {!chiXem && xem === 'CHUA_THU' && <th></th>}
+                      <th>Mã đơn</th>
+                      <th>Giao lúc</th>
+                      <th className="so">Số tiền</th>
+                      {xem === 'DA_THU' && <th>Phiếu thu</th>}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {khoan.map((k) => (
+                      <tr key={k.id}>
+                        {!chiXem && xem === 'CHUA_THU' && (
+                          <td>
+                            <input
+                              type="checkbox"
+                              aria-label={`Chọn ${k.ma_don}`}
+                              checked={chon.has(k.id)}
+                              onChange={() => tich(k.id)}
+                            />
+                          </td>
+                        )}
+                        <td className="bien-so">{k.ma_don}</td>
+                        <td>{k.ngay_giao ? ngayGio(k.ngay_giao) : '–'}</td>
+                        <td className="so">{dong(k.so_tien)}</td>
+                        {xem === 'DA_THU' && (
+                          <td>
+                            #{k.phieu_thu_id} · {k.ngay_thu && ngayVN(k.ngay_thu)}
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                    {khoan.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="trong">
+                          {xem === 'CHUA_THU' ? 'Không còn khoản chưa thu' : 'Chưa thu khoản nào'}
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </section>
+              {!chiXem && xem === 'CHUA_THU' && khoan.length > 0 && (
+                <div className="o-nhap">
+                  <p>
+                    Đã chọn <strong>{chon.size}</strong> khoản · <strong>{dong(tongChon)}</strong>
+                  </p>
+                  <label>
+                    Ngày thu
+                    <input
+                      type="date"
+                      value={ngay}
+                      max={homNay()}
+                      required
+                      onChange={(e) => setNgay(e.target.value)}
+                    />
+                  </label>
+                  <button disabled={dangGui || !chon.size || !ngay} onClick={() => void danhDau()}>
+                    {dangGui ? 'Đang lưu…' : 'Đánh dấu đã thu'}
+                  </button>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      </div>
     </section>
   )
 }

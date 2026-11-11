@@ -138,6 +138,13 @@ Khi có nút đổi bộ màu trong Cài đặt, lựa chọn đã lưu của ng
 - **Hiệu suất xe** (UC-34): xe có chạy trong tháng, số chuyến (rỗng), lấp đầy trung bình dạng thanh, km, dầu thực tế / tham khảo, số chuyến chưa quyết toán; dòng cuối đếm xe không chạy.
 - Màu biểu đồ `--bd-lai: #16799F`, `--bd-lo: #C2410C` đã chạy `validate_palette.js` (skill dataviz) trên nền khung sáng: đạt dải sáng, độ đậm màu, mù màu (ΔE 19,4), tương phản. Màu `--chay` của hệ thống bị nhạt quá cho mảng lớn nên biểu đồ dùng biến riêng. Biểu đồ vẽ SVG tay, không thêm thư viện.
 
+## Màn Quyết toán (UC-24) và Công nợ (UC-25), đã vào code
+
+- Chung một bố cục: danh sách bên trái trong khung kính (chuyến chờ / đã quyết toán; khách còn nợ, nhiều nợ trước), bấm để mở chi tiết bên phải; dưới 1000 px danh sách lên trên.
+- **Quyết toán:** đầu chi tiết là mã + tuyến, biển số, tài xế; hàng số tóm tắt (doanh thu, chi phí đã duyệt kèm định mức, lương, lãi kèm dự kiến lúc chốt, chênh lệch tạm ứng); các khối Doanh thu, Chi phí so với định mức, Khoản chi tài xế khai (xét duyệt ngay trong dòng), Kết quả; form quyết toán trong khung riêng. Dòng tổng, dòng lãi trong bảng đậm.
+- **Công nợ:** hàng số tổng nợ chưa thu, số khoản, số khách còn nợ; khung khoản của khách có tab Chưa thu / Đã thu; form đánh dấu đã thu trong khung riêng.
+- Hành vi, quyền (Quản lý chỉ xem), câu lỗi giữ nguyên như Kiệt làm.
+
 ## Còn phải quyết khi làm vào code
 
 - Nút đổi bộ màu trong Cài đặt (Tài làm sau).

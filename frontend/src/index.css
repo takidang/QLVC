@@ -2597,6 +2597,37 @@ rect.chon {
   }
 }
 
+/* ----- Màn Công nợ (UC-25): dùng chung bố cục danh sách trái / chi tiết phải với Quyết toán ----- */
+.cn-so {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 16px;
+}
+.qt-ds h2 {
+  margin: 4px 6px 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.qt-ds .cn-tien {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+/* Cột ô chọn trong bảng chỉ rộng vừa ô */
+.qt-khoi th:first-child:empty,
+.qt-khoi td:has(> input[type='checkbox']) {
+  width: 44px;
+}
+.cn-dau {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.quyet-toan .cn-dau h3 {
+  margin: 0;
+}
+
 /* ----- Màn của Kiệt: 04, 05, 06, 08 ----- */
 
 /* Đầu trang danh mục (06): thấp hơn màn Chuyến, tiêu đề + một dòng phụ, nút chính bên phải */
