@@ -1477,3 +1477,71 @@ tr.hang.mo .gio b {
     box-shadow: none;
   }
 }
+
+/* ----- Màn của Kiệt: 04, 05, 06, 08 ----- */
+
+/* Đầu trang danh mục (06): thấp hơn màn Chuyến, tiêu đề + một dòng phụ, nút chính bên phải */
+.dm-dau {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: flex-end;
+  padding: 14px 0 22px;
+}
+.dm-dau h1 {
+  margin: 0;
+  font-size: 38px;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+.dm-dau p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: var(--phu);
+  font-variant-numeric: tabular-nums;
+}
+.dm-dau > button {
+  margin-left: auto;
+  padding: 9px 20px 9px 16px;
+}
+/* Ô tìm trong thanh công cụ của bảng, bên phải tab lọc */
+.dm-tim {
+  margin-left: auto;
+}
+.dm-tim input {
+  min-width: 220px;
+  border-radius: 99px;
+}
+.han-sap {
+  font-weight: 600;
+  color: var(--cam);
+}
+.bang-khung td.hanh-dong {
+  width: 1%;
+}
+/* Bảng danh mục cuộn ngang trong khung trên màn hẹp, số không xuống dòng */
+.bang-khung.dm {
+  overflow-x: auto;
+}
+.bang-khung.dm td.so {
+  white-space: nowrap;
+}
+/* Lộ trình tuyến: các nút nối bằng mũi tên, điểm nghỉ chữ phụ */
+.lo-trinh {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 0;
+  margin: 0 0 4px;
+  padding: 0;
+  list-style: none;
+}
+.lo-trinh li + li::before {
+  content: '→';
+  margin: 0 6px;
+  color: var(--phu);
+}
+.bang-khung .lo-trinh small {
+  display: inline;
+  font-size: 12px;
+  color: var(--phu);
+}
