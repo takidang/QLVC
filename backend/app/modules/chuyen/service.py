@@ -1,3 +1,4 @@
+import unicodedata
 from dataclasses import dataclass, replace
 from datetime import date, datetime, time, timedelta
 from decimal import Decimal
@@ -258,7 +259,8 @@ def danh_sach(
         loc = loc.where(Chuyen.khoi_hanh_du_kien >= dau, Chuyen.khoi_hanh_du_kien < dau + timedelta(days=1))
     if tuyen_id:
         loc = loc.where(Chuyen.tuyen_id == tuyen_id)
-    if tu_khoa and (tu_khoa := tu_khoa.strip()):  # UC-32-AC15: mã chuyến, biển số, tên tài xế
+    # UC-32-AC15: mã chuyến, biển số, tên tài xế; NFC để "Bình" gõ kiểu tổ hợp (Unikey, macOS) vẫn khớp
+    if tu_khoa and (tu_khoa := unicodedata.normalize("NFC", tu_khoa).strip()):
         loc = loc.where(
             or_(
                 Chuyen.ma_chuyen.icontains(tu_khoa, autoescape=True),

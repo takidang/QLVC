@@ -81,10 +81,10 @@ def _theo_doi(db: Session, c: Chuyen, nguong: int) -> dict:
     if c.trang_thai == "HOAN_THANH":
         co.append("CHUA_QUYET_TOAN")
 
+    gan_nhat = max(tre, key=lambda p: p["thuc_te"], default=None)  # lượt quét gần nhất (BR-73)
     # BR-73: kết thúc dự kiến khi đang chạy = kết thúc dự kiến + max(0, độ trễ lượt quét gần nhất)
     ket_thuc_dang_chay, chong = None, []
     if c.trang_thai == "DANG_CHAY":
-        gan_nhat = max(tre, key=lambda p: p["thuc_te"], default=None)
         ket_thuc_dang_chay = c.ket_thuc_du_kien + timedelta(minutes=max(0, gan_nhat["tre_phut"] if gan_nhat else 0))
         chong = list(
             db.scalars(
@@ -101,7 +101,6 @@ def _theo_doi(db: Session, c: Chuyen, nguong: int) -> dict:
         )
         if chong:
             co.append("CHONG_LICH")
-    gan_nhat = max(tre, key=lambda p: p["thuc_te"], default=None)
     return {
         "diem": diem,
         "tre_phut": gan_nhat["tre_phut"] if gan_nhat else None,  # lượt quét gần nhất, âm là sớm (BR-73)

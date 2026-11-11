@@ -1,3 +1,5 @@
+import unicodedata
+
 # ruff: noqa: F811  (kb là fixture nhập từ test UC-13, dùng làm tham số)
 from datetime import datetime, timedelta
 from decimal import Decimal
@@ -5,7 +7,7 @@ from decimal import Decimal
 import pytest
 from sqlalchemy import select
 
-from app.models import Chuyen, DonHang, Ghep, LichSuTrangThai, LuotQuet, Nut, SuCo, TamUng, Xe
+from app.models import Chuyen, DonHang, Ghep, LichSuTrangThai, LuotQuet, NguoiDung, Nut, SuCo, TaiXe, TamUng, Xe
 from app.modules.chuyen import theo_doi
 from tests.api.test_uc13_ghep_don import NGAY, kb, lap, luc, trang_thai  # noqa: F401 (kb là fixture)
 from tests.api.test_uc15_chot_chuyen import chot, chuyen, lap_c01, sua
@@ -341,3 +343,8 @@ def test_uc32_ac15_tu_khoa(client, db, kb, dang_chay):
     assert tim(ct["ma_chuyen"], ngay=(NGAY + timedelta(days=1)).isoformat()) == set()
     assert tim("%") == set() and tim("_") == set()  # ký tự đại diện không khớp tất cả
     assert c01 in tim("   ")  # chỉ khoảng trắng: bỏ qua bộ lọc
+    # Gõ kiểu tổ hợp (NFD: Unikey tổ hợp, macOS) vẫn khớp tên lưu dạng dựng sẵn (góp ý review #41)
+    nd = db.get(NguoiDung, db.get(TaiXe, kb["an"]).nguoi_dung_id)
+    nd.ho_ten = "Trần Bình"
+    db.commit()
+    assert c01 in tim(unicodedata.normalize("NFD", "bình"))
