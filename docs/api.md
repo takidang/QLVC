@@ -57,7 +57,7 @@
 | POST | `/api/khach-hang` | DP | UC-06 | SĐT chuẩn hóa về `0` + 9–10 số (BR-59) |
 | GET | `/api/khach-hang/{id}` | DP, KT | UC-06 | |
 | PATCH | `/api/khach-hang/{id}` | DP | UC-06 | `trang_thai` `HOAT_DONG`/`NGUNG`; không xóa (BR-60) |
-| GET | `/api/canh-bao` | DP | UC-27 | Giấy tờ sắp hết hạn (BR-21), lượt quét thiếu GPS (BR-43), chuyến trễ làm chồng chuyến kế tiếp, đơn chờ sắp quá hạn (BR-73), sự cố đang mở |
+| GET | `/api/canh-bao` | DP (QL) | UC-27 | Không tham số (tham số lạ → 400). Trả `{cau_hinh: {ngay_bao_truoc, nguong_tre_phut, gio_cho_ghep}, giay_to, chuyen_tre, su_co_mo, don_sap_qua_han, thieu_gps, so_viec}`. `giay_to` `[{doi_tuong: XE\|TAI_XE, id, ten, loai: DANG_KIEM\|BAO_HIEM\|GPLX, han, con_ngay, het_han}]`: xe, tài xế `HOAT_DONG` có hạn ≤ hôm nay + CFG-02 (BR-21), hạn gần trước. `chuyen_tre` `[{chuyen_id, ma_chuyen, bien_so, ten_tai_xe, tre_phut, ket_thuc_dang_chay, chong}]`: chuyến `DANG_CHAY` có cờ `TRE` hoặc `CHONG_LICH` (cách tính UC-32, BR-73). `su_co_mo` `[{su_co_id, chuyen_id, ma_chuyen, bien_so, ten_tai_xe, loai, ghi_chu, luc}]`, cũ trước. `don_sap_qua_han` `[{don_id, ma_don, ten_khach, tinh_lay, tinh_giao, han_giao, con_phut, qua_han}]`: đơn `CHO_GHEP` còn dưới CFG-10 giờ tới hạn (gồm đã quá hạn). `thieu_gps` `[{chuyen_id, ma_chuyen, ten_tai_xe, so_luot, luc_gan_nhat}]`: lượt quét thiếu GPS (BR-43) của chuyến đang chạy hoặc kết thúc trong 24 giờ |
 
 ### 2.3 Đơn hàng
 
