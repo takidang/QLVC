@@ -87,7 +87,7 @@ export default function BanDoNgay({ ds, ten }: { ds: Chuyen[]; ten: Record<strin
               key={d.id}
               positions={d.nut.map((n) => n.vt)}
               pathOptions={{
-                className: `bd-tuyen ${d.chuyen.some((c) => c.theo_doi?.co.includes('TRE')) ? 'tre' : LOP[d.nong.trang_thai]}`,
+                className: `bd-tuyen ${d.chuyen.some((c) => c.trang_thai === 'DANG_CHAY' && c.theo_doi?.co.includes('TRE')) ? 'tre' : LOP[d.nong.trang_thai]}`,
               }}
             >
               <Tooltip sticky>

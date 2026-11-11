@@ -1461,6 +1461,305 @@ tr.hang.mo .gio b {
   }
 }
 
+/* ----- Màn Chi tiết chuyến (03) ----- */
+.ct-ve {
+  font-size: 13px;
+  color: var(--phu);
+}
+.ct-dau {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin: 10px 0 22px;
+}
+.chi-tiet .ct-dau h1 {
+  margin: 0 0 8px;
+  font-size: 46px;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+}
+.ct-nhan {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.ct-nhan .ma {
+  margin-right: 6px;
+  font-size: 14px;
+}
+.ct-nhan .nhan + .nhan {
+  margin-left: 0;
+}
+.ct-hanh-dong {
+  display: flex;
+  gap: 8px;
+}
+.ct-tre {
+  color: var(--cam);
+  font-weight: 600;
+}
+
+/* Khung tổng: hàng trên là ai, khi nào; hàng dưới là các số lớn */
+.ct-tong {
+  margin-bottom: 16px;
+  padding: 18px 22px;
+}
+.ct-ai,
+.ct-so {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px 28px;
+}
+.ct-ai {
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--vien);
+}
+.ct-so {
+  padding-top: 16px;
+}
+.ct-tong small {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12.5px;
+  color: var(--phu);
+}
+.ct-tong strong {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.ct-so b {
+  display: block;
+  font-size: 32px;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.ct-so em {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  font-style: normal;
+  color: var(--phu);
+}
+.ct-thanh-so {
+  display: block;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+.ct-thanh {
+  display: block;
+  height: 5px;
+  margin-top: 8px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--muc) 14%, transparent);
+  border-radius: 99px;
+}
+.ct-thanh i {
+  display: block;
+  height: 100%;
+  background: var(--muc);
+}
+.ct-thanh.cao i {
+  background: var(--cam);
+}
+
+/* Lưới chính: lịch trình (trái), bản đồ + tiền + sự cố + dòng thời gian (phải) */
+.ct-luoi {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 16px;
+}
+.ct-ben {
+  display: grid;
+  gap: 16px;
+}
+.ct-ben .ban-do {
+  height: 300px;
+  margin: 0;
+}
+.ct-khoi {
+  padding: 14px 18px 16px;
+}
+.chi-tiet .ct-khoi h2 {
+  display: flex;
+  justify-content: space-between;
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.ct-khoi h2 em {
+  font-style: normal;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: var(--phu);
+}
+
+/* Lịch trình dọc: chấm + đường nối; xong đặc mực, đang tới xanh, thất bại đỏ */
+.lt {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.lt li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px 1fr auto;
+  gap: 14px;
+  align-items: start;
+  padding-bottom: 16px;
+}
+.lt li:last-child {
+  padding-bottom: 0;
+}
+.lt li::before {
+  content: '';
+  position: absolute;
+  top: 18px;
+  bottom: -2px;
+  left: 7.5px;
+  width: 1px;
+  background: color-mix(in srgb, var(--muc) 25%, transparent);
+}
+.lt li:last-child::before {
+  display: none;
+}
+.lt i {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  background: rgb(255 255 255 / 80%);
+  border: 1.5px solid color-mix(in srgb, var(--muc) 40%, transparent);
+  border-radius: 50%;
+}
+.lt li.xong i {
+  background: var(--muc);
+  border-color: var(--muc);
+}
+.lt li.toi i {
+  background: #fff;
+  border: 4.5px solid var(--chay);
+}
+.lt li.hong i {
+  background: var(--do);
+  border-color: var(--do);
+}
+.lt li.bo i {
+  border-style: dashed;
+}
+.lt strong {
+  display: block;
+  font-weight: 500;
+}
+.lt li.toi strong {
+  font-weight: 600;
+}
+.lt small {
+  display: block;
+  font-size: 12.5px;
+  color: var(--phu);
+}
+.lt li.hong small {
+  color: var(--do);
+}
+.lt small.ct-tre {
+  color: var(--cam);
+}
+.lt-gio {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.lt-gio span {
+  font-weight: 500;
+}
+
+/* Tiền: nhãn trái, số phải; lãi có đường kẻ trên */
+.ct-tien {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 16px;
+  margin: 0;
+}
+.ct-tien dt {
+  color: var(--phu);
+}
+.ct-tien dd {
+  margin: 0;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.ct-tien .ct-lai {
+  padding-top: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--muc);
+  border-top: 1px solid var(--vien);
+}
+
+/* Dòng thời gian: giờ trái, nội dung phải; mới nhất trên cùng, khung cuộn */
+.dtg {
+  max-height: 320px;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.dtg li {
+  display: grid;
+  grid-template-columns: 116px 1fr;
+  gap: 12px;
+  padding: 7px 0;
+  font-size: 13px;
+  border-top: 1px solid var(--vien);
+}
+.dtg li:first-child {
+  border-top: 0;
+}
+.dtg time {
+  color: var(--phu);
+  font-variant-numeric: tabular-nums;
+}
+.dtg small {
+  display: block;
+  font-size: 12px;
+  color: var(--phu);
+}
+
+.ct-don {
+  margin-bottom: 16px;
+}
+.chi-tiet .ct-don h2 {
+  margin: 0 auto 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+@media (max-width: 1000px) {
+  .ct-luoi {
+    grid-template-columns: 1fr;
+  }
+  .ct-ai,
+  .ct-so {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .chi-tiet .ct-dau h1 {
+    font-size: 34px;
+  }
+}
+@media (max-width: 520px) {
+  .ct-so b {
+    font-size: 24px;
+  }
+  .ct-tong {
+    padding: 16px;
+  }
+}
+
 /* ----- Màn của Kiệt: 04, 05, 06, 08 ----- */
 
 /* Đầu trang danh mục (06): thấp hơn màn Chuyến, tiêu đề + một dòng phụ, nút chính bên phải */

@@ -105,6 +105,14 @@ Khi có nút đổi bộ màu trong Cài đặt, lựa chọn đã lưu của ng
 - Mẫu tham khảo 02 (ngoài repo, `tham-khao-ui/02-bang-chuyen-trong-ngay`): lấy thanh menu trên, tab lọc có số đếm, bảng trong khung, phần đầu có số liệu + nút chính, lịch theo giờ, bản đồ.
 - Biểu đồ doanh thu, nhiên liệu, hiệu suất, vị trí xe: chờ backend, danh sách ở `..\ghi-chu6-11-10-backend-can-them-cho-giao-dien-v2.md` (ngoài repo).
 
+## Màn Chi tiết chuyến (03), đã vào code
+
+- **Đầu trang:** tên tuyến làm tiêu đề lớn (46 px), dưới là mã chuyến · mã tuyến, nhãn trạng thái và các cờ; nút Chốt / Mở chốt / Hủy bên phải.
+- **Khung tổng:** hàng trên Xe (biển số khung viền), Tài xế, Khởi hành, Kết thúc dự kiến (đang trễ thì ghi "Dự kiến xong (đang trễ)" màu cam theo BR-73); hàng dưới Tải trọng và Thể tích (số + thanh 5 px, trên 95% cam), Lấp đầy, Lãi dự kiến (số lớn 32 px).
+- **Lưới hai cột:** trái là **Lịch trình dọc** (chấm: xong đặc mực, đang tới vòng xanh, thất bại đỏ, bỏ nét đứt; giờ ETA, giờ quét, "Trễ 2 giờ 5′" / "Sớm 4′") và **Dòng thời gian** (mới nhất trên, khung cuộn); phải là bản đồ, khối **Tiền** (doanh thu − định mức − lương = lãi dự kiến, tạm ứng, km) và **Sự cố**.
+- **Đơn của chuyến** trong khung bảng, trạng thái đơn dùng nhãn có hình như màn Đơn hàng.
+- Màn Chuyến trong ngày: cờ Trễ chỉ tô cam thanh lịch và đường bản đồ khi chuyến **còn đang chạy**; chuyến đã xong giữ màu trạng thái, nhãn Trễ vẫn ở bảng.
+
 ## Còn phải quyết khi làm vào code
 
 - Nút đổi bộ màu trong Cài đặt (Tài làm sau).

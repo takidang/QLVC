@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { dongSuCo, ketThucSuCo, TEN_CO, type ChuyenChiTiet } from '../../api/chuyen'
+import { dongSuCo, ketThucSuCo, type ChuyenChiTiet } from '../../api/chuyen'
 import { kemMaBr, LoiApi } from '../../api/goi'
 import { Nhan } from '../../nhan'
 
@@ -7,27 +7,20 @@ const dong = (n: number) => `${n.toLocaleString('vi-VN')} đ`
 const lucVN = (iso: string) =>
   new Date(iso).toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' })
 
-// UC-32: cờ, cảnh báo chồng lịch (BR-73), tiền, sự cố, dòng thời gian, kết thúc do sự cố (BR-68).
-// Chỉ có khi trang tải bằng GET chi tiết; kết quả ghép / gỡ / chốt không kèm phần này
-export default function TheoDoiChuyen({
+// UC-32: cảnh báo chồng lịch (BR-73), kết thúc do sự cố (BR-68), tiền, sự cố, dòng thời gian.
+// Chỉ có khi trang tải bằng GET chi tiết (có `tien`); kết quả ghép / gỡ / chốt không kèm phần này.
+// Mỗi phần là một khối riêng để màn chi tiết đặt vào đúng chỗ của bố cục.
+
+export function CanhBaoTheoDoi({
   c,
   onDoi,
 }: {
   c: ChuyenChiTiet
-  onDoi: (c: ChuyenChiTiet | null) => void
+  onDoi: (c: ChuyenChiTiet) => void
 }) {
   if (!c.tien) return null
   return (
     <>
-      {(c.co?.length ?? 0) > 0 && (
-        <p>
-          {c.co!.map((x) => (
-            <Nhan key={x} loai={x}>
-              {TEN_CO[x] ?? x}
-            </Nhan>
-          ))}
-        </p>
-      )}
       {(c.chong?.length ?? 0) > 0 && c.ket_thuc_dang_chay && (
         <p role="alert" className="loi">
           Đang trễ: dự kiến xong {lucVN(c.ket_thuc_dang_chay)}, chồng lên chuyến kế tiếp của xe /
@@ -36,50 +29,87 @@ export default function TheoDoiChuyen({
       )}
       {c.ket_thuc_bat_thuong && <p className="canh-bao">Kết thúc do sự cố: {c.ly_do_ket_thuc}</p>}
       {c.trang_thai === 'DANG_CHAY' && <KetThucSuCo c={c} onDoi={onDoi} />}
+    </>
+  )
+}
 
+// Khối tiền: doanh thu, định mức, lương, lãi dự kiến, tạm ứng (số đã chốt khi chuyến đã chốt)
+export function KhoiTien({ c }: { c: ChuyenChiTiet }) {
+  if (!c.tien) return null
+  return (
+    <section className="kinh ct-khoi">
       <h2>Tiền</h2>
-      <p>
-        Doanh thu dự kiến <strong>{dong(c.tien.doanh_thu)}</strong> · Định mức chi phí{' '}
-        <strong>{dong(c.tien.dinh_muc)}</strong> · Lương tài xế{' '}
-        <strong>{dong(c.tien.luong)}</strong> · Tạm ứng còn hiệu lực{' '}
-        <strong>{dong(c.tien.tam_ung_hieu_luc)}</strong>
-        {c.km_bat_dau !== null && ` · Km ${c.km_bat_dau?.toLocaleString('vi-VN')}`}
-        {c.km_ket_thuc != null && ` → ${c.km_ket_thuc.toLocaleString('vi-VN')}`}
-      </p>
+      <dl className="ct-tien">
+        <dt>Doanh thu dự kiến</dt>
+        <dd>{dong(c.tien.doanh_thu)}</dd>
+        <dt>Định mức chi phí</dt>
+        <dd>− {dong(c.tien.dinh_muc)}</dd>
+        <dt>Lương tài xế</dt>
+        <dd>− {dong(c.tien.luong)}</dd>
+        <dt className="ct-lai">Lãi dự kiến</dt>
+        <dd className={c.canh_bao_lai_am ? 'ct-lai het-han' : 'ct-lai'}>{dong(c.lai_du_kien)}</dd>
+        <dt>Tạm ứng còn hiệu lực</dt>
+        <dd>{dong(c.tien.tam_ung_hieu_luc)}</dd>
+        {c.km_bat_dau != null && (
+          <>
+            <dt>Km đồng hồ</dt>
+            <dd>
+              {c.km_bat_dau.toLocaleString('vi-VN')}
+              {c.km_ket_thuc != null && ` → ${c.km_ket_thuc.toLocaleString('vi-VN')}`}
+            </dd>
+          </>
+        )}
+      </dl>
+    </section>
+  )
+}
 
-      {(c.su_co?.length ?? 0) > 0 && (
-        <>
-          <h2>Sự cố</h2>
-          <ul className="ds-the">
-            {c.su_co!.map((s) => (
-              <li key={s.id} className="the">
-                <div className="the-dau">
-                  <strong>
-                    {s.loai} · {lucVN(s.luc)}
-                  </strong>
-                  <span className={s.trang_thai === 'MO' ? 'nhan do' : 'nhan xam'}>
-                    {s.trang_thai === 'MO' ? 'Đang mở' : 'Đã đóng'}
-                  </span>
-                </div>
-                {s.ghi_chu && <div>{s.ghi_chu}</div>}
-                {s.cach_xu_ly && <div className="ghi-chu">Cách xử lý: {s.cach_xu_ly}</div>}
-                {s.trang_thai === 'MO' && <DongSuCo id={s.id} onXong={() => onDoi(null)} />}
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
-
-      <h2>Dòng thời gian</h2>
-      <ol className="ghi-chu">
-        {(c.dong_thoi_gian ?? []).map((s, i) => (
-          <li key={i}>
-            {lucVN(s.luc)} · {s.noi_dung}
-            {s.nguoi && ` · ${s.nguoi}`}
+export function KhoiSuCo({ c, onDoi }: { c: ChuyenChiTiet; onDoi: () => void }) {
+  if (!c.tien || !c.su_co?.length) return null
+  return (
+    <section className="kinh ct-khoi">
+      <h2>Sự cố</h2>
+      <ul className="ds-the">
+        {c.su_co.map((s) => (
+          <li key={s.id} className="the">
+            <div className="the-dau">
+              <strong>
+                {s.loai} · {lucVN(s.luc)}
+              </strong>
+              <Nhan loai={s.trang_thai === 'MO' ? 'SU_CO' : 'HOAN_THANH'}>
+                {s.trang_thai === 'MO' ? 'Đang mở' : 'Đã đóng'}
+              </Nhan>
+            </div>
+            {s.ghi_chu && <div>{s.ghi_chu}</div>}
+            {s.cach_xu_ly && <div className="ghi-chu">Cách xử lý: {s.cach_xu_ly}</div>}
+            {s.trang_thai === 'MO' && <DongSuCo id={s.id} onXong={onDoi} />}
           </li>
         ))}
+      </ul>
+    </section>
+  )
+}
+
+// Dòng thời gian: mới nhất trên cùng, giờ bên trái
+export function DongThoiGian({ c }: { c: ChuyenChiTiet }) {
+  if (!c.tien) return null
+  const ds = [...(c.dong_thoi_gian ?? [])].reverse()
+  return (
+    <section className="kinh ct-khoi">
+      <h2>Dòng thời gian</h2>
+      <ol className="dtg">
+        {ds.map((s, i) => (
+          <li key={i}>
+            <time>{lucVN(s.luc)}</time>
+            <span>
+              {s.noi_dung}
+              {s.nguoi && <small>{s.nguoi}</small>}
+            </span>
+          </li>
+        ))}
+        {ds.length === 0 && <li className="ghi-chu">Chưa có sự kiện</li>}
       </ol>
-    </>
+    </section>
   )
 }
 

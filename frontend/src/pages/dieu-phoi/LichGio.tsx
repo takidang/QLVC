@@ -53,7 +53,7 @@ export default function LichGio({ ds, ten }: { ds: Chuyen[]; ten: Record<string,
                   <Link
                     key={c.id}
                     to={String(c.id)}
-                    className={`lg-thanh ${LOP[c.trang_thai] ?? 'lap'}${c.theo_doi?.co.includes('TRE') ? ' tre' : ''}`}
+                    className={`lg-thanh ${LOP[c.trang_thai] ?? 'lap'}${c.trang_thai === 'DANG_CHAY' && c.theo_doi?.co.includes('TRE') ? ' tre' : ''}`}
                     style={{ left: pt(di), width: `${((den - di) / (cuoi - dau)) * 100}%` }}
                     title={`${c.ma_chuyen} · ${c.ten_tuyen} · ${gio(di)} → ${gio(den)} · ${c.ten_tai_xe} · ${ten[c.trang_thai] ?? c.trang_thai}`}
                   >

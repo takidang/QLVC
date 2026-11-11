@@ -97,7 +97,7 @@ const cauLoi = (ly_do: LyDo[]) => ly_do.map((v) => kemMaBr(v.thong_diep, v.ma))
 const lopVach = (c: Chuyen) =>
   c.trang_thai === 'HUY'
     ? 'h'
-    : c.theo_doi?.co.includes('TRE')
+    : c.trang_thai === 'DANG_CHAY' && c.theo_doi?.co.includes('TRE')
       ? 't'
       : c.trang_thai === 'DANG_CHAY'
         ? 'c'
