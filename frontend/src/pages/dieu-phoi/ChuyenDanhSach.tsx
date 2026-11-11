@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   danhSachChuyen,
+  phutDoc,
   TEN_CO,
   lapChuyen,
   taiXeKhaDung,
@@ -36,6 +37,13 @@ const TEN_TRANG_THAI: Record<string, string> = {
   HOAN_THANH: 'Hoàn thành',
   DA_QUYET_TOAN: 'Đã quyết toán',
   HUY: 'Hủy',
+}
+// Đoạn của thanh điểm dừng theo trạng thái điểm (UC-32, PR #41)
+const DOAN: Record<string, string | undefined> = {
+  XONG: 'x',
+  THAT_BAI: 'f',
+  DANG_TOI: 'c',
+  CHUA: undefined,
 }
 // Cờ đưa lên khung "Cần chú ý" (Chưa quyết toán là việc của kế toán, không phải việc gấp của điều phối)
 const CO_CHU_Y = ['TRE', 'SU_CO', 'THAT_BAI', 'CHONG_LICH']
@@ -115,6 +123,15 @@ export default function ChuyenDanhSach() {
   const [moForm, setMoForm] = useState(false)
   const [vuaLap, setVuaLap] = useState<Chuyen | null>(null)
   const [lanTai, setLanTai] = useState(0)
+  const [tim, setTim] = useState('')
+  const [tuKhoa, setTuKhoa] = useState('') // giá trị ô tìm sau khi ngừng gõ 300 ms
+  useEffect(() => {
+    const h = setTimeout(() => {
+      setTuKhoa(tim.trim())
+      setTrang(1)
+    }, 300)
+    return () => clearTimeout(h)
+  }, [tim])
   const [viec, setViec] = useState<Viec[]>([])
   useEffect(() => {
     viecHomNay().then(setViec)
@@ -128,8 +145,8 @@ export default function ChuyenDanhSach() {
     let bo = false // yêu cầu cũ về muộn thì bỏ
     danhSachChuyen(
       ngay
-        ? { ngay, so_dong: 100 }
-        : { trang_thai: locMayChu, trang: trangMayChu, so_dong: SO_DONG },
+        ? { ngay, tu_khoa: tuKhoa, so_dong: 100 }
+        : { trang_thai: locMayChu, tu_khoa: tuKhoa, trang: trangMayChu, so_dong: SO_DONG },
     )
       .then((r) => {
         if (bo) return
@@ -144,7 +161,7 @@ export default function ChuyenDanhSach() {
     return () => {
       bo = true
     }
-  }, [ngay, locMayChu, trangMayChu, lanTai])
+  }, [ngay, locMayChu, trangMayChu, tuKhoa, lanTai])
 
   const chonNgay = (v: string) => {
     setNgay(v)
@@ -232,7 +249,14 @@ export default function ChuyenDanhSach() {
                   <Ic ten={nang ? 'canh-bao' : 'dong-ho'} />
                   <span>
                     <strong>
-                      {c.ma_chuyen} · {co.map((x) => TEN_CO[x] ?? x).join(', ')}
+                      {c.ma_chuyen} ·{' '}
+                      {co
+                        .map((x) =>
+                          x === 'TRE' && (c.theo_doi!.tre_phut ?? 0) > 0
+                            ? `Trễ ${phutDoc(c.theo_doi!.tre_phut!)}`
+                            : (TEN_CO[x] ?? x),
+                        )
+                        .join(', ')}
                     </strong>
                     <small>
                       {c.ten_tuyen} ·{' '}
@@ -299,6 +323,14 @@ export default function ChuyenDanhSach() {
             ))}
           </div>
           <div className="loc-ngay">
+            <input
+              type="search"
+              className="o-tim"
+              aria-label="Tìm chuyến"
+              placeholder="Tìm mã chuyến, biển số, tài xế"
+              value={tim}
+              onChange={(e) => setTim(e.target.value)}
+            />
             <input
               type="date"
               aria-label="Ngày khởi hành"
@@ -367,21 +399,17 @@ export default function ChuyenDanhSach() {
                       {td && (
                         <div className="tien-do">
                           <div className="doan">
-                            {Array.from({ length: td.tong }, (_, i) => (
-                              <i
-                                key={i}
-                                className={
-                                  i < td.xong
-                                    ? 'x'
-                                    : i === td.xong && c.trang_thai === 'DANG_CHAY'
-                                      ? 'c'
-                                      : undefined
-                                }
-                              />
-                            ))}
+                            {td.diem
+                              ? td.diem.map((d, i) => <i key={i} className={DOAN[d]} />)
+                              : Array.from({ length: td.tong }, (_, i) => (
+                                  <i key={i} className={i < td.xong ? 'x' : undefined} />
+                                ))}
                           </div>
                           <small>
                             {td.xong} / {td.tong} điểm
+                            {(td.diem?.filter((d) => d === 'THAT_BAI').length ?? 0) > 0 && (
+                              <b> · {td.diem!.filter((d) => d === 'THAT_BAI').length} thất bại</b>
+                            )}
                           </small>
                         </div>
                       )}
@@ -410,7 +438,9 @@ export default function ChuyenDanhSach() {
                           loai={x}
                           title={x === 'CHONG_LICH' ? td.chong.join(', ') : undefined}
                         >
-                          {TEN_CO[x] ?? x}
+                          {x === 'TRE' && (td.tre_phut ?? 0) > 0
+                            ? `Trễ ${phutDoc(td.tre_phut!)}`
+                            : (TEN_CO[x] ?? x)}
                         </Nhan>
                       ))}
                     </div>

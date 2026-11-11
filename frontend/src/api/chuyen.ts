@@ -23,6 +23,11 @@ export type Chuyen = {
     ty_le_lap_day: string
     co: string[]
     chong: string[]
+    // UC-32 mở rộng (PR #41): trạng thái từng điểm theo thứ tự lịch trình, phút trễ lượt quét gần nhất
+    // (âm là sớm), vị trí lượt quét có GPS gần nhất (lat, lng là chuỗi thập phân)
+    diem?: ('XONG' | 'THAT_BAI' | 'DANG_TOI' | 'CHUA')[]
+    tre_phut?: number | null
+    vi_tri?: { lat: string; lng: string; luc: string; nut: string } | null
   } | null
 }
 export type ChuyenVao = {
@@ -51,6 +56,7 @@ export type TaiXeKhaDung = {
 export const danhSachChuyen = (loc: {
   trang_thai?: string
   ngay?: string
+  tu_khoa?: string
   trang?: number
   so_dong?: number
 }) => goi<DanhSach<Chuyen>>(`/api/chuyen?${query(loc)}`)
@@ -137,6 +143,8 @@ export const ketThucSuCo = (id: number, ly_do: string, km_ket_thuc: number | nul
 export const dongSuCo = (id: number, cach_xu_ly: string) =>
   guiJson<SuCo>(`/api/su-co/${id}/dong`, 'POST', { cach_xu_ly })
 // Cờ trên bảng chuyến trong ngày (UC-32)
+// Phút trễ dễ đọc: "25′", "3 giờ 21′"
+export const phutDoc = (n: number) => (n >= 60 ? `${Math.floor(n / 60)} giờ ${n % 60}′` : `${n}′`)
 export const TEN_CO: Record<string, string> = {
   TRE: 'Trễ',
   SU_CO: 'Sự cố',

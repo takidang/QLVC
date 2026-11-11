@@ -23,7 +23,7 @@ const LOP: Record<string, string> = {
 type Duong = { id: number; nut: { ten: string; vt: LatLngTuple }[] }
 
 // Bản đồ tuyến trong ngày: mỗi tuyến có chuyến là một đường nối thẳng các nút (không phải đường đi thật),
-// màu theo trạng thái. Không có vị trí xe: hệ thống chỉ có GPS lúc quét mã, API danh sách chưa trả.
+// màu theo trạng thái. Vị trí xe là GPS của lượt quét gần nhất (theo_doi.vi_tri), không theo dõi liên tục.
 export default function BanDoNgay({ ds, ten }: { ds: Chuyen[]; ten: Record<string, string> }) {
   const [duong, setDuong] = useState<Duong[]>()
   useEffect(() => {
@@ -97,6 +97,29 @@ export default function BanDoNgay({ ds, ten }: { ds: Chuyen[]; ten: Record<strin
               </Tooltip>
             </Polyline>
           ))}
+          {/* Vị trí lúc quét gần nhất của chuyến đang chạy (không theo dõi GPS liên tục) */}
+          {ds
+            .filter((c) => c.trang_thai === 'DANG_CHAY' && c.theo_doi?.vi_tri)
+            .map((c) => {
+              const v = c.theo_doi!.vi_tri!
+              return (
+                <CircleMarker
+                  key={`xe-${c.id}`}
+                  center={[Number(v.lat), Number(v.lng)]}
+                  radius={8}
+                  pathOptions={{ className: 'bd-xe' }}
+                >
+                  <Tooltip direction="top" offset={[0, -8]}>
+                    {c.ma_chuyen} · {c.bien_so} · quét lúc{' '}
+                    {new Date(v.luc).toLocaleTimeString('vi-VN', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}{' '}
+                    ({v.nut})
+                  </Tooltip>
+                </CircleMarker>
+              )
+            })}
           {[...nut].map(([t, vt]) => (
             <CircleMarker key={t} center={vt} radius={5} pathOptions={{ className: 'bd-nut' }}>
               <Tooltip direction="top" offset={[0, -6]}>
@@ -107,7 +130,8 @@ export default function BanDoNgay({ ds, ten }: { ds: Chuyen[]; ten: Record<strin
         </MapContainer>
       )}
       <p className="ghi-chu">
-        Đường nối thẳng các nút của tuyến, màu theo trạng thái chuyến. Chưa có vị trí xe.
+        Đường nối thẳng các nút của tuyến, màu theo trạng thái chuyến. Chấm xanh là vị trí xe lúc
+        quét mã gần nhất (không theo dõi liên tục).
       </p>
     </section>
   )

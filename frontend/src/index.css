@@ -1136,6 +1136,12 @@ p.thanh-cong {
   stroke: var(--cam);
   stroke-width: 5;
 }
+.bd-xe {
+  fill: var(--chay);
+  fill-opacity: 1;
+  stroke: #fff;
+  stroke-width: 3;
+}
 .bd-nut {
   fill: #fff;
   fill-opacity: 1;
@@ -1209,7 +1215,13 @@ tr.hang {
   border-radius: 5px;
 }
 .tien-do {
+  min-width: 128px;
+}
+.tien-do .doan {
   width: 128px;
+}
+.tien-do small {
+  white-space: nowrap;
 }
 .tien-do small {
   margin-top: 5px;
@@ -1231,6 +1243,17 @@ tr.hang {
 }
 .doan i.c {
   background: var(--chay);
+}
+.doan i.f {
+  background: var(--do);
+}
+.tien-do small b {
+  font-weight: 500;
+  color: var(--do);
+}
+.loc-ngay .o-tim {
+  width: 250px;
+  border-radius: 99px;
 }
 .day {
   display: flex;
