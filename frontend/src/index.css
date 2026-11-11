@@ -3151,6 +3151,87 @@ rect.chon {
   }
 }
 
+/* ----- Khối đầu màn Chuyến "điện ảnh" (impeccable bolder, 12/11) ----- */
+.mo-dau-anh {
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  background:
+    linear-gradient(
+      100deg,
+      color-mix(in srgb, var(--o-liu) 96%, black) 0%,
+      color-mix(in srgb, var(--o-liu) 88%, transparent) 42%,
+      color-mix(in srgb, var(--o-liu) 30%, transparent) 78%,
+      transparent 100%
+    ),
+    var(--anh) 70% 55% / cover no-repeat,
+    var(--o-liu);
+  border: 0;
+  border-radius: 16px;
+}
+.mo-dau-anh .ngay,
+.mo-dau-anh .so-lieu span,
+.mo-dau-trong {
+  color: rgb(255 255 255 / 84%);
+}
+.mo-dau-anh .vach i {
+  background: rgb(255 255 255 / 28%);
+}
+.mo-dau-anh .vach i.x {
+  background: #fff;
+}
+.mo-dau-anh .vach i.c {
+  background: #8fd3ea;
+}
+.mo-dau-anh .vach i.t {
+  background: var(--tren-dam-toi);
+}
+.mo-dau-anh .vach i.h {
+  background: none;
+  border-color: rgb(255 255 255 / 55%);
+}
+.mo-dau-anh .so-lieu button {
+  color: var(--muc);
+  background: #fff;
+  border-color: #fff;
+}
+.mo-dau-anh .so-lieu button:enabled:hover {
+  background: rgb(255 255 255 / 88%);
+}
+.mo-dau-anh :focus-visible {
+  outline-color: #fff;
+}
+.mo-dau-trong {
+  max-width: 46ch;
+  margin: 4px 0 18px;
+  font-size: 15px;
+}
+button.lien-ket {
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none;
+  border: 0;
+}
+button.lien-ket:enabled:hover {
+  background: none;
+}
+/* Nền trang: thêm vệt màu khối nhấn rất nhạt ở góc trên trái cho đỡ phẳng */
+body {
+  background:
+    radial-gradient(
+      1100px 620px at 0% 0%,
+      color-mix(in srgb, var(--o-liu) 16%, transparent) 0%,
+      transparent 60%
+    ),
+    radial-gradient(900px 520px at 80% 6%, var(--sang1) 0%, transparent 62%),
+    radial-gradient(700px 520px at 6% 34%, var(--sang2) 0%, transparent 66%), var(--da);
+  background-attachment: fixed;
+}
+
 /* ----- Màn của Kiệt: 04, 05, 06, 08 ----- */
 
 /* Đầu trang danh mục (06): thấp hơn màn Chuyến, tiêu đề + một dòng phụ, nút chính bên phải */

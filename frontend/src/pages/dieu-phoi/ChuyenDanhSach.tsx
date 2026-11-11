@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useState, type CSSProperties, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   danhSachChuyen,
@@ -19,6 +19,7 @@ import { TEN_LOAI_SU_CO, type LoaiSuCo } from '../../api/suCo'
 import { danhSachTuyen, type Tuyen } from '../../api/tuyen'
 import { Ic, Nhan } from '../../nhan'
 import LichGio from './LichGio'
+import { NEN } from '../../nen'
 import { ThongBao } from '../../thongBao'
 import NumberFlow from '@number-flow/react'
 
@@ -168,6 +169,17 @@ export default function ChuyenDanhSach() {
     return () => clearTimeout(h)
   }, [tim])
   const [viec, setViec] = useState<Viec[]>([])
+  // Ngày khởi hành của chuyến mới nhất (mọi ngày, mới nhất trước) để gợi ý khi ngày đang xem trống
+  const [ganNhat, setGanNhat] = useState('')
+  useEffect(() => {
+    danhSachChuyen({ so_dong: 1 })
+      .then((r) =>
+        setGanNhat(
+          r.du_lieu[0] ? new Date(r.du_lieu[0].khoi_hanh_du_kien).toLocaleDateString('sv-SE') : '',
+        ),
+      )
+      .catch(() => setGanNhat(''))
+  }, [])
   useEffect(() => {
     viecHomNay().then(setViec)
   }, [])
@@ -230,7 +242,12 @@ export default function ChuyenDanhSach() {
           Mỗi cột tự xếp chồng nên không có khoảng trống do cột kia cao hơn */}
       <div className={ngay ? 'dau-luoi' : 'dau-luoi mot-cot'}>
         <div className="dau-cot">
-          <div className="kinh mo-dau">
+          {/* Khối đầu "điện ảnh": ảnh xe tải của màn đăng nhập (cùng ảnh, cùng bộ màu của phiên) phủ màu
+              khối nhấn đậm dần sang trái để chữ trắng đọc được */}
+          <div
+            className="mo-dau mo-dau-anh"
+            style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}
+          >
             <h1>
               {!ngay
                 ? 'Tất cả chuyến'
@@ -253,6 +270,20 @@ export default function ChuyenDanhSach() {
                   />
                 ))}
               </div>
+            )}
+            {ngay && ds && caNgay.length === 0 && (
+              <p className="mo-dau-trong">
+                Chưa có chuyến nào khởi hành ngày này.
+                {ganNhat && ganNhat !== ngay && (
+                  <>
+                    {' '}
+                    Gần nhất có chuyến:{' '}
+                    <button type="button" className="lien-ket" onClick={() => chonNgay(ganNhat)}>
+                      ngày {ngayThang(`${ganNhat}T00:00`)}
+                    </button>
+                  </>
+                )}
+              </p>
             )}
             <div className="so-lieu">
               {caNgay.length > 0 && (
