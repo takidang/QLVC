@@ -262,3 +262,5 @@ Request: `{ "ma_don": "DH-0012", "sdt_4_so_cuoi": "6789" }`
 ```
 
 Không trả GPS, số điện thoại tài xế, cước (BR-59). Sai mã hoặc sai số → 404 với thông báo chung "Không tìm thấy đơn". Quá tần suất → 429.
+
+**UC-28 (đã làm 11/11):** không cần đăng nhập. `ma_don` 1–20 ký tự, bỏ khoảng trắng đầu cuối, không phân biệt hoa thường; `sdt_4_so_cuoi` đúng 4 chữ số, khớp 4 số cuối `sdt_lay` hoặc `sdt_nhan` của đơn; sai dạng / thừa trường → 400. `moc` đầu tiên là `CHO_GHEP` lúc tạo đơn (`tao_luc`), sau đó mỗi lần đổi trạng thái trong lịch sử; **không** trả lý do, người thao tác. Giới hạn: 10 lần **sai** (404) trong 60 giây từ một IP → lần sau 429 `QUA_TAN_SUAT` (kể cả đúng); tra đúng không tính. IP lấy từ kết nối (`request.client`), app không tự đọc `X-Forwarded-For`. **Khi chạy sau proxy (Render)** phải chạy `uvicorn ... --proxy-headers --forwarded-allow-ips="*"` để uvicorn lấy IP thật của khách từ header của proxy; không thì mọi khách chung IP proxy, một người sai 10 lần là khóa tra cứu của tất cả (góp ý Kiệt review #42). Bộ đếm trong bộ nhớ tiến trình (shortcut: một tiến trình uvicorn).
