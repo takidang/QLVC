@@ -128,6 +128,16 @@ Khi có nút đổi bộ màu trong Cài đặt, lựa chọn đã lưu của ng
 - Kết quả: form thu thành một dòng "mã · số cuối · Tra đơn khác"; trạng thái hiện tại là dòng chữ lớn bằng **lời cho khách** (vd "Giao chưa thành công, đang chờ giao lại", không dùng từ nội bộ "ghép", "thất bại"); dưới là các mốc dạng dòng thời gian, mới nhất trên cùng và ghi "Hiện tại". Có kết quả thì focus chuyển tới dòng trạng thái.
 - Lỗi: 404 hướng dẫn kiểm lại mã trên phiếu và 4 số của người gửi hoặc người nhận; 429 hiện câu của máy chủ.
 
+## Trang Tổng quan (Quản lý, Kế toán), đã vào code
+
+- Trang đầu sau đăng nhập của Quản lý và Kế toán (`/quan-ly/tong-quan`, `/ke-toan/tong-quan`, mục đầu menu). Chọn tháng (mặc định tháng này). Chỉ tính chuyến đã quyết toán (UC-26), tháng theo ngày khởi hành.
+- **Hàng số liệu** của tháng: doanh thu (kèm số chuyến), chi phí chuyến, lương tài xế, chi phí cố định xe, lãi (lỗ thì màu cam).
+- **Lưu ý** khi số liệu chưa đủ: số chuyến chạy xong chưa quyết toán, xe chưa nhập chi phí cố định tháng; Kế toán có link tới Quyết toán / Chi phí cố định.
+- **Lãi theo tháng** (6 tháng tới tháng chọn): cột trên mốc 0, lãi đi lên màu `--bd-lai`, lỗ đi xuống màu `--bd-lo`; tháng chọn đậm hơn; rê chuột / Tab / chạm vào cột hiện doanh thu − chi phí − lương − cố định = lãi; có "Xem dạng bảng". Màn hẹp vẽ khung nhỏ hơn để chữ trục đủ to.
+- **Lãi theo xe** của tháng: thanh ngang xếp từ lãi cao xuống, mốc 0 chung.
+- **Hiệu suất xe** (UC-34): xe có chạy trong tháng, số chuyến (rỗng), lấp đầy trung bình dạng thanh, km, dầu thực tế / tham khảo, số chuyến chưa quyết toán; dòng cuối đếm xe không chạy.
+- Màu biểu đồ `--bd-lai: #16799F`, `--bd-lo: #C2410C` đã chạy `validate_palette.js` (skill dataviz) trên nền khung sáng: đạt dải sáng, độ đậm màu, mù màu (ΔE 19,4), tương phản. Màu `--chay` của hệ thống bị nhạt quá cho mảng lớn nên biểu đồ dùng biến riêng. Biểu đồ vẽ SVG tay, không thêm thư viện.
+
 ## Còn phải quyết khi làm vào code
 
 - Nút đổi bộ màu trong Cài đặt (Tài làm sau).

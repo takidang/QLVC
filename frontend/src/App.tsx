@@ -29,6 +29,7 @@ import QuyetToan from './pages/ke-toan/QuyetToan'
 import TamUng from './pages/ke-toan/TamUng'
 import ChuyenCuaToi from './pages/tai-xe/ChuyenCuaToi'
 import ChuyenCuaToiChiTiet from './pages/tai-xe/ChuyenCuaToiChiTiet'
+import TongQuan from './pages/TongQuan'
 import TraCuu from './pages/TraCuu'
 
 const TRANG_CHU: Record<VaiTro, string> = {
@@ -64,12 +65,14 @@ const TRANG_CON: Partial<
     { duong_dan: 'tuyen', ten: 'Tuyến', trang: <TuyenDanhSach />, nhom: true },
   ],
   KE_TOAN: [
+    { duong_dan: 'tong-quan', ten: 'Tổng quan', trang: <TongQuan ketToan /> },
     { duong_dan: 'chi-phi-xe', ten: 'Chi phí cố định xe', trang: <ChiPhiCoDinh /> },
     { duong_dan: 'cong-no', ten: 'Công nợ', trang: <CongNo /> },
     { duong_dan: 'quyet-toan', ten: 'Quyết toán', trang: <QuyetToan /> },
     { duong_dan: 'tam-ung', ten: 'Tạm ứng', trang: <TamUng /> },
   ],
   QUAN_LY: [
+    { duong_dan: 'tong-quan', ten: 'Tổng quan', trang: <TongQuan /> },
     { duong_dan: 'nguoi-dung', ten: 'Người dùng', trang: <NguoiDungDanhSach />, nhom: true },
     { duong_dan: 'bang-gia', ten: 'Bảng giá', trang: <BangGiaDanhSach />, nhom: true },
     { duong_dan: 'cau-hinh', ten: 'Cấu hình', trang: <CauHinh />, nhom: true },
@@ -84,8 +87,13 @@ const TRANG_CON: Partial<
 }
 
 // Vào trang của vai trò thì mở thẳng trang con này thay trang chào
-// (tài xế vào thẳng chuyến của mình, UC-17; điều phối vào bảng chuyến hôm nay)
-const TRANG_DAU: Partial<Record<VaiTro, string>> = { TAI_XE: 'chuyen', DIEU_PHOI: 'chuyen' }
+// (tài xế vào thẳng chuyến của mình, UC-17; điều phối vào bảng chuyến hôm nay; quản lý, kế toán vào Tổng quan)
+const TRANG_DAU: Partial<Record<VaiTro, string>> = {
+  TAI_XE: 'chuyen',
+  DIEU_PHOI: 'chuyen',
+  QUAN_LY: 'tong-quan',
+  KE_TOAN: 'tong-quan',
+}
 
 // Chỉ để điều hướng; quyền thật do máy chủ kiểm (BR-57). Quản lý vào được trang Điều phối.
 const duocVao = (nd: NguoiDung, trang: VaiTro) =>

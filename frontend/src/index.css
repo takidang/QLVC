@@ -2185,6 +2185,302 @@ input[type='file']::file-selector-button {
   grid-template-columns: 16px 1fr;
 }
 
+/* ----- Trang Tổng quan (Quản lý, Kế toán): UC-26 lãi lỗ, UC-34 hiệu suất xe ----- */
+:root {
+  /* Màu biểu đồ lãi / lỗ: đã chạy validate_palette.js (dataviz) trên nền khung sáng, đạt cả mù màu */
+  --bd-lai: #16799f;
+  --bd-lo: #c2410c;
+}
+.tq-dau {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.tong-quan .tq-dau h1 {
+  margin: 0 0 4px;
+  font-size: 46px;
+  letter-spacing: -0.03em;
+}
+.tq-dau .ghi-chu {
+  margin: 0;
+}
+.tq-thang {
+  display: grid;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--phu);
+}
+.tq-thang input {
+  border-radius: 99px;
+}
+.tq-so {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 18px 28px;
+  margin-bottom: 14px;
+  padding: 18px 22px;
+}
+.tq-so small {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12.5px;
+  color: var(--phu);
+}
+.tq-so b {
+  display: block;
+  white-space: nowrap;
+  font-size: 26px;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+.tq-so em {
+  display: block;
+  margin-top: 4px;
+  font-size: 12.5px;
+  font-style: normal;
+  color: var(--phu);
+}
+.tq-am {
+  color: var(--bd-lo);
+}
+.tq-so b.tq-am {
+  font-weight: 400;
+}
+.tq-luu-y {
+  margin: 0 0 16px;
+  padding: 10px 16px 10px 34px;
+  font-size: 13.5px;
+  background: color-mix(in srgb, var(--cam) 8%, #fbfbf9);
+  border-radius: 12px;
+}
+.tq-luu-y li + li {
+  margin-top: 4px;
+}
+.tq-luoi {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.tq-khoi {
+  padding: 16px 20px 18px;
+}
+.tong-quan .tq-khoi h2 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Biểu đồ cột */
+.bd-khung {
+  position: relative;
+}
+.bd-khung svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.bd-luoi {
+  stroke: var(--vien);
+  stroke-width: 1;
+}
+.bd-moc {
+  stroke: color-mix(in srgb, var(--muc) 45%, transparent);
+  stroke-width: 1;
+}
+.bd-truc {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  fill: var(--phu);
+}
+.bd-truc.chon {
+  font-weight: 600;
+  fill: var(--muc);
+}
+.bd-nhan {
+  font-size: 11.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  fill: var(--muc);
+}
+.bd-cham {
+  fill: transparent;
+}
+.bd-cot-nhom {
+  outline: none;
+  cursor: default;
+}
+.bd-cot-nhom:hover .bd-cham,
+.bd-cot-nhom:focus-visible .bd-cham {
+  fill: color-mix(in srgb, var(--muc) 5%, transparent);
+}
+.bd-cot-nhom:focus-visible .bd-cham {
+  stroke: var(--muc);
+  stroke-width: 1.5;
+}
+rect.bd-duong {
+  fill: var(--bd-lai);
+  opacity: 0.75;
+}
+rect.bd-am {
+  fill: var(--bd-lo);
+  opacity: 0.75;
+}
+rect.chon {
+  opacity: 1;
+}
+.bd-goi-y {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  gap: 2px;
+  min-width: 220px;
+  padding: 10px 14px;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  background: #fbfbf9;
+  border: 1px solid var(--vien-dam);
+  border-radius: 12px;
+  pointer-events: none;
+}
+.bd-goi-y.trai {
+  right: auto;
+  left: 56px;
+}
+.bd-nhan.trong {
+  fill: #fff;
+}
+.tq-cuon {
+  overflow-x: auto;
+}
+.bd-goi-y span {
+  color: var(--phu);
+}
+.bd-goi-y b {
+  margin-top: 4px;
+  font-weight: 600;
+}
+.bd-chu-giai {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0 0;
+  font-size: 12.5px;
+  color: var(--phu);
+}
+.bd-chu-giai i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+}
+.bd-chu-giai i.bd-duong,
+.tq-xe i.bd-duong {
+  background: var(--bd-lai);
+}
+.bd-chu-giai i.bd-am,
+.tq-xe i.bd-am {
+  background: var(--bd-lo);
+}
+.bd-chu-giai span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.tq-bang {
+  margin-top: 12px;
+  font-size: 13px;
+}
+.tq-bang summary {
+  color: var(--phu);
+  cursor: pointer;
+}
+.tq-bang table {
+  margin-top: 8px;
+  background: none;
+  border-color: var(--vien);
+}
+
+/* Lãi theo xe: thanh ngang trên một mốc 0 chung */
+.tq-xe {
+  list-style: none;
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+}
+.tq-xe li {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) 76px;
+  gap: 12px;
+  align-items: center;
+}
+.tq-xe-truc {
+  position: relative;
+  height: 14px;
+}
+.tq-xe-truc::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  left: var(--moc);
+  width: 1px;
+  background: color-mix(in srgb, var(--muc) 45%, transparent);
+}
+.tq-xe-truc i {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  min-width: 2px;
+  border-radius: 4px;
+}
+.tq-xe .so small {
+  display: block;
+  font-size: 11.5px;
+  color: var(--phu);
+}
+.tq-hs {
+  background: none;
+  border-color: var(--vien);
+}
+.tq-hs small {
+  font-size: 12px;
+  color: var(--phu);
+}
+@media (max-width: 1000px) {
+  .tq-luoi {
+    grid-template-columns: 1fr;
+  }
+  .tq-so {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .tq-so b {
+    font-size: 21px;
+  }
+  .tong-quan .tq-dau h1 {
+    font-size: 34px;
+  }
+}
+@media (forced-colors: active) {
+  rect.bd-duong,
+  rect.bd-am,
+  .tq-xe-truc i,
+  .bd-chu-giai i {
+    forced-color-adjust: none;
+    fill: CanvasText;
+    background: CanvasText;
+  }
+}
+
 /* ----- Màn của Kiệt: 04, 05, 06, 08 ----- */
 
 /* Đầu trang danh mục (06): thấp hơn màn Chuyến, tiêu đề + một dòng phụ, nút chính bên phải */
