@@ -1545,3 +1545,34 @@ tr.hang.mo .gio b {
   font-size: 12px;
   color: var(--phu);
 }
+/* Thẻ kính chứa form (Kế toán 08): chọn chuyến / xe, số liệu lớn, form nhập */
+.dm-the {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 18px;
+  padding: 20px 22px;
+}
+.dm-the > p {
+  margin: 0;
+}
+.dm-chon {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  align-items: flex-end;
+}
+.dm-chon label {
+  display: grid;
+  gap: 6px;
+  width: min(100%, 420px);
+}
+.dm-so {
+  align-items: center;
+}
+.dm-so .day span {
+  width: 160px;
+}
+.dm-chon select {
+  width: 100%;
+  min-width: 0;
+}
