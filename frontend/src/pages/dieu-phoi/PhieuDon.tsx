@@ -26,7 +26,7 @@ export default function PhieuDon() {
 
   return (
     <section className="noi-dung phieu">
-      <div className="thanh-cong-cu khong-in">
+      <div className="vd-cong-cu khong-in">
         <Link to="../.." relative="path">
           ← Đơn hàng
         </Link>
@@ -39,48 +39,63 @@ export default function PhieuDon() {
       )}
       {!d && !loi && <p className="ghi-chu">Đang tải…</p>}
       {d && (
-        <article className="the phieu-noi-dung">
-          <div className="phieu-dau">
+        <article className="van-don" aria-label={`Phiếu gửi hàng ${d.ma_don}`}>
+          <header className="vd-dau">
+            <span>Quản lý vận tải</span>
+            <span>Phiếu gửi hàng</span>
+          </header>
+          <div className="vd-ma">
             <div>
-              <h1>Phiếu gửi hàng</h1>
-              <p className="phieu-ma">{d.ma_don}</p>
-              <p>
-                Khách: <strong>{d.ten_khach}</strong>
-              </p>
+              <small>Mã đơn</small>
+              <b>{d.ma_don}</b>
+              <small>Khách: {d.ten_khach}</small>
             </div>
-            {qr && <img src={qr} alt={`Mã QR đơn ${d.ma_don}`} width={160} height={160} />}
+            {qr && <img src={qr} alt={`Mã QR đơn ${d.ma_don}`} width={132} height={132} />}
           </div>
-          <dl className="hai-cot">
+          <div className="vd-den">
+            <small>Giao đến</small>
+            <b>{d.tinh_giao}</b>
+          </div>
+          <div className="vd-hai">
+            <section>
+              <small>Lấy hàng · {d.tinh_lay}</small>
+              <p>{d.dia_chi_lay}</p>
+              <p>SĐT {d.sdt_lay}</p>
+              {d.lay_tu && d.lay_den && (
+                <p>
+                  Khung lấy {lucVN(d.lay_tu)} – {lucVN(d.lay_den)}
+                </p>
+              )}
+            </section>
+            <section>
+              <small>Người nhận</small>
+              <p>
+                <strong>{d.nguoi_nhan}</strong>
+              </p>
+              <p>{d.dia_chi_giao}</p>
+              <p>SĐT {d.sdt_nhan}</p>
+            </section>
+          </div>
+          <dl className="vd-hang">
             <div>
-              <dt>Lấy hàng</dt>
-              <dd>
-                {d.dia_chi_lay}, {d.tinh_lay}
-                <br />
-                SĐT {d.sdt_lay}
-                {d.lay_tu && d.lay_den && (
-                  <>
-                    <br />
-                    Khung lấy {lucVN(d.lay_tu)} – {lucVN(d.lay_den)}
-                  </>
-                )}
-              </dd>
+              <dt>Số kiện</dt>
+              <dd>{d.so_kien}</dd>
             </div>
             <div>
-              <dt>Giao hàng</dt>
-              <dd>
-                {d.dia_chi_giao}, {d.tinh_giao}
-                <br />
-                {d.nguoi_nhan} · SĐT {d.sdt_nhan}
-                <br />
-                Hạn giao {lucVN(d.han_giao)}
-              </dd>
+              <dt>Khối lượng</dt>
+              <dd>{Number(d.kg).toLocaleString('vi-VN')} kg</dd>
+            </div>
+            <div>
+              <dt>Thể tích</dt>
+              <dd>{Number(d.m3).toLocaleString('vi-VN')} m³</dd>
             </div>
           </dl>
-          <p>
-            {d.mo_ta && `${d.mo_ta} · `}
-            <strong>{d.so_kien} kiện</strong> · {Number(d.kg).toLocaleString('vi-VN')} kg ·{' '}
-            {Number(d.m3).toLocaleString('vi-VN')} m³
-          </p>
+          <footer className="vd-chan">
+            <span>
+              Hạn giao <strong>{lucVN(d.han_giao)}</strong>
+            </span>
+            {d.mo_ta && <span>{d.mo_ta}</span>}
+          </footer>
         </article>
       )}
     </section>

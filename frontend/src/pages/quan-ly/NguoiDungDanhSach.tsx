@@ -9,6 +9,8 @@ import {
   type TaiKhoan,
   type VaiTroTao,
 } from '../../api/nguoiDung'
+import { Nhan } from '../../nhan'
+import { DauDanhMuc, LocTrangThai, OTim } from '../danh-muc'
 
 const SO_DONG = 20
 const TEN_VAI_TRO: Record<VaiTro, string> = {
@@ -83,37 +85,12 @@ export default function NguoiDungDanhSach() {
   }
   return (
     <section className="noi-dung">
-      <div className="thanh-cong-cu">
-        <h1>Người dùng</h1>
-        <input
-          placeholder="Tìm tên đăng nhập, họ tên"
-          aria-label="Tìm tên đăng nhập, họ tên"
-          value={tim}
-          onChange={(e) => locTrang(setTim)(e.target.value)}
-        />
-        <select
-          aria-label="Lọc vai trò"
-          value={vaiTro}
-          onChange={(e) => locTrang(setVaiTro)(e.target.value)}
-        >
-          <option value="">Mọi vai trò</option>
-          {(Object.keys(TEN_VAI_TRO) as VaiTro[]).map((vt) => (
-            <option key={vt} value={vt}>
-              {TEN_VAI_TRO[vt]}
-            </option>
-          ))}
-        </select>
-        <select
-          aria-label="Lọc trạng thái"
-          value={trangThai}
-          onChange={(e) => locTrang(setTrangThai)(e.target.value)}
-        >
-          <option value="">Mọi trạng thái</option>
-          <option value="HOAT_DONG">Hoạt động</option>
-          <option value="NGUNG">Đã khóa</option>
-        </select>
-        <button onClick={() => setDangSua('moi')}>Thêm người dùng</button>
-      </div>
+      <DauDanhMuc
+        tieuDe="Người dùng"
+        phu={`${ds.tong} tài khoản · tài xế khóa ở mục Tài xế`}
+        nut="Thêm người dùng"
+        onNut={() => setDangSua('moi')}
+      />
 
       {loiTai && (
         <p role="alert" className="loi">
@@ -121,54 +98,91 @@ export default function NguoiDungDanhSach() {
         </p>
       )}
 
-      <table>
-        <thead>
-          <tr>
-            <th>Tên đăng nhập</th>
-            <th>Họ tên</th>
-            <th>Vai trò</th>
-            <th>Trạng thái</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {ds.du_lieu.map((tk) => (
-            <tr key={tk.id} className={tk.trang_thai === 'NGUNG' ? 'mo' : undefined}>
-              <td>
-                {tk.ten_dang_nhap}
-                {tk.id === toiId && ' (bạn)'}
-              </td>
-              <td>{tk.ho_ten}</td>
-              <td>{TEN_VAI_TRO[tk.vai_tro]}</td>
-              <td className={dangKhoaTam(tk) ? 'het-han' : undefined}>
-                {tk.trang_thai === 'HOAT_DONG' ? 'Hoạt động' : 'Đã khóa'}
-                {dangKhoaTam(tk) && ' · khóa tạm do sai mật khẩu'}
-              </td>
-              <td className="hanh-dong">
-                <button className="phu" onClick={() => setDangSua(tk)}>
-                  Sửa
-                </button>
-                <button className="phu" onClick={() => setDatMk(tk)}>
-                  Đặt lại mật khẩu
-                </button>
-                {/* Tài xế khóa ở trang Tài xế (UC-04); không tự khóa chính mình */}
-                {tk.vai_tro !== 'TAI_XE' && tk.id !== toiId && (
-                  <button className="phu" onClick={() => doiTrangThai(tk)}>
-                    {tk.trang_thai === 'HOAT_DONG' ? 'Khóa' : 'Mở khóa'}
-                  </button>
-                )}
-              </td>
-            </tr>
-          ))}
-          {ds.du_lieu.length === 0 && (
+      <div className="kinh bang-khung dm">
+        <div className="cong-cu">
+          <LocTrangThai
+            nhan="Lọc vai trò"
+            chon={vaiTro}
+            ds={[
+              ['', 'Mọi vai trò'],
+              ...(Object.keys(TEN_VAI_TRO) as VaiTro[]).map((vt): [string, string] => [
+                vt,
+                TEN_VAI_TRO[vt],
+              ]),
+            ]}
+            onChon={locTrang(setVaiTro)}
+          />
+          <LocTrangThai
+            chon={trangThai}
+            ds={[
+              ['', 'Tất cả'],
+              ['HOAT_DONG', 'Hoạt động'],
+              ['NGUNG', 'Đã khóa'],
+            ]}
+            onChon={locTrang(setTrangThai)}
+          />
+          <OTim giaTri={tim} goiY="Tìm tên đăng nhập, họ tên" onDoi={locTrang(setTim)} />
+        </div>
+        <table>
+          <thead>
             <tr>
-              <td colSpan={5} className="trong">
-                Chưa có người dùng nào phù hợp
-              </td>
+              <th>Người dùng</th>
+              <th>Vai trò</th>
+              <th>Trạng thái</th>
+              <th>
+                <span className="an-chu">Thao tác</span>
+              </th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ds.du_lieu.map((tk) => (
+              <tr key={tk.id} className={tk.trang_thai === 'NGUNG' ? 'mo' : undefined}>
+                <td>
+                  <span className="tuyen">{tk.ho_ten}</span>
+                  <small>
+                    {tk.ten_dang_nhap}
+                    {tk.id === toiId && ' · bạn'}
+                  </small>
+                </td>
+                <td>{TEN_VAI_TRO[tk.vai_tro]}</td>
+                <td>
+                  {tk.trang_thai === 'HOAT_DONG' ? (
+                    <Nhan loai="HOAN_THANH">Hoạt động</Nhan>
+                  ) : (
+                    <Nhan loai="HUY">Đã khóa</Nhan>
+                  )}
+                  {dangKhoaTam(tk) && (
+                    <Nhan loai="TRE" title="Sai mật khẩu nhiều lần, tự mở sau thời gian khóa">
+                      Khóa tạm
+                    </Nhan>
+                  )}
+                </td>
+                <td className="hanh-dong so">
+                  <button className="phu" onClick={() => setDangSua(tk)}>
+                    Sửa
+                  </button>
+                  <button className="phu" onClick={() => setDatMk(tk)}>
+                    Đặt lại mật khẩu
+                  </button>
+                  {/* Tài xế khóa ở trang Tài xế (UC-04); không tự khóa chính mình */}
+                  {tk.vai_tro !== 'TAI_XE' && tk.id !== toiId && (
+                    <button className="phu" onClick={() => doiTrangThai(tk)}>
+                      {tk.trang_thai === 'HOAT_DONG' ? 'Khóa' : 'Mở khóa'}
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ))}
+            {ds.du_lieu.length === 0 && (
+              <tr>
+                <td colSpan={4} className="trong">
+                  Chưa có người dùng nào phù hợp
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <div className="phan-trang">
         <button className="phu" disabled={trang <= 1} onClick={() => setTrang(trang - 1)}>

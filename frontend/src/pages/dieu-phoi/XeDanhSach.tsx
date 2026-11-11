@@ -1,11 +1,9 @@
 import { useEffect, useState, type FormEvent, type InputHTMLAttributes } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachXe, suaXe, themXe, type Xe } from '../../api/xe'
+import { DauDanhMuc, HanGiayTo, LocTrangThai, NhanHoatDong, OTim } from '../danh-muc'
 
 const SO_DONG = 20
-// Ngày theo giờ máy người dùng (Việt Nam), không theo UTC: 'sv-SE' cho dạng YYYY-MM-DD
-const homNay = () => new Date().toLocaleDateString('sv-SE')
-const ngayVN = (d: string) => d.split('-').reverse().join('/')
 
 type Form = Record<keyof Omit<Xe, 'id' | 'trang_thai'>, string>
 const FORM_TRONG: Form = {
@@ -67,31 +65,12 @@ export default function XeDanhSach() {
   const soTrang = Math.max(1, Math.ceil(ds.tong / SO_DONG))
   return (
     <section className="noi-dung">
-      <div className="thanh-cong-cu">
-        <h1>Xe</h1>
-        <input
-          placeholder="Tìm biển số"
-          aria-label="Tìm biển số"
-          value={tim}
-          onChange={(e) => {
-            setTim(e.target.value)
-            setTrang(1)
-          }}
-        />
-        <select
-          aria-label="Lọc trạng thái"
-          value={trangThai}
-          onChange={(e) => {
-            setTrangThai(e.target.value)
-            setTrang(1)
-          }}
-        >
-          <option value="">Mọi trạng thái</option>
-          <option value="HOAT_DONG">Hoạt động</option>
-          <option value="NGUNG">Ngừng</option>
-        </select>
-        <button onClick={() => setDangSua('moi')}>Thêm xe</button>
-      </div>
+      <DauDanhMuc
+        tieuDe="Xe"
+        phu={`${ds.tong} xe${trangThai === 'NGUNG' ? ' đang ngừng' : trangThai ? ' đang hoạt động' : ''} · giấy tờ sắp hết hạn tô cam`}
+        nut="Thêm xe"
+        onNut={() => setDangSua('moi')}
+      />
 
       {loiTai && (
         <p role="alert" className="loi">
@@ -99,50 +78,75 @@ export default function XeDanhSach() {
         </p>
       )}
 
-      <table>
-        <thead>
-          <tr>
-            <th>Biển số</th>
-            <th className="so">Tải trọng (kg)</th>
-            <th className="so">Thể tích (m³)</th>
-            <th>Hạn đăng kiểm</th>
-            <th>Hạn bảo hiểm</th>
-            <th>Trạng thái</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {ds.du_lieu.map((xe) => (
-            <tr key={xe.id} className={xe.trang_thai === 'NGUNG' ? 'mo' : undefined}>
-              <td className="bien-so">{xe.bien_so}</td>
-              <td className="so">{xe.tai_trong_kg.toLocaleString('vi-VN')}</td>
-              <td className="so">{Number(xe.the_tich_m3).toLocaleString('vi-VN')}</td>
-              {[xe.han_dang_kiem, xe.han_bao_hiem].map((han, i) => (
-                <td key={i} className={han < homNay() ? 'het-han' : undefined}>
-                  {ngayVN(han)}
-                  {han < homNay() && ' (hết hạn)'}
-                </td>
-              ))}
-              <td>{xe.trang_thai === 'HOAT_DONG' ? 'Hoạt động' : 'Ngừng'}</td>
-              <td className="hanh-dong">
-                <button className="phu" onClick={() => setDangSua(xe)}>
-                  Sửa
-                </button>
-                <button className="phu" onClick={() => doiTrangThai(xe)}>
-                  {xe.trang_thai === 'HOAT_DONG' ? 'Ngừng' : 'Hoạt động lại'}
-                </button>
-              </td>
-            </tr>
-          ))}
-          {ds.du_lieu.length === 0 && (
+      <div className="kinh bang-khung dm">
+        <div className="cong-cu">
+          <LocTrangThai
+            chon={trangThai}
+            onChon={(ma) => {
+              setTrangThai(ma)
+              setTrang(1)
+            }}
+          />
+          <OTim
+            giaTri={tim}
+            goiY="Tìm biển số"
+            onDoi={(v) => {
+              setTim(v)
+              setTrang(1)
+            }}
+          />
+        </div>
+        <table>
+          <thead>
             <tr>
-              <td colSpan={7} className="trong">
-                Chưa có xe nào phù hợp
-              </td>
+              <th>Biển số</th>
+              <th className="so">Tải trọng</th>
+              <th className="so">Thể tích</th>
+              <th>Hạn đăng kiểm</th>
+              <th>Hạn bảo hiểm</th>
+              <th>Trạng thái</th>
+              <th>
+                <span className="an-chu">Thao tác</span>
+              </th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ds.du_lieu.map((xe) => (
+              <tr key={xe.id} className={xe.trang_thai === 'NGUNG' ? 'mo' : undefined}>
+                <td>
+                  <span className="bien">{xe.bien_so}</span>
+                </td>
+                <td className="so">{xe.tai_trong_kg.toLocaleString('vi-VN')} kg</td>
+                <td className="so">{Number(xe.the_tich_m3).toLocaleString('vi-VN')} m³</td>
+                <td>
+                  <HanGiayTo han={xe.han_dang_kiem} />
+                </td>
+                <td>
+                  <HanGiayTo han={xe.han_bao_hiem} />
+                </td>
+                <td>
+                  <NhanHoatDong trangThai={xe.trang_thai} />
+                </td>
+                <td className="hanh-dong so">
+                  <button className="phu" onClick={() => setDangSua(xe)}>
+                    Sửa
+                  </button>
+                  <button className="phu" onClick={() => doiTrangThai(xe)}>
+                    {xe.trang_thai === 'HOAT_DONG' ? 'Ngừng' : 'Hoạt động lại'}
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {ds.du_lieu.length === 0 && (
+              <tr>
+                <td colSpan={7} className="trong">
+                  Chưa có xe nào phù hợp
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <div className="phan-trang">
         <button className="phu" disabled={trang <= 1} onClick={() => setTrang(trang - 1)}>

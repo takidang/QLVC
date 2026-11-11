@@ -7,6 +7,8 @@ import {
   type BangGia,
 } from '../../api/bangGia'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
+import { Nhan } from '../../nhan'
+import { DauDanhMuc, OTim } from '../danh-muc'
 
 const SO_DONG = 20
 const ngayVN = (d: string) => d.split('-').reverse().join('/')
@@ -39,23 +41,12 @@ export default function BangGiaDanhSach() {
   const soTrang = Math.max(1, Math.ceil(ds.tong / SO_DONG))
   return (
     <section className="noi-dung">
-      <div className="thanh-cong-cu">
-        <h1>Bảng giá</h1>
-        <input
-          placeholder="Tìm tỉnh"
-          aria-label="Tìm tỉnh"
-          value={tim}
-          onChange={(e) => {
-            setTim(e.target.value)
-            setTrang(1)
-          }}
-        />
-        <button onClick={() => setDangSua('moi')}>Thêm mức giá</button>
-      </div>
-      <p className="ghi-chu">
-        Cước = max(cước tối thiểu, đơn giá/kg × khối lượng tính cước), làm tròn lên (BR-48). Đổi
-        giá: thêm mức mới với ngày hiệu lực mới; đơn đã tạo giữ giá cũ.
-      </p>
+      <DauDanhMuc
+        tieuDe="Bảng giá"
+        phu="Cước = max(cước tối thiểu, đơn giá/kg × khối lượng tính cước), làm tròn lên (BR-48). Đổi giá: thêm mức mới với ngày hiệu lực mới; đơn đã tạo giữ giá cũ."
+        nut="Thêm mức giá"
+        onNut={() => setDangSua('moi')}
+      />
 
       {loiTai && (
         <p role="alert" className="loi">
@@ -63,43 +54,64 @@ export default function BangGiaDanhSach() {
         </p>
       )}
 
-      <table>
-        <thead>
-          <tr>
-            <th>Tỉnh lấy</th>
-            <th>Tỉnh giao</th>
-            <th className="so">Đơn giá (đ/kg)</th>
-            <th className="so">Cước tối thiểu (đ)</th>
-            <th>Hiệu lực từ</th>
-            <th></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {ds.du_lieu.map((bg) => (
-            <tr key={bg.id} className={bg.dang_ap_dung ? undefined : 'mo'}>
-              <td className="bien-so">{bg.tinh_lay}</td>
-              <td className="bien-so">{bg.tinh_giao}</td>
-              <td className="so">{dong(bg.don_gia_kg)}</td>
-              <td className="so">{dong(bg.cuoc_toi_thieu)}</td>
-              <td>{ngayVN(bg.hieu_luc_tu)}</td>
-              <td>{bg.dang_ap_dung && <span className="nhan">Đang áp dụng</span>}</td>
-              <td className="hanh-dong">
-                <button className="phu" onClick={() => setDangSua(bg)}>
-                  Sửa
-                </button>
-              </td>
-            </tr>
-          ))}
-          {ds.du_lieu.length === 0 && (
+      <div className="kinh bang-khung dm">
+        <div className="cong-cu">
+          <span className="ghi-chu">{ds.tong} mức giá</span>
+          <OTim
+            giaTri={tim}
+            goiY="Tìm tỉnh"
+            onDoi={(v) => {
+              setTim(v)
+              setTrang(1)
+            }}
+          />
+        </div>
+        <table>
+          <thead>
             <tr>
-              <td colSpan={7} className="trong">
-                Chưa có mức giá nào
-              </td>
+              <th>Tỉnh lấy → tỉnh giao</th>
+              <th className="so">Đơn giá (đ/kg)</th>
+              <th className="so">Cước tối thiểu (đ)</th>
+              <th>Hiệu lực từ</th>
+              <th>Trạng thái</th>
+              <th>
+                <span className="an-chu">Thao tác</span>
+              </th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ds.du_lieu.map((bg) => (
+              <tr key={bg.id} className={bg.dang_ap_dung ? undefined : 'mo'}>
+                <td className="tuyen">
+                  {bg.tinh_lay} → {bg.tinh_giao}
+                </td>
+                <td className="so">{dong(bg.don_gia_kg)}</td>
+                <td className="so">{dong(bg.cuoc_toi_thieu)}</td>
+                <td>{ngayVN(bg.hieu_luc_tu)}</td>
+                <td>
+                  {bg.dang_ap_dung ? (
+                    <Nhan loai="HOAN_THANH">Đang áp dụng</Nhan>
+                  ) : (
+                    <span className="ghi-chu">Đã thay hoặc chưa tới ngày</span>
+                  )}
+                </td>
+                <td className="hanh-dong so">
+                  <button className="phu" onClick={() => setDangSua(bg)}>
+                    Sửa
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {ds.du_lieu.length === 0 && (
+              <tr>
+                <td colSpan={6} className="trong">
+                  Chưa có mức giá nào
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <div className="phan-trang">
         <button className="phu" disabled={trang <= 1} onClick={() => setTrang(trang - 1)}>

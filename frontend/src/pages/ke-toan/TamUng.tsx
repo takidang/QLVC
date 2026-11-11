@@ -12,6 +12,8 @@ import {
   type TamUngChuyen,
 } from '../../api/tamUng'
 import { ngayGio, TEN_TRANG_THAI } from '../../api/toi'
+import { Ic, Nhan } from '../../nhan'
+import { DauDanhMuc } from '../danh-muc'
 
 // Cấp mới khi chuyến đã chốt / đang chạy (BR-53); sửa, thu hồi tới khi quyết toán (UC-23 quyết định 3)
 const CAP_DUOC = ['DA_CHOT', 'DANG_CHAY']
@@ -98,127 +100,179 @@ export default function TamUng() {
   const capDuoc = tu && CAP_DUOC.includes(tu.trang_thai_chuyen)
   const suaDuoc = tu && SUA_DUOC.includes(tu.trang_thai_chuyen)
 
+  const daDung = tu && tu.dinh_muc > 0 ? Math.min(1, tu.tong_hieu_luc / tu.dinh_muc) : 0
   return (
     <section className="noi-dung">
-      <h1>Tạm ứng chuyến</h1>
-      <p className="ghi-chu">
-        Tổng tạm ứng còn hiệu lực không vượt định mức chi phí đã chốt của chuyến (dầu + cầu đường +
-        bốc xếp, BR-53). Muốn mở chốt hoặc hủy chuyến thì thu hồi trước.
-      </p>
-      <label className="o-nhap">
-        Chuyến
-        <select value={chuyenId} onChange={(e) => chonChuyen(e.target.value)}>
-          <option value="">– Chọn chuyến –</option>
-          {dsChuyen.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.ma_chuyen} · {c.ma_tuyen} · {c.ten_tai_xe} ({TEN_TRANG_THAI[c.trang_thai]})
-            </option>
-          ))}
-        </select>
-      </label>
+      <DauDanhMuc
+        tieuDe="Tạm ứng chuyến"
+        phu="Tổng tạm ứng còn hiệu lực không vượt định mức chi phí đã chốt của chuyến (dầu + cầu đường + bốc xếp, BR-53). Muốn mở chốt hoặc hủy chuyến thì thu hồi trước."
+      />
 
-      {tu && (
-        <>
-          <p>
-            Định mức đã chốt <strong>{dong(tu.dinh_muc)}</strong> · Đã cấp còn hiệu lực{' '}
-            <strong>{dong(tu.tong_hieu_luc)}</strong> · Còn được cấp{' '}
-            <strong>{dong(tu.con_duoc_cap)}</strong>
-          </p>
-          {capDuoc ? (
-            <form className="o-nhap" onSubmit={cap}>
-              <label>
-                Số tiền (đồng)
-                <input
-                  type="number"
-                  min={1}
-                  step={1}
-                  value={soTien}
-                  onChange={(e) => setSoTien(e.target.value)}
-                  required
-                />
-              </label>
-              <label>
-                Hình thức
-                <select value={hinhThuc} onChange={(e) => setHinhThuc(e.target.value as HinhThuc)}>
-                  {Object.entries(TEN_HINH_THUC).map(([ma, ten]) => (
-                    <option key={ma} value={ma}>
-                      {ten}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <button disabled={dangGui}>{dangGui ? 'Đang gửi…' : 'Cấp tạm ứng'}</button>
-            </form>
-          ) : (
-            <p className="ghi-chu">
-              Chuyến {TEN_TRANG_THAI[tu.trang_thai_chuyen]?.toLowerCase()}: không cấp thêm, vẫn sửa
-              hoặc thu hồi được tới khi quyết toán.
-            </p>
+      <div className="kinh dm-the">
+        <div className="dm-chon">
+          <label>
+            Chuyến
+            <select value={chuyenId} onChange={(e) => chonChuyen(e.target.value)}>
+              <option value="">– Chọn chuyến –</option>
+              {dsChuyen.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.ma_chuyen} · {c.ma_tuyen} · {c.ten_tai_xe} ({TEN_TRANG_THAI[c.trang_thai]})
+                </option>
+              ))}
+            </select>
+          </label>
+          {tu && (
+            <Nhan loai={tu.trang_thai_chuyen}>
+              {TEN_TRANG_THAI[tu.trang_thai_chuyen] ?? tu.trang_thai_chuyen}
+            </Nhan>
           )}
-        </>
-      )}
-      {thongBao && <p className="thanh-cong">{thongBao}</p>}
-      {loi && (
-        <p role="alert" className="loi">
-          {loi}
-        </p>
-      )}
+        </div>
+
+        {tu ? (
+          <>
+            <div className="so-lieu dm-so">
+              <div>
+                <b>{dong(tu.dinh_muc)}</b>
+                <span>định mức đã chốt</span>
+              </div>
+              <div>
+                <b>{dong(tu.tong_hieu_luc)}</b>
+                <span>đã cấp còn hiệu lực</span>
+              </div>
+              <div>
+                <b>{dong(tu.con_duoc_cap)}</b>
+                <span>còn được cấp</span>
+              </div>
+              <div
+                className={`day${daDung > 0.95 ? ' cao' : ''}`}
+                title="Đã cấp so với định mức đã chốt"
+              >
+                <span>
+                  <i style={{ width: `${Math.round(daDung * 100)}%` }} />
+                </span>
+                {Math.round(daDung * 100)}%
+              </div>
+            </div>
+            {capDuoc ? (
+              <form className="o-nhap" onSubmit={cap}>
+                <label>
+                  Số tiền (đồng)
+                  <input
+                    type="number"
+                    min={1}
+                    step={1}
+                    value={soTien}
+                    onChange={(e) => setSoTien(e.target.value)}
+                    required
+                  />
+                </label>
+                <label>
+                  Hình thức
+                  <select
+                    value={hinhThuc}
+                    onChange={(e) => setHinhThuc(e.target.value as HinhThuc)}
+                  >
+                    {Object.entries(TEN_HINH_THUC).map(([ma, ten]) => (
+                      <option key={ma} value={ma}>
+                        {ten}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <button disabled={dangGui}>
+                  <Ic ten="cong" />
+                  {dangGui ? 'Đang gửi…' : 'Cấp tạm ứng'}
+                </button>
+              </form>
+            ) : (
+              <p className="ghi-chu">
+                Chuyến {TEN_TRANG_THAI[tu.trang_thai_chuyen]?.toLowerCase()}: không cấp thêm, vẫn
+                sửa hoặc thu hồi được tới khi quyết toán.
+              </p>
+            )}
+          </>
+        ) : (
+          <p className="ghi-chu">
+            Chọn chuyến đã chốt hoặc đang chạy để cấp; chuyến đã về để sửa hoặc thu hồi.
+          </p>
+        )}
+        {thongBao && <p className="thanh-cong">{thongBao}</p>}
+        {loi && (
+          <p role="alert" className="loi">
+            {loi}
+          </p>
+        )}
+      </div>
 
       {tu && (
-        <table>
-          <thead>
-            <tr>
-              <th>Lúc cấp</th>
-              <th>Tài xế</th>
-              <th>Số tiền</th>
-              <th>Hình thức</th>
-              <th>Trạng thái</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {tu.khoan.map((k) =>
-              dangSua === k.id ? (
-                <SuaKhoan
-                  key={k.id}
-                  k={k}
-                  onLuu={(so, ht, lyDo) =>
-                    lam(() => suaTamUng(k.id, so, ht, lyDo), `Đã sửa thành ${dong(so)}`)
-                  }
-                  onThoi={() => setDangSua(null)}
-                  dangGui={dangGui}
-                />
-              ) : (
-                <tr key={k.id}>
-                  <td>{ngayGio(k.tao_luc)}</td>
-                  <td>{k.ten_tai_xe}</td>
-                  <td>{dong(k.so_tien)}</td>
-                  <td>{TEN_HINH_THUC[k.hinh_thuc]}</td>
-                  <td>{k.trang_thai === 'HIEU_LUC' ? 'Hiệu lực' : 'Đã thu hồi'}</td>
-                  <td className="hanh-dong">
-                    {suaDuoc && k.trang_thai === 'HIEU_LUC' && (
-                      <>
-                        <button className="phu" disabled={dangGui} onClick={() => setDangSua(k.id)}>
-                          Sửa
-                        </button>
-                        <button className="phu" disabled={dangGui} onClick={() => thuHoi(k)}>
-                          Thu hồi
-                        </button>
-                      </>
-                    )}
+        <div className="kinh bang-khung dm">
+          <table>
+            <thead>
+              <tr>
+                <th>Lúc cấp</th>
+                <th>Tài xế</th>
+                <th className="so">Số tiền</th>
+                <th>Hình thức</th>
+                <th>Trạng thái</th>
+                <th>
+                  <span className="an-chu">Thao tác</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {tu.khoan.map((k) =>
+                dangSua === k.id ? (
+                  <SuaKhoan
+                    key={k.id}
+                    k={k}
+                    onLuu={(so, ht, lyDo) =>
+                      lam(() => suaTamUng(k.id, so, ht, lyDo), `Đã sửa thành ${dong(so)}`)
+                    }
+                    onThoi={() => setDangSua(null)}
+                    dangGui={dangGui}
+                  />
+                ) : (
+                  <tr key={k.id}>
+                    <td>{ngayGio(k.tao_luc)}</td>
+                    <td>{k.ten_tai_xe}</td>
+                    <td className="so">{dong(k.so_tien)}</td>
+                    <td>{TEN_HINH_THUC[k.hinh_thuc]}</td>
+                    <td>
+                      {k.trang_thai === 'HIEU_LUC' ? (
+                        <Nhan loai="HOAN_THANH">Hiệu lực</Nhan>
+                      ) : (
+                        <Nhan loai="HUY">Đã thu hồi</Nhan>
+                      )}
+                    </td>
+                    <td className="hanh-dong so">
+                      {suaDuoc && k.trang_thai === 'HIEU_LUC' && (
+                        <>
+                          <button
+                            className="phu"
+                            disabled={dangGui}
+                            onClick={() => setDangSua(k.id)}
+                          >
+                            Sửa
+                          </button>
+                          <button className="phu" disabled={dangGui} onClick={() => thuHoi(k)}>
+                            Thu hồi
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ),
+              )}
+              {tu.khoan.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="trong">
+                    Chưa cấp tạm ứng cho chuyến này
                   </td>
                 </tr>
-              ),
-            )}
-            {tu.khoan.length === 0 && (
-              <tr>
-                <td colSpan={6} className="trong">
-                  Chưa cấp tạm ứng cho chuyến này
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
     </section>
   )
