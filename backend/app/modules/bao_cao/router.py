@@ -11,19 +11,21 @@ from app.thoi_gian import hom_nay_vn
 
 router = APIRouter(prefix="/api/bao-cao", tags=["bao-cao"])
 THANG = r"^\d{4}-(0[1-9]|1[0-2])$"
-TRUONG = {"theo", "tu", "den"}
 
 
-def _khong_tham_so_la(request: Request) -> None:
-    la = set(request.query_params.keys()) - TRUONG
-    if la:
-        raise LoiNghiepVu("DU_LIEU_KHONG_HOP_LE", f"Tham số không hợp lệ: {', '.join(sorted(la))}", 400)
+def _chi_nhan(*truong: str):
+    def kiem(request: Request) -> None:
+        la = set(request.query_params.keys()) - set(truong)
+        if la:
+            raise LoiNghiepVu("DU_LIEU_KHONG_HOP_LE", f"Tham số không hợp lệ: {', '.join(sorted(la))}", 400)
+
+    return kiem
 
 
 # Quản lý, Kế toán xem; Điều phối xem theo api.md (UC-26 quyết định 5); Tài xế không (BR-57)
 @router.get(
     "/lai-lo",
-    dependencies=[Depends(can_vai_tro("QUAN_LY", "KE_TOAN", "DIEU_PHOI")), Depends(_khong_tham_so_la)],
+    dependencies=[Depends(can_vai_tro("QUAN_LY", "KE_TOAN", "DIEU_PHOI")), Depends(_chi_nhan("theo", "tu", "den"))],
 )
 def lai_lo(
     db: Annotated[Session, Depends(get_db)],
@@ -33,3 +35,15 @@ def lai_lo(
 ):
     nay = hom_nay_vn().strftime("%Y-%m")
     return service.lai_lo(db, theo, tu or nay, den or tu or nay)
+
+
+# Quản lý, Kế toán xem (api.md); Điều phối, Tài xế không (UC-34 quyết định 5)
+@router.get(
+    "/hieu-suat-xe",
+    dependencies=[Depends(can_vai_tro("QUAN_LY", "KE_TOAN")), Depends(_chi_nhan("thang"))],
+)
+def hieu_suat_xe(
+    db: Annotated[Session, Depends(get_db)],
+    thang: Annotated[str | None, Query(pattern=THANG)] = None,
+):
+    return service.hieu_suat_xe(db, thang or hom_nay_vn().strftime("%Y-%m"))

@@ -1,15 +1,20 @@
-"""UC-26 báo cáo lãi lỗ: chỉ đọc số đã khóa trong QUYET_TOAN (BR-29, 51), không tính lại.
+"""Báo cáo, chỉ đọc.
 
-Theo xe, theo tháng thì trừ chi phí cố định hằng tháng của xe (nghiep-vu.md bảng chỉ số "Lãi xe theo tháng").
+UC-26 lãi lỗ: số đã khóa trong QUYET_TOAN (BR-29, 51), không tính lại; theo xe, theo tháng thì trừ chi phí cố định
+hằng tháng của xe (nghiep-vu.md bảng chỉ số "Lãi xe theo tháng").
+UC-34 hiệu suất xe theo tháng: lấp đầy, chạy rỗng, km, dầu thực tế so với tham khảo.
 """
 
+from collections import defaultdict
 from datetime import datetime
+from decimal import Decimal
 
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
+from app.domain.lich_trinh import ty_le_lap_day
 from app.loi import LoiNghiepVu
-from app.models import ChiPhiCoDinhXe, Chuyen, QuyetToan, Tuyen, Xe
+from app.models import ChiPhi, ChiPhiCoDinhXe, Chuyen, DonHang, Ghep, QuyetToan, Tuyen, Xe
 from app.thoi_gian import GIO_VN
 
 SO_THANG_TOI_DA = 12
@@ -121,3 +126,88 @@ def lai_lo(db: Session, theo: str, tu: str, den: str) -> dict:
         for k in ("so_chuyen", *COT, "lai_chuyen", "chi_phi_co_dinh", "lai"):
             tong[k] += d[k]
     return ket | {"du_lieu": du_lieu, "tong": tong}
+
+
+def hieu_suat_xe(db: Session, thang: str) -> dict:
+    a = _so(thang)
+    # Chuyến đã chạy xong (UC-34 quyết định 1), khởi hành thực tế trong tháng theo giờ VN như UC-26
+    ds = list(
+        db.scalars(
+            select(Chuyen).where(
+                Chuyen.trang_thai.in_(("HOAN_THANH", "DA_QUYET_TOAN")),
+                Chuyen.khoi_hanh_thuc_te >= _dau_thang(a),
+                Chuyen.khoi_hanh_thuc_te < _dau_thang(a + 1),
+            )
+        )
+    )
+    ids = [c.id for c in ds]
+    # Hàng của chuyến như UC-13: ghép còn hiệu lực hoặc đã có kết quả (gồm đơn thất bại); đơn đã gỡ không tính
+    hang = {
+        cid: (kg, m3)
+        for cid, kg, m3 in db.execute(
+            select(Ghep.chuyen_id, func.sum(DonHang.kg), func.sum(DonHang.m3))
+            .join(DonHang, DonHang.id == Ghep.don_hang_id)
+            .where(Ghep.chuyen_id.in_(ids), or_(Ghep.hieu_luc, Ghep.ket_qua.is_not(None)))
+            .group_by(Ghep.chuyen_id)
+        )
+    }
+    lit = dict(
+        db.execute(
+            select(ChiPhi.chuyen_id, func.sum(ChiPhi.so_lit))
+            .where(ChiPhi.chuyen_id.in_(ids), ChiPhi.loai == "DAU", ChiPhi.trang_thai == "DA_DUYET")
+            .group_by(ChiPhi.chuyen_id)
+        ).all()
+    )
+    xe_co_chuyen = {c.xe_id for c in ds}
+    xe = {
+        x.id: x for x in db.scalars(select(Xe).where(or_(Xe.id.in_(xe_co_chuyen), Xe.trang_thai == "HOAT_DONG")))
+    }  # xe hoạt động không chạy vẫn có dòng; xe ngừng chỉ khi có chuyến (quyết định 4)
+
+    theo_xe: dict[int, list[Chuyen]] = defaultdict(list)
+    for c in ds:
+        theo_xe[c.xe_id].append(c)
+    lap_day_moi_chuyen: list[Decimal] = []
+    du_lieu = []
+    for x in sorted(xe.values(), key=lambda x: x.bien_so):
+        cs = theo_xe.get(x.id, [])
+        lap_day = []
+        km = 0
+        thuc_te = Decimal(0)
+        for c in cs:
+            kg, m3 = hang.get(c.id, (Decimal(0), Decimal(0)))
+            lap_day.append(ty_le_lap_day(kg, m3, x.tai_trong_kg, x.the_tich_m3))  # chạy rỗng = 0
+            if c.km_bat_dau is not None and c.km_ket_thuc is not None:  # BR-70: ghi lúc bắt đầu / kết thúc
+                km += c.km_ket_thuc - c.km_bat_dau
+            thuc_te += lit.get(c.id) or 0
+        lap_day_moi_chuyen += lap_day
+        tham_khao = (
+            (Decimal(km) * x.dinh_muc_lit_100km / 100).quantize(Decimal("0.01"))
+            if x.dinh_muc_lit_100km is not None
+            else None
+        )  # như dầu tham khảo của quyết toán (UC-24)
+        du_lieu.append(
+            {
+                "xe_id": x.id,
+                "bien_so": x.bien_so,
+                "so_chuyen": len(cs),
+                "so_chuyen_rong": sum(c.chay_rong for c in cs),
+                "lap_day_tb": round(sum(lap_day) / len(lap_day), 4) if lap_day else None,
+                "km": km,
+                "dau_thuc_te_lit": thuc_te,
+                "dau_tham_khao_lit": tham_khao,
+                "chenh_lech_lit": thuc_te - tham_khao if tham_khao is not None else None,
+                "so_chuyen_chua_quyet_toan": sum(c.trang_thai == "HOAN_THANH" for c in cs),
+            }
+        )
+
+    def cong(k):
+        return sum(d[k] for d in du_lieu)
+
+    tham_khao_tong = [d["dau_tham_khao_lit"] for d in du_lieu if d["dau_tham_khao_lit"] is not None]
+    tong = {k: cong(k) for k in ("so_chuyen", "so_chuyen_rong", "km", "dau_thuc_te_lit", "so_chuyen_chua_quyet_toan")}
+    tong |= {
+        # Trung bình trên mọi chuyến, không phải trung bình của các xe (AC4)
+        "lap_day_tb": round(sum(lap_day_moi_chuyen) / len(lap_day_moi_chuyen), 4) if lap_day_moi_chuyen else None,
+        "dau_tham_khao_lit": sum(tham_khao_tong, Decimal(0)) if tham_khao_tong else None,
+    }
+    return {"thang": thang, "du_lieu": du_lieu, "tong": tong}

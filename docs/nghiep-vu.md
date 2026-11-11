@@ -103,7 +103,7 @@ Mọi con số hệ thống tính ra đều theo bảng này; code viết mỗi 
 | Chênh lệch tạm ứng | Σ tạm ứng `HIEU_LUC` − Σ chi phí đã duyệt; dương: tài xế nộp lại, âm: công ty trả thêm | đồng | BR-55 |
 | Dầu tham khảo | (km kết thúc − km bắt đầu) × `dinh_muc_lit_100km` / 100; chỉ để xem | lít | UC-24, 34 |
 | Lãi xe theo tháng | Σ lãi các chuyến của xe khởi hành trong tháng − chi phí cố định tháng của xe | đồng | UC-26 |
-| Hiệu suất xe theo tháng | % lấp đầy trung bình các chuyến không hủy; số chuyến chạy rỗng; Σ km; Σ lít dầu thực tế so với Σ dầu tham khảo | — | UC-34 |
+| Hiệu suất xe theo tháng | % lấp đầy trung bình các chuyến **đã chạy xong** (`HOAN_THANH`, `DA_QUYET_TOAN`; chuyến chưa chạy chưa có km, dầu – chốt ở UC-34 ngày 11/11); số chuyến chạy rỗng; Σ km; Σ lít dầu thực tế so với Σ dầu tham khảo | — | UC-34 |
 
 Vì ETA phụ thuộc số điểm dừng, mọi thao tác làm đổi danh sách đơn, xe hoặc tài xế đều kiểm lại cả chuyến (BR-67).
 
