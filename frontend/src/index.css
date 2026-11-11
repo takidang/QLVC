@@ -985,6 +985,16 @@ p.thanh-cong {
   display: block;
   font-weight: 500;
 }
+/* Trong lưới đầu màn Chuyến: khung cao suốt cột trái, chữ to hơn một bậc */
+.dau-cot .chu-y a {
+  padding: 13px 20px;
+}
+.dau-cot .chu-y strong {
+  font-size: 15px;
+}
+.dau-cot .chu-y small {
+  font-size: 13px;
+}
 .chu-y small,
 .chu-y p {
   font-size: 12.5px;
@@ -998,8 +1008,8 @@ p.thanh-cong {
 /* Màn Chuyến: hai cột độc lập (trái: tiêu đề, số liệu, lịch xe; phải: Cần chú ý, bản đồ) */
 .dau-luoi {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 420px;
-  gap: 16px 32px;
+  grid-template-columns: minmax(0, 1fr) 460px;
+  gap: 16px;
   align-items: stretch;
   margin-bottom: 16px;
 }
@@ -1031,7 +1041,6 @@ tr.giu-cho {
 }
 .dau-luoi .mo-dau {
   display: block;
-  flex: 1; /* khối số liệu và Cần chú ý cao bằng nhau, mép trên thẳng nhau */
   padding: 18px 22px;
 }
 .dau-luoi .mo-dau h1 {
@@ -1042,7 +1051,7 @@ tr.giu-cho {
 }
 /* Lịch xe theo giờ: trải hết bề rộng dưới hàng số liệu */
 .lich-gio {
-  margin-bottom: 16px;
+  margin-bottom: 0;
   padding: 14px 18px 16px;
 }
 .lich-gio h2 {
@@ -1440,6 +1449,9 @@ input[type='file']::file-selector-button {
   .dau-luoi .chu-y {
     order: 2;
     max-height: 300px;
+  }
+  .dau-luoi .lich-gio {
+    order: 3;
   }
   .mo-dau {
     grid-template-columns: 1fr;

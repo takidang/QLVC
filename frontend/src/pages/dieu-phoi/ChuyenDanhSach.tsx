@@ -320,6 +320,7 @@ export default function ChuyenDanhSach() {
               </button>
             </div>
           </div>
+          {caNgay.length > 0 && <LichGio ds={caNgay} ten={TEN_TRANG_THAI} />}
         </div>
         {ngay && (
           <div className="dau-cot">
@@ -368,7 +369,6 @@ export default function ChuyenDanhSach() {
           </div>
         )}
       </div>
-      {caNgay.length > 0 && <LichGio ds={caNgay} ten={TEN_TRANG_THAI} />}
       <ThongBao
         chu={
           vuaLap
