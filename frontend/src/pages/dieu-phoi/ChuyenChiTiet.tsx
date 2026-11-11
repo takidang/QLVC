@@ -23,6 +23,7 @@ import { TEN_TRANG_THAI_DON, type Don } from '../../api/don'
 import { kemMaBr, LoiApi } from '../../api/goi'
 import { Nhan } from '../../nhan'
 import { CanhBaoTheoDoi, DongThoiGian, KhoiSuCo, KhoiTien } from './TheoDoiChuyen'
+import XepHang from './XepHang'
 
 // Bản đồ (leaflet + css) tải riêng khi mở chi tiết chuyến, không kéo theo vào màn đăng nhập
 const BanDoChuyen = lazy(() => import('./BanDoChuyen'))
@@ -112,14 +113,15 @@ export default function ChuyenChiTiet() {
     }
   }
 
-  async function lam(viec: 'ghep' | 'go' | 'chot' | 'mo-chot' | 'huy') {
+  // `ids`: ghép / gỡ một đơn từ khối Xếp hàng lên xe; bỏ trống thì dùng các ô đã tích trong bảng
+  async function lam(viec: 'ghep' | 'go' | 'chot' | 'mo-chot' | 'huy', ids?: number[]) {
     setLoi('')
     setViPham([])
     setDangGui(true)
     try {
       const goi = {
-        ghep: () => ghepDon(id, chonGhep),
-        go: () => goDon(id, chonGo),
+        ghep: () => ghepDon(id, ids ?? chonGhep),
+        go: () => goDon(id, ids ?? chonGo),
         chot,
         'mo-chot': () => moChotChuyen(id),
         huy: () => huyChuyen(id, lyDoHuy ?? ''),
@@ -324,6 +326,15 @@ export default function ChuyenChiTiet() {
       )}
       <CanhBaoTheoDoi c={c} onDoi={setC} />
 
+      <XepHang
+        c={c}
+        phuHop={phuHop}
+        dangLap={dangLap}
+        dangGui={dangGui}
+        onGhep={(x) => lam('ghep', [x])}
+        onGo={(x) => lam('go', [x])}
+      />
+
       <div className="ct-luoi">
         <div className="ct-ben">
           {/* Lịch trình dạng dòng thời gian dọc: mỗi điểm dừng một dòng */}
@@ -407,19 +418,6 @@ export default function ChuyenChiTiet() {
           )
         }
       />
-      {dangLap && (
-        <BangDon
-          tieu_de={`Đơn chờ ghép phù hợp tuyến (${phuHop.length})`}
-          ds={phuHop}
-          chon={chonGhep}
-          onChon={(x) => doi(chonGhep, setChonGhep, x)}
-          nut={
-            <button disabled={dangGui || chonGhep.length === 0} onClick={() => lam('ghep')}>
-              {dangGui ? 'Đang kiểm…' : `Ghép ${chonGhep.length || ''} đơn đã chọn`}
-            </button>
-          }
-        />
-      )}
     </section>
   )
 }

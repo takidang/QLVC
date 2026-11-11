@@ -2695,6 +2695,234 @@ rect.chon {
   margin: 0;
 }
 
+/* ----- Xếp hàng lên xe (chi tiết chuyến): hình xe minh họa, thùng lấp theo thể tích ----- */
+.xh {
+  margin-bottom: 16px;
+  padding: 16px 20px 18px;
+}
+.xh-hai-cot {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(300px, 2fr);
+  gap: 24px;
+}
+.chi-tiet .xh h2 {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+.xh h2 em {
+  font-style: normal;
+  font-weight: 400;
+  color: var(--phu);
+}
+.xh-xe svg {
+  display: block;
+  width: 100%;
+  max-width: 640px;
+  height: auto;
+}
+.xh-thung {
+  fill: rgb(255 255 255 / 55%);
+  stroke: color-mix(in srgb, var(--muc) 55%, transparent);
+  stroke-width: 1.5;
+}
+.xh-vach {
+  stroke: var(--vien);
+  stroke-dasharray: 3 4;
+}
+/* Các khối đơn: một màu, ba độ đậm xen nhau để tách khối; khe 2 px giữa các khối */
+.xh-o {
+  fill: var(--chay);
+}
+.xh-o.o1 {
+  fill: color-mix(in srgb, var(--chay) 78%, white);
+}
+.xh-o.o2 {
+  fill: color-mix(in srgb, var(--chay) 88%, black);
+}
+.xh-khoi[role='button'] {
+  cursor: pointer;
+  outline: none;
+}
+.xh-khoi[role='button']:hover .xh-o,
+.xh-khoi[role='button']:focus-visible .xh-o {
+  stroke: var(--muc);
+  stroke-width: 2;
+}
+.xh-khoi.chon .xh-o {
+  fill: var(--cam);
+}
+.xh-chu {
+  font-size: 13px;
+  font-weight: 600;
+  fill: #fff;
+}
+.xh-chu.nho {
+  font-size: 11.5px;
+  font-weight: 400;
+}
+.xh-thu {
+  fill: color-mix(in srgb, var(--chay) 18%, transparent);
+  stroke: var(--chay);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 4;
+}
+.xh-thu.qua {
+  fill: color-mix(in srgb, var(--cam) 18%, transparent);
+  stroke: var(--cam);
+}
+.xh-trong {
+  font-size: 13px;
+  fill: var(--phu);
+}
+.xh-dau {
+  fill: rgb(255 255 255 / 70%);
+  stroke: color-mix(in srgb, var(--muc) 55%, transparent);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.xh-kinh {
+  fill: color-mix(in srgb, var(--chay) 18%, white);
+  stroke: color-mix(in srgb, var(--muc) 40%, transparent);
+  stroke-width: 1;
+}
+.xh-gam {
+  stroke: color-mix(in srgb, var(--muc) 55%, transparent);
+  stroke-width: 3;
+  stroke-linecap: round;
+}
+.xh-banh {
+  fill: var(--muc);
+}
+.xh-mam {
+  fill: color-mix(in srgb, var(--muc) 30%, white);
+}
+.xh-thanh {
+  display: grid;
+  gap: 8px;
+  max-width: 640px;
+  margin-top: 10px;
+}
+.xh-hang {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  font-size: 13px;
+}
+.xh-hang > span:first-child {
+  color: var(--phu);
+}
+.xh-ray {
+  position: relative;
+  height: 8px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--muc) 12%, transparent);
+  border-radius: 99px;
+}
+.xh-ray i {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--muc);
+}
+.xh-ray i.thu {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--chay) 0 4px,
+    color-mix(in srgb, var(--chay) 35%, transparent) 4px 8px
+  );
+}
+.xh-hang.qua .xh-ray i.thu {
+  background: var(--cam);
+}
+.xh-hang.qua .so {
+  font-weight: 600;
+  color: var(--cam);
+}
+.xh-bao {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--cam);
+}
+.xh-chon {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  max-width: 640px;
+  margin-top: 10px;
+  padding: 8px 8px 8px 14px;
+  font-size: 13.5px;
+  background: rgb(255 255 255 / 70%);
+  border: 1px solid var(--vien-dam);
+  border-radius: 12px;
+}
+.xh-xe > .ghi-chu {
+  margin: 10px 0 0;
+}
+/* Thẻ đơn chờ ghép */
+.xh-cho ul {
+  list-style: none;
+  display: grid;
+  gap: 8px;
+  max-height: 360px;
+  margin: 0;
+  padding: 0 2px 0 0;
+  overflow-y: auto;
+}
+.xh-cho li:not(.ghi-chu) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 10px 10px 14px;
+  background: rgb(255 255 255 / 60%);
+  border: 1px solid var(--vien);
+  border-radius: 12px;
+}
+.xh-cho li:not(.ghi-chu):hover,
+.xh-cho li:not(.ghi-chu):focus-within {
+  background: rgb(255 255 255 / 92%);
+  border-color: var(--vien-dam);
+}
+.xh-cho li div {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+.xh-cho li small {
+  font-size: 12px;
+  color: var(--phu);
+  font-variant-numeric: tabular-nums;
+}
+.xh-cho li button {
+  flex: none;
+  padding: 7px 14px;
+  font-size: 13px;
+}
+@media (max-width: 1000px) {
+  .xh-hai-cot {
+    grid-template-columns: 1fr;
+  }
+}
+@media (forced-colors: active) {
+  .xh-o,
+  .xh-banh {
+    forced-color-adjust: none;
+    fill: CanvasText;
+  }
+  .xh-thung,
+  .xh-dau {
+    stroke: CanvasText;
+  }
+}
+
 /* ----- Màn của Kiệt: 04, 05, 06, 08 ----- */
 
 /* Đầu trang danh mục (06): thấp hơn màn Chuyến, tiêu đề + một dòng phụ, nút chính bên phải */
