@@ -27,7 +27,7 @@ Một ô tìm duy nhất trả kết quả gộp theo nhóm (chuyến, đơn, xe
 
 ## Ghi chú triển khai
 - File đã đổi: `backend/app/modules/tim_kiem/{router,service}.py` (mới, dùng lại `truy_van_chuyen`, `truy_van_don`, `THAY_DUOC`), `backend/app/main.py` (đăng ký router theo chữ cái), `docs/api.md` mục 2.7.
-- Test đã viết: `backend/tests/api/test_uc36_tim_kiem_chung.py` (16 ca). Thử làm hỏng 10 chỗ (tài xế thấy mọi chuyến, thấy cả LAP/HUY, Kế toán thấy xe và tài xế, bỏ NFC, 6 dòng/nhóm, bỏ chống ký tự đại diện ở 4 nhóm) → test đỏ đúng chỗ.
+- Test đã viết: `backend/tests/api/test_uc36_tim_kiem_chung.py` (16 ca). Thử làm hỏng 9 chỗ (tài xế thấy mọi chuyến, thấy cả LAP/HUY, Kế toán thấy xe và tài xế, bỏ NFC, 6 dòng/nhóm, bỏ chống ký tự đại diện ở 4 nhóm) → test đỏ đúng chỗ.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/api/test_uc36_tim_kiem_chung.py`
 - Lệch đặc tả: không (UC mới, ghi `api.md`). Mỗi nhóm một truy vấn đếm và một truy vấn lấy 5 dòng (10 truy vấn cho Điều phối), đủ cho đội nhỏ.
 
