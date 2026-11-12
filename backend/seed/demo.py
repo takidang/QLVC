@@ -10,6 +10,7 @@ bằng đồng hồ giả (`seed/dong_ho.py`) để có chuyến đã chạy, đ
 import sys
 from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta
+from pathlib import Path
 
 from fastapi.testclient import TestClient
 from sqlalchemy import func, select
@@ -23,8 +24,11 @@ from app.tai_khoan_demo import MAT_KHAU_DEV, tao_tai_khoan_demo
 from app.thoi_gian import GIO_VN
 from seed import dong_ho
 
-JPG = b"\xff\xd8\xff\xe0" + b"0" * 600  # ảnh mẫu tối thiểu (máy chủ chỉ kiểm byte đầu, kích thước)
-PNG = b"\x89PNG\r\n\x1a\n" + b"0" * 300
+# Ảnh mẫu thật nhỏ (seed/anh/, tạo một lần): bấm xem chứng từ khi demo có hình, không phải ô trống
+_ANH = Path(__file__).parent / "anh"
+JPG = (_ANH / "chung_tu.jpg").read_bytes()  # hóa đơn: chi phí, ảnh quét, sự cố
+DONG_HO = (_ANH / "dong_ho.jpg").read_bytes()  # ảnh đồng hồ km lúc bắt đầu / kết thúc
+PNG = (_ANH / "chu_ky.png").read_bytes()  # chữ ký người nhận
 SO_NGAY_TRUOC = 7
 GIO_SOM, GIO_MUON = 7, 18  # hôm nay có chuyến từ T−5h đến T+5h, phải nằm trong một ngày
 
@@ -321,7 +325,7 @@ def chay(m: dict, dm: DanhMuc, ngay: date, kb: KichBan, so: list[int]) -> int:
         tx.post(
             f"/api/toi/chuyen/{cid}/bat-dau",
             data={"km_bat_dau": km0},
-            files={"anh_dong_ho": ("km.jpg", JPG, "image/jpeg")},
+            files={"anh_dong_ho": ("km.jpg", DONG_HO, "image/jpeg")},
         )
     )
     ket = {d: kb.don[i] for i, d in enumerate(don_ids)}
@@ -380,7 +384,7 @@ def chay(m: dict, dm: DanhMuc, ngay: date, kb: KichBan, so: list[int]) -> int:
         tx.post(
             f"/api/toi/chuyen/{cid}/ket-thuc",
             data={"km_ket_thuc": km},
-            files={"anh_dong_ho": ("km.jpg", JPG, "image/jpeg")},
+            files={"anh_dong_ho": ("km.jpg", DONG_HO, "image/jpeg")},
         )
     )
     if kb.den == "HOAN_THANH":
@@ -554,6 +558,25 @@ def danh_dau_da_thu(kt: TestClient, truoc: date) -> None:
         _kiem(kt.post("/api/phai-thu/da-thu", json={"phai_thu_ids": ids[:100], "ngay": truoc.isoformat()}))
 
 
+def ket_thuc_chuyen_treo(dp: TestClient, nay: date) -> int:
+    """Chuyến "đang chạy" của ngày trước (do lần nạp trước để lại) thì Điều phối kết thúc do sự cố, kèm đóng sự cố
+    mở, để bảng chuyến, cảnh báo, thông báo không còn chuyến trễ / sự cố treo từ ngày cũ (BR-68)."""
+    dau = datetime.combine(nay, time(), GIO_VN)
+    ds = _kiem(dp.get("/api/chuyen", params={"trang_thai": "DANG_CHAY", "so_dong": 100}))["du_lieu"]
+    treo = [c for c in ds if datetime.fromisoformat(c["khoi_hanh_du_kien"]) < dau]
+    for c in treo:
+        for s in _kiem(dp.get(f"/api/chuyen/{c['id']}")).get("su_co") or []:
+            if s["trang_thai"] == "MO":
+                _kiem(dp.post(f"/api/su-co/{s['id']}/dong", json={"cach_xu_ly": "Đã xử lý, dữ liệu demo ngày trước"}))
+        # Kết thúc vào giờ kết thúc kế hoạch của chính chuyến (trước 0 giờ hôm nay): xe, tài xế bị coi là bận đến giờ
+        # kết thúc (BR-68), để ở sáng nay thì chồng lên chuyến mới của hôm nay (BR-16, 17)
+        gio_ket = min(datetime.fromisoformat(c["ket_thuc_du_kien"]), dau - timedelta(minutes=1))
+        dong_ho.dat(max(gio_ket, datetime.fromisoformat(c["khoi_hanh_du_kien"])))
+        ly_do = "Dữ liệu demo: kết thúc chuyến của ngày trước khi nạp ngày mới"
+        _kiem(dp.post(f"/api/chuyen/{c['id']}/ket-thuc-su-co", json={"ly_do": ly_do}))
+    return len(treo)
+
+
 # ---------- Lệnh ----------
 
 
@@ -588,13 +611,17 @@ def nap(ngay_moi: bool = False, bay_gio: datetime | None = None) -> str:
         if not ngay_moi:
             tao_danh_muc(m["dp"], _may("quanly"), nay)
         dm = doc_danh_muc(m["dp"])
+        da_ket_thuc = 0
+        if ngay_moi:
+            da_ket_thuc = ket_thuc_chuyen_treo(m["dp"], nay)
         if not ngay_moi:
             for i in range(SO_NGAY_TRUOC, 0, -1):
                 ngay_truoc(m, dm, nay - timedelta(days=i), i, so)
             dong_ho.dat(bay_gio - timedelta(hours=6))
             danh_dau_da_thu(m["kt"], nay - timedelta(days=3))
         hom_nay(m, dm, nay, t, so)
-    return f"Đã nạp dữ liệu demo cho {nay:%d/%m/%Y}" + ("" if ngay_moi else f" và {SO_NGAY_TRUOC} ngày trước")
+    them = f"; đã kết thúc {da_ket_thuc} chuyến đang chạy còn treo của ngày trước" if da_ket_thuc else ""
+    return f"Đã nạp dữ liệu demo cho {nay:%d/%m/%Y}" + (them if ngay_moi else f" và {SO_NGAY_TRUOC} ngày trước")
 
 
 def main(argv: list[str]) -> int:

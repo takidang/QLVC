@@ -38,6 +38,7 @@
 | UC-32-AC13 | `theo_doi.tre_phut`: độ trễ lượt quét gần nhất so ETA kế hoạch (cùng cách tính BR-73), âm là sớm; chưa quét → `null` | API | BR-73 |
 | UC-32-AC14 | `theo_doi.vi_tri`: `{lat, lng, luc, nut}` của lượt quét mới nhất có GPS; lượt thiếu GPS bỏ qua; chưa có → `null`. Chỉ là vị trí lúc quét, không theo dõi liên tục | API | BR-43 |
 | UC-32-AC15 | `GET /api/chuyen?tu_khoa=`: khớp một phần mã chuyến, biển số, tên tài xế, không phân biệt hoa thường; kết hợp được với `ngay`; ký tự `%`, `_` không làm khớp tất cả | API | — |
+| UC-32-AC16 | Bảng ngày có `theo_doi.ket_thuc_dang_chay`: bằng kết thúc dự kiến + độ trễ lượt quét gần nhất (BR-73), cùng giá trị với chi tiết chuyến; chuyến không `DANG_CHAY` → `null`. Thêm 12/11/2026 theo góp ý Kiệt thử giao diện v2 | API | BR-73 |
 
 ## Ghi chú triển khai
 - File đã đổi: `backend/app/modules/chuyen/theo_doi.py` (mới: tiến độ, cờ, trễ, chồng lịch, dòng thời gian, tiền, kết thúc do sự cố, đóng sự cố), `chuyen/router.py` (GET danh sách thêm `theo_doi` khi có `ngay`, GET chi tiết dùng `theo_doi.chi_tiet`, `ket-thuc-su-co`, `router_su_co`), `chuyen/schemas.py`, `chuyen/service.py` (`_dong_don_cua_chuyen` lấy cả ghép đã có kết quả), `app/main.py` (đăng ký `router_su_co`), `frontend/src/api/chuyen.ts`, `frontend/src/pages/dieu-phoi/{ChuyenDanhSach,ChuyenChiTiet,TheoDoiChuyen}.tsx`, `docs/api.md`.
@@ -68,3 +69,4 @@
 | UC-32-AC13 | API | `test_uc32_ac13_tre_phut` | Đạt | 11/11/2026 |
 | UC-32-AC14 | API | `test_uc32_ac14_vi_tri` | Đạt | 11/11/2026 |
 | UC-32-AC15 | API | `test_uc32_ac15_tu_khoa` | Đạt | 11/11/2026 |
+| UC-32-AC16 | API | `test_uc32_ac16_*` (2 ca) | Đạt | 12/11/2026 |
