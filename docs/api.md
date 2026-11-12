@@ -138,6 +138,7 @@ Mọi endpoint ghi tiền đều ghi `NHAT_KY_TIEN` (BR-62).
 | GET | `/api/tep/{id}/link` | DP, KT, TX (của chuyến mình) | — | Link có hạn 5 phút (NFR-SEC-04). **UC-24 đã làm phần ảnh chi phí cho KT, QL** (tệp khác → 403): `{url, het_han}`, link ký HMAC |
 | GET | `/api/tep/{id}/anh?het=&ky=` | (link) | UC-24 | Mở ảnh từ link trên, không cần cookie; hết hạn / sai chữ ký → 403; `nosniff` |
 | POST | `/api/tra-cuu` | CK | UC-28 | **Chi tiết ở mục 3.4** |
+| GET | `/api/thong-bao` | Mọi vai trò | UC-37 | Không tham số (lạ → 400). Trả `{so_luong, thong_bao: [{loai, muc_do, tieu_de, noi_dung, doi_tuong: {loai, id}, luc}]}`, mới trước theo `luc`; tính lại mỗi lần, không lưu. `muc_do`: `KHAN` / `CAN_LAM` / `THONG_TIN`; `doi_tuong.loai`: `CHUYEN` / `DON` / `XE` / `TAI_XE`. `luc` là lúc sự việc xảy ra (giấy tờ: đầu ngày hôm nay), giao diện so với mốc lần mở chuông lưu trên trình duyệt để biết chưa đọc. DP, QL: `GIAY_TO`, `CHUYEN_TRE`, `SU_CO_MO`, `DON_SAP_QUA_HAN`, `THIEU_GPS` (từ UC-27), `DON_THAT_BAI` (đơn sẵn sàng xử lý, UC-22). KT: `CHO_QUYET_TOAN`, `CHI_PHI_CHO_DUYET` (gộp theo chuyến), `TAM_UNG_TREO` – đều của chuyến `HOAN_THANH`. TX (của mình): `CHUYEN_DUOC_GIAO` (`DA_CHOT`, khởi hành hôm nay / ngày mai), `SU_CO_DA_DONG`, `CHI_PHI_DA_XU_LY` (từ chối / duyệt khác số khai, trong 3 ngày, lần xử lý mới nhất) |
 
 ---
 
