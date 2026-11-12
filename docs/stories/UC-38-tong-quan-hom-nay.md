@@ -1,6 +1,6 @@
 # UC-38: Tổng quan hôm nay
 
-- **Trạng thái:** Đang làm – AC1–AC5 đạt, AC6 giao diện chờ làm (Đã duyệt 12/11/2026 – Tài: "ok làm theo kế hoạch", tiêu chí như đề xuất 12/11)
+- **Trạng thái:** Hoàn thành 12/11/2026 – 6/6 AC đạt (Đã duyệt 12/11/2026 – Tài: "ok làm theo kế hoạch", tiêu chí như đề xuất 12/11)
 - **Tác nhân:** Quản lý, Điều phối, Kế toán
 - **Đặc tả:** chưa có trong `docs/use-cases.md` (UC mới, hàng số liệu đầu trang Tổng quan của giao diện v2, mục B1 trong ghi chú của phiên giao diện); `docs/api.md` mục 2.7
 - **Quy tắc nghiệp vụ liên quan:** BR-57, BR-73 (độ trễ), CFG-09
@@ -41,4 +41,4 @@ Số liệu một ngày cho trang đầu: chuyến theo trạng thái, đơn đ�
 | UC-38-AC3 | API | `test_uc38_ac3_*` (2 ca) | Đạt | 12/11/2026 |
 | UC-38-AC4 | API | `test_uc38_ac4_doanh_thu` | Đạt | 12/11/2026 |
 | UC-38-AC5 | API | `test_uc38_ac5_*` (10 ca) | Đạt | 12/11/2026 |
-| UC-38-AC6 | UI | Hàng số liệu đầu trang Tổng quan: phiên giao diện v2 làm | CHƯA KIỂM | |
+| UC-38-AC6 | UI | Khối Hôm nay trang Tổng quan Quản lý, Kế toán: Kiệt thử 12/11, ảnh `docs/test-evidence/UC-38/a-…`, `b-…` (PR #55) | Đạt | 12/11/2026 |

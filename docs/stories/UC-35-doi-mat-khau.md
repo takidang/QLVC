@@ -1,6 +1,6 @@
 # UC-35: Đổi mật khẩu của chính mình
 
-- **Trạng thái:** Đang làm – AC1–AC4 đạt, AC5 giao diện chờ làm (Đã duyệt 12/11/2026 – Tài: "làm UC-35 36 đi")
+- **Trạng thái:** Hoàn thành 12/11/2026 – 5/5 AC đạt (Đã duyệt 12/11/2026 – Tài: "làm UC-35 36 đi")
 - **Tác nhân:** Quản lý, Điều phối, Kế toán, Tài xế
 - **Đặc tả:** chưa có trong `docs/use-cases.md` (UC mới, giao diện v2 "Cài đặt cá nhân"); `docs/api.md` mục 2.1
 - **Quy tắc nghiệp vụ liên quan:** BR-57, NFR-SEC-05, `docs/security-rules.md`
@@ -39,4 +39,4 @@ Người dùng đang đăng nhập tự đổi mật khẩu bằng cách nhập 
 | UC-35-AC2 | API | `test_uc35_ac2_*` (3 ca) | Đạt | 12/11/2026 |
 | UC-35-AC3 | API | `test_uc35_ac3_*` (7 ca, gồm biên 8 ký tự) | Đạt | 12/11/2026 |
 | UC-35-AC4 | API | `test_uc35_ac4_*` (6 ca) | Đạt | 12/11/2026 |
-| UC-35-AC5 | UI | Màn Cài đặt cá nhân: phiên giao diện v2 làm | CHƯA KIỂM | |
+| UC-35-AC5 | UI | Màn Cài đặt cá nhân (menu tài khoản): Kiệt thử 12/11, ảnh `docs/test-evidence/UC-35/a-sai-mat-khau-cu.png` (PR #55) | Đạt | 12/11/2026 |
