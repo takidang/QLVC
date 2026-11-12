@@ -189,7 +189,7 @@ Theo gợi ý video Tài xem: không chuyển sang shadcn/ui (phải thêm Tailw
 - Tài xế: chuyến đang chạy còn điểm chưa xong thì khối "Kết thúc chuyến" bị khóa, ghi "Còn N điểm chưa xong…"; hết điểm mới hiện ô nhập km cuối.
 - Tài xế: Kết thúc chuyến, Chi phí, Sự cố cách nhau 14 px, thẳng mép trái phải với thẻ lịch trình.
 - Nút bị khóa (vd. Duyệt ở Quyết toán khi lệch tiền) dùng nền xám đặc, chữ mờ, không còn chỉ giảm độ trong suốt.
-- Bảng chuyến hiện giờ kết thúc dự kiến mới cho chuyến trễ: chờ backend thêm `theo_doi.ket_thuc_dang_chay`.
+- Bảng chuyến, chuyến đang trễ (`theo_doi.ket_thuc_dang_chay` muộn hơn giờ theo lịch ≥ 1 phút, PR #54): giờ theo lịch gạch ngang màu phụ, giờ xong mới màu cam bên cạnh, vd. "→ ~~13:30~~ 14:10". Chưa có trường thì hiện như cũ.
 
 ## Còn phải quyết khi làm vào code
 

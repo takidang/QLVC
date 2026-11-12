@@ -474,7 +474,14 @@ export default function ChuyenDanhSach() {
             {dong.map((c) => {
               const td = c.theo_doi
               const day = td ? Math.round(Number(td.ty_le_lap_day) * 100) : 0
-              const denKhacNgay = ngayThang(c.ket_thuc_du_kien) !== ngayThang(c.khoi_hanh_du_kien)
+              // Chuyến đang trễ: giờ xong mới (G4), chỉ khi muộn hơn giờ dự kiến ít nhất 1 phút
+              const moi =
+                td?.ket_thuc_dang_chay &&
+                Date.parse(td.ket_thuc_dang_chay) - Date.parse(c.ket_thuc_du_kien) >= 60_000
+                  ? td.ket_thuc_dang_chay
+                  : null
+              const ketThuc = moi ?? c.ket_thuc_du_kien
+              const denKhacNgay = ngayThang(ketThuc) !== ngayThang(c.khoi_hanh_du_kien)
               return (
                 <tr
                   key={c.id}
@@ -485,8 +492,14 @@ export default function ChuyenDanhSach() {
                   <td className="gio">
                     <b>{gio(c.khoi_hanh_du_kien)}</b>
                     <small className={td?.co.includes('TRE') ? 'tre' : undefined}>
-                      {!ngay && `${ngayThang(c.khoi_hanh_du_kien)} `}→ {gio(c.ket_thuc_du_kien)}
-                      {denKhacNgay && ` (${ngayThang(c.ket_thuc_du_kien)})`}
+                      {!ngay && `${ngayThang(c.khoi_hanh_du_kien)} `}→{' '}
+                      {moi && (
+                        <>
+                          <s title="Giờ kết thúc theo lịch">{gio(c.ket_thuc_du_kien)}</s>{' '}
+                        </>
+                      )}
+                      {gio(ketThuc)}
+                      {denKhacNgay && ` (${ngayThang(ketThuc)})`}
                     </small>
                   </td>
                   <td>

@@ -3915,3 +3915,9 @@ tr.huy .ma-don {
     max-width: none;
   }
 }
+
+/* G4: chuyến đang trễ, giờ theo lịch gạch đi, giờ xong mới màu cam */
+.gio small.tre s {
+  font-weight: 400;
+  color: var(--phu);
+}

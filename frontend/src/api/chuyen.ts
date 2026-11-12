@@ -28,6 +28,8 @@ export type Chuyen = {
     diem?: ('XONG' | 'THAT_BAI' | 'DANG_TOI' | 'CHUA')[]
     tre_phut?: number | null
     vi_tri?: { lat: string; lng: string; luc: string; nut: string } | null
+    // PR #54 (BR-73): kết thúc dự kiến + độ trễ lượt quét gần nhất; null khi chuyến không đang chạy
+    ket_thuc_dang_chay?: string | null
   } | null
 }
 export type ChuyenVao = {
