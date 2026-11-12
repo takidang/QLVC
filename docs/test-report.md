@@ -4,15 +4,15 @@
 
 ## Tổng hợp
 
-- **34 story**, **341 tiêu chí** (AC): **331 đạt**, **10 chưa kiểm**, **0 không đạt**.
-- Story hoàn thành: 24/34.
+- **34 story**, **342 tiêu chí** (AC): **337 đạt**, **5 chưa kiểm**, **0 không đạt**.
+- Story hoàn thành: 29/34.
 
 ## Theo loại tiêu chí
 
 | Loại | Số AC | Đạt | Chưa kiểm | Không đạt |
 |---|---|---|---|---|
-| API | 276 | 276 | 0 | 0 |
-| UI | 38 | 28 | 10 | 0 |
+| API | 277 | 277 | 0 | 0 |
+| UI | 38 | 33 | 5 | 0 |
 | Logic | 23 | 23 | 0 | 0 |
 | Dữ liệu | 3 | 3 | 0 | 0 |
 | Tài liệu | 1 | 1 | 0 | 0 |
@@ -47,13 +47,13 @@
 | UC-26 | Báo cáo lãi lỗ theo chuyến / xe / tháng | 8 | 7 | 1 | 0 | Đang làm |
 | UC-27 | Bảng cảnh báo cho Điều phối | 8 | 7 | 1 | 0 | Đang làm |
 | UC-28 | Tra cứu đơn | 7 | 6 | 1 | 0 | Đang làm |
-| UC-32 | Theo dõi chuyến | 15 | 14 | 1 | 0 | Đang làm |
+| UC-32 | Theo dõi chuyến | 16 | 16 | 0 | 0 | Hoàn thành |
 | UC-33 | Báo sự cố | 9 | 9 | 0 | 0 | Hoàn thành |
 | UC-34 | Hiệu suất xe theo tháng | 7 | 6 | 1 | 0 | Đang làm |
-| UC-35 | Đổi mật khẩu của chính mình | 5 | 4 | 1 | 0 | Đang làm |
-| UC-36 | Tìm kiếm chung | 5 | 4 | 1 | 0 | Đang làm |
-| UC-37 | Thông báo theo vai trò | 5 | 4 | 1 | 0 | Đang làm |
-| UC-38 | Tổng quan hôm nay | 6 | 5 | 1 | 0 | Đang làm |
+| UC-35 | Đổi mật khẩu của chính mình | 5 | 5 | 0 | 0 | Hoàn thành |
+| UC-36 | Tìm kiếm chung | 5 | 5 | 0 | 0 | Hoàn thành |
+| UC-37 | Thông báo theo vai trò | 5 | 5 | 0 | 0 | Hoàn thành |
+| UC-38 | Tổng quan hôm nay | 6 | 6 | 0 | 0 | Hoàn thành |
 | DEMO | Dữ liệu mẫu cho buổi demo | 6 | 6 | 0 | 0 | Hoàn thành |
 
 ## Việc còn mở
@@ -64,12 +64,7 @@
 | UC-26-AC8 | UI | Tài làm giao diện, Kiệt thử | CHƯA KIỂM |
 | UC-27-AC8 | UI | Tài nối khung "Cần chú ý", Kiệt thử | CHƯA KIỂM |
 | UC-28-AC7 | UI | Trang tra cứu: phiên giao diện v2 làm | CHƯA KIỂM |
-| UC-32-AC11 | UI | Kiệt thử 10/11, ca a, b, d đạt (b, d thử lại trên PR #34); c, e chưa thử (`docs/test-evidence/UC-32/`) | CHƯA KIỂM (ca c, e) |
 | UC-34-AC7 | UI | Tài làm giao diện, Kiệt thử | CHƯA KIỂM |
-| UC-35-AC5 | UI | Màn Cài đặt cá nhân: phiên giao diện v2 làm | CHƯA KIỂM |
-| UC-36-AC5 | UI | Ô tìm trên thanh đầu: phiên giao diện v2 làm | CHƯA KIỂM |
-| UC-37-AC5 | UI | Chuông trên thanh đầu: phiên giao diện v2 làm | CHƯA KIỂM |
-| UC-38-AC6 | UI | Hàng số liệu đầu trang Tổng quan: phiên giao diện v2 làm | CHƯA KIỂM |
 
 ## Lỗi còn mở
 
