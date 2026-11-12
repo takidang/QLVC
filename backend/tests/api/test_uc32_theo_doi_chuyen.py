@@ -348,3 +348,22 @@ def test_uc32_ac15_tu_khoa(client, db, kb, dang_chay):
     nd.ho_ten = "Trần Bình"
     db.commit()
     assert c01 in tim(unicodedata.normalize("NFD", "bình"))
+
+
+# AC16 – kết thúc dự kiến khi đang chạy có ở bảng ngày (giao diện v2 hiện giờ mới của chuyến trễ)
+def test_uc32_ac16_ket_thuc_dang_chay_o_bang_ngay(client, db, kb, dang_chay):
+    c01 = dang_chay["c01"]
+    ket_thuc_du_kien = db.get(Chuyen, c01).ket_thuc_du_kien
+    assert datetime.fromisoformat(bang(client, c01)["ket_thuc_dang_chay"]) == ket_thuc_du_kien  # chưa trễ
+    quet(db, kb, c01, "d4", "LAY", tre_phut=25, trang_thai_moi="DA_LAY")
+    td = bang(client, c01)
+    assert datetime.fromisoformat(td["ket_thuc_dang_chay"]) == ket_thuc_du_kien + timedelta(minutes=25)
+    assert td["ket_thuc_dang_chay"] == chi_tiet(client, c01)["ket_thuc_dang_chay"]  # cùng cách tính BR-73
+    quet(db, kb, c01, "d4", "GIAO", tre_phut=-4, trang_thai_moi="DA_GIAO")  # lượt gần nhất sớm: không lùi quá kế hoạch
+    assert datetime.fromisoformat(bang(client, c01)["ket_thuc_dang_chay"]) == ket_thuc_du_kien
+
+
+def test_uc32_ac16_khong_dang_chay_la_null(client, db, kb, dang_chay):
+    c01 = dang_chay["c01"]
+    sua(db, Chuyen, c01, trang_thai="HOAN_THANH")
+    assert bang(client, c01)["ket_thuc_dang_chay"] is None

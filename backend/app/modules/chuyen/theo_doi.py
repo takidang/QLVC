@@ -163,6 +163,7 @@ def bang_ngay(db: Session, ds: list[dict]) -> list[dict]:
             "diem": _trang_thai_diem(c, ct, td["diem"]),
             "tre_phut": td["tre_phut"],
             "vi_tri": _vi_tri(db, c, ct),
+            "ket_thuc_dang_chay": td["ket_thuc_dang_chay"],  # BR-73; null khi chuyến không đang chạy
         }
     return ds
 

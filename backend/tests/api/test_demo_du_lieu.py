@@ -1,12 +1,12 @@
 """Story DEMO: lệnh nạp dữ liệu demo (seed/demo.py) trên CSDL test, ngày cố định để kết quả không đổi."""
 
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 
 import pytest
 from sqlalchemy import func, select
 
 from app import luu_tru
-from app.models import BangGia, ChiPhi, Chuyen, DonHang, KhachHang, NguoiDung, PhaiThu, QuyetToan, Tuyen, Xe
+from app.models import BangGia, ChiPhi, Chuyen, DonHang, KhachHang, NguoiDung, PhaiThu, QuyetToan, SuCo, Tep, Tuyen, Xe
 from app.thoi_gian import GIO_VN, bay_gio
 from seed import demo, dong_ho
 
@@ -104,6 +104,54 @@ def test_demo_ac5_khong_nap_chong_va_ngay_moi(da_nap, monkeypatch, tmp_path):
     assert (dem(db, Xe), dem(db, KhachHang), dem(db, Tuyen)) == truoc[1:]
     ds = may("dieuphoi").get("/api/chuyen", params={"ngay": mai.date().isoformat()}).json()["du_lieu"]
     assert len(ds) == 7
+
+
+# Ảnh mẫu là ảnh thật: ảnh chứng từ tải về mở được (không phải byte giả)
+def test_demo_anh_that(da_nap):
+    db = da_nap
+    kt = may("ketoan")
+    dau_jpg = bytes([0xFF, 0xD8, 0xFF])  # 3 byte đầu của JPEG
+    chung_tu = db.scalars(select(Tep).where(Tep.chi_phi_id.is_not(None)).limit(3)).all()
+    assert chung_tu
+    for t in chung_tu:
+        url = kt.get(f"/api/tep/{t.id}/link").json()["url"]
+        r = kt.get(url)
+        assert r.status_code == 200 and r.headers["content-type"] == "image/jpeg"
+        assert r.content.startswith(dau_jpg) and 5_000 < len(r.content) < 500 * 1024  # JPEG thật, dưới 500 KB
+    assert demo.DONG_HO.startswith(dau_jpg)
+    assert demo.PNG.startswith(bytes([0x89]) + b"PNG") and len(demo.PNG) > 500  # chữ ký là PNG thật
+
+
+# --ngay-moi kết thúc chuyến "đang chạy" còn treo của ngày trước, không để cảnh báo cũ
+def test_demo_ngay_moi_ket_thuc_chuyen_treo(da_nap):
+    db = da_nap
+    dau = datetime.combine(LUC.date(), time(), GIO_VN)
+    treo = [
+        c.id
+        for c in db.scalars(
+            select(Chuyen).where(
+                Chuyen.trang_thai == "DANG_CHAY",
+                Chuyen.khoi_hanh_du_kien >= dau,
+                Chuyen.khoi_hanh_du_kien < dau + timedelta(days=1),
+            )
+        )
+    ]
+    assert len(treo) == 2  # đang chạy trễ + đang chạy có sự cố
+    assert dem(db, SuCo, SuCo.chuyen_id.in_(treo), SuCo.trang_thai == "MO") == 1
+    thong_bao = demo.nap(ngay_moi=True, bay_gio=LUC + timedelta(days=1))
+    assert "đã kết thúc 2 chuyến" in thong_bao
+    db.expire_all()
+    for cid in treo:
+        c = db.get(Chuyen, cid)
+        assert (c.trang_thai, c.ket_thuc_bat_thuong) == ("HOAN_THANH", True)
+    assert dem(db, SuCo, SuCo.chuyen_id.in_(treo), SuCo.trang_thai == "MO") == 0  # sự cố cũ đã đóng
+    # Hôm nay mới có đúng 2 chuyến đang chạy và 1 sự cố mở của riêng nó
+    mai = (LUC + timedelta(days=1)).date().isoformat()
+    ds = may("dieuphoi").get("/api/chuyen", params={"ngay": mai, "so_dong": 100}).json()["du_lieu"]
+    assert sum(c["trang_thai"] == "DANG_CHAY" for c in ds) == 2
+    assert dem(db, SuCo, SuCo.trang_thai == "MO") == 1
+    dang_chay = may("dieuphoi").get("/api/chuyen", params={"trang_thai": "DANG_CHAY", "so_dong": 100})
+    assert len(dang_chay.json()["du_lieu"]) == 2  # chỉ còn 2 chuyến đang chạy của hôm nay mới
 
 
 def test_demo_chi_chay_o_dev(db, monkeypatch):
