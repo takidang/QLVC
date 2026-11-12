@@ -2306,6 +2306,20 @@ input[type='file']::file-selector-button {
   font-weight: 400;
   color: var(--phu);
 }
+.tq-hn-dau {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.tong-quan .tq-hn-dau h2 {
+  margin: 0;
+}
+.tq-hn-dau input {
+  padding: 5px 12px;
+  border-radius: 99px;
+}
 .tq-hom-nay .tq-so {
   margin-bottom: 0;
 }

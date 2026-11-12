@@ -181,7 +181,7 @@ Theo gợi ý video Tài xem: không chuyển sang shadcn/ui (phải thêm Tailw
 
 ## Tổng quan: khối "Hôm nay" (UC-38) và thanh đầu Quản lý (12/11/2026)
 
-- Trang Tổng quan có khối **Hôm nay** (`GET /api/tong-quan`, mọi chuyến trong ngày, không chỉ chuyến đã quyết toán): chuyến (đang chạy · xong · chưa đi), đơn (đã giao · thất bại · còn lại), **điểm dừng đúng giờ** (tỉ lệ, "–" khi chưa quét; số điểm đã quét; ngưỡng trễ), hàng đã chở (kg), **doanh thu dự kiến** (ghi rõ chưa trừ đơn thất bại). Lỗi API thì ẩn khối, không chặn trang. Dưới là khối tháng, có tiêu đề "Tháng … chỉ tính chuyến đã quyết toán".
+- Trang Tổng quan có khối **Hôm nay** (`GET /api/tong-quan?ngay=`, mặc định hôm nay, có ô đổi ngày và nút "Hôm nay"; mọi chuyến trong ngày, không chỉ chuyến đã quyết toán): chuyến (đang chạy · xong · chưa đi), đơn (đã giao · thất bại · còn lại), **điểm dừng đúng giờ** (tỉ lệ, "–" khi chưa quét; số điểm đã quét; ngưỡng trễ), hàng đã chở (kg), **doanh thu dự kiến** (ghi rõ chưa trừ đơn thất bại). Lỗi API thì ẩn khối, không chặn trang. Dưới là khối tháng, có tiêu đề "Tháng … chỉ tính chuyến đã quyết toán".
 - **Thanh đầu Quản lý:** Xe, Tài xế, Nút, Tuyến gộp vào "Danh mục" cùng Người dùng, Bảng giá, Cấu hình (Điều phối vẫn thấy thẳng); tên người dùng ẩn dưới 1600 px; ô tìm 210 px (≤ 1600) / 150 px (≤ 1400). Thanh đầu một hàng từ 1280 px trở lên với mọi vai trò.
 
 ## Còn phải quyết khi làm vào code

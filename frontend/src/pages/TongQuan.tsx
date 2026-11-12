@@ -431,12 +431,14 @@ function BangHieuSuat({ ds }: { ds: HieuSuatXe[] }) {
 
 // UC-38: tình hình hôm nay (mọi chuyến, không chỉ chuyến đã quyết toán). Lỗi thì ẩn cả khối, không chặn trang
 function HomNay() {
+  const homNay = new Date().toLocaleDateString('sv-SE')
+  const [ngayChon, setNgayChon] = useState(homNay) // mặc định hôm nay, đổi được ngày khác
   const [tq, setTq] = useState<TongQuanNgay | null>(null)
   useEffect(() => {
-    tongQuanNgay()
+    tongQuanNgay(ngayChon)
       .then(setTq)
       .catch(() => setTq(null))
-  }, [])
+  }, [ngayChon])
   if (!tq) return null
   const tt = tq.chuyen.theo_trang_thai
   const dg = tq.dung_gio
@@ -447,7 +449,23 @@ function HomNay() {
   })
   return (
     <section className="tq-hom-nay">
-      <h2>Hôm nay · {ngay}</h2>
+      <div className="tq-hn-dau">
+        <h2>
+          {tq.ngay === homNay ? 'Hôm nay' : 'Ngày'} · {ngay}
+        </h2>
+        <input
+          type="date"
+          aria-label="Xem ngày"
+          value={ngayChon}
+          max={homNay}
+          onChange={(e) => e.target.value && setNgayChon(e.target.value)}
+        />
+        {ngayChon !== homNay && (
+          <button className="phu" onClick={() => setNgayChon(homNay)}>
+            Hôm nay
+          </button>
+        )}
+      </div>
       <div className="kinh tq-so">
         <div>
           <small>Chuyến</small>
@@ -479,7 +497,7 @@ function HomNay() {
         <div>
           <small>Doanh thu dự kiến</small>
           <b>{tq.doanh_thu_du_kien.toLocaleString('vi-VN')} đ</b>
-          <em>cước các đơn của chuyến hôm nay, chưa trừ đơn thất bại</em>
+          <em>cước các đơn của chuyến trong ngày, chưa trừ đơn thất bại</em>
         </div>
       </div>
     </section>
