@@ -29,6 +29,7 @@ from app.modules.tien.cong_no.router import router as cong_no_router
 from app.modules.tien.quyet_toan.router import router as quyet_toan_router
 from app.modules.tien.tam_ung.router import router as tam_ung_router
 from app.modules.toi.router import router as toi_router
+from app.modules.tong_quan.router import router as tong_quan_router
 from app.modules.tra_cuu.router import router as tra_cuu_router
 
 
@@ -60,6 +61,7 @@ app.include_router(su_co_router)
 app.include_router(tai_xe_router)
 app.include_router(tam_ung_router)
 app.include_router(tep_router)
+app.include_router(tong_quan_router)
 app.include_router(toi_router)
 app.include_router(tra_cuu_router)
 app.include_router(tuyen_router)

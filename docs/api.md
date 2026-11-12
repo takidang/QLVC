@@ -138,6 +138,7 @@ Mọi endpoint ghi tiền đều ghi `NHAT_KY_TIEN` (BR-62).
 | GET | `/api/tep/{id}/link` | DP, KT, TX (của chuyến mình) | — | Link có hạn 5 phút (NFR-SEC-04). **UC-24 đã làm phần ảnh chi phí cho KT, QL** (tệp khác → 403): `{url, het_han}`, link ký HMAC |
 | GET | `/api/tep/{id}/anh?het=&ky=` | (link) | UC-24 | Mở ảnh từ link trên, không cần cookie; hết hạn / sai chữ ký → 403; `nosniff` |
 | POST | `/api/tra-cuu` | CK | UC-28 | **Chi tiết ở mục 3.4** |
+| GET | `/api/tong-quan?ngay=` | QL, DP, KT | UC-38 | `ngay` YYYY-MM-DD (bỏ trống: hôm nay giờ VN; sai dạng / tham số lạ → 400); Tài xế 403. Chuyến của ngày = khởi hành dự kiến trong ngày (giờ VN). Trả `{ngay, chuyen: {tong, theo_trang_thai: {LAP, DA_CHOT, DANG_CHAY, HOAN_THANH, DA_QUYET_TOAN, HUY}}, don: {tong, da_giao, that_bai, con_lai, kg_da_cho}, dung_gio: {nguong_tre_phut, da_quet, dung_gio, ty_le}, doanh_thu_du_kien}`. Đơn theo kết quả trên chính chuyến (như UC-32), không tính chuyến hủy; `dung_gio` = điểm đã quét có trễ ≤ CFG-09 (sớm hoặc đúng ngưỡng vẫn đúng giờ), `ty_le` 0–1 hoặc `null` khi chưa quét điểm nào; `doanh_thu_du_kien` = tổng cước đơn của chuyến không hủy (gồm đơn thất bại; số thực ở quyết toán UC-24) |
 
 ---
 
