@@ -40,3 +40,10 @@
 ## Sau khi thử
 
 Kiệt thử xong 10/11/2026: 12/12 ca đạt. Claude đối chiếu ảnh với log máy chủ (duyệt, từ chối, 2 lần quyết toán, 6 lần mở ảnh đều 200). AC14 ghi Đạt trong story.
+
+## Thử lại trên giao diện v2 (Kiệt, 12/11/2026)
+
+Màn Quyết toán v2 (nhánh `tai/thu-giao-dien-v2` 30949bf: chọn chuyến ở danh sách trái, chi tiết chia khung), backend `dev` (93ab7eb), dữ liệu demo. Logic không đổi.
+
+- Đạt: chọn chuyến **CH-261112-01** ở danh sách "Chờ quyết toán"; doanh thu 800.000 (2 đơn thất bại ghi 0); duyệt Dầu 880.000, Cầu đường 235.000 (từ chối rồi duyệt lại) → chi 1.115.000, lãi −715.000 (đỏ), chênh lệch tạm ứng −505.000 "công ty trả thêm"; quyết toán → chuyển sang "Đã quyết toán", chỉ xem; tài xế `taixe02` thấy các khoản "Đã duyệt", không có form; Quản lý chỉ xem. Ảnh `l-v2-bang-quyet-toan.png`, `m-v2-da-quyet-toan.png`.
+- Góp ý gửi Tài: nút **Duyệt** khi bị tắt (giảm số chưa có lý do) chỉ nhạt 55%, khó phân biệt với nút thường; máy chủ vẫn chặn đúng BR-55.
