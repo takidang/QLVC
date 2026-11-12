@@ -184,6 +184,13 @@ Theo gợi ý video Tài xem: không chuyển sang shadcn/ui (phải thêm Tailw
 - Trang Tổng quan có khối **Hôm nay** (`GET /api/tong-quan?ngay=`, mặc định hôm nay, có ô đổi ngày và nút "Hôm nay"; mọi chuyến trong ngày, không chỉ chuyến đã quyết toán): chuyến (đang chạy · xong · chưa đi), đơn (đã giao · thất bại · còn lại), **điểm dừng đúng giờ** (tỉ lệ, "–" khi chưa quét; số điểm đã quét; ngưỡng trễ), hàng đã chở (kg), **doanh thu dự kiến** (ghi rõ chưa trừ đơn thất bại). Lỗi API thì ẩn khối, không chặn trang. Dưới là khối tháng, có tiêu đề "Tháng … chỉ tính chuyến đã quyết toán".
 - **Thanh đầu Quản lý:** Xe, Tài xế, Nút, Tuyến gộp vào "Danh mục" cùng Người dùng, Bảng giá, Cấu hình (Điều phối vẫn thấy thẳng); tên người dùng ẩn dưới 1600 px; ô tìm 210 px (≤ 1600) / 150 px (≤ 1400). Thanh đầu một hàng từ 1280 px trở lên với mọi vai trò.
 
+## Sửa theo lượt thử của Kiệt (12/11/2026)
+- Điện thoại (≤ 760 px): hộp chuông, menu tài khoản, kết quả tìm chung cố định cách hai mép 12 px, không tràn mép trái.
+- Tài xế: chuyến đang chạy còn điểm chưa xong thì khối "Kết thúc chuyến" bị khóa, ghi "Còn N điểm chưa xong…"; hết điểm mới hiện ô nhập km cuối.
+- Tài xế: Kết thúc chuyến, Chi phí, Sự cố cách nhau 14 px, thẳng mép trái phải với thẻ lịch trình.
+- Nút bị khóa (vd. Duyệt ở Quyết toán khi lệch tiền) dùng nền xám đặc, chữ mờ, không còn chỉ giảm độ trong suốt.
+- Bảng chuyến hiện giờ kết thúc dự kiến mới cho chuyến trễ: chờ backend thêm `theo_doi.ket_thuc_dang_chay`.
+
 ## Còn phải quyết khi làm vào code
 
 - Nút đổi bộ màu trong Cài đặt (Tài làm sau).

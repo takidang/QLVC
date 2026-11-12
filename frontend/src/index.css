@@ -442,9 +442,13 @@ button {
 button:enabled:hover {
   background: color-mix(in srgb, var(--muc) 86%, white);
 }
-button:disabled {
-  opacity: 0.55;
-  cursor: default;
+/* Nút bị tắt: xám hẳn, không chỉ nhạt đi (Kiệt góp ý G5: nhạt 55% trên nền be khó phân biệt) */
+button:disabled,
+button:disabled:hover {
+  color: color-mix(in srgb, var(--muc) 45%, transparent);
+  background: color-mix(in srgb, var(--muc) 10%, #f3f3f0);
+  border-color: transparent;
+  cursor: not-allowed;
 }
 button.phu {
   padding: 5px 14px;
@@ -2077,6 +2081,7 @@ input[type='file']::file-selector-button {
 }
 /* Lịch trình tài xế: dòng thời gian, mỗi điểm một thẻ đủ địa chỉ, gọi điện, nút giao */
 .lt-dt li {
+  grid-template-columns: 16px 1fr;
   gap: 10px;
   padding-bottom: 10px;
 }
@@ -3882,5 +3887,31 @@ tr.huy .ma-don {
   .van-don small,
   .van-don dt {
     color: #000;
+  }
+}
+
+/* ----- Góp ý Kiệt thử v2 (12/11): G1 khung xổ trên điện thoại, G3 khối cuối màn tài xế ----- */
+.dt-cuoi {
+  display: grid;
+  gap: 14px;
+  margin: 16px 0 0 26px; /* thẳng mép trái với thẻ lịch trình (cột chấm 16 px + khe 10 px) */
+}
+.dt-cuoi > .the,
+.dt-cuoi > .neo > .the {
+  margin: 0;
+}
+.form-km.khoa p {
+  margin: 4px 0 0;
+}
+@media (max-width: 760px) {
+  .chuong-hop,
+  .menu-tk-hop,
+  .tim-hop {
+    position: fixed;
+    top: 60px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+    max-width: none;
   }
 }

@@ -65,6 +65,8 @@ export default function ChuyenCuaToiChiTiet() {
       ? c.lich_trinh.find((p) => !xongDiem(p) && nhan(p) !== 'Thất bại')
       : undefined
   const soXong = c ? c.lich_trinh.filter(xongDiem).length : 0
+  // Điểm chưa xong (chưa lấy / chưa giao, không tính điểm đã thất bại)
+  const conDiem = c ? c.lich_trinh.filter((p) => !xongDiem(p) && nhan(p) !== 'Thất bại').length : 0
   // Còn điểm lấy chưa quét thì mới cần khối Lấy hàng (quét lấy); lấy hết rồi thì giao ở từng điểm
   const conLay = !!c?.lich_trinh.some((p) => p.viec === 'LAY' && p.trang_thai_don === 'DA_GHEP')
   const idDiem = (p: ChiTiet['lich_trinh'][number]) => `diem-${p.viec}-${p.don_id}`
@@ -231,17 +233,31 @@ export default function ChuyenCuaToiChiTiet() {
             ))}
           </ol>
 
-          {/* Kết thúc nằm sau lịch trình: còn điểm chưa xong thì không đứng chắn ở đầu trang */}
-          {c.trang_thai === 'DANG_CHAY' && <FormKm key={c.trang_thai} c={c} onXong={setC} />}
+          {/* Các khối cuối: cách đều, canh cùng mép với thẻ lịch trình (Kiệt góp ý G3) */}
+          <div className="dt-cuoi">
+            {/* Kết thúc chỉ mở khi mọi điểm đã xong / báo không được (BR-28); còn điểm thì chỉ báo số (G2) */}
+            {c.trang_thai === 'DANG_CHAY' &&
+              (conDiem > 0 ? (
+                <div className="the form-km khoa">
+                  <strong>Kết thúc chuyến</strong>
+                  <p className="ghi-chu">
+                    Còn {conDiem} điểm chưa xong. Giao hoặc báo không giao được hết rồi mới kết thúc
+                    chuyến.
+                  </p>
+                </div>
+              ) : (
+                <FormKm key={c.trang_thai} c={c} onXong={setC} />
+              ))}
 
-          {['DANG_CHAY', 'HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai) && (
-            <ChiPhi chuyenId={c.id} ghiDuoc={c.trang_thai !== 'DA_QUYET_TOAN'} />
-          )}
-          {['DANG_CHAY', 'HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai) && (
-            <div id="khoi-su-co" className="neo">
-              <SuCoChuyen chuyenId={c.id} baoDuoc={c.trang_thai === 'DANG_CHAY'} />
-            </div>
-          )}
+            {['DANG_CHAY', 'HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai) && (
+              <ChiPhi chuyenId={c.id} ghiDuoc={c.trang_thai !== 'DA_QUYET_TOAN'} />
+            )}
+            {['DANG_CHAY', 'HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai) && (
+              <div id="khoi-su-co" className="neo">
+                <SuCoChuyen chuyenId={c.id} baoDuoc={c.trang_thai === 'DANG_CHAY'} />
+              </div>
+            )}
+          </div>
         </>
       )}
     </section>
