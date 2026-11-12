@@ -3327,34 +3327,96 @@ body {
   border: 1px solid var(--vien-dam);
   border-radius: 16px;
 }
+.chuong-hop {
+  width: 360px;
+  max-height: 70dvh;
+  overflow-y: auto;
+}
 .chuong-hop > strong {
+  display: flex;
+  justify-content: space-between;
   padding: 4px 8px 6px;
   font-size: 14px;
 }
+.chuong-hop > strong small {
+  font-weight: 400;
+  color: var(--phu);
+}
+.chuong-hop ul {
+  list-style: none;
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+}
 .chuong-hop a {
   display: grid;
-  grid-template-columns: 34px 1fr 18px;
-  gap: 8px;
-  align-items: center;
-  padding: 8px;
+  grid-template-columns: 8px 1fr;
+  gap: 10px;
+  align-items: start;
+  padding: 9px 8px;
   text-decoration: none;
   border-radius: 10px;
 }
-.chuong-hop a:hover {
+.chuong-hop a:hover,
+.chuong-hop a:focus-visible {
   background: color-mix(in srgb, var(--muc) 6%, transparent);
 }
-.chuong-hop a b {
-  font-variant-numeric: tabular-nums;
-  text-align: right;
-  color: var(--cam);
+.chuong-hop a > i {
+  width: 8px;
+  height: 8px;
+  margin-top: 6px;
+  background: var(--xam);
+  border-radius: 50%;
 }
-.chuong-hop a.do b {
-  color: var(--do);
+.chuong-hop a.khan > i {
+  background: var(--do);
+}
+.chuong-hop a.can-lam > i {
+  background: var(--cam);
+}
+.chuong-hop a b {
+  display: block;
+  font-weight: 500;
+}
+.chuong-hop a small,
+.chuong-hop a time {
+  display: block;
+  font-size: 12px;
+  color: var(--phu);
+}
+.chuong-hop a time {
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+}
+.tb-moi {
+  margin-left: 6px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--chay);
+  border-radius: 99px;
 }
 .chuong-hop p {
   margin: 0;
   padding: 6px 8px 8px;
   color: var(--phu);
+}
+.menu-tk-hop {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 20;
+  display: grid;
+  gap: 2px;
+  width: 300px;
+  padding: 10px;
+  font-size: 13.5px;
+  color: var(--muc);
+  background: #fbfbf9;
+  border: 1px solid var(--vien-dam);
+  border-radius: 16px;
 }
 .menu-tk-hop {
   gap: 10px;

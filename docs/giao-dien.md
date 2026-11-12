@@ -171,7 +171,7 @@ Theo gợi ý video Tài xem: không chuyển sang shadcn/ui (phải thêm Tailw
 ## Chuông thông báo và menu tài khoản (12/11/2026)
 
 - **Menu tài khoản** (`MenuTaiKhoan.tsx`, bấm vòng tên tắt góc phải, mọi vai trò): họ tên, vai trò, **chọn bộ màu** (Ngẫu nhiên theo ảnh / 5 bộ màu), nút Đăng xuất. Bộ màu lưu trên trình duyệt (`localStorage` khóa `qlvc-bo-mau`, `nen.ts`), thắng bộ màu ngẫu nhiên. Đổi mật khẩu thêm vào đây khi backend có UC-35. (Dùng nút `aria-pressed` thay ô radio: radio ẩn trong `<details>` làm trình duyệt kiểm thử bị sập khi chọn.)
-- **Chuông thông báo** (`ChuongThongBao.tsx`, Điều phối và Quản lý): số việc từ `GET /api/canh-bao` (UC-27), mở ra là các nhóm (sự cố mở, chuyến trễ / chồng lịch, đơn quá / sắp tới hạn, giấy tờ, thiếu GPS) kèm số, bấm để tới màn tương ứng; tải lại khi đổi trang và mỗi 2 phút. Thay bằng `GET /api/thong-bao` (UC-37) khi có, lúc đó mới có chuông cho Kế toán và Tài xế.
+- **Chuông thông báo** (`ChuongThongBao.tsx`, **mọi vai trò**, UC-37 `GET /api/thong-bao`): danh sách mới trước, mỗi dòng có chấm mức độ (đỏ khẩn, cam cần làm, xám thông tin), tiêu đề (câu tiếng Việt từ máy chủ), nội dung phụ, giờ; nhãn "mới" cho thông báo sau lần mở chuông trước. Số trên chuông = số thông báo mới; mở chuông thì lưu mốc thời gian mới nhất vào trình duyệt (`qlvc-da-doc-<id người dùng>`). Bấm dẫn tới: chuyến → chi tiết chuyến (tài xế: chuyến của tôi; kế toán: Quyết toán), đơn → phiếu đơn (kế toán: Công nợ), tạm ứng treo → Tạm ứng, xe / tài xế → danh mục. Tải lại khi đổi trang và mỗi 2 phút; đóng khi bấm / Tab ra ngoài.
 
 ## Tìm chung (UC-36) và đổi mật khẩu (UC-35), giao diện (12/11/2026)
 

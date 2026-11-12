@@ -1,20 +1,47 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { canhBao, type CanhBao } from './api/canhBao'
-import { Ic } from './nhan'
+import type { VaiTro } from './api/auth'
+import { thongBao, type ThongBao } from './api/thongBao'
 
-// Chuông thông báo của Điều phối / Quản lý: số việc từ bảng cảnh báo UC-27 (GET /api/canh-bao),
-// mở ra là tóm tắt theo nhóm, bấm để tới màn tương ứng. Tải lại khi đổi trang và mỗi 2 phút.
-// Thay bằng GET /api/thong-bao (UC-37) khi backend có.
-export default function ChuongThongBao({ goc }: { goc: string }) {
+// Chuông thông báo cho mọi vai trò (UC-37, GET /api/thong-bao). Số trên chuông = thông báo mới hơn
+// lần mở chuông trước (mốc lưu trên trình duyệt theo người dùng). Tải lại khi đổi trang và mỗi 2 phút.
+const MUC: Record<ThongBao['muc_do'], string> = {
+  KHAN: 'khan',
+  CAN_LAM: 'can-lam',
+  THONG_TIN: 'thong-tin',
+}
+const luc = (iso: string) =>
+  new Date(iso).toLocaleString('vi-VN', {
+    hour: '2-digit',
+    minute: '2-digit',
+    day: '2-digit',
+    month: '2-digit',
+  })
+
+export default function ChuongThongBao({
+  nguoiDungId,
+  vaiTro,
+}: {
+  nguoiDungId: number
+  vaiTro: VaiTro
+}) {
   const { pathname } = useLocation()
-  const [cb, setCb] = useState<CanhBao | null>(null)
+  const [ds, setDs] = useState<ThongBao[] | null>(null)
+  const [loi, setLoi] = useState(false)
+  const khoa = `qlvc-da-doc-${nguoiDungId}`
+  const [moc, setMoc] = useState(() => localStorage.getItem(khoa) ?? '')
+  const hop = useRef<HTMLDetailsElement>(null)
+
   useEffect(() => {
     let bo = false
     const tai = () =>
-      canhBao()
-        .then((r) => !bo && setCb(r))
-        .catch(() => !bo && setCb(null))
+      thongBao()
+        .then((r) => {
+          if (bo) return
+          setDs(r.thong_bao)
+          setLoi(false)
+        })
+        .catch(() => !bo && setLoi(true))
     tai()
     const h = setInterval(tai, 120_000)
     return () => {
@@ -23,67 +50,82 @@ export default function ChuongThongBao({ goc }: { goc: string }) {
     }
   }, [pathname])
 
-  const nhom = cb
-    ? [
-        { so: cb.su_co_mo.length, chu: 'sự cố đang mở', den: `${goc}/chuyen`, nang: true },
-        {
-          so: cb.chuyen_tre.length,
-          chu: 'chuyến trễ / chồng lịch',
-          den: `${goc}/chuyen`,
-          nang: true,
-        },
-        {
-          so: cb.don_sap_qua_han.filter((d) => d.qua_han).length,
-          chu: 'đơn chờ ghép đã quá hạn giao',
-          den: `${goc}/don`,
-          nang: true,
-        },
-        {
-          so: cb.don_sap_qua_han.filter((d) => !d.qua_han).length,
-          chu: 'đơn chờ ghép sắp tới hạn',
-          den: `${goc}/don`,
-          nang: false,
-        },
-        {
-          so: cb.giay_to.length,
-          chu: 'giấy tờ xe / GPLX sắp hết hạn',
-          den: `${goc}/xe`,
-          nang: false,
-        },
-        { so: cb.thieu_gps.length, chu: 'lượt quét thiếu GPS', den: `${goc}/chuyen`, nang: false },
-      ].filter((x) => x.so > 0)
-    : []
-  const tong = cb?.so_viec ?? 0
+  // Đóng khi bấm hoặc Tab ra ngoài
+  useEffect(() => {
+    const ngoai = (e: Event) => {
+      if (hop.current?.open && !hop.current.contains(e.target as Node)) hop.current.open = false
+    }
+    document.addEventListener('pointerdown', ngoai)
+    document.addEventListener('focusin', ngoai)
+    return () => {
+      document.removeEventListener('pointerdown', ngoai)
+      document.removeEventListener('focusin', ngoai)
+    }
+  }, [])
+
+  const moi = (ds ?? []).filter((t) => !moc || t.luc > moc)
+  const soMoi = moi.length
+  // Mở chuông: những thông báo đang hiện tính là đã đọc (lần sau mở mới hiện dấu "mới")
+  const [mocLucMo, setMocLucMo] = useState(moc)
+  const mo = (open: boolean) => {
+    if (!open || !ds?.length) return
+    const moiNhat = ds.reduce((m, t) => (t.luc > m ? t.luc : m), moc)
+    setMocLucMo(moc)
+    localStorage.setItem(khoa, moiNhat)
+    setMoc(moiNhat)
+  }
+
+  const dp = vaiTro === 'DIEU_PHOI' || vaiTro === 'QUAN_LY'
+  const den = (t: ThongBao) => {
+    const d = t.doi_tuong
+    if (vaiTro === 'TAI_XE')
+      return d?.loai === 'CHUYEN' ? `/tai-xe/chuyen/${d.id}` : '/tai-xe/chuyen'
+    if (vaiTro === 'KE_TOAN') {
+      if (t.loai === 'TAM_UNG_TREO') return '/ke-toan/tam-ung'
+      return d?.loai === 'DON' ? '/ke-toan/cong-no' : '/ke-toan/quyet-toan'
+    }
+    if (!dp || !d) return '/dieu-phoi/chuyen'
+    return {
+      CHUYEN: `/dieu-phoi/chuyen/${d.id}`,
+      DON: `/dieu-phoi/don/${d.id}/phieu`,
+      XE: '/dieu-phoi/xe',
+      TAI_XE: '/dieu-phoi/tai-xe',
+    }[d.loai]
+  }
 
   return (
-    <details
-      className="chuong"
-      onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) e.currentTarget.open = false
-      }}
-    >
-      <summary aria-label={tong ? `Thông báo: ${tong} việc cần chú ý` : 'Thông báo'}>
+    <details ref={hop} className="chuong" onToggle={(e) => mo(e.currentTarget.open)}>
+      <summary aria-label={soMoi ? `Thông báo: ${soMoi} mới` : 'Thông báo'}>
         <svg className="ic" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15zM10 20.5a2 2 0 0 0 4 0" />
         </svg>
-        {tong > 0 && <em>{tong > 99 ? '99+' : tong}</em>}
+        {soMoi > 0 && <em>{soMoi > 99 ? '99+' : soMoi}</em>}
       </summary>
       <div className="chuong-hop">
-        <strong>Cần chú ý</strong>
-        {nhom.map((x) => (
-          <Link
-            key={x.chu}
-            to={x.den}
-            className={x.nang ? 'do' : undefined}
-            onClick={(e) => e.currentTarget.closest('details')?.removeAttribute('open')}
-          >
-            <b>{x.so}</b>
-            <span>{x.chu}</span>
-            <Ic ten="phai" />
-          </Link>
-        ))}
-        {cb && nhom.length === 0 && <p>Không có việc nào cần chú ý.</p>}
-        {!cb && <p>Không tải được thông báo.</p>}
+        <strong>Thông báo {ds && <small>{ds.length}</small>}</strong>
+        <ul>
+          {(ds ?? []).map((t, i) => (
+            <li key={`${t.loai}-${t.luc}-${i}`}>
+              <Link
+                to={den(t)}
+                className={MUC[t.muc_do]}
+                onClick={() => hop.current?.removeAttribute('open')}
+              >
+                <i aria-hidden="true" />
+                <span>
+                  <b>
+                    {t.tieu_de}
+                    {(!mocLucMo || t.luc > mocLucMo) && <span className="tb-moi">mới</span>}
+                  </b>
+                  {t.noi_dung && <small>{t.noi_dung}</small>}
+                  <time>{luc(t.luc)}</time>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        {ds && ds.length === 0 && <p>Không có thông báo nào.</p>}
+        {loi && !ds && <p>Không tải được thông báo.</p>}
       </div>
     </details>
   )

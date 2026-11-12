@@ -170,9 +170,7 @@ function KhungTrang({
           <span className="ten">
             {nd.ho_ten} · {TEN_VAI_TRO[nd.vai_tro]}
           </span>
-          {(nd.vai_tro === 'DIEU_PHOI' || nd.vai_tro === 'QUAN_LY') && (
-            <ChuongThongBao goc={TRANG_CHU.DIEU_PHOI} />
-          )}
+          <ChuongThongBao nguoiDungId={nd.id} vaiTro={nd.vai_tro} />
           <MenuTaiKhoan nd={nd} tenVaiTro={TEN_VAI_TRO[nd.vai_tro]} onThoat={onThoat} />
         </div>
       </header>
