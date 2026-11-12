@@ -96,6 +96,9 @@ flowchart LR
   HT(("Hệ thống<br/>hằng ngày"))
   subgraph CHUNG["Chung"]
     UC02(["UC-02 Người dùng, vai trò"])
+    UC35(["UC-35 Đổi mật khẩu"])
+    UC36(["UC-36 Tìm kiếm chung"])
+    UC37(["UC-37 Thông báo"])
   end
   subgraph XTX["Xe / Tài xế"]
     UC03(["UC-03 Quản lý xe"])
@@ -132,6 +135,7 @@ flowchart LR
     UC25(["UC-25 Công nợ"])
     UC26(["UC-26 Báo cáo lãi lỗ"])
     UC34(["UC-34 Hiệu suất xe"])
+    UC38(["UC-38 Tổng quan hôm nay"])
   end
   subgraph TRA["Tra cứu"]
     UC28(["UC-28 Tra cứu đơn"])
@@ -139,11 +143,11 @@ flowchart LR
   subgraph PHU["Phụ trợ"]
     UC30(["UC-30 Dự đoán trễ"])
   end
-  QL --- UC02 & UC07 & UC26 & UC34
-  DP --- UC03 & UC04 & UC05 & UC06 & UC08 & UC10 & UC11 & UC12 & UC13 & UC15 & UC16 & UC22 & UC27 & UC32
+  QL --- UC02 & UC07 & UC26 & UC34 & UC35 & UC36 & UC37 & UC38
+  DP --- UC03 & UC04 & UC05 & UC06 & UC08 & UC10 & UC11 & UC12 & UC13 & UC15 & UC16 & UC22 & UC27 & UC32 & UC35 & UC36 & UC37 & UC38
   DP -.- UC30
-  TX --- UC17 & UC18 & UC19 & UC20 & UC21 & UC33
-  KT --- UC23 & UC24 & UC25 & UC26 & UC03
+  TX --- UC17 & UC18 & UC19 & UC20 & UC21 & UC33 & UC35 & UC36 & UC37
+  KT --- UC23 & UC24 & UC25 & UC26 & UC03 & UC35 & UC36 & UC37 & UC38
   KH --- UC28
   HT --- UC27
 ```

@@ -58,8 +58,12 @@
 | UC-32 | Theo dõi chuyến (bảng chuyến trong ngày, chi tiết chuyến, cờ trễ, đóng sự cố, kết thúc do sự cố) | Điều phối | Chuyến | M | BR-68, 73 |
 | UC-33 | Báo sự cố | Tài xế | Quét mã | M | BR-58 |
 | UC-34 | Hiệu suất xe theo tháng | Quản lý | Quyết toán | S | — |
+| UC-35 | Đổi mật khẩu của chính mình (giao diện v2: Cài đặt cá nhân) | Mọi vai trò | Chung | S | BR-57 |
+| UC-36 | Tìm kiếm chung (ô tìm trên thanh đầu: chuyến, đơn, xe, tài xế, khách) | Mọi vai trò | Chung | S | BR-57, 58 |
+| UC-37 | Thông báo theo vai trò (chuông trên thanh đầu) | Mọi vai trò | Chung | S | BR-57, 58 |
+| UC-38 | Tổng quan hôm nay (số liệu một ngày cho trang đầu) | Quản lý, Điều phối, Kế toán | Quyết toán | S | BR-57, 73 |
 
-Số UC còn hiệu lực: 31 − 4 (UC-09, 14, 29, 31) + 3 (UC-32, 33, 34) = **30**.
+Số UC còn hiệu lực: 31 − 4 (UC-09, 14, 29, 31) + 3 (UC-32, 33, 34) + 4 (UC-35…38, thêm 12/11/2026 cho giao diện v2) = **34**.
 Ghi chú: UC-30 chỉ **gợi ý**; module phụ hỏng thì lõi vẫn chạy.
 
 ---
@@ -208,6 +212,25 @@ Ghi chú: UC-30 chỉ **gợi ý**; module phụ hỏng thì lõi vẫn chạy.
 ### UC-33 Báo sự cố
 - **Tác nhân:** Tài xế · **Tiền điều kiện:** Chuyến của mình `DANG_CHAY` (BR-58).
 - **Luồng chính:** Chọn loại sự cố, ghi chú, chụp ảnh → lưu sự cố trạng thái mở, hiện cờ trên bảng chuyến của Điều phối. Không đổi trạng thái chuyến.
+
+### UC-35 Đổi mật khẩu
+- **Tác nhân:** mọi vai trò đã đăng nhập.
+- **Luồng chính:** nhập mật khẩu hiện tại và mật khẩu mới (8–200 ký tự) → đổi được; phiên đang dùng vẫn còn hạn.
+- **Ngoại lệ:** sai mật khẩu hiện tại → báo lỗi và **tính như một lần đăng nhập sai** (5 lần liên tiếp khóa 15 phút, dùng chung bộ đếm với đăng nhập, NFR-SEC-05); mật khẩu mới trùng cũ → báo lỗi. Chỉ đổi mật khẩu của chính mình; Quản lý đặt lại cho người khác ở UC-02.
+
+### UC-36 Tìm kiếm chung
+- **Tác nhân:** mọi vai trò đã đăng nhập.
+- **Luồng chính:** gõ từ khóa (2–100 ký tự) → kết quả gộp theo nhóm chuyến, đơn, xe, tài xế, khách; mỗi nhóm tối đa 5 dòng kèm tổng số khớp. Khớp một phần, không phân biệt hoa thường, gõ tiếng Việt kiểu nào cũng ra.
+- **Phân quyền (BR-57, 58):** Điều phối, Quản lý thấy cả 5 nhóm; Kế toán thấy chuyến, đơn, khách; Tài xế chỉ thấy chuyến của mình (không `LAP`, `HUY`).
+
+### UC-37 Thông báo theo vai trò
+- **Tác nhân:** mọi vai trò đã đăng nhập.
+- **Luồng chính:** bấm chuông → danh sách việc cần chú ý của vai trò mình, mới trước; mỗi thông báo có mức độ (khẩn / cần làm / thông tin), đối tượng để bấm mở và thời điểm sự việc. Tính lại mỗi lần mở từ dữ liệu sẵn có; "đã đọc" do giao diện nhớ bằng mốc lần xem cuối, hệ thống không lưu.
+- **Theo vai trò:** Điều phối, Quản lý: các dòng của bảng cảnh báo (UC-27) và đơn thất bại cần xử lý (UC-22). Kế toán: chuyến chờ quyết toán, khoản chi chờ duyệt, tạm ứng chưa quyết toán (UC-24). Tài xế: chuyến được giao hôm nay hoặc ngày mai, sự cố đã được xử lý, khoản chi bị từ chối hoặc điều chỉnh.
+
+### UC-38 Tổng quan hôm nay
+- **Tác nhân:** Quản lý, Điều phối, Kế toán.
+- **Luồng chính:** mở trang Tổng quan (mặc định hôm nay, đổi được ngày) → số chuyến theo 6 trạng thái; đơn đã giao / thất bại / còn lại và tổng kg đã chở; tỉ lệ điểm đúng giờ (trễ không quá `CFG-09`; chưa quét thì không có tỉ lệ); doanh thu **dự kiến** (số thực ở quyết toán UC-24, báo cáo UC-26). Chỉ đọc.
 
 > Các UC còn lại (UC-01…07, 10, 17, 25, 26, 27, 30, 34) là CRUD/xem báo cáo: đặc tả rút gọn khi làm story tương ứng.
 
