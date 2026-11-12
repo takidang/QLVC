@@ -3328,6 +3328,8 @@ body {
   border-radius: 16px;
 }
 .chuong-hop {
+  white-space: normal; /* thanh đầu đặt nowrap; tiêu đề thông báo dài phải xuống dòng */
+  overflow-wrap: anywhere;
   width: 360px;
   max-height: 70dvh;
   overflow-y: auto;
@@ -3419,6 +3421,7 @@ body {
   border-radius: 16px;
 }
 .menu-tk-hop {
+  white-space: normal;
   gap: 10px;
   width: 280px;
   padding: 14px;
