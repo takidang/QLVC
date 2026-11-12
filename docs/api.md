@@ -29,6 +29,7 @@
 | POST | `/api/auth/dang-nhap` | CK | UC-01 | Đặt cookie; giới hạn tần suất |
 | POST | `/api/auth/dang-xuat` | Mọi vai trò | UC-01 | Xóa cookie |
 | GET | `/api/auth/toi` | Mọi vai trò | UC-01 | Thông tin và vai trò người đang đăng nhập |
+| PUT | `/api/auth/mat-khau` | Mọi vai trò | UC-35 | `{mat_khau_cu, mat_khau_moi}` (mới 8–200 ký tự) → 204; chỉ của chính mình, trường lạ → 400. Sai mật khẩu cũ → 422 `SAI_MAT_KHAU_CU` (không dùng 401) và **tính như một lần đăng nhập sai**: 5 lần liên tiếp khóa 15 phút (429 `KHOA_TAM`, đăng nhập cũng bị khóa); mới trùng cũ → 422 `MAT_KHAU_TRUNG`. Đổi đúng thì xóa bộ đếm; phiên đang dùng vẫn còn hạn |
 | GET, POST | `/api/nguoi-dung` | QL | UC-02 | BR-57; `?vai_tro=&trang_thai=&tim=&trang=&so_dong=`; POST chỉ tạo `QUAN_LY`/`DIEU_PHOI`/`KE_TOAN` (tài xế tạo ở UC-04); trùng tên đăng nhập → 409 |
 | PATCH | `/api/nguoi-dung/{id}` | QL | UC-02 | `ten_dang_nhap`, `ho_ten`, `vai_tro`, `trang_thai` (khóa/mở, mở thì xóa khóa tạm); không nhận `mat_khau`. 409: đổi vai trò/trạng thái tài khoản tài xế (làm ở UC-04), tự đổi vai trò/trạng thái của mình, khóa/hạ Quản lý hoạt động cuối cùng |
 | PUT | `/api/nguoi-dung/{id}/mat-khau` | QL | UC-02 | `{mat_khau}` 8–200 ký tự → 204; xóa bộ đếm sai và khóa tạm; mọi vai trò kể cả tài xế |
@@ -138,6 +139,7 @@ Mọi endpoint ghi tiền đều ghi `NHAT_KY_TIEN` (BR-62).
 | GET | `/api/tep/{id}/link` | DP, KT, TX (của chuyến mình) | — | Link có hạn 5 phút (NFR-SEC-04). **UC-24 đã làm phần ảnh chi phí cho KT, QL** (tệp khác → 403): `{url, het_han}`, link ký HMAC |
 | GET | `/api/tep/{id}/anh?het=&ky=` | (link) | UC-24 | Mở ảnh từ link trên, không cần cookie; hết hạn / sai chữ ký → 403; `nosniff` |
 | POST | `/api/tra-cuu` | CK | UC-28 | **Chi tiết ở mục 3.4** |
+| GET | `/api/tim?q=` | Mọi vai trò | UC-36 | Tìm chung, `q` 2–100 ký tự sau khi bỏ khoảng trắng (chuẩn NFC), thiếu / quá ngắn / tham số lạ → 400. Trả `{q, chuyen, don, xe, tai_xe, khach_hang}`, mỗi nhóm `{tong, ds}` với `ds` tối đa 5 dòng, `tong` là số khớp thật; luôn đủ 5 khóa, nhóm không được xem trả `{tong: 0, ds: []}`. Quyền: DP, QL cả 5 nhóm; KT chuyến, đơn, khách; TX chỉ chuyến của mình (không `LAP`, `HUY`). `chuyen`: `{id, ma_chuyen, trang_thai, bien_so, ten_tai_xe, khoi_hanh_du_kien}` (khớp mã chuyến, biển số, tên tài xế); `don`: `{id, ma_don, trang_thai, ten_khach, tinh_lay, tinh_giao}`; `xe`: `{id, bien_so, trang_thai}`; `tai_xe`: `{id, ho_ten, trang_thai}`; `khach_hang`: `{id, ten, sdt}` |
 
 ---
 
