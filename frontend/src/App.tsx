@@ -104,13 +104,20 @@ const duocVao = (nd: NguoiDung, trang: VaiTro) =>
   nd.vai_tro === trang || (trang === 'DIEU_PHOI' && nd.vai_tro === 'QUAN_LY')
 
 // Menu của người dùng: trang của vai trò mình, Quản lý thấy thêm trang Điều phối
+const DANH_MUC_DP = ['xe', 'tai-xe', 'nut', 'tuyen']
 const menu = (nd: NguoiDung) =>
   (Object.keys(TRANG_CHU) as VaiTro[])
     .filter((vt) => duocVao(nd, vt))
     .flatMap((vt) =>
       (TRANG_CON[vt] ?? [])
         .filter((t) => !t.an)
-        .map((t) => ({ ...t, den: `${TRANG_CHU[vt]}/${t.duong_dan}` })),
+        .map((t) => ({
+          ...t,
+          den: `${TRANG_CHU[vt]}/${t.duong_dan}`,
+          // Quản lý có thêm Tổng quan, Công nợ, Quyết toán: danh mục của Điều phối gộp vào "Danh mục"
+          // cho thanh đầu một hàng; Điều phối vẫn thấy thẳng (Tài góp ý 12/11)
+          nhom: t.nhom || (nd.vai_tro === 'QUAN_LY' && DANH_MUC_DP.includes(t.duong_dan)),
+        })),
     )
 
 // Khung trang sau đăng nhập: tên hệ thống, menu viên thuốc (mục phụ gộp vào "Danh mục"), người dùng

@@ -475,6 +475,7 @@ button:has(> svg.ic) {
   gap: 16px;
 }
 .thuong-hieu {
+  white-space: nowrap;
   font-size: 15px;
   font-weight: 600;
 }
@@ -1442,9 +1443,13 @@ input[type='file']::file-selector-button {
 }
 
 /* Thanh trên chật (Quản lý có nhiều mục): bỏ tên, giữ vòng tên tắt */
-@media (max-width: 1240px) {
+/* Thanh đầu chật (Quản lý nhiều mục, thêm ô tìm): bỏ tên, giữ vòng tên tắt; ô tìm hẹp lại */
+@media (max-width: 1600px) {
   .ben-phai .ten {
     display: none;
+  }
+  .tim-o {
+    width: 210px;
   }
 }
 @media (max-width: 1000px) {
@@ -2282,6 +2287,27 @@ input[type='file']::file-selector-button {
 }
 .tq-so b.tq-am {
   font-weight: 400;
+}
+.tq-hom-nay {
+  margin-bottom: 18px;
+}
+.tong-quan .tq-tieu-de,
+.tong-quan .tq-hom-nay h2 {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.tong-quan .tq-hom-nay h2::first-letter {
+  text-transform: uppercase;
+}
+.tq-tieu-de small {
+  margin-left: 6px;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--phu);
+}
+.tq-hom-nay .tq-so {
+  margin-bottom: 0;
 }
 .tq-luu-y {
   margin: 0 0 16px;
@@ -3578,9 +3604,9 @@ body {
 .menu-tk-hop > button.phu + button.phu {
   margin-top: -4px;
 }
-@media (max-width: 1240px) {
+@media (max-width: 1400px) {
   .tim-o {
-    width: 200px;
+    width: 150px;
   }
 }
 @media (max-width: 760px) {

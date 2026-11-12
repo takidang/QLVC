@@ -9,6 +9,7 @@ import {
   type LaiLo,
 } from '../api/baoCao'
 import { LoiApi } from '../api/goi'
+import { tongQuanNgay, type TongQuanNgay } from '../api/tongQuan'
 import NumberFlow from '@number-flow/react'
 
 // Trang Tổng quan của Quản lý và Kế toán (UC-26 lãi lỗ, UC-34 hiệu suất xe).
@@ -66,7 +67,7 @@ export default function TongQuan({ ketToan = false }: { ketToan?: boolean }) {
       <div className="tq-dau">
         <div>
           <h1>Tổng quan</h1>
-          <p className="ghi-chu">Chỉ tính chuyến đã quyết toán; tháng theo ngày khởi hành.</p>
+          <p className="ghi-chu">Tình hình hôm nay và lãi lỗ theo tháng.</p>
         </div>
         <label className="tq-thang">
           Tháng
@@ -84,7 +85,12 @@ export default function TongQuan({ ketToan = false }: { ketToan?: boolean }) {
         </p>
       )}
 
+      <HomNay />
+
       {/* Hàng số liệu của tháng đang chọn */}
+      <h2 className="tq-tieu-de">
+        Tháng {tenThang(thang)} <small>chỉ tính chuyến đã quyết toán, theo ngày khởi hành</small>
+      </h2>
       <div className="kinh tq-so">
         <SoLieu
           nhan="Doanh thu"
@@ -420,5 +426,62 @@ function BangHieuSuat({ ds }: { ds: HieuSuatXe[] }) {
         <p className="ghi-chu">{nghi} xe đang hoạt động không chạy chuyến nào trong tháng.</p>
       )}
     </>
+  )
+}
+
+// UC-38: tình hình hôm nay (mọi chuyến, không chỉ chuyến đã quyết toán). Lỗi thì ẩn cả khối, không chặn trang
+function HomNay() {
+  const [tq, setTq] = useState<TongQuanNgay | null>(null)
+  useEffect(() => {
+    tongQuanNgay()
+      .then(setTq)
+      .catch(() => setTq(null))
+  }, [])
+  if (!tq) return null
+  const tt = tq.chuyen.theo_trang_thai
+  const dg = tq.dung_gio
+  const ngay = new Date(`${tq.ngay}T00:00`).toLocaleDateString('vi-VN', {
+    weekday: 'long',
+    day: '2-digit',
+    month: '2-digit',
+  })
+  return (
+    <section className="tq-hom-nay">
+      <h2>Hôm nay · {ngay}</h2>
+      <div className="kinh tq-so">
+        <div>
+          <small>Chuyến</small>
+          <b>{tq.chuyen.tong}</b>
+          <em>
+            {tt.DANG_CHAY ?? 0} đang chạy · {(tt.HOAN_THANH ?? 0) + (tt.DA_QUYET_TOAN ?? 0)} xong ·{' '}
+            {(tt.LAP ?? 0) + (tt.DA_CHOT ?? 0)} chưa đi
+          </em>
+        </div>
+        <div>
+          <small>Đơn</small>
+          <b>{tq.don.tong}</b>
+          <em>
+            {tq.don.da_giao} đã giao · {tq.don.that_bai} thất bại · {tq.don.con_lai} còn lại
+          </em>
+        </div>
+        <div>
+          <small>Điểm dừng đúng giờ</small>
+          <b>{dg.ty_le === null ? '–' : `${Math.round(dg.ty_le * 100)}%`}</b>
+          <em>
+            {dg.da_quet ? `${dg.dung_gio} / ${dg.da_quet} điểm đã quét` : 'Chưa quét điểm nào'} ·
+            trễ quá {dg.nguong_tre_phut}′ tính là trễ
+          </em>
+        </div>
+        <div>
+          <small>Hàng đã chở</small>
+          <b>{tq.don.kg_da_cho.toLocaleString('vi-VN', { maximumFractionDigits: 0 })} kg</b>
+        </div>
+        <div>
+          <small>Doanh thu dự kiến</small>
+          <b>{tq.doanh_thu_du_kien.toLocaleString('vi-VN')} đ</b>
+          <em>cước các đơn của chuyến hôm nay, chưa trừ đơn thất bại</em>
+        </div>
+      </div>
+    </section>
   )
 }
