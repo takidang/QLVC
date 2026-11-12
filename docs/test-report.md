@@ -5,7 +5,7 @@
 ## Tổng hợp
 
 - **34 story**, **341 tiêu chí** (AC): **331 đạt**, **10 chưa kiểm**, **0 không đạt**.
-- Story hoàn thành: 21/34.
+- Story hoàn thành: 24/34.
 
 ## Theo loại tiêu chí
 
@@ -31,10 +31,10 @@
 | UC-08 | Tạo đơn hàng | 11 | 11 | 0 | 0 | Hoàn thành |
 | UC-10 | Sửa / hủy đơn | 12 | 12 | 0 | 0 | Hoàn thành |
 | UC-11 | Lập chuyến | 12 | 12 | 0 | 0 | Hoàn thành |
-| UC-12 | Gán / đổi xe và tài xế | 5 | 5 | 0 | 0 | Đang làm |
+| UC-12 | Gán / đổi xe và tài xế | 5 | 5 | 0 | 0 | Hoàn thành |
 | UC-13 | Ghép / gỡ đơn khỏi chuyến | 13 | 13 | 0 | 0 | Hoàn thành |
-| UC-15 | Chốt / mở chốt chuyến | 11 | 11 | 0 | 0 | Đang làm |
-| UC-16 | Hủy chuyến | 10 | 10 | 0 | 0 | Đang làm |
+| UC-15 | Chốt / mở chốt chuyến | 11 | 11 | 0 | 0 | Hoàn thành |
+| UC-16 | Hủy chuyến | 10 | 10 | 0 | 0 | Hoàn thành |
 | UC-17 | Xem chuyến được giao | 10 | 10 | 0 | 0 | Hoàn thành |
 | UC-18 | Bắt đầu / kết thúc chuyến | 11 | 11 | 0 | 0 | Hoàn thành |
 | UC-19 | Quét mã lấy hàng / báo không lấy được | 15 | 15 | 0 | 0 | Hoàn thành |
