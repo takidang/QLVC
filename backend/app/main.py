@@ -24,10 +24,12 @@ from app.modules.nguoi_dung.router import router as nguoi_dung_router
 from app.modules.quet.router import router as quet_router
 from app.modules.su_co.router import router as bao_su_co_router
 from app.modules.tep.router import router as tep_router
+from app.modules.thong_bao.router import router as thong_bao_router
 from app.modules.tien.chi_phi.router import router as chi_phi_router
 from app.modules.tien.cong_no.router import router as cong_no_router
 from app.modules.tien.quyet_toan.router import router as quyet_toan_router
 from app.modules.tien.tam_ung.router import router as tam_ung_router
+from app.modules.tim_kiem.router import router as tim_kiem_router
 from app.modules.toi.router import router as toi_router
 from app.modules.tong_quan.router import router as tong_quan_router
 from app.modules.tra_cuu.router import router as tra_cuu_router
@@ -61,6 +63,8 @@ app.include_router(su_co_router)
 app.include_router(tai_xe_router)
 app.include_router(tam_ung_router)
 app.include_router(tep_router)
+app.include_router(thong_bao_router)
+app.include_router(tim_kiem_router)
 app.include_router(tong_quan_router)
 app.include_router(toi_router)
 app.include_router(tra_cuu_router)
