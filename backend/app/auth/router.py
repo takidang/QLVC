@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app.auth import service
 from app.auth.bao_mat import THOI_HAN_TOKEN, tao_token
 from app.auth.phu_thuoc import nguoi_dung_hien_tai
-from app.auth.schemas import DangNhapVao, NguoiDungRa
+from app.auth.schemas import DangNhapVao, DoiMatKhauVao, NguoiDungRa
 from app.db import get_db
 from app.models import NguoiDung
 
@@ -32,3 +32,11 @@ def dang_xuat(response: Response):
 @router.get("/toi", response_model=NguoiDungRa)
 def toi(nd: Annotated[NguoiDung, Depends(nguoi_dung_hien_tai)]):
     return nd
+
+
+# UC-35: mọi vai trò đổi mật khẩu của chính mình
+@router.put("/mat-khau", status_code=204)
+def doi_mat_khau(
+    vao: DoiMatKhauVao, nd: Annotated[NguoiDung, Depends(nguoi_dung_hien_tai)], db: Annotated[Session, Depends(get_db)]
+):
+    service.doi_mat_khau(db, nd.id, vao.mat_khau_cu, vao.mat_khau_moi, datetime.now(UTC))

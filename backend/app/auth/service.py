@@ -43,6 +43,26 @@ def dang_nhap(db: Session, ten_dang_nhap: str, mat_khau: str, bay_gio: datetime)
     return nd
 
 
+def doi_mat_khau(db: Session, nd_id: int, cu: str, moi: str, bay_gio: datetime) -> None:
+    """UC-35. Sai mật khẩu cũ tính như đăng nhập sai (cùng bộ đếm, cùng khóa 15 phút) để không dò mật khẩu qua đây."""
+    nd = db.scalar(select(NguoiDung).where(NguoiDung.id == nd_id).with_for_update())
+    if nd.khoa_den and nd.khoa_den > bay_gio:
+        phut = math.ceil((nd.khoa_den - bay_gio).total_seconds() / 60)
+        raise LoiNghiepVu("KHOA_TAM", f"Sai mật khẩu quá {SO_LAN_SAI_TOI_DA} lần, thử lại sau {phut} phút", 429)
+    if not dung_mat_khau(nd.mat_khau_bam, cu):
+        nd.so_lan_sai += 1
+        if nd.so_lan_sai >= SO_LAN_SAI_TOI_DA:
+            nd.so_lan_sai, nd.khoa_den = 0, bay_gio + THOI_GIAN_KHOA
+        db.commit()
+        # 422, không phải 401: giao diện không nhầm là phiên hết hạn
+        raise LoiNghiepVu("SAI_MAT_KHAU_CU", "Mật khẩu hiện tại không đúng", 422)
+    if cu == moi:
+        raise LoiNghiepVu("MAT_KHAU_TRUNG", "Mật khẩu mới phải khác mật khẩu hiện tại", 422)
+    # Phiên đang dùng vẫn còn hạn (JWT không có phiên bản – UC-02 quyết định 5)
+    nd.mat_khau_bam, nd.so_lan_sai, nd.khoa_den = bam_mat_khau(moi), 0, None
+    db.commit()
+
+
 def tao_quan_ly(db: Session, ten_dang_nhap: str, ho_ten: str, mat_khau: str) -> NguoiDung:
     if len(mat_khau) < 8:
         raise ValueError("Mật khẩu phải có ít nhất 8 ký tự")
