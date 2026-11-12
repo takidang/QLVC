@@ -27,7 +27,7 @@ Chuông thông báo cho mọi vai trò: mỗi người thấy việc cần chú 
 
 ## Ghi chú triển khai
 - File đã đổi: `backend/app/modules/thong_bao/{router,service}.py` (mới; Điều phối dùng lại `canh_bao.bang` và `that_bai.can_xu_ly`), `backend/app/main.py` (đăng ký router theo chữ cái), `docs/api.md` mục 2.7.
-- Test đã viết: `backend/tests/api/test_uc37_thong_bao.py` (12 ca). Thử làm hỏng 11 chỗ (báo cả đơn thất bại còn ghép, đếm cả khoản chi đã duyệt, cộng cả tạm ứng thu hồi, tài xế thấy chuyến người khác, lấy cả ngày kia, sự cố quá 3 ngày, báo cả khoản duyệt đúng số, không xếp mới trước, giấy tờ lấy giờ hiện tại, đơn sắp quá hạn lấy hạn giao, không bỏ trùng khoản chi xử lý nhiều lần) → test đỏ đúng chỗ.
+- Test đã viết: `backend/tests/api/test_uc37_thong_bao.py` (22 ca; thêm 10 ca cách ghi độ trễ: dưới 60 phút ghi phút, từ 60 đổi sang giờ như giao diện, góp ý stark 12/11). Thử làm hỏng 11 chỗ (báo cả đơn thất bại còn ghép, đếm cả khoản chi đã duyệt, cộng cả tạm ứng thu hồi, tài xế thấy chuyến người khác, lấy cả ngày kia, sự cố quá 3 ngày, báo cả khoản duyệt đúng số, không xếp mới trước, giấy tờ lấy giờ hiện tại, đơn sắp quá hạn lấy hạn giao, không bỏ trùng khoản chi xử lý nhiều lần) → test đỏ đúng chỗ.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/api/test_uc37_thong_bao.py`
 - Lệch đặc tả: không (UC mới, ghi `api.md`). Khoản chi bị từ chối rồi duyệt lại chỉ giữ lần xử lý mới nhất.
 
@@ -35,7 +35,7 @@ Chuông thông báo cho mọi vai trò: mỗi người thấy việc cần chú 
 
 | AC | Loại | Test / Bằng chứng | Kết quả | Ngày |
 |---|---|---|---|---|
-| UC-37-AC1 | API | `test_uc37_ac1_*` (3 ca) | Đạt | 12/11/2026 |
+| UC-37-AC1 | API | `test_uc37_ac1_*` (13 ca) | Đạt | 12/11/2026 |
 | UC-37-AC2 | API | `test_uc37_ac2_*` (3 ca) | Đạt | 12/11/2026 |
 | UC-37-AC3 | API | `test_uc37_ac3_*` (3 ca) | Đạt | 12/11/2026 |
 | UC-37-AC4 | API | `test_uc37_ac4_*` (3 ca) | Đạt | 12/11/2026 |

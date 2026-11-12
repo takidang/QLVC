@@ -107,6 +107,30 @@ def test_uc37_ac1_dieu_phoi(client, db, kb, du_dp):
     assert len(ds) == cb["so_viec"] + 1
 
 
+@pytest.mark.parametrize(
+    ("phut", "chu"),
+    [
+        (None, "trễ"),
+        (0, "trễ"),
+        (1, "trễ 1′"),
+        (59, "trễ 59′"),  # biên: dưới 1 giờ ghi phút
+        (60, "trễ 1 giờ"),  # biên: đúng 1 giờ
+        (61, "trễ 1 giờ 1′"),
+        (201, "trễ 3 giờ 21′"),
+        (486, "trễ 8 giờ 6′"),
+        (600, "trễ 10 giờ"),
+    ],
+)
+def test_uc37_ac1_cach_ghi_do_tre(phut, chu):
+    assert service._tre(phut) == chu
+
+
+def test_uc37_ac1_tieu_de_chuyen_tre_doi_gio(client, db, kb, dang_chay):
+    quet(db, kb, dang_chay["c01"], "d4", "LAY", tre_phut=486, trang_thai_moi="DA_LAY")
+    tre = cua(xem(client), "CHUYEN_TRE")
+    assert len(tre) == 1 and "trễ 8 giờ 6′" in tre[0]["tieu_de"] and "486" not in tre[0]["tieu_de"]
+
+
 def test_uc37_ac1_don_that_bai_con_ghep_chua_bao(client, db, kb, dang_chay):
     # Đơn thất bại khi chuyến còn chạy (ghép còn hiệu lực) chưa xử lý được (BR-36): chưa thông báo
     quet(db, kb, dang_chay["c01"], "d2", "KHONG_LAY", trang_thai_moi="THAT_BAI")

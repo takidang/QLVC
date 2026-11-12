@@ -34,6 +34,16 @@ def _tien(so: int) -> str:
     return f"{so:,}".replace(",", ".") + " đ"
 
 
+def _tre(phut: int | None) -> str:
+    """ "trễ 25′", từ 60 phút đổi sang giờ như giao diện: "trễ 8 giờ 6′" (góp ý stark)."""
+    if phut is None or phut <= 0:
+        return "trễ"
+    if phut < 60:
+        return f"trễ {phut}′"
+    gio, du = divmod(phut, 60)
+    return f"trễ {gio} giờ" + (f" {du}′" if du else "")
+
+
 def _gio(luc: datetime) -> str:
     return luc.astimezone(GIO_VN).strftime("%H:%M %d/%m")
 
@@ -90,7 +100,7 @@ def _dieu_phoi(db: Session, nay: datetime) -> list[dict]:
             ).all()
         )
     for c in cb["chuyen_tre"]:
-        tre = f"trễ {c['tre_phut']}′" if c["tre_phut"] is not None else "trễ"
+        tre = _tre(c["tre_phut"])
         chong = f", chồng lên {', '.join(c['chong'])}" if c["chong"] else ""
         ra.append(
             _tb(
