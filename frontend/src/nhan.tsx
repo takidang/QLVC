@@ -12,8 +12,71 @@ const DUONG = {
     </>
   ),
   'canh-bao': <path d="M12 4 2.5 20h19zM12 10v4.5M12 17.2v.3" />,
+  // Menu cột trái (v3)
+  chuyen: (
+    <>
+      <circle cx="6" cy="18" r="2.2" />
+      <circle cx="18" cy="5" r="2.2" />
+      <path d="M8.2 18h6.3a3.25 3.25 0 0 0 0-6.5h-5a3.25 3.25 0 0 1 0-6.5h6.3" />
+    </>
+  ),
+  don: (
+    <>
+      <path d="M4 8.2 12 4l8 4.2v7.6L12 20l-8-4.2z" />
+      <path d="M4 8.2l8 4.2 8-4.2M12 12.4V20" />
+    </>
+  ),
+  xe: (
+    <>
+      <path d="M3 6.5h10.5v10H3zM13.5 10h4l3.5 3.5v3h-7.5" />
+      <circle cx="7.5" cy="17.5" r="1.8" />
+      <circle cx="17" cy="17.5" r="1.8" />
+    </>
+  ),
+  'tai-xe': (
+    <>
+      <circle cx="12" cy="8" r="3.6" />
+      <path d="M4.5 20c.6-3.6 3.6-5.5 7.5-5.5s6.9 1.9 7.5 5.5" />
+    </>
+  ),
+  'khach-hang': <path d="M5 20V5.5h9V20M14 10h5v10M3.5 20h17M8 9h3M8 12.5h3M8 16h3" />,
+  nut: (
+    <>
+      <path d="M12 20.5s6.5-5.6 6.5-10.5a6.5 6.5 0 0 0-13 0c0 4.9 6.5 10.5 6.5 10.5z" />
+      <circle cx="12" cy="10" r="2.3" />
+    </>
+  ),
+  tuyen: <path d="M6 4v16M6 7.5h9l3 2.5-3 2.5H6" />,
+  'tong-quan': <path d="M4 4v16h16M8.5 16v-5M12.5 16V8M16.5 16v-3" />,
+  'cong-no': <path d="M6 3.5h12v17l-3-1.8-3 1.8-3-1.8-3 1.8zM9 8.5h6M9 12h6" />,
+  'quyet-toan': <path d="M4.5 5.5h15v13h-15zM8 12.2l2.6 2.6 5.4-5.6" />,
+  'tam-ung': (
+    <path d="M17 5H5.5A1.5 1.5 0 0 0 4 6.5V18a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 18V9a1.5 1.5 0 0 0-1.5-1.5H4M16 13.5h.5" />
+  ),
+  'chi-phi-xe': <path d="M4.5 6.5h15v13h-15zM4.5 10.5h15M8.5 4v4M15.5 4v4" />,
+  'nguoi-dung': (
+    <>
+      <circle cx="9" cy="8.5" r="3.2" />
+      <path d="M3 19.5c.5-3 2.8-4.8 6-4.8s5.5 1.8 6 4.8M16 5.6a3.2 3.2 0 0 1 0 5.8M18 15c1.7.6 2.7 2 3 4.5" />
+    </>
+  ),
+  'bang-gia': (
+    <>
+      <path d="M12.5 3.5h8v8l-9 9-8-8z" />
+      <circle cx="16" cy="8" r="1.3" />
+    </>
+  ),
+  'cau-hinh': (
+    <>
+      <path d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h11M19 17h1" />
+      <circle cx="15" cy="7" r="2" />
+      <circle cx="9" cy="12" r="2" />
+      <circle cx="17" cy="17" r="2" />
+    </>
+  ),
 }
-export const Ic = ({ ten }: { ten: keyof typeof DUONG }) => (
+export type TenIc = keyof typeof DUONG
+export const Ic = ({ ten }: { ten: TenIc }) => (
   <svg className="ic" viewBox="0 0 24 24" aria-hidden="true">
     {DUONG[ten]}
   </svg>

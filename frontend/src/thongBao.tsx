@@ -15,15 +15,17 @@ export function KhungThongBao() {
   return (
     <Toaster
       position="bottom-right"
+      mobileOffset={{ bottom: 84 }}
       closeButton
       toastOptions={{
         style: {
           fontFamily: 'var(--font)',
           fontSize: '14px',
           color: 'var(--muc)',
-          background: '#fbfbf9',
-          border: '1px solid var(--vien-dam)',
-          borderRadius: '16px',
+          background: 'var(--noi)',
+          border: '1px solid var(--vien)',
+          borderRadius: '12px',
+          boxShadow: 'var(--bong)',
         },
       }}
     />

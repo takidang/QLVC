@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { toast } from 'sonner'
 import { doiMatKhau, LoiApi, type NguoiDung } from './api/auth'
-import { BO_MAU, apMau, mauDaLuu } from './nen'
+import { CHE_DO, apCheDo, cheDoDaLuu } from './nen'
 
-// Menu tài khoản (bấm vòng tên tắt): thông tin người dùng, chọn bộ màu giao diện,
+// Menu tài khoản (bấm vòng tên tắt): thông tin người dùng, chọn giao diện sáng / tối,
 // đổi mật khẩu (UC-35), đăng xuất.
 export default function MenuTaiKhoan({
   nd,
@@ -14,7 +14,7 @@ export default function MenuTaiKhoan({
   tenVaiTro: string
   onThoat: () => void
 }) {
-  const [mau, setMau] = useState(mauDaLuu)
+  const [cheDo, setCheDo] = useState(cheDoDaLuu)
   // Đóng khi bấm hoặc Tab ra ngoài menu (không dựa vào blur: nút bị khóa lúc gửi làm mất focus)
   const hop = useRef<HTMLDetailsElement>(null)
   useEffect(() => {
@@ -29,8 +29,8 @@ export default function MenuTaiKhoan({
     }
   }, [])
   const chon = (ma: string) => {
-    apMau(ma)
-    setMau(ma)
+    apCheDo(ma)
+    setCheDo(ma)
   }
   const tat = nd.ho_ten
     .split(' ')
@@ -48,27 +48,20 @@ export default function MenuTaiKhoan({
           <strong>{nd.ho_ten}</strong>
           <small>{tenVaiTro}</small>
         </div>
-        <div className="menu-tk-mau" role="group" aria-label="Bộ màu giao diện">
-          <small>Bộ màu giao diện</small>
-          {[{ ma: '', ten: 'Ngẫu nhiên theo ảnh', nen: '', nhan: '' }, ...BO_MAU].map((b) => (
-            <button
-              key={b.ma || 'ngau-nhien'}
-              type="button"
-              aria-pressed={mau === b.ma}
-              onClick={() => chon(b.ma)}
-            >
-              <i
-                className={b.ma ? 'o-mau' : 'o-mau ngau-nhien'}
-                aria-hidden="true"
-                style={
-                  b.ma
-                    ? { background: `linear-gradient(135deg, ${b.nen} 50%, ${b.nhan} 50%)` }
-                    : undefined
-                }
-              />
-              {b.ten}
-            </button>
-          ))}
+        <div className="menu-tk-che-do" role="group" aria-label="Giao diện">
+          <small>Giao diện</small>
+          <div className="vien-thuoc">
+            {CHE_DO.map((c) => (
+              <button
+                key={c.ma || 'may'}
+                type="button"
+                aria-pressed={cheDo === c.ma}
+                onClick={() => chon(c.ma)}
+              >
+                {c.ten}
+              </button>
+            ))}
+          </div>
         </div>
         <DoiMatKhau />
         <button className="phu" onClick={onThoat}>

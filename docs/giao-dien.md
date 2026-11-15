@@ -191,6 +191,19 @@ Theo gợi ý video Tài xem: không chuyển sang shadcn/ui (phải thêm Tailw
 - Nút bị khóa (vd. Duyệt ở Quyết toán khi lệch tiền) dùng nền xám đặc, chữ mờ, không còn chỉ giảm độ trong suốt.
 - Bảng chuyến, chuyến đang trễ (`theo_doi.ket_thuc_dang_chay` muộn hơn giờ theo lịch ≥ 1 phút, PR #54): giờ theo lịch gạch ngang màu phụ, giờ xong mới màu cam bên cạnh, vd. "→ ~~13:30~~ 14:10". Chưa có trường thì hiện như cũ.
 
+## Giao diện v3 "Giấy ngà, mực đêm" (nhánh `tai/thu-giao-dien-v3`, Tài duyệt hướng 16/11/2026)
+
+Bản thử làm lại toàn bộ cho hiện đại hơn, tách khỏi nhánh v2. Các mục phía trên tả v2; ở nhánh này những điểm dưới đây thay thế.
+
+- **Phong cách:** nền giấy ngà phẳng (`--giay`), thẻ đặc (`--mat`) viền mảnh, không kính mờ, không vệt sáng nền. Lớp nổi (menu xổ, hộp thoại, toast) mới có bóng (`--bong`). Một màu thương hiệu xanh rêu đậm (`--o-liu` `#1F4D3F`); cam vẫn chỉ để cảnh báo.
+- **Sáng / Tối:** bỏ 5 bộ màu. Bản sáng ở `:root`, bản tối ở `:root[data-che-do='toi']`; chọn "Theo máy / Sáng / Tối" trong menu tài khoản (`nen.ts`, khóa `qlvc-che-do`). Màu trạng thái có thêm biến `--…-chu` để làm chữ / biểu tượng (bản tối sáng hơn); màu tô đặc giữ nguyên hai bản. Phiếu in luôn nền sáng. Bản đồ đảo màu ở bản tối.
+- **Khung trang:** cột menu trái nền mực đêm (`--dem`), mục chia nhóm Vận hành / Danh mục / Tài chính / Quản trị, mỗi mục một biểu tượng (`nhan.tsx`). Thanh trên: tìm chung bên trái, tên + vai trò, chuông, tài khoản bên phải. Tài xế (một mục) không có cột menu. Dưới 900 px cột menu thành thanh đáy cuộn ngang.
+- **Chữ:** tiêu đề trang 28 px đậm 600 (v2: 46 px mảnh 300); số liệu lớn 26 px đậm 600.
+- **Bo góc:** nút, ô nhập 10 px (`--bo`), thẻ 14 px (`--bo-the`), nhãn trạng thái 7 px. Chỉ thanh tiến độ còn bo tròn hết cỡ.
+- **Nhãn trạng thái:** nền nhuộm nhạt theo màu trạng thái, không viền; cờ khẩn (Trễ, Sự cố, Chồng lịch) và Đã quyết toán vẫn tô đặc. Hình biểu tượng giữ như v2.
+- **Tab lọc:** rãnh lõm `--mat-2`, mục đang chọn nổi lên bằng `--mat` + bóng nhỏ.
+- **Chưa làm:** soát từng màn (chi tiết chuyến, tài xế, Tổng quan, kế toán, danh mục) với dữ liệu thật; màu biểu đồ bản tối chưa chạy bộ kiểm dataviz.
+
 ## Còn phải quyết khi làm vào code
 
 - Nút đổi bộ màu trong Cài đặt (Tài làm sau).

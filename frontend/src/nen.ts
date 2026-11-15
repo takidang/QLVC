@@ -1,28 +1,22 @@
-// Mỗi lần mở web chọn ngẫu nhiên một ảnh đăng nhập kèm bộ màu hợp với ảnh đó (áp cho cả app).
-// Người dùng đã chọn bộ màu trong menu tài khoản (lưu trên trình duyệt) thì lựa chọn đó thắng.
-const DS = [
-  { anh: '/anh/dang-nhap-hoang-hon.webp', mau: 'suong' }, // trời xanh chuyển cam → Sương xanh
-  { anh: '/anh/dang-nhap-luot-ngang.webp', mau: 'cat' }, // tông be xám → Cát ấm
-]
+// Ảnh nền (đăng nhập, đầu màn Chuyến, tra cứu): mỗi lần mở web chọn ngẫu nhiên một ảnh.
+const DS = ['/anh/dang-nhap-hoang-hon.webp', '/anh/dang-nhap-luot-ngang.webp']
+export const NEN = { anh: DS[Math.floor(Math.random() * DS.length)] }
 
-export const BO_MAU = [
-  { ma: 'da', ten: 'Đá xám xanh', nen: '#c4c8be', nhan: '#56624a' },
-  { ma: 'suong', ten: 'Sương xanh', nen: '#c3cad3', nhan: '#3f5673' },
-  { ma: 'cat', ten: 'Cát ấm', nen: '#d2cabb', nhan: '#6b5540' },
-  { ma: 'ngoc', ten: 'Ngọc xanh', nen: '#bfcbc8', nhan: '#2f5f58' },
-  { ma: 'oai', ten: 'Oải hương', nen: '#cac6cf', nhan: '#54486e' },
+// Chế độ sáng / tối (v3): '' = theo máy. Lưu trên trình duyệt; đặt data-che-do trên <html>
+// (index.css chỉ có một khối biến cho bản tối, nên "theo máy" cũng quy về sang / toi ở đây).
+export const CHE_DO = [
+  { ma: '', ten: 'Theo máy' },
+  { ma: 'sang', ten: 'Sáng' },
+  { ma: 'toi', ten: 'Tối' },
 ] as const
-const KHOA = 'qlvc-bo-mau'
+const KHOA = 'qlvc-che-do'
+const mayToi = matchMedia('(prefers-color-scheme: dark)')
 
-export const NEN = DS[Math.floor(Math.random() * DS.length)]
-
-// '' = ngẫu nhiên theo ảnh; 'da' là bộ mặc định (không gắn data-mau)
-export const mauDaLuu = () => localStorage.getItem(KHOA) ?? ''
-export function apMau(ma: string) {
+export const cheDoDaLuu = () => localStorage.getItem(KHOA) ?? ''
+export function apCheDo(ma: string) {
   if (ma) localStorage.setItem(KHOA, ma)
   else localStorage.removeItem(KHOA)
-  const dung = ma || NEN.mau
-  if (dung === 'da') delete document.documentElement.dataset.mau
-  else document.documentElement.dataset.mau = dung
+  document.documentElement.dataset.cheDo = ma || (mayToi.matches ? 'toi' : 'sang')
 }
-apMau(mauDaLuu())
+apCheDo(cheDoDaLuu())
+mayToi.addEventListener('change', () => apCheDo(cheDoDaLuu()))
