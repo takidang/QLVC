@@ -4424,3 +4424,39 @@ td {
 .qt-so b {
   font-size: 20px;
 }
+/* Hộp thoại phủ cả thanh trên và cột menu */
+.nen-mo {
+  z-index: 40;
+}
+/* Form của tài xế (giao hàng, giao không được, quét lấy, chi phí, sự cố, km): xếp dọc, cách đều */
+form.form-km {
+  display: grid;
+  gap: 12px;
+}
+form.form-km label {
+  display: grid;
+  gap: 5px;
+  font-size: 13px;
+  color: var(--phu);
+}
+form.form-km .hanh-dong {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+form.form-km .hanh-dong > * + * {
+  margin-left: 0;
+}
+form.form-km > button {
+  justify-self: start;
+}
+.giao-hang {
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--vien);
+}
+/* Ô ký tên giữ nền giấy trắng ở cả bản tối (nét ký màu mực) */
+.o-ky canvas {
+  border-color: var(--vien-o);
+}

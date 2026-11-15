@@ -202,7 +202,10 @@ Bản thử làm lại toàn bộ cho hiện đại hơn, tách khỏi nhánh v2
 - **Bo góc:** nút, ô nhập 10 px (`--bo`), thẻ 14 px (`--bo-the`), nhãn trạng thái 7 px. Chỉ thanh tiến độ còn bo tròn hết cỡ.
 - **Nhãn trạng thái:** nền nhuộm nhạt theo màu trạng thái, không viền; cờ khẩn (Trễ, Sự cố, Chồng lịch) và Đã quyết toán vẫn tô đặc. Hình biểu tượng giữ như v2.
 - **Tab lọc:** rãnh lõm `--mat-2`, mục đang chọn nổi lên bằng `--mat` + bóng nhỏ.
-- **Chưa làm:** soát từng màn (chi tiết chuyến, tài xế, Tổng quan, kế toán, danh mục) với dữ liệu thật; màu biểu đồ bản tối chưa chạy bộ kiểm dataviz.
+- **Form tài xế** (giao hàng, giao không được, quét lấy, chi phí, sự cố, km): xếp dọc cách 12 px, nhãn trên ô. Ô ký tên luôn nền trắng nét đen ở cả hai bản.
+- **Hộp thoại** phủ cả cột menu và thanh trên (lớp mờ z-index 40).
+- **Đã soát với dữ liệu thật (16/11):** mọi màn của 4 vai trò, hộp thoại lập chuyến / tạo đơn / sửa xe, form tài xế 360 px, phiếu in, bản đồ; cả bản sáng và tối.
+- **Chưa làm:** màu biểu đồ bản tối chưa chạy bộ kiểm dataviz; bố cục bên trong từng màn vẫn như v2.
 
 ## Còn phải quyết khi làm vào code
 
