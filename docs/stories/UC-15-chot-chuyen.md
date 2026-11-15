@@ -1,6 +1,6 @@
 # UC-15: Chốt / mở chốt chuyến
 
-- **Trạng thái:** Xong 08/11/2026 – 11/11 AC (AC11 Kiệt thử 07/11, PR #18) (Đã duyệt 01/11/2026 – Tài: xác nhận chạy rỗng một lần là đủ; mở chốt xóa số đã chốt)
+- **Trạng thái:** Hoàn thành 08/11/2026 – 11/11 AC (AC11 Kiệt thử 07/11, PR #18) (Đã duyệt 01/11/2026 – Tài: xác nhận chạy rỗng một lần là đủ; mở chốt xóa số đã chốt)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa)
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-15) · `docs/api.md` mục 2.4 · `docs/nghiep-vu.md` BR-23, 24, 52, 71, mục 2.1, 5.1, mục 11 bước 4 · ca test `docs/ca-test-br.md` (TC-BR23-01…03, BR24-01, 02, BR30-01, BR52-01, 02, BR71-01, 02)
 - **Quy tắc nghiệp vụ liên quan:** BR-01…06 (nhóm A), BR-11…19 (nhóm B), BR-23 (chốt), BR-24 (mở chốt), BR-30 (lịch sử), BR-52 (lãi dự kiến), BR-57 (phân quyền), BR-71 (lưu định mức, lương, ETA kế hoạch)

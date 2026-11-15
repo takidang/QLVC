@@ -1,6 +1,6 @@
 # UC-37: Thông báo theo vai trò
 
-- **Trạng thái:** Đang làm – AC1–AC4 đạt, AC5 giao diện chờ làm (Đã duyệt 12/11/2026 – Tài: "làm theo kế hoạch", tiêu chí như đề xuất 12/11)
+- **Trạng thái:** Hoàn thành 12/11/2026 – 5/5 AC đạt (Đã duyệt 12/11/2026 – Tài: "làm theo kế hoạch", tiêu chí như đề xuất 12/11)
 - **Tác nhân:** Quản lý, Điều phối, Kế toán, Tài xế
 - **Đặc tả:** chưa có trong `docs/use-cases.md` (UC mới, chuông trên thanh đầu của giao diện v2); `docs/api.md` mục 2.7
 - **Quy tắc nghiệp vụ liên quan:** BR-57, BR-58; dùng lại UC-27 (bảng cảnh báo), UC-22, UC-24
@@ -39,4 +39,4 @@ Chuông thông báo cho mọi vai trò: mỗi người thấy việc cần chú 
 | UC-37-AC2 | API | `test_uc37_ac2_*` (3 ca) | Đạt | 12/11/2026 |
 | UC-37-AC3 | API | `test_uc37_ac3_*` (3 ca) | Đạt | 12/11/2026 |
 | UC-37-AC4 | API | `test_uc37_ac4_*` (3 ca) | Đạt | 12/11/2026 |
-| UC-37-AC5 | UI | Chuông trên thanh đầu: phiên giao diện v2 làm | CHƯA KIỂM | |
+| UC-37-AC5 | UI | Chuông 4 vai trò: Kiệt thử 12/11, ảnh `docs/test-evidence/UC-37/a…d` (PR #55) | Đạt | 12/11/2026 |

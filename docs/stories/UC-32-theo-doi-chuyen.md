@@ -1,6 +1,6 @@
 # UC-32: Theo dõi chuyến
 
-- **Trạng thái:** Đang làm – AC1–AC10, AC12–AC15 đạt; AC11 đạt ca a, b, d, còn ca c (tài xế khác) và e (chờ UC-33) (Tài giao "làm xong hết" 08/11/2026; quyết định dưới đây Claude đề xuất, Tài xem lại khi review PR)
+- **Trạng thái:** Hoàn thành 12/11/2026 – AC1–AC15 đạt (AC11 ca c, e Kiệt thử 12/11 trên giao diện v2) (Tài giao "làm xong hết" 08/11/2026; quyết định dưới đây Claude đề xuất, Tài xem lại khi review PR)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa); Kế toán xem
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-32) · `docs/api.md` mục 2.4 (`GET /api/chuyen?ngay=`, `GET /api/chuyen/{id}`, `ket-thuc-su-co`, `POST /api/su-co/{id}/dong`) · `docs/nghiep-vu.md` BR-36, 68, 70, 73, mục 2.1 · ca test `docs/ca-test-br.md` (TC-BR68-01…04, TC-BR73-01…03)
 - **Quy tắc nghiệp vụ liên quan:** BR-30 (lịch sử), BR-36, BR-57 (phân quyền), BR-68 (kết thúc do sự cố), BR-70 (km), BR-71 (ETA kế hoạch), BR-73 (trễ, chồng lịch)
@@ -38,6 +38,7 @@
 | UC-32-AC13 | `theo_doi.tre_phut`: độ trễ lượt quét gần nhất so ETA kế hoạch (cùng cách tính BR-73), âm là sớm; chưa quét → `null` | API | BR-73 |
 | UC-32-AC14 | `theo_doi.vi_tri`: `{lat, lng, luc, nut}` của lượt quét mới nhất có GPS; lượt thiếu GPS bỏ qua; chưa có → `null`. Chỉ là vị trí lúc quét, không theo dõi liên tục | API | BR-43 |
 | UC-32-AC15 | `GET /api/chuyen?tu_khoa=`: khớp một phần mã chuyến, biển số, tên tài xế, không phân biệt hoa thường; kết hợp được với `ngay`; ký tự `%`, `_` không làm khớp tất cả | API | — |
+| UC-32-AC16 | Bảng ngày có `theo_doi.ket_thuc_dang_chay`: bằng kết thúc dự kiến + độ trễ lượt quét gần nhất (BR-73), cùng giá trị với chi tiết chuyến; chuyến không `DANG_CHAY` → `null`. Thêm 12/11/2026 theo góp ý Kiệt thử giao diện v2 | API | BR-73 |
 
 ## Ghi chú triển khai
 - File đã đổi: `backend/app/modules/chuyen/theo_doi.py` (mới: tiến độ, cờ, trễ, chồng lịch, dòng thời gian, tiền, kết thúc do sự cố, đóng sự cố), `chuyen/router.py` (GET danh sách thêm `theo_doi` khi có `ngay`, GET chi tiết dùng `theo_doi.chi_tiet`, `ket-thuc-su-co`, `router_su_co`), `chuyen/schemas.py`, `chuyen/service.py` (`_dong_don_cua_chuyen` lấy cả ghép đã có kết quả), `app/main.py` (đăng ký `router_su_co`), `frontend/src/api/chuyen.ts`, `frontend/src/pages/dieu-phoi/{ChuyenDanhSach,ChuyenChiTiet,TheoDoiChuyen}.tsx`, `docs/api.md`.
@@ -63,8 +64,9 @@
 | UC-32-AC8 | API | `test_uc32_ac8_giai_phong_lich` | Đạt | 08/11/2026 |
 | UC-32-AC9 | API | `test_uc32_ac9_dong_su_co` | Đạt | 08/11/2026 |
 | UC-32-AC10 | API | `test_uc32_ac10_* (5 ca)` | Đạt | 08/11/2026 |
-| UC-32-AC11 | UI | Kiệt thử 10/11, ca a, b, d đạt (b, d thử lại trên PR #34); c, e chưa thử (`docs/test-evidence/UC-32/`) | CHƯA KIỂM (ca c, e) | 10/11/2026 |
+| UC-32-AC11 | UI | Kiệt thử 10/11 ca a, b, d (b, d thử lại trên PR #34); 12/11 ca c (chồng lịch), e (đóng sự cố) đạt trên giao diện v2, ảnh `docs/test-evidence/UC-32/c1-v2-…`, `c2-v2-…`, `e-v2-…`, `e2-tai-xe-…` (PR #55) | Đạt | 12/11/2026 |
 | UC-32-AC12 | API | `test_uc32_ac12_trang_thai_diem` | Đạt | 11/11/2026 |
 | UC-32-AC13 | API | `test_uc32_ac13_tre_phut` | Đạt | 11/11/2026 |
 | UC-32-AC14 | API | `test_uc32_ac14_vi_tri` | Đạt | 11/11/2026 |
 | UC-32-AC15 | API | `test_uc32_ac15_tu_khoa` | Đạt | 11/11/2026 |
+| UC-32-AC16 | API | `test_uc32_ac16_*` (2 ca) | Đạt | 12/11/2026 |

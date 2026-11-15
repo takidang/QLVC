@@ -48,3 +48,9 @@ Claude kiểm CSDL:
 
 - 9/9 ca đạt (a–h, e2).
 - CSDL: phiếu thu #1 1.600.000 (DH-6HXV2Y, DH-S4JPYG) và #2 2.997.000 (DH-MSKG7T), cùng Cty A, ngày 09/11, người tạo `thu`; 3 `phai_thu` `DA_THU` đúng `phieu_thu_id`; 3 dòng `nhat_ky_tien` `DA_THU` có "Phiếu thu #… ngày 09/11/2026"; 3 đơn vẫn `DA_GIAO`. Không có phiếu nào từ ca d (bị từ chối) và ca e (bấm Hủy).
+
+## Thử lại trên giao diện v2 (Kiệt, 12/11/2026)
+
+Màn Công nợ v2 (nhánh `tai/thu-giao-dien-v2` 30949bf: chọn khách ở danh sách trái, khoản bên phải), backend `dev` (93ab7eb), dữ liệu demo.
+
+- Đạt: khối số trên cùng (tổng nợ, số khoản, số khách); khách nợ nhiều trước; chọn **Cty Dược phẩm An Khang** → tab Chưa thu có ô tích, "Đã chọn N khoản · … đ" đổi theo, lịch không cho chọn ngày mai; đánh dấu đã thu DH-S8X868 + DH-BJC7N3 → phiếu thu **#7 · 2.998.000 đ** ngày 12/11, khách còn 1 khoản 800.000; tab Đã thu có số phiếu, ngày thu, không ô tích; đơn vẫn "Đã giao". Ảnh `j-v2-chon-khach.png`, `i-v2-da-thu.png`.

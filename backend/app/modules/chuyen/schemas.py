@@ -117,6 +117,7 @@ class TheoDoi(BaseModel):
     diem: list[str]  # XONG|THAT_BAI|DANG_TOI|CHUA từng điểm dừng theo thứ tự lịch trình
     tre_phut: int | None  # trễ của lượt quét gần nhất, âm là sớm; chưa quét thì null
     vi_tri: ViTriQuet | None  # lượt quét mới nhất có GPS
+    ket_thuc_dang_chay: datetime | None = None  # kết thúc dự kiến khi đang chạy (BR-73), như ở chi tiết chuyến
 
 
 class ChuyenNgay(ChuyenRa):

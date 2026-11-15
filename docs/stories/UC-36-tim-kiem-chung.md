@@ -1,6 +1,6 @@
 # UC-36: Tìm kiếm chung
 
-- **Trạng thái:** Đang làm – AC1–AC4 đạt, AC5 giao diện chờ làm (Đã duyệt 12/11/2026 – Tài: "làm UC-35 36 đi")
+- **Trạng thái:** Hoàn thành 12/11/2026 – 5/5 AC đạt (Đã duyệt 12/11/2026 – Tài: "làm UC-35 36 đi")
 - **Tác nhân:** Quản lý, Điều phối, Kế toán, Tài xế
 - **Đặc tả:** chưa có trong `docs/use-cases.md` (UC mới, ô tìm trên thanh đầu của giao diện v2); `docs/api.md` mục 2
 - **Quy tắc nghiệp vụ liên quan:** BR-57, BR-58
@@ -39,4 +39,4 @@ Một ô tìm duy nhất trả kết quả gộp theo nhóm (chuyến, đơn, xe
 | UC-36-AC2 | API | `test_uc36_ac2_toi_da_5_dong` | Đạt | 12/11/2026 |
 | UC-36-AC3 | API | `test_uc36_ac3_*` (3 ca) | Đạt | 12/11/2026 |
 | UC-36-AC4 | API | `test_uc36_ac4_*` (10 ca) | Đạt | 12/11/2026 |
-| UC-36-AC5 | UI | Ô tìm trên thanh đầu: phiên giao diện v2 làm | CHƯA KIỂM | |
+| UC-36-AC5 | UI | Ô tìm trên thanh đầu: Kiệt thử 12/11, ảnh `docs/test-evidence/UC-36/a-tim-chung-51C.png` (PR #55) | Đạt | 12/11/2026 |
