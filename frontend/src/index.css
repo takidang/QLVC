@@ -4411,3 +4411,16 @@ td {
     min-width: 860px;
   }
 }
+
+/* Soát từng màn với dữ liệu thật (16/11) */
+/* Điểm đã xong trên màn tài xế: mờ hơn thẻ thường ở cả bản sáng và tối */
+.lt-dt li.xong .the {
+  background: color-mix(in srgb, var(--mat) 55%, transparent);
+}
+/* Hàng số liệu 5 cột trong cột chi tiết hẹp (Quyết toán, Công nợ): số nhỏ lại cho khỏi đè nhau */
+.tq-so b {
+  font-size: 24px;
+}
+.qt-so b {
+  font-size: 20px;
+}
