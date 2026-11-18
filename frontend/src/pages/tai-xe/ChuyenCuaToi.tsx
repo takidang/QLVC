@@ -1,15 +1,23 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { LoiApi } from '../../api/goi'
+import { Ic, Nhan } from '../../nhan'
 import {
   TEN_TRANG_THAI,
   chuyenCuaToi,
-  ngayGio,
+  khoangGio,
+  ngayThang,
   type ChuyenCuaToi as Chuyen,
   type NhomChuyen,
 } from '../../api/toi'
 
 const SO_DONG = 20
+// Dòng ngày trên tiêu đề, tính một lần lúc tải trang
+const homNay = new Date().toLocaleDateString('vi-VN', {
+  weekday: 'long',
+  day: '2-digit',
+  month: '2-digit',
+})
 // UC-17: chuyến của tài xế trên điện thoại (thẻ thay bảng để không cuộn ngang ở 360 px)
 export default function ChuyenCuaToi() {
   const [nhom, setNhom] = useState<NhomChuyen>('can_lam')
@@ -36,6 +44,7 @@ export default function ChuyenCuaToi() {
   const soTrang = Math.max(1, Math.ceil((ds?.tong ?? 0) / SO_DONG))
   return (
     <section className="noi-dung dien-thoai">
+      <p className="dt-ngay">{homNay}</p>
       <h1>Chuyến của tôi</h1>
       <div className="the-chon" role="tablist">
         {(['can_lam', 'da_xong'] as NhomChuyen[]).map((n) => (
@@ -68,26 +77,55 @@ export default function ChuyenCuaToi() {
         </p>
       )}
 
-      <ul className="ds-the">
-        {ds?.du_lieu.map((c) => (
-          <li key={c.id}>
-            <Link to={String(c.id)} className="the">
-              <div className="the-dau">
-                <strong>{c.ma_chuyen}</strong>
-                <span className={c.trang_thai === 'DANG_CHAY' ? 'nhan' : 'nhan xam'}>
-                  {TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}
-                </span>
+      {/* Chuyến đang chạy nổi lên thành khối đậm, nút mở to cho ngón tay; chuyến khác là dòng gọn */}
+      {ds?.du_lieu
+        .filter((c) => c.trang_thai === 'DANG_CHAY')
+        .map((c) => (
+          <section key={c.id} className="the-chinh">
+            <div className="dong">
+              <span className="ma">{c.ma_chuyen}</span>
+              <Nhan loai={c.trang_thai}>{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</Nhan>
+            </div>
+            <div>
+              <h2>{c.ten_tuyen}</h2>
+              <div className="mo-chu">
+                <span className="bien">{c.bien_so}</span>
+                {khoangGio(c.khoi_hanh_du_kien, c.ket_thuc_du_kien)}
               </div>
-              <div>
-                {c.ma_tuyen} – {c.ten_tuyen}
-              </div>
-              <div className="ghi-chu">
-                Xe <span className="bien-so">{c.bien_so}</span> · {ngayGio(c.khoi_hanh_du_kien)} →{' '}
-                {ngayGio(c.ket_thuc_du_kien)} · {c.so_don} đơn
-              </div>
+              <div className="mo-chu">{c.so_don} đơn</div>
+            </div>
+            <Link to={String(c.id)} className="nut-to">
+              Mở lịch trình, quét mã
+              <Ic ten="phai" />
             </Link>
-          </li>
+          </section>
         ))}
+
+      <ul className="ds-the">
+        {ds?.du_lieu
+          .filter((c) => c.trang_thai !== 'DANG_CHAY')
+          .map((c) => (
+            <li key={c.id}>
+              <Link to={String(c.id)} className="the hang-dt">
+                <span className="gio">
+                  <b>
+                    {new Date(c.khoi_hanh_du_kien).toLocaleTimeString('vi-VN', {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </b>
+                  <small>{ngayThang(new Date(c.khoi_hanh_du_kien))}</small>
+                </span>
+                <span>
+                  <span className="tuyen">{c.ten_tuyen}</span>
+                  <small>
+                    {c.ma_chuyen} · {c.bien_so} · {c.so_don} đơn
+                  </small>
+                  <Nhan loai={c.trang_thai}>{TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}</Nhan>
+                </span>
+              </Link>
+            </li>
+          ))}
       </ul>
 
       {soTrang > 1 && (

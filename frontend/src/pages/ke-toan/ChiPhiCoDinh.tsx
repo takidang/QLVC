@@ -1,6 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachXe, datChiPhiCoDinh, xemChiPhiCoDinh, type Xe } from '../../api/xe'
+import { DauDanhMuc } from '../danh-muc'
+import { ThongBao } from '../../thongBao'
 
 // Tháng theo giờ máy người dùng (Việt Nam), không theo UTC: đầu tháng không bị chọn nhầm tháng trước
 const thangNay = () => new Date().toLocaleDateString('sv-SE').slice(0, 7) // YYYY-MM
@@ -56,71 +58,78 @@ export default function ChiPhiCoDinh() {
 
   return (
     <section className="noi-dung">
-      <h1>Chi phí cố định tháng của xe</h1>
-      <p className="ghi-chu">
-        Khấu hao, bảo hiểm, phí đường bộ… tính theo tháng; dùng cho lãi theo xe (không vào lãi
-        chuyến).
-      </p>
-      <form className="o-nhap" onSubmit={luu}>
-        <label>
-          Xe
-          <select
-            value={xeId}
-            onChange={(e) => {
-              setXeId(e.target.value)
-              setThongBao('')
-              setLoi('')
-            }}
-            required
-          >
-            <option value="">– Chọn xe –</option>
-            {dsXe.map((x) => (
-              <option key={x.id} value={x.id}>
-                {x.bien_so}
-                {x.trang_thai === 'NGUNG' ? ' (ngừng)' : ''}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label>
-          Tháng
-          <input
-            type="month"
-            value={thang}
-            onChange={(e) => {
-              setThang(e.target.value)
-              setThongBao('')
-              setLoi('')
-            }}
-            required
-          />
-        </label>
-        <label>
-          Số tiền (đồng)
-          <input
-            type="number"
-            min={0}
-            step={1000}
-            value={soTien}
-            onChange={(e) => setSoTien(e.target.value)}
-            required
-            disabled={!xeId}
-          />
-        </label>
-        <button disabled={!xeId}>Lưu</button>
-      </form>
-      {xeId && (
-        <p className="ghi-chu">
-          Đã lưu cho tháng này:{' '}
-          {daLuu === null ? 'chưa nhập' : `${daLuu.toLocaleString('vi-VN')} đ`}
-        </p>
-      )}
-      {thongBao && <p className="thanh-cong">{thongBao}</p>}
-      {loi && (
-        <p role="alert" className="loi">
-          {loi}
-        </p>
-      )}
+      <DauDanhMuc
+        tieuDe="Chi phí cố định xe"
+        phu="Khấu hao, bảo hiểm, phí đường bộ… tính theo tháng; dùng cho lãi theo xe (không vào lãi chuyến)."
+      />
+      <div className="kinh dm-the">
+        <form className="o-nhap" onSubmit={luu}>
+          <label>
+            Xe
+            <select
+              value={xeId}
+              onChange={(e) => {
+                setXeId(e.target.value)
+                setThongBao('')
+                setLoi('')
+              }}
+              required
+            >
+              <option value="">– Chọn xe –</option>
+              {dsXe.map((x) => (
+                <option key={x.id} value={x.id}>
+                  {x.bien_so}
+                  {x.trang_thai === 'NGUNG' ? ' (ngừng)' : ''}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Tháng
+            <input
+              type="month"
+              value={thang}
+              onChange={(e) => {
+                setThang(e.target.value)
+                setThongBao('')
+                setLoi('')
+              }}
+              required
+            />
+          </label>
+          <label>
+            Số tiền (đồng)
+            <input
+              type="number"
+              min={0}
+              step={1000}
+              value={soTien}
+              onChange={(e) => setSoTien(e.target.value)}
+              required
+              disabled={!xeId}
+            />
+          </label>
+          <button disabled={!xeId}>Lưu</button>
+        </form>
+        {!xeId ? (
+          <p className="ghi-chu">Chọn xe và tháng để xem số đã lưu hoặc nhập mới.</p>
+        ) : daLuu === null ? (
+          <p className="ghi-chu">Chưa nhập cho tháng {thang.split('-').reverse().join('/')}.</p>
+        ) : (
+          <div className="so-lieu dm-so">
+            <div>
+              <b>{daLuu.toLocaleString('vi-VN')} đ</b>
+              <span>đã lưu cho tháng {thang.split('-').reverse().join('/')}</span>
+            </div>
+          </div>
+        )}
+        <ThongBao chu={thongBao} />
+        {loi && (
+          <p role="alert" className="loi">
+            {loi}
+          </p>
+        )}
+      </div>
     </section>
   )
 }

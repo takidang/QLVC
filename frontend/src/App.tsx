@@ -1,6 +1,11 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import { BrowserRouter, Navigate, NavLink, Outlet, Route, Routes } from 'react-router-dom'
 import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
+import { Ic, type TenIc } from './nhan'
+import { KhungThongBao } from './thongBao'
+import ChuongThongBao from './ChuongThongBao'
+import MenuTaiKhoan from './MenuTaiKhoan'
+import TimChung from './TimChung'
 import DangNhap from './pages/DangNhap'
 import BangGiaDanhSach from './pages/quan-ly/BangGiaDanhSach'
 import CauHinh from './pages/quan-ly/CauHinh'
@@ -20,6 +25,8 @@ import QuyetToan from './pages/ke-toan/QuyetToan'
 import TamUng from './pages/ke-toan/TamUng'
 import ChuyenCuaToi from './pages/tai-xe/ChuyenCuaToi'
 import ChuyenCuaToiChiTiet from './pages/tai-xe/ChuyenCuaToiChiTiet'
+import TongQuan from './pages/TongQuan'
+import TraCuu from './pages/TraCuu'
 
 const TRANG_CHU: Record<VaiTro, string> = {
   QUAN_LY: '/quan-ly',
@@ -34,34 +41,45 @@ const TEN_VAI_TRO: Record<VaiTro, string> = {
   KE_TOAN: 'Kế toán',
 }
 
-// Trang con của từng vai trò. Thêm UC mới: thêm một dòng ở đây (docs/mau-use-case.md). `an`: không hiện trên menu
+// Trang con của từng vai trò. Thêm UC mới: thêm một dòng ở đây (docs/mau-use-case.md).
+// `an`: không hiện trên menu; `nhom`: tên nhóm trên cột menu (bỏ trống là đứng đầu, không tên nhóm)
 const TRANG_CON: Partial<
-  Record<VaiTro, { duong_dan: string; ten: string; trang: ReactNode; an?: boolean }[]>
+  Record<
+    VaiTro,
+    { duong_dan: string; ten: string; trang: ReactNode; an?: boolean; nhom?: string }[]
+  >
 > = {
   DIEU_PHOI: [
-    { duong_dan: 'chuyen', ten: 'Chuyến', trang: <ChuyenDanhSach /> },
+    { duong_dan: 'chuyen', ten: 'Chuyến', trang: <ChuyenDanhSach />, nhom: 'Vận hành' },
     { duong_dan: 'chuyen/:id', ten: 'Chi tiết chuyến', trang: <ChuyenChiTiet />, an: true },
-    { duong_dan: 'don', ten: 'Đơn hàng', trang: <DonDanhSach /> },
+    { duong_dan: 'don', ten: 'Đơn hàng', trang: <DonDanhSach />, nhom: 'Vận hành' },
     { duong_dan: 'don/:id/phieu', ten: 'Phiếu đơn', trang: <PhieuDon />, an: true },
-    { duong_dan: 'xe', ten: 'Xe', trang: <XeDanhSach /> },
-    { duong_dan: 'tai-xe', ten: 'Tài xế', trang: <TaiXeDanhSach /> },
-    { duong_dan: 'khach-hang', ten: 'Khách hàng', trang: <KhachHangDanhSach /> },
-    { duong_dan: 'nut', ten: 'Nút', trang: <NutDanhSach /> },
-    { duong_dan: 'tuyen', ten: 'Tuyến', trang: <TuyenDanhSach /> },
+    { duong_dan: 'xe', ten: 'Xe', trang: <XeDanhSach />, nhom: 'Danh mục' },
+    { duong_dan: 'tai-xe', ten: 'Tài xế', trang: <TaiXeDanhSach />, nhom: 'Danh mục' },
+    { duong_dan: 'khach-hang', ten: 'Khách hàng', trang: <KhachHangDanhSach />, nhom: 'Vận hành' },
+    { duong_dan: 'nut', ten: 'Nút', trang: <NutDanhSach />, nhom: 'Danh mục' },
+    { duong_dan: 'tuyen', ten: 'Tuyến', trang: <TuyenDanhSach />, nhom: 'Danh mục' },
   ],
   KE_TOAN: [
-    { duong_dan: 'chi-phi-xe', ten: 'Chi phí cố định xe', trang: <ChiPhiCoDinh /> },
-    { duong_dan: 'cong-no', ten: 'Công nợ', trang: <CongNo /> },
-    { duong_dan: 'quyet-toan', ten: 'Quyết toán', trang: <QuyetToan /> },
-    { duong_dan: 'tam-ung', ten: 'Tạm ứng', trang: <TamUng /> },
+    { duong_dan: 'tong-quan', ten: 'Tổng quan', trang: <TongQuan ketToan /> },
+    {
+      duong_dan: 'chi-phi-xe',
+      ten: 'Chi phí cố định xe',
+      trang: <ChiPhiCoDinh />,
+      nhom: 'Tài chính',
+    },
+    { duong_dan: 'cong-no', ten: 'Công nợ', trang: <CongNo />, nhom: 'Tài chính' },
+    { duong_dan: 'quyet-toan', ten: 'Quyết toán', trang: <QuyetToan />, nhom: 'Tài chính' },
+    { duong_dan: 'tam-ung', ten: 'Tạm ứng', trang: <TamUng />, nhom: 'Tài chính' },
   ],
   QUAN_LY: [
-    { duong_dan: 'nguoi-dung', ten: 'Người dùng', trang: <NguoiDungDanhSach /> },
-    { duong_dan: 'bang-gia', ten: 'Bảng giá', trang: <BangGiaDanhSach /> },
-    { duong_dan: 'cau-hinh', ten: 'Cấu hình', trang: <CauHinh /> },
+    { duong_dan: 'tong-quan', ten: 'Tổng quan', trang: <TongQuan /> },
+    { duong_dan: 'nguoi-dung', ten: 'Người dùng', trang: <NguoiDungDanhSach />, nhom: 'Quản trị' },
+    { duong_dan: 'bang-gia', ten: 'Bảng giá', trang: <BangGiaDanhSach />, nhom: 'Quản trị' },
+    { duong_dan: 'cau-hinh', ten: 'Cấu hình', trang: <CauHinh />, nhom: 'Quản trị' },
     // Quản lý chỉ xem tiền (nghiep-vu.md mục 8): ẩn nút ghi; quyền thật do máy chủ kiểm
-    { duong_dan: 'cong-no', ten: 'Công nợ', trang: <CongNo chiXem /> },
-    { duong_dan: 'quyet-toan', ten: 'Quyết toán', trang: <QuyetToan chiXem /> },
+    { duong_dan: 'cong-no', ten: 'Công nợ', trang: <CongNo chiXem />, nhom: 'Tài chính' },
+    { duong_dan: 'quyet-toan', ten: 'Quyết toán', trang: <QuyetToan chiXem />, nhom: 'Tài chính' },
   ],
   TAI_XE: [
     { duong_dan: 'chuyen', ten: 'Chuyến của tôi', trang: <ChuyenCuaToi /> },
@@ -69,8 +87,14 @@ const TRANG_CON: Partial<
   ],
 }
 
-// Vào trang của vai trò thì mở thẳng trang con này thay trang chào (tài xế vào thẳng chuyến của mình, UC-17)
-const TRANG_DAU: Partial<Record<VaiTro, string>> = { TAI_XE: 'chuyen' }
+// Vào trang của vai trò thì mở thẳng trang con này thay trang chào
+// (tài xế vào thẳng chuyến của mình, UC-17; điều phối vào bảng chuyến hôm nay; quản lý, kế toán vào Tổng quan)
+const TRANG_DAU: Partial<Record<VaiTro, string>> = {
+  TAI_XE: 'chuyen',
+  DIEU_PHOI: 'chuyen',
+  QUAN_LY: 'tong-quan',
+  KE_TOAN: 'tong-quan',
+}
 
 // Chỉ để điều hướng; quyền thật do máy chủ kiểm (BR-57). Quản lý vào được trang Điều phối.
 const duocVao = (nd: NguoiDung, trang: VaiTro) =>
@@ -85,6 +109,81 @@ const menu = (nd: NguoiDung) =>
         .filter((t) => !t.an)
         .map((t) => ({ ...t, den: `${TRANG_CHU[vt]}/${t.duong_dan}` })),
     )
+// Thứ tự nhóm trên cột menu
+const NHOM = ['', 'Vận hành', 'Danh mục', 'Tài chính', 'Quản trị']
+
+const Hieu = () => (
+  <span className="hieu">
+    <i aria-hidden="true">
+      <Ic ten="chuyen" />
+    </i>
+    Quản lý vận tải
+  </span>
+)
+
+// Khung trang sau đăng nhập (v3): cột menu trái theo nhóm, thanh trên có tìm chung, chuông, tài khoản.
+// Chỉ một mục (tài xế) thì không có cột menu: tiêu đề trang đã nói đủ. Màn hẹp: cột menu thành thanh đáy.
+function KhungTrang({
+  nd,
+  loiThoat,
+  onThoat,
+}: {
+  nd: NguoiDung
+  loiThoat: string
+  onThoat: () => void
+}) {
+  const muc = menu(nd)
+  const coMenu = muc.length > 1
+  return (
+    <div className={coMenu ? 'khung' : 'khung mot'}>
+      {coMenu && (
+        <aside className="canh">
+          <Hieu />
+          <nav aria-label="Chức năng">
+            {NHOM.map((nhom) => {
+              const ds = muc.filter((m) => (m.nhom ?? '') === nhom)
+              if (ds.length === 0) return null
+              return (
+                <div key={nhom} role="group" aria-label={nhom || undefined}>
+                  {nhom && <h2>{nhom}</h2>}
+                  {ds.map((m) => (
+                    <NavLink key={m.den} to={m.den}>
+                      <Ic ten={m.duong_dan as TenIc} />
+                      {m.ten}
+                    </NavLink>
+                  ))}
+                </div>
+              )
+            })}
+          </nav>
+          <p className="canh-chan">Đồ án chuyên ngành · Nhóm 8</p>
+        </aside>
+      )}
+      <div className="than">
+        <header className="dau">
+          <Hieu />
+          <TimChung vaiTro={nd.vai_tro} />
+          <div className="ben-phai">
+            <span className="ten">
+              <b>{nd.ho_ten}</b>
+              {TEN_VAI_TRO[nd.vai_tro]}
+            </span>
+            <ChuongThongBao nguoiDungId={nd.id} vaiTro={nd.vai_tro} />
+            <MenuTaiKhoan nd={nd} tenVaiTro={TEN_VAI_TRO[nd.vai_tro]} onThoat={onThoat} />
+          </div>
+        </header>
+        <main className="trang">
+          {loiThoat && (
+            <p role="alert" className="loi trang-loi">
+              {loiThoat}
+            </p>
+          )}
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  )
+}
 
 export default function App() {
   const [nd, setNd] = useState<NguoiDung | null | undefined>(undefined) // undefined = đang kiểm phiên
@@ -111,7 +210,10 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <KhungThongBao />
       <Routes>
+        {/* UC-28: trang công khai cho khách, không cần đăng nhập */}
+        <Route path="/tra-cuu" element={<TraCuu />} />
         <Route
           path="/dang-nhap"
           element={
@@ -128,27 +230,7 @@ export default function App() {
               ) : !duocVao(nd, vt) ? (
                 <Navigate to={TRANG_CHU[nd.vai_tro]} replace />
               ) : (
-                <main className="trang">
-                  <header>
-                    <nav>
-                      {menu(nd).map((m) => (
-                        <NavLink key={m.den} to={m.den}>
-                          {m.ten}
-                        </NavLink>
-                      ))}
-                    </nav>
-                    <span>
-                      {nd.ho_ten} · {TEN_VAI_TRO[nd.vai_tro]}
-                    </span>
-                    <button onClick={thoat}>Đăng xuất</button>
-                  </header>
-                  {loiThoat && (
-                    <p role="alert" className="loi trang-loi">
-                      {loiThoat}
-                    </p>
-                  )}
-                  <Outlet />
-                </main>
+                <KhungTrang nd={nd} loiThoat={loiThoat} onThoat={thoat} />
               )
             }
           >

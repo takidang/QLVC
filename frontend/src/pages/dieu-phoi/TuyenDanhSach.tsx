@@ -1,5 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
+import { Nhan } from '../../nhan'
+import { DauDanhMuc, NhanHoatDong, OTim } from '../danh-muc'
 import {
   danhSachNut,
   danhSachTuyen,
@@ -48,16 +50,12 @@ export default function TuyenDanhSach() {
 
   return (
     <section className="noi-dung">
-      <div className="thanh-cong-cu">
-        <h1>Tuyến</h1>
-        <input
-          placeholder="Tìm mã hoặc tên tuyến"
-          aria-label="Tìm mã hoặc tên tuyến"
-          value={tim}
-          onChange={(e) => setTim(e.target.value)}
-        />
-        <button onClick={() => setDangSua('moi')}>Thêm tuyến</button>
-      </div>
+      <DauDanhMuc
+        tieuDe="Tuyến"
+        phu="Lộ trình cố định, định mức chi phí và lương khoán mỗi chuyến"
+        nut="Thêm tuyến"
+        onNut={() => setDangSua('moi')}
+      />
       {loiTai && (
         <p role="alert" className="loi">
           {loiTai}
@@ -74,53 +72,76 @@ export default function TuyenDanhSach() {
         </div>
       )}
 
-      <table>
-        <thead>
-          <tr>
-            <th>Mã</th>
-            <th>Tên</th>
-            <th>Lộ trình</th>
-            <th className="so">Thời gian</th>
-            <th className="so">Km</th>
-            <th className="so">Định mức + lương (đ)</th>
-            <th>Trạng thái</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {ds.du_lieu.map((t) => (
-            <tr key={t.id} className={t.trang_thai === 'NGUNG' ? 'mo' : undefined}>
-              <td className="bien-so">{t.ma}</td>
-              <td>{t.ten}</td>
-              <td>
-                {t.nut.map((n) => (n.la_diem_nghi ? `${n.ten} (nghỉ)` : n.ten)).join(' → ')}
-                {t.canh_bao.length > 0 && <div className="loi">Thiếu điểm nghỉ</div>}
-              </td>
-              <td className="so">{gio(t.tong_phut)}</td>
-              <td className="so">{dong(t.tong_km)}</td>
-              <td className="so">
-                {dong(t.dm_dau + t.dm_cau_duong + t.dm_boc_xep)} + {dong(t.dm_luong_tai_xe)}
-              </td>
-              <td>{t.trang_thai === 'HOAT_DONG' ? 'Hoạt động' : 'Ngừng'}</td>
-              <td className="hanh-dong">
-                <button className="phu" onClick={() => setDangSua(t)}>
-                  Sửa
-                </button>
-                <button className="phu" onClick={() => doiTrangThai(t)}>
-                  {t.trang_thai === 'HOAT_DONG' ? 'Ngừng' : 'Hoạt động lại'}
-                </button>
-              </td>
-            </tr>
-          ))}
-          {ds.du_lieu.length === 0 && (
+      <div className="kinh bang-khung dm">
+        <div className="cong-cu">
+          <span className="ghi-chu">{ds.du_lieu.length} tuyến</span>
+          <OTim giaTri={tim} goiY="Tìm mã hoặc tên tuyến" onDoi={setTim} />
+        </div>
+        <table>
+          <thead>
             <tr>
-              <td colSpan={8} className="trong">
-                Chưa có tuyến nào
-              </td>
+              <th>Mã</th>
+              <th>Tên</th>
+              <th>Lộ trình</th>
+              <th className="so">Thời gian</th>
+              <th className="so">Km</th>
+              <th className="so">Định mức + lương (đ)</th>
+              <th>Trạng thái</th>
+              <th>
+                <span className="an-chu">Thao tác</span>
+              </th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ds.du_lieu.map((t) => (
+              <tr key={t.id} className={t.trang_thai === 'NGUNG' ? 'mo' : undefined}>
+                <td>
+                  <span className="bien">{t.ma}</span>
+                </td>
+                <td className="tuyen">{t.ten}</td>
+                <td>
+                  <ol className="lo-trinh">
+                    {t.nut.map((n) => (
+                      <li key={n.thu_tu} className={n.la_diem_nghi ? 'nghi' : undefined}>
+                        {n.ten}
+                        {n.la_diem_nghi && <small> nghỉ</small>}
+                      </li>
+                    ))}
+                  </ol>
+                  {t.canh_bao.length > 0 && (
+                    <Nhan loai="SU_CO" title={t.canh_bao.join('; ')}>
+                      Thiếu điểm nghỉ
+                    </Nhan>
+                  )}
+                </td>
+                <td className="so">{gio(t.tong_phut)}</td>
+                <td className="so">{dong(t.tong_km)}</td>
+                <td className="so">
+                  {dong(t.dm_dau + t.dm_cau_duong + t.dm_boc_xep)} + {dong(t.dm_luong_tai_xe)}
+                </td>
+                <td>
+                  <NhanHoatDong trangThai={t.trang_thai} />
+                </td>
+                <td className="hanh-dong so">
+                  <button className="phu" onClick={() => setDangSua(t)}>
+                    Sửa
+                  </button>
+                  <button className="phu" onClick={() => doiTrangThai(t)}>
+                    {t.trang_thai === 'HOAT_DONG' ? 'Ngừng' : 'Hoạt động lại'}
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {ds.du_lieu.length === 0 && (
+              <tr>
+                <td colSpan={8} className="trong">
+                  Chưa có tuyến nào
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {dangSua && (
         <FormTuyen

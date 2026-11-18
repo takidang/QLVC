@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
+import { DauDanhMuc, LocTrangThai, NhanHoatDong, OTim } from '../danh-muc'
 import { danhSachKhachHang, suaKhachHang, themKhachHang, type KhachHang } from '../../api/khachHang'
 
 const SO_DONG = 20
@@ -45,31 +46,12 @@ export default function KhachHangDanhSach() {
   const soTrang = Math.max(1, Math.ceil(ds.tong / SO_DONG))
   return (
     <section className="noi-dung">
-      <div className="thanh-cong-cu">
-        <h1>Khách hàng</h1>
-        <input
-          placeholder="Tìm tên hoặc SĐT"
-          aria-label="Tìm tên hoặc số điện thoại"
-          value={tim}
-          onChange={(e) => {
-            setTim(e.target.value)
-            setTrang(1)
-          }}
-        />
-        <select
-          aria-label="Lọc trạng thái"
-          value={trangThai}
-          onChange={(e) => {
-            setTrangThai(e.target.value)
-            setTrang(1)
-          }}
-        >
-          <option value="">Mọi trạng thái</option>
-          <option value="HOAT_DONG">Hoạt động</option>
-          <option value="NGUNG">Ngừng</option>
-        </select>
-        <button onClick={() => setDangSua('moi')}>Thêm khách hàng</button>
-      </div>
+      <DauDanhMuc
+        tieuDe="Khách hàng"
+        phu={`${ds.tong} khách${trangThai === 'NGUNG' ? ' đang ngừng' : trangThai ? ' đang hoạt động' : ''}`}
+        nut="Thêm khách hàng"
+        onNut={() => setDangSua('moi')}
+      />
 
       {loiTai && (
         <p role="alert" className="loi">
@@ -77,44 +59,67 @@ export default function KhachHangDanhSach() {
         </p>
       )}
 
-      <table>
-        <thead>
-          <tr>
-            <th>Tên</th>
-            <th>SĐT</th>
-            <th>Địa chỉ</th>
-            <th>Mã số thuế</th>
-            <th>Trạng thái</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {ds.du_lieu.map((kh) => (
-            <tr key={kh.id} className={kh.trang_thai === 'NGUNG' ? 'mo' : undefined}>
-              <td className="bien-so">{kh.ten}</td>
-              <td>{kh.sdt}</td>
-              <td>{kh.dia_chi}</td>
-              <td>{kh.ma_so_thue}</td>
-              <td>{kh.trang_thai === 'HOAT_DONG' ? 'Hoạt động' : 'Ngừng'}</td>
-              <td className="hanh-dong">
-                <button className="phu" onClick={() => setDangSua(kh)}>
-                  Sửa
-                </button>
-                <button className="phu" onClick={() => doiTrangThai(kh)}>
-                  {kh.trang_thai === 'HOAT_DONG' ? 'Ngừng' : 'Hoạt động lại'}
-                </button>
-              </td>
-            </tr>
-          ))}
-          {ds.du_lieu.length === 0 && (
+      <div className="kinh bang-khung dm">
+        <div className="cong-cu">
+          <LocTrangThai
+            chon={trangThai}
+            onChon={(ma) => {
+              setTrangThai(ma)
+              setTrang(1)
+            }}
+          />
+          <OTim
+            giaTri={tim}
+            goiY="Tìm tên hoặc SĐT"
+            onDoi={(v) => {
+              setTim(v)
+              setTrang(1)
+            }}
+          />
+        </div>
+        <table>
+          <thead>
             <tr>
-              <td colSpan={6} className="trong">
-                Chưa có khách hàng nào phù hợp
-              </td>
+              <th>Tên</th>
+              <th>SĐT</th>
+              <th>Địa chỉ</th>
+              <th>Mã số thuế</th>
+              <th>Trạng thái</th>
+              <th>
+                <span className="an-chu">Thao tác</span>
+              </th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ds.du_lieu.map((kh) => (
+              <tr key={kh.id} className={kh.trang_thai === 'NGUNG' ? 'mo' : undefined}>
+                <td className="tuyen">{kh.ten}</td>
+                <td className="ma">{kh.sdt}</td>
+                <td>{kh.dia_chi || <span className="ghi-chu">—</span>}</td>
+                <td className="ma">{kh.ma_so_thue || '—'}</td>
+                <td>
+                  <NhanHoatDong trangThai={kh.trang_thai} />
+                </td>
+                <td className="hanh-dong so">
+                  <button className="phu" onClick={() => setDangSua(kh)}>
+                    Sửa
+                  </button>
+                  <button className="phu" onClick={() => doiTrangThai(kh)}>
+                    {kh.trang_thai === 'HOAT_DONG' ? 'Ngừng' : 'Hoạt động lại'}
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {ds.du_lieu.length === 0 && (
+              <tr>
+                <td colSpan={6} className="trong">
+                  Chưa có khách hàng nào phù hợp
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <div className="phan-trang">
         <button className="phu" disabled={trang <= 1} onClick={() => setTrang(trang - 1)}>

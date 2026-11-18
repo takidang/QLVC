@@ -12,3 +12,7 @@ export const dangNhap = (ten_dang_nhap: string, mat_khau: string) =>
 export const toi = () => goi<NguoiDung>('/api/auth/toi')
 
 export const dangXuat = () => goi<void>('/api/auth/dang-xuat', { method: 'POST' })
+
+// UC-35: tự đổi mật khẩu (mọi vai trò). 204 xong; 422 SAI_MAT_KHAU_CU / MAT_KHAU_TRUNG; 429 KHOA_TAM
+export const doiMatKhau = (mat_khau_cu: string, mat_khau_moi: string) =>
+  guiJson<void>('/api/auth/mat-khau', 'PUT', { mat_khau_cu, mat_khau_moi })

@@ -4,6 +4,7 @@ import { baoSuCo, suCoChuyen, TEN_LOAI_SU_CO, type LoaiSuCo, type SuCo } from '.
 import { ngayGio } from '../../api/toi'
 import { nenAnh } from '../../nenAnh'
 import { LOI_MANG, SO_ANH_TOI_DA } from './QuetLay'
+import { ThongBao } from '../../thongBao'
 
 const thongBaoLoi = (err: unknown) => {
   const truong = Object.values(loiTheoTruong(err))
@@ -31,7 +32,7 @@ export function SuCoChuyen({ chuyenId, baoDuoc }: { chuyenId: number; baoDuoc: b
   return (
     <div className="the">
       <strong>Sự cố</strong>
-      {thongBao && <p className="thanh-cong">{thongBao}</p>}
+      <ThongBao chu={thongBao} />
       {loi && (
         <p role="alert" className="loi">
           {loi}

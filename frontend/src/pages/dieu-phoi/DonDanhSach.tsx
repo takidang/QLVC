@@ -17,6 +17,9 @@ import {
 import { kemMaBr, LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachKhachHang, type KhachHang } from '../../api/khachHang'
 import { danhSachNut, type Nut } from '../../api/tuyen'
+import { Nhan } from '../../nhan'
+import { DauDanhMuc, LocTrangThai, OTim } from '../danh-muc'
+import { ThongBao } from '../../thongBao'
 
 const SO_DONG = 20
 const dong = (n: number) => n.toLocaleString('vi-VN')
@@ -34,6 +37,21 @@ const oGio = (iso: string | null) =>
     : ''
 // UC-10: sửa / hủy khi hàng chưa lấy (BR-33, 34)
 const SUA_DUOC = ['CHO_GHEP', 'DA_GHEP']
+// Nhãn đơn dùng lại hình của nhãn chuyến (nhan.tsx): mỗi trạng thái một hình, không chỉ dựa vào màu
+const NHAN_DON: Record<string, string> = {
+  CHO_GHEP: 'LAP',
+  DA_GHEP: 'DA_CHOT',
+  DA_LAY: 'DANG_CHAY',
+  DA_GIAO: 'HOAN_THANH',
+  THAT_BAI: 'THAT_BAI',
+  TRA_HANG: 'HUY',
+  HUY: 'HUY',
+}
+const LOC_DON: [string, string][] = [['', 'Tất cả'], ...Object.entries(TEN_TRANG_THAI_DON)]
+// Chưa giao mà đã qua hạn giao: tô cam như giờ đến trễ ở màn Chuyến
+const quaHan = (d: Don) =>
+  ['CHO_GHEP', 'DA_GHEP', 'DA_LAY'].includes(d.trang_thai) &&
+  new Date(d.han_giao).getTime() < Date.now()
 
 export default function DonDanhSach() {
   const [tim, setTim] = useState('')
@@ -67,40 +85,18 @@ export default function DonDanhSach() {
   const soTrang = Math.max(1, Math.ceil(ds.tong / SO_DONG))
   return (
     <section className="noi-dung">
-      <div className="thanh-cong-cu">
-        <h1>Đơn hàng</h1>
-        <input
-          placeholder="Tìm mã đơn"
-          aria-label="Tìm mã đơn"
-          value={tim}
-          onChange={(e) => {
-            setTim(e.target.value)
-            setTrang(1)
-          }}
-        />
-        <select
-          aria-label="Lọc trạng thái"
-          value={trangThai}
-          onChange={(e) => {
-            setTrangThai(e.target.value)
-            setTrang(1)
-          }}
-        >
-          <option value="">Mọi trạng thái</option>
-          {Object.entries(TEN_TRANG_THAI_DON).map(([ma, ten]) => (
-            <option key={ma} value={ma}>
-              {ten}
-            </option>
-          ))}
-        </select>
-        <button onClick={() => setMoForm(true)}>Tạo đơn</button>
-      </div>
-      {vuaTao && (
-        <p className="thanh-cong">
-          Đã tạo đơn <strong>{vuaTao.ma_don}</strong>, cước {dong(vuaTao.cuoc_tinh)} đ (đã chốt).
-        </p>
-      )}
-      {thongBao && <p className="thanh-cong">{thongBao}</p>}
+      <DauDanhMuc
+        tieuDe="Đơn hàng"
+        phu={`${ds.tong} đơn${trangThai ? ` ${(TEN_TRANG_THAI_DON[trangThai] ?? '').toLowerCase()}` : ''} · bấm mã đơn để in phiếu QR`}
+        nut="Tạo đơn"
+        onNut={() => setMoForm(true)}
+      />
+      <ThongBao
+        chu={
+          vuaTao ? `Đã tạo đơn ${vuaTao.ma_don}, cước ${dong(vuaTao.cuoc_tinh)} đ (đã chốt)` : ''
+        }
+      />
+      <ThongBao chu={thongBao} />
       <DonThatBaiCanXuLy
         lanTai={lanTai}
         onHuy={setDangHuy}
@@ -116,72 +112,102 @@ export default function DonDanhSach() {
         </p>
       )}
 
-      <table>
-        <thead>
-          <tr>
-            <th>Mã đơn</th>
-            <th>Khách</th>
-            <th>Lấy → giao</th>
-            <th className="so">Hàng</th>
-            <th>Hạn giao</th>
-            <th className="so">Cước (đ)</th>
-            <th>Trạng thái</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {ds.du_lieu.map((d) => (
-            <tr key={d.id}>
-              <td className="bien-so">
-                <Link to={`${d.id}/phieu`} title="Mở phiếu in QR">
-                  {d.ma_don}
-                </Link>
-              </td>
-              <td>{d.ten_khach}</td>
-              <td>
-                {d.tinh_lay} → {d.tinh_giao}
-              </td>
-              <td className="so">
-                {Number(d.kg).toLocaleString('vi-VN')} kg, {Number(d.m3).toLocaleString('vi-VN')}{' '}
-                m³, {d.so_kien} kiện
-              </td>
-              <td>{lucVN(d.han_giao)}</td>
-              <td className="so">{dong(d.cuoc_tinh)}</td>
-              <td>{TEN_TRANG_THAI_DON[d.trang_thai] ?? d.trang_thai}</td>
-              <td className="hanh-dong">
-                {SUA_DUOC.includes(d.trang_thai) &&
-                d.trang_thai_chuyen &&
-                d.trang_thai_chuyen !== 'LAP' ? (
-                  <span
-                    className="ghi-chu"
-                    title="Chỉ sửa / hủy được khi chuyến Đang lập (BR-33, 34)"
-                  >
-                    {d.trang_thai_chuyen === 'DA_CHOT' ? 'Chuyến đã chốt' : 'Chuyến đã chạy'}
-                  </span>
-                ) : (
-                  SUA_DUOC.includes(d.trang_thai) && (
-                    <>
-                      <button className="phu" onClick={() => setDangSua(d)}>
-                        Sửa
-                      </button>
-                      <button className="phu" onClick={() => setDangHuy(d)}>
-                        Hủy
-                      </button>
-                    </>
-                  )
-                )}
-              </td>
-            </tr>
-          ))}
-          {ds.du_lieu.length === 0 && (
+      <div className="kinh bang-khung dm">
+        <div className="cong-cu">
+          <LocTrangThai
+            ds={LOC_DON}
+            chon={trangThai}
+            onChon={(ma) => {
+              setTrangThai(ma)
+              setTrang(1)
+            }}
+          />
+          <OTim
+            giaTri={tim}
+            goiY="Tìm mã đơn"
+            onDoi={(v) => {
+              setTim(v)
+              setTrang(1)
+            }}
+          />
+        </div>
+        <table>
+          <thead>
             <tr>
-              <td colSpan={8} className="trong">
-                Chưa có đơn nào phù hợp
-              </td>
+              <th>Mã đơn · Khách</th>
+              <th>Lấy → giao</th>
+              <th className="so">Hàng</th>
+              <th>Hạn giao</th>
+              <th className="so">Cước (đ)</th>
+              <th>Trạng thái</th>
+              <th>
+                <span className="an-chu">Thao tác</span>
+              </th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ds.du_lieu.map((d) => (
+              <tr key={d.id} className={d.trang_thai === 'HUY' ? 'mo huy' : undefined}>
+                <td>
+                  <Link className="ma-don" to={`${d.id}/phieu`} title="Mở phiếu in QR">
+                    {d.ma_don}
+                  </Link>
+                  <small>{d.ten_khach}</small>
+                </td>
+                <td className="tuyen">
+                  {d.tinh_lay} → {d.tinh_giao}
+                </td>
+                <td className="so">
+                  {Number(d.kg).toLocaleString('vi-VN')} kg
+                  <small>
+                    {Number(d.m3).toLocaleString('vi-VN')} m³ · {d.so_kien} kiện
+                  </small>
+                </td>
+                <td className="gio">
+                  {lucVN(d.han_giao)}
+                  {quaHan(d) && <small className="tre">quá hạn</small>}
+                </td>
+                <td className="so">{dong(d.cuoc_tinh)}</td>
+                <td>
+                  <Nhan loai={NHAN_DON[d.trang_thai] ?? 'LAP'}>
+                    {TEN_TRANG_THAI_DON[d.trang_thai] ?? d.trang_thai}
+                  </Nhan>
+                </td>
+                <td className="hanh-dong so">
+                  {SUA_DUOC.includes(d.trang_thai) &&
+                  d.trang_thai_chuyen &&
+                  d.trang_thai_chuyen !== 'LAP' ? (
+                    <span
+                      className="ghi-chu"
+                      title="Chỉ sửa / hủy được khi chuyến Đang lập (BR-33, 34)"
+                    >
+                      {d.trang_thai_chuyen === 'DA_CHOT' ? 'Chuyến đã chốt' : 'Chuyến đã chạy'}
+                    </span>
+                  ) : (
+                    SUA_DUOC.includes(d.trang_thai) && (
+                      <>
+                        <button className="phu" onClick={() => setDangSua(d)}>
+                          Sửa
+                        </button>
+                        <button className="phu" onClick={() => setDangHuy(d)}>
+                          Hủy
+                        </button>
+                      </>
+                    )
+                  )}
+                </td>
+              </tr>
+            ))}
+            {ds.du_lieu.length === 0 && (
+              <tr>
+                <td colSpan={7} className="trong">
+                  Chưa có đơn nào phù hợp
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
       <div className="phan-trang">
         <button className="phu" disabled={trang <= 1} onClick={() => setTrang(trang - 1)}>
           Trước
@@ -586,8 +612,13 @@ function DonThatBaiCanXuLy({
 
   if (!ds.length && !loi) return null
   return (
-    <div className="canh-bao">
-      <h2>Đơn thất bại cần xử lý ({ds.length})</h2>
+    <div className="kinh dm-chu-y">
+      <div className="dm-chu-y-dau">
+        <h2>
+          <Nhan loai="THAT_BAI">Đơn thất bại cần xử lý</Nhan>
+        </h2>
+        <span>{ds.length} đơn</span>
+      </div>
       {loi && (
         <p role="alert" className="loi">
           {loi}
@@ -609,16 +640,18 @@ function DonThatBaiCanXuLy({
             const datNguong = d.so_lan_giao_tb_khach >= d.nguong
             return (
               <tr key={d.id}>
-                <td className="bien-so">{d.ma_don}</td>
-                <td>
+                <td className="ma-don">{d.ma_don}</td>
+                <td className="tuyen">
                   {d.tinh_lay} → {d.tinh_giao}
                 </td>
                 <td>{d.ly_do_cuoi ?? '–'}</td>
-                <td>{d.da_lay ? 'Đã lấy' : 'Chưa lấy'}</td>
+                <td>
+                  <span className="bien">{d.da_lay ? 'Đã lấy' : 'Chưa lấy'}</span>
+                </td>
                 <td className="so">
                   {d.so_lan_giao_tb_khach}/{d.nguong}
                 </td>
-                <td className="hanh-dong">
+                <td className="hanh-dong so">
                   {d.cho_chuyen_xong ? (
                     <span className="ghi-chu">Chờ chuyến kết thúc</span>
                   ) : (

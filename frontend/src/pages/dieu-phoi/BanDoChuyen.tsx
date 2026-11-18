@@ -27,7 +27,14 @@ const xong = (t: Tram) => t.diem.every((p) => p.ket_qua)
 
 // Bản đồ chi tiết chuyến: trạm đã xong tô đặc, chưa tới để rỗng; đường nối thẳng giữa các trạm theo thứ tự
 // (không phải đường đi thật – vẽ đường thật cần dịch vụ chỉ đường)
-export default function BanDoChuyen({ lichTrinh }: { lichTrinh: DiemDung[] }) {
+export default function BanDoChuyen({
+  lichTrinh,
+  viTri,
+}: {
+  lichTrinh: DiemDung[]
+  // Vị trí GPS của lượt quét gần nhất (không theo dõi liên tục); chỉ truyền khi chuyến đang chạy
+  viTri?: { lat: string; lng: string; luc: string; nut: string } | null
+}) {
   const ds = tram(lichTrinh)
   if (!ds.length) return null
   const vt = ds.map((t) => t.vt)
@@ -75,6 +82,21 @@ export default function BanDoChuyen({ lichTrinh }: { lichTrinh: DiemDung[] }) {
           </Tooltip>
         </CircleMarker>
       ))}
+      {viTri && (
+        <CircleMarker
+          center={[Number(viTri.lat), Number(viTri.lng)]}
+          radius={9}
+          pathOptions={{ className: 'bd-xe' }}
+        >
+          <Tooltip direction="top" offset={[0, -8]}>
+            Xe · quét lúc{' '}
+            {new Date(viTri.luc).toLocaleTimeString('vi-VN', {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </Tooltip>
+        </CircleMarker>
+      )}
     </MapContainer>
   )
 }

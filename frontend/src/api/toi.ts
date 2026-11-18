@@ -41,6 +41,17 @@ export const TEN_TRANG_THAI: Record<string, string> = {
   HOAN_THANH: 'Hoàn thành',
   DA_QUYET_TOAN: 'Đã quyết toán',
 }
+// Khoảng giờ chuyến: cùng ngày "05:30 → 13:30 · 11/11", khác ngày "22:15 10/11 → 03:00 11/11"
+const hh = (d: Date) => d.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+export const ngayThang = (d: Date) =>
+  `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}`
+export const khoangGio = (di: string, den: string) => {
+  const a = new Date(di)
+  const b = new Date(den)
+  return ngayThang(a) === ngayThang(b)
+    ? `${hh(a)} → ${hh(b)} · ${ngayThang(a)}`
+    : `${hh(a)} ${ngayThang(a)} → ${hh(b)} ${ngayThang(b)}`
+}
 export const ngayGio = (iso: string) =>
   new Date(iso).toLocaleString('vi-VN', {
     hour: '2-digit',
