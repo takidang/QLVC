@@ -1,6 +1,6 @@
 # UC-22: Xử lý đơn thất bại
 
-- **Trạng thái:** Đang làm – AC1–AC11 đạt; AC12 đạt ca a–d, còn ca e (cần 3 chuyến) (Tài giao "làm xong hết" 08/11/2026; quyết định dưới đây Claude đề xuất, Tài xem lại khi review PR)
+- **Trạng thái:** Hoàn thành 19/11/2026 – AC1–AC12 đạt (AC12 ca e Kiệt thử 18/11 trên giao diện v3) (Tài giao "làm xong hết" 08/11/2026; quyết định dưới đây Claude đề xuất, Tài xem lại khi review PR)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa)
 - **Đặc tả:** `docs/use-cases.md` mục 3 (UC-22) · `docs/api.md` mục 2.3 (`ghep-lai`, `tra-hang`, `huy`) · `docs/nghiep-vu.md` BR-30, 34, 36, 37, 69, mục 5.2, mục 11 bước 6 · ca test `docs/ca-test-br.md` (TC-BR34-02, 04, TC-BR36-02, 03, TC-BR37-01…03, TC-BR69-01, 02)
 - **Quy tắc nghiệp vụ liên quan:** BR-30 (lịch sử), BR-34 (hủy), BR-36 (ba cách xử lý), BR-37 (CFG-04 lần giao thất bại phía khách), BR-57 (phân quyền), BR-69 (nơi giữ hàng khi ghép lại)
@@ -66,4 +66,4 @@ Sau khi chuyến kết thúc, đơn `THAT_BAI` hiện trong danh sách cần x�
 | UC-22-AC9 | API | `test_uc22_ac9_lich_su` | Đạt | 08/11/2026 |
 | UC-22-AC10 | API | `test_uc22_ac10_danh_sach_can_xu_ly` | Đạt | 08/11/2026 |
 | UC-22-AC11 | API | `test_uc22_ac11_* (5 ca)` | Đạt | 08/11/2026 |
-| UC-22-AC12 | UI | Kiệt thử 10/11, ca a–d đạt, e chưa thử (`docs/test-evidence/UC-22/`) | CHƯA KIỂM (ca e) | 10/11/2026 |
+| UC-22-AC12 | UI | Kiệt thử 10/11 ca a–d; 18/11 ca e (3/3 lần giao thất bại phía khách, nút Ghép lại khóa xám hẳn) trên giao diện v3 `0cef9cd`, ảnh `docs/test-evidence/UC-22/e-dat-nguong.png` (PR #60) | Đạt | 18/11/2026 |

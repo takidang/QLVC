@@ -1,6 +1,6 @@
 # UC-28: Tra cứu đơn
 
-- **Trạng thái:** Đang làm – AC1–AC6 đạt, AC7 giao diện chờ làm (Đã duyệt 11/11/2026 – Tài: đồng ý 7 AC và 4 quyết định)
+- **Trạng thái:** Hoàn thành 19/11/2026 – AC1–AC7 đạt (AC7 Kiệt thử 18/11 trên giao diện v3) (Đã duyệt 11/11/2026 – Tài: đồng ý 7 AC và 4 quyết định)
 - **Tác nhân:** Khách hàng (không đăng nhập)
 - **Đặc tả:** `docs/use-cases.md#uc-28-tra-cứu-đơn`, `docs/api.md` mục 3.4
 - **Quy tắc nghiệp vụ liên quan:** BR-59, NFR-SEC-05
@@ -43,4 +43,4 @@ Khách nhập mã đơn và 4 số cuối số điện thoại, xem trạng thá
 | UC-28-AC4 | API | `test_uc28_ac4_du_lieu_sai` (6 ca) | Đạt | 11/11/2026 |
 | UC-28-AC5 | API | `test_uc28_ac5_gioi_han_tan_suat`, `test_uc28_ac5_tra_dung_khong_tinh_sai` | Đạt | 11/11/2026 |
 | UC-28-AC6 | API | `test_uc28_ac6_khong_dang_nhap_ma_tu_do` | Đạt | 11/11/2026 |
-| UC-28-AC7 | UI | Trang tra cứu: phiên giao diện v2 làm | CHƯA KIỂM | |
+| UC-28-AC7 | UI | Kiệt thử 18/11 trên giao diện v3, không đăng nhập: tra đúng (4 số SĐT lấy, SĐT nhận), mã viết thường, sai 4 số, sai dạng, quá nhiều lần sai, sau 1 phút tra lại được; ảnh `docs/test-evidence/UC-28/` (PR #60) | Đạt | 18/11/2026 |
