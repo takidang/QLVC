@@ -4515,6 +4515,15 @@ form.form-km > button {
   .tim-hop {
     top: 60px;
   }
+  /* Ô tìm mở rộng cao 40 px còn thanh đầu cao 60 px: phủ kín thanh đầu để chấm đỏ của chuông, ảnh đại diện không ló lên */
+  .tim-chung:focus-within::before {
+    content: '';
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 44;
+    height: 60px;
+    background: var(--giay);
+  }
 }
 
 /* V4: nút "Chọn tệp" không chiếm hết chỗ: tên tệp xuống dòng dưới nút thay vì bị cắt giữa chữ ở màn 360-390 px */
