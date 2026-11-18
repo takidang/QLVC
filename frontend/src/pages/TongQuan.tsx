@@ -594,16 +594,16 @@ function BangHieuSuat({ ds }: { ds: HieuSuatXe[] }) {
                       : d.dau_tham_khao_lit.toLocaleString('vi-VN')}
                     {d.dau_thuc_te_lit === 0 && <small> chưa duyệt dầu</small>}
                   </td>
-                  {/* UC-34-AC7: chênh lệch dương = hao hơn định mức, tô màu lỗ */}
-                  <td
-                    className={
-                      d.chenh_lech_lit !== null && d.chenh_lech_lit > 0 ? 'so tq-am' : 'so'
-                    }
-                  >
-                    {d.chenh_lech_lit === null
-                      ? '–'
-                      : `${d.chenh_lech_lit > 0 ? '+' : ''}${d.chenh_lech_lit.toLocaleString('vi-VN')}`}
-                  </td>
+                  {/* UC-34-AC7: chênh lệch dương = hao hơn định mức, tô màu lỗ.
+                      Chưa duyệt khoản dầu nào thì so sánh vô nghĩa (âm giả), hiện "–" (Kiệt 18/11) */}
+                  {d.chenh_lech_lit === null || d.dau_thuc_te_lit === 0 ? (
+                    <td className="so">–</td>
+                  ) : (
+                    <td className={d.chenh_lech_lit > 0 ? 'so tq-am' : 'so'}>
+                      {d.chenh_lech_lit > 0 ? '+' : ''}
+                      {d.chenh_lech_lit.toLocaleString('vi-VN')}
+                    </td>
+                  )}
                   <td className="so">{d.so_chuyen_chua_quyet_toan || ''}</td>
                 </tr>
               )
