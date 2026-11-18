@@ -62,9 +62,13 @@ Cần: Docker Desktop (đang chạy), Python 3.12, Node.js 24. Từng bước c�
 | `dieuphoi` | Điều phối viên | Chuyến trong ngày, lập chuyến, ghép đơn, chốt, theo dõi trễ / sự cố |
 | `ketoan` | Kế toán | Duyệt chi phí, quyết toán, công nợ, tạm ứng |
 | `quanly` | Quản lý | Tổng quan, báo cáo lãi lỗ, hiệu suất xe, người dùng, bảng giá |
-| `taixe`, `taixe04` (cũng có `taixe01`…`taixe05`) | Tài xế (`taixe` và `taixe04` có chuyến đang chạy hôm nay) | Dùng **điện thoại hoặc thu nhỏ cửa sổ 360 px**: bắt đầu, quét lấy, giao, chi phí, sự cố, kết thúc |
+| `taixe`, `taixe04` (cũng có `taixe01`…`taixe05`) | Tài xế (`taixe` và `taixe04` có chuyến đang chạy hôm nay) | Màn tài xế làm cho điện thoại: trên máy chạy demo, **thu hẹp cửa sổ còn khoảng 360 px** (hoặc F12 → chế độ điện thoại) rồi thử bắt đầu, quét lấy, giao, chi phí, sự cố, kết thúc |
 
 **Tra cứu đơn cho khách** (không cần đăng nhập): **http://127.0.0.1:5173/tra-cuu**. Lấy mã đơn ở trang Đơn hàng của Điều phối, nhập kèm 4 số cuối số điện thoại người gửi hoặc người nhận (xem trong hộp **Sửa** của đơn).
+
+Bản demo chỉ mở được trên chính máy chạy nó (`127.0.0.1`): điện thoại khác không vào được, và camera quét mã QR cần HTTPS. Không có camera thì ở màn tài xế gõ mã đơn thay cho quét.
+
+**Lỗi hay gặp:** cổng 5432 đã bị PostgreSQL khác trên máy chiếm, Docker Desktop chưa mở, thiếu `.env`… Cách xử lý từng lỗi: `docs/cai-moi-truong.md` mục "Lỗi hay gặp".
 
 **Chạy test tự động** (backend, cần CSDL đang chạy): `cd backend; .venv\Scripts\python -m pytest`.
 
