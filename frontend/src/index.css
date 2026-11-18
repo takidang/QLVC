@@ -2625,6 +2625,8 @@ rect.chon {
 }
 .qt-so {
   margin-bottom: 0;
+  /* Khung hẹp: số liệu tự xuống hàng thay vì chồng lên nhau (V1) */
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
 }
 .qt-khoi {
   padding: 14px 18px 16px;
@@ -2662,7 +2664,8 @@ rect.chon {
   text-align: center;
   color: var(--phu);
 }
-@media (max-width: 1000px) {
+/* Cột menu trái chiếm ~245 px nên khu nội dung hẹp hơn cửa sổ nhiều: 1280 px trở xuống xếp một cột (V1) */
+@media (max-width: 1280px) {
   .qt-luoi {
     grid-template-columns: 1fr;
   }
@@ -3617,8 +3620,9 @@ button.lien-ket:enabled:hover {
   }
 }
 @media (max-width: 760px) {
+  /* V3: không ẩn nữa; xem khối "tìm chung thu gọn" ở cuối tệp */
   .tim-chung {
-    display: none;
+    display: block;
   }
 }
 
@@ -3755,6 +3759,16 @@ tr.huy .ma-don {
 .bang-khung td.gio small.tre {
   font-weight: 600;
   color: var(--cam-chu);
+}
+/* Bảng cột cố định: dòng "→ 17:50 18:12" xuống hàng trong ô, không tràn đè cột Tuyến (V2) */
+table.bang-ngay td.gio {
+  white-space: normal;
+}
+table.bang-ngay td.gio small {
+  white-space: normal;
+}
+table.bang-ngay td.gio small s {
+  white-space: nowrap;
 }
 
 /* Phiếu in QR (05): nhãn vận đơn khổ nhỏ, nền trắng, chia ô bằng đường kẻ; in đen trắng */
@@ -4459,4 +4473,58 @@ form.form-km > button {
 /* Ô ký tên giữ nền giấy trắng ở cả bản tối (nét ký màu mực) */
 .o-ky canvas {
   border-color: var(--vien-o);
+}
+
+/* V3: màn hẹp, ô tìm chung thu thành nút kính lúp; bấm vào (hoặc Tab tới) thì mở rộng phủ cả thanh đầu */
+@media (max-width: 760px) {
+  .tim-o {
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 50%;
+  }
+  .tim-o input {
+    flex: 0 0 0;
+    width: 0;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    opacity: 0;
+  }
+  .tim-o:focus-within {
+    position: fixed;
+    top: 10px;
+    right: 12px;
+    left: 12px;
+    z-index: 45;
+    justify-content: flex-start;
+    width: auto;
+    height: 40px;
+    padding: 0 14px;
+    cursor: text;
+    background: var(--mat-2);
+    border-radius: var(--bo);
+  }
+  .tim-o:focus-within input {
+    flex: 1;
+    width: auto;
+    opacity: 1;
+  }
+  .tim-hop {
+    top: 60px;
+  }
+}
+
+/* V4: nút "Chọn tệp" không chiếm hết chỗ: tên tệp xuống dòng dưới nút thay vì bị cắt giữa chữ ở màn 360-390 px */
+@media (max-width: 520px) {
+  input[type='file'] {
+    padding: 6px;
+    font-size: 13px;
+  }
+  input[type='file']::file-selector-button {
+    display: block;
+    margin: 0 0 6px;
+  }
 }
