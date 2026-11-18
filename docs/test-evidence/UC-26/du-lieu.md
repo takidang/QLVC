@@ -12,6 +12,19 @@
 | d | Đổi tháng sang 10/2026 | Số liệu, biểu đồ, bảng đổi theo tháng | `c-chon-thang-10.png` | Đạt: 0 chuyến đã quyết toán, "Tháng này chưa có chuyến nào được quyết toán" (dữ liệu demo chỉ có tháng 11) |
 | e | Xem theo Chuyến / Xe / Tháng | Chọn khoảng tháng và kiểu xem thì bảng đổi đúng | | **Không có**: chỉ có theo tháng (6 tháng tới tháng chọn) và theo xe (tháng chọn); không có kiểu xem theo chuyến, không chọn được khoảng tháng tùy ý |
 
-## Kết luận
+## Kết luận lần 1 (trước khi sửa)
 - Đạt: số liệu chỉ từ chuyến đã quyết toán, số chuyến chờ quyết toán, cảnh báo thiếu chi phí cố định, lãi âm tô màu, đổi tháng.
 - Lệch AC8: không có menu riêng, không xem theo chuyến, không chọn khoảng tháng, bảng không có dòng tổng. Cần Tài quyết: bổ sung giao diện, hoặc sửa AC8 theo cách làm ở Tổng quan (ghi lý do trong story).
+
+## Thử lại sau khi Tài sửa (18/11/2026, v3 `0cef9cd`)
+
+Tài bổ sung khối **"Bảng lãi lỗ"** cuối trang Tổng quan (không sửa AC). Ảnh chụp theo khung nhìn (1440 × 1700) ở khối này.
+
+| Ca | Làm gì | Ảnh | Kết quả |
+|---|---|---|---|
+| h | Từ 09/2026 đến 11/2026, xem **Chuyến** | `d-bang-lai-lo-theo-chuyen.png` | Đạt: 18 chuyến đã quyết toán (cột Chuyến, Ngày, Xe, Doanh thu, Chi phí, Lương, Lãi); dòng **Tổng (18 chuyến)** 52.201.000 / 19.295.000 / 9.300.000 / 23.606.000; CH-261118-01 lãi −450.000 tô màu; "9 chuyến chờ quyết toán, chưa vào bảng." |
+| i | Xem **Xe** | `e-bang-lai-lo-theo-xe.png` | Đạt: 5 xe, có cột Cố định; tổng khớp; 51D-305.55 −450.000 tô màu; thêm "Chưa nhập chi phí cố định: 51C-201.11 (11/2026), …" |
+| j | Xem **Tháng** | `f-bang-lai-lo-theo-thang.png` | Đạt: 09, 10, 11/2026 + dòng tổng, khớp với kiểu xem Chuyến, Xe |
+| k | Khoảng 10/2026 – 10/2026 (không có chuyến), xem Tháng rồi Chuyến | `g-khoang-thang-10-rong.png` | Đạt: bảng rỗng, "Tổng (0 chuyến)" toàn 0, không lỗi; đổi qua lại 3 cách xem không sập (không có lỗi trong console) |
+
+**Kết luận: AC8 đạt** (menu riêng không có, báo cáo nằm ở trang Tổng quan của Quản lý; các ý còn lại của AC8 đủ).

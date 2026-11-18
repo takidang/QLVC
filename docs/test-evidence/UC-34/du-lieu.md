@@ -10,4 +10,8 @@
 | b | Đổi tháng sang 10/2026 | Bảng đổi theo tháng | `b-hieu-suat-xe-thang-10.png` | Đạt: "Tháng này chưa có xe nào chạy xong chuyến" |
 | c | Xe có dầu thực tế lớn hơn tham khảo | Tô chênh lệch dầu dương (hao) | `a-hieu-suat-xe-thang-11.png` | **Không đạt**: không hiện cột chênh lệch (`chenh_lech_lit` API có trả), không tô màu. Ví dụ 51C-203.33 dầu 240 / tham khảo 69,12 lít, 51C-204.44 160 / 46,08 lít vẫn cùng màu chữ thường như mọi dòng |
 
-**Kết luận: AC7 chưa đạt** (thiếu tô chênh lệch dầu dương). Chọn tháng và bảng mỗi xe đã đạt.
+## Thử lại sau khi Tài sửa (18/11/2026, v3 `0cef9cd`)
+- Bảng có thêm cột **Chênh lệch (lít)**; số dương (hao dầu) tô màu cam như màu lỗ: 51C-201.11 +26,04, 51C-203.33 +170,88, 51C-204.44 +113,92, 51D-305.55 +0,04. Số âm, 0 giữ màu chữ thường (51C-202.22 −20). Ảnh `a-hieu-suat-xe-thang-11.png` đã thay bằng ảnh mới.
+- Góp ý nhỏ (không chặn AC): xe chưa có khoản dầu được duyệt vẫn hiện chênh lệch âm (51D-307.77 "0 / 62,64 chưa duyệt dầu", chênh lệch −62,64), dễ hiểu nhầm là tiết kiệm dầu; nên để "–" khi chưa duyệt dầu.
+
+**Kết luận: AC7 đạt.**

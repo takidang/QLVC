@@ -17,3 +17,6 @@
 Góp ý nhỏ (không chặn AC): sau khi tra được, tiêu đề kết quả "Đã xếp chuyến xe" có khung viền đen dày (viền focus khi trang tự đưa focus vào tiêu đề), nhìn như ô nhập (`b-ket-qua-sdt-lay.png`).
 
 **Kết luận: AC7 đạt.**
+
+### Thử lại góp ý viền tiêu đề (18/11/2026, v3 `0cef9cd`)
+- Gõ mã, 4 số rồi **bấm chuột** nút Tra cứu: tiêu đề kết quả không còn viền đen (`b-ket-qua-sdt-lay.png` đã thay bằng ảnh mới). Dùng bàn phím (Tab, Enter) thì vẫn có viền focus, đúng cho người dùng bàn phím.
