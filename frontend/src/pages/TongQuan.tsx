@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   hieuSuatXe,
+  laiLo,
   laiLoThang,
   laiLoXe,
   type DongLaiLo,
@@ -178,6 +179,183 @@ export default function TongQuan({ ketToan = false }: { ketToan?: boolean }) {
         <h2>Hiệu suất xe · {tenThang(thang)}</h2>
         {hieuSuat ? <BangHieuSuat ds={hieuSuat} /> : <p className="ghi-chu">Đang tải…</p>}
       </section>
+
+      <BangLaiLo den={thang} />
+    </section>
+  )
+}
+
+// UC-26-AC8: bảng lãi lỗ chọn khoảng tháng, xem theo Chuyến / Xe / Tháng, có dòng tổng, lãi âm tô màu lỗ
+type DongChiTiet = DongLaiLo & {
+  thang?: string
+  bien_so?: string
+  ma_chuyen?: string
+  ngay?: string
+  ten_tuyen?: string
+}
+const CACH_XEM: [LaiLo<DongChiTiet>['theo'], string][] = [
+  ['chuyen', 'Chuyến'],
+  ['xe', 'Xe'],
+  ['thang', 'Tháng'],
+]
+function BangLaiLo({ den: denMacDinh }: { den: string }) {
+  const [tu, setTu] = useState(() => lui(denMacDinh, 2))
+  const [den, setDen] = useState(denMacDinh)
+  const [theo, setTheo] = useState<LaiLo<DongChiTiet>['theo']>('chuyen')
+  const [kq, setKq] = useState<LaiLo<DongChiTiet> | null>(null)
+  const [loi, setLoi] = useState('')
+
+  useEffect(() => {
+    let bo = false
+    laiLo<DongChiTiet>(theo, tu, den)
+      .then((r) => {
+        if (bo) return
+        setLoi('')
+        setKq(r)
+      })
+      .catch((e) => {
+        if (bo) return
+        setKq(null)
+        setLoi(e instanceof LoiApi ? e.message : 'Không tải được số liệu')
+      })
+    return () => {
+      bo = true
+    }
+  }, [theo, tu, den])
+
+  const so = (n: number) => n.toLocaleString('vi-VN')
+  const lai = (n: number) => <td className={n < 0 ? 'so tq-am' : 'so'}>{so(n)}</td>
+  // Vẽ theo cách xem của số liệu đang có (không theo nút vừa bấm, số liệu mới chưa về)
+  const xem = kq?.theo ?? theo
+  const coDinh = xem !== 'chuyen'
+  return (
+    <section className="kinh tq-khoi tq-chi-tiet">
+      <h2>Bảng lãi lỗ</h2>
+      <div className="tq-loc">
+        <label>
+          Từ tháng
+          <input
+            type="month"
+            value={tu}
+            max={den}
+            onChange={(e) => e.target.value && setTu(e.target.value)}
+          />
+        </label>
+        <label>
+          Đến tháng
+          <input
+            type="month"
+            value={den}
+            min={tu}
+            max={thangNay()}
+            onChange={(e) => e.target.value && setDen(e.target.value)}
+          />
+        </label>
+        <div className="vien-thuoc" role="group" aria-label="Xem theo">
+          {CACH_XEM.map(([ma, ten]) => (
+            <button key={ma} aria-pressed={theo === ma} onClick={() => setTheo(ma)}>
+              {ten}
+            </button>
+          ))}
+        </div>
+      </div>
+      {loi && (
+        <p role="alert" className="loi">
+          {loi}
+        </p>
+      )}
+      {kq && (kq.so_chuyen_cho_quyet_toan > 0 || kq.thieu_chi_phi_co_dinh.length > 0) && (
+        <ul className="tq-luu-y">
+          {kq.so_chuyen_cho_quyet_toan > 0 && (
+            <li>{kq.so_chuyen_cho_quyet_toan} chuyến chờ quyết toán, chưa vào bảng.</li>
+          )}
+          {kq.thieu_chi_phi_co_dinh.length > 0 && (
+            <li>
+              Chưa nhập chi phí cố định:{' '}
+              {kq.thieu_chi_phi_co_dinh
+                .map((x) => `${x.bien_so} (${tenThang(x.thang)})`)
+                .join(', ')}
+              .
+            </li>
+          )}
+        </ul>
+      )}
+      {!kq ? (
+        !loi && <p className="ghi-chu">Đang tải…</p>
+      ) : (
+        <div className="tq-cuon">
+          <table>
+            <thead>
+              <tr>
+                {xem === 'chuyen' && (
+                  <>
+                    <th>Chuyến</th>
+                    <th>Ngày</th>
+                    <th>Xe</th>
+                  </>
+                )}
+                {xem === 'xe' && <th>Xe</th>}
+                {xem === 'thang' && <th>Tháng</th>}
+                {xem !== 'chuyen' && <th className="so">Chuyến</th>}
+                <th className="so">Doanh thu</th>
+                <th className="so">Chi phí</th>
+                <th className="so">Lương</th>
+                {coDinh && <th className="so">Cố định</th>}
+                <th className="so">Lãi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {kq.du_lieu.length === 0 && (
+                <tr>
+                  <td colSpan={8} className="ghi-chu">
+                    Không có chuyến đã quyết toán trong khoảng này.
+                  </td>
+                </tr>
+              )}
+              {kq.du_lieu.map((d, i) => (
+                <tr key={d.ma_chuyen ?? d.bien_so ?? d.thang ?? i}>
+                  {xem === 'chuyen' && (
+                    <>
+                      <td className="ma-don">{d.ma_chuyen}</td>
+                      <td>{d.ngay?.split('-').reverse().join('/')}</td>
+                      <td>
+                        <span className="bien">{d.bien_so}</span>
+                      </td>
+                    </>
+                  )}
+                  {xem === 'xe' && (
+                    <td>
+                      <span className="bien">{d.bien_so}</span>
+                    </td>
+                  )}
+                  {xem === 'thang' && <td>{tenThang(d.thang!)}</td>}
+                  {xem !== 'chuyen' && <td className="so">{d.so_chuyen}</td>}
+                  <td className="so">{so(d.doanh_thu)}</td>
+                  <td className="so">{so(d.tong_chi)}</td>
+                  <td className="so">{so(d.luong_tai_xe)}</td>
+                  {coDinh && <td className="so">{so(d.chi_phi_co_dinh)}</td>}
+                  {lai(d.lai)}
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan={xem === 'chuyen' ? 3 : 2}>
+                  Tổng
+                  {xem === 'chuyen'
+                    ? ` (${kq.du_lieu.length} chuyến)`
+                    : ` (${kq.tong.so_chuyen} chuyến)`}
+                </td>
+                <td className="so">{so(kq.tong.doanh_thu)}</td>
+                <td className="so">{so(kq.tong.tong_chi)}</td>
+                <td className="so">{so(kq.tong.luong_tai_xe)}</td>
+                {coDinh && <td className="so">{so(kq.tong.chi_phi_co_dinh)}</td>}
+                {lai(kq.tong.lai)}
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      )}
     </section>
   )
 }
@@ -382,6 +560,7 @@ function BangHieuSuat({ ds }: { ds: HieuSuatXe[] }) {
               <th>Lấp đầy trung bình</th>
               <th className="so">Km</th>
               <th className="so">Dầu thực tế / tham khảo (lít)</th>
+              <th className="so">Chênh lệch (lít)</th>
               <th className="so">Chưa quyết toán</th>
             </tr>
           </thead>
@@ -414,6 +593,16 @@ function BangHieuSuat({ ds }: { ds: HieuSuatXe[] }) {
                       ? '–'
                       : d.dau_tham_khao_lit.toLocaleString('vi-VN')}
                     {d.dau_thuc_te_lit === 0 && <small> chưa duyệt dầu</small>}
+                  </td>
+                  {/* UC-34-AC7: chênh lệch dương = hao hơn định mức, tô màu lỗ */}
+                  <td
+                    className={
+                      d.chenh_lech_lit !== null && d.chenh_lech_lit > 0 ? 'so tq-am' : 'so'
+                    }
+                  >
+                    {d.chenh_lech_lit === null
+                      ? '–'
+                      : `${d.chenh_lech_lit > 0 ? '+' : ''}${d.chenh_lech_lit.toLocaleString('vi-VN')}`}
                   </td>
                   <td className="so">{d.so_chuyen_chua_quyet_toan || ''}</td>
                 </tr>

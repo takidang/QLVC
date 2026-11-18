@@ -19,6 +19,8 @@ export type LaiLo<T> = {
   so_chuyen_cho_quyet_toan: number
   thieu_chi_phi_co_dinh: { xe_id: number; bien_so: string; thang: string }[]
 }
+export const laiLo = <T extends DongLaiLo>(theo: LaiLo<T>['theo'], tu: string, den: string) =>
+  goi<LaiLo<T>>(`/api/bao-cao/lai-lo?${query({ theo, tu, den })}`)
 export const laiLoThang = (tu: string, den: string) =>
   goi<LaiLo<DongLaiLo & { thang: string }>>(
     `/api/bao-cao/lai-lo?${query({ theo: 'thang', tu, den })}`,

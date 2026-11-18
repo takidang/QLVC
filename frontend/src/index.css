@@ -355,6 +355,10 @@ body {
   outline: 2px solid var(--muc);
   outline-offset: 2px;
 }
+/* Chỉ nhận focus bằng code (tiêu đề kết quả tra cứu): không vẽ viền, nhìn như ô nhập (Kiệt 18/11) */
+[tabindex='-1']:focus {
+  outline: none;
+}
 a {
   color: inherit;
   text-decoration-color: color-mix(in srgb, var(--muc) 40%, transparent);
@@ -458,6 +462,14 @@ button.phu {
 }
 button.phu:enabled:hover {
   background: var(--mat-2);
+}
+/* button.phu viết sau nên đè mất kiểu tắt ở trên: nhắc lại cho nút phụ (Ghép lại đạt ngưỡng BR-37, Kiệt 18/11) */
+button.phu:disabled,
+button.phu:disabled:hover {
+  color: color-mix(in srgb, var(--muc) 45%, transparent);
+  background: color-mix(in srgb, var(--muc) 10%, var(--mat));
+  border-color: transparent;
+  cursor: not-allowed;
 }
 button:has(> svg.ic) {
   display: inline-flex;
@@ -2289,6 +2301,17 @@ input[type='file']::file-selector-button {
 }
 .tq-am {
   color: var(--bd-lo);
+}
+.tq-loc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: end;
+  margin-bottom: 12px;
+}
+.tq-chi-tiet tfoot td {
+  font-weight: 600;
+  border-top: 2px solid var(--vien-dam);
 }
 .tq-so b.tq-am {
   font-weight: 400;
