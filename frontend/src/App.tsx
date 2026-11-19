@@ -180,7 +180,7 @@ function KhungTrang({
               {loiThoat}
             </p>
           )}
-          <Outlet />
+          <Outlet context={nd} />
         </main>
       </div>
     </div>

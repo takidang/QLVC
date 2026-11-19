@@ -144,6 +144,10 @@ const LOAI: Record<string, [string, string]> = {
   THAT_BAI: ['suco', 'suco'],
   CHONG_LICH: ['suco', 'suco'],
   CHUA_QUYET_TOAN: ['tre', ''],
+  // UC-30: nhãn gợi ý nguy cơ trễ chuyến (nền nhuộm nhạt, không tô đặc như cờ khẩn)
+  NGUY_CO_THAP: ['tre', 'nc-thap'],
+  NGUY_CO_TRUNG_BINH: ['tre', 'nc-tb'],
+  NGUY_CO_CAO: ['tre', 'nc-cao'],
 }
 
 export function Nhan({

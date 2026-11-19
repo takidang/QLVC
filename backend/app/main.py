@@ -20,6 +20,7 @@ from app.modules.danh_muc.tai_xe.router import router as tai_xe_router
 from app.modules.danh_muc.tuyen.router import router as tuyen_router
 from app.modules.danh_muc.xe.router import router as xe_router
 from app.modules.don.router import router as don_router
+from app.modules.goi_y.router import router as goi_y_router
 from app.modules.nguoi_dung.router import router as nguoi_dung_router
 from app.modules.quet.router import router as quet_router
 from app.modules.su_co.router import router as bao_su_co_router
@@ -53,6 +54,7 @@ app.include_router(chi_phi_router)
 app.include_router(chuyen_router)
 app.include_router(cong_no_router)
 app.include_router(don_router)
+app.include_router(goi_y_router)
 app.include_router(khach_hang_router)
 app.include_router(ly_do_router)
 app.include_router(nguoi_dung_router)
