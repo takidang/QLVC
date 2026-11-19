@@ -1,6 +1,6 @@
 # UC-26: Báo cáo lãi lỗ theo chuyến / xe / tháng
 
-- **Trạng thái:** Đang làm – backend xong 7/8 AC (11/11/2026; duyệt 11/11/2026, Kiệt: "duyệt" – 7 quyết định như đề xuất). AC8 giao diện chờ Tài làm, Kiệt thử
+- **Trạng thái:** Hoàn thành 19/11/2026 – 8/8 AC (backend 11/11; AC8 giao diện v3 Kiệt thử 18/11, PR #60). Duyệt 11/11/2026, Kiệt: "duyệt" – 7 quyết định như đề xuất
 - **Tác nhân:** Quản lý, Kế toán (Điều phối chỉ xem)
 - **Đặc tả:** `docs/use-cases.md` mục 2 (UC-26, ưu tiên S; đặc tả rút gọn ở story này) · `docs/api.md` `GET /api/bao-cao/lai-lo` · `nghiep-vu.md` bảng chỉ số ("Lãi xe theo tháng") và mục 11 bước 8 (X1 tháng 10: Σ lãi các chuyến − chi phí cố định 9.000.000) · `so-do.md` (`CHI_PHI_CO_DINH_XE` chỉ dùng cho lãi theo xe/tháng, không vào lãi chuyến)
 - **Quy tắc nghiệp vụ liên quan:** BR-51 (lãi chuyến), BR-29 (quyết toán khóa sổ), BR-57 (phân quyền)
@@ -62,4 +62,4 @@ Quản lý (và Kế toán) chọn khoảng tháng và cách xem: **theo chuyế
 | UC-26-AC5 | API | `test_uc26_ac5_thieu_chi_phi_co_dinh_tinh_0_va_bao` | Đạt | 11/11/2026 |
 | UC-26-AC6 | API | `test_uc26_ac6_tham_so_sai_400` (7 ca), `test_uc26_ac6_bien_12_thang_duoc_va_mac_dinh_thang_nay` | Đạt | 11/11/2026 |
 | UC-26-AC7 | API | `test_uc26_ac7_vai_tro_duoc_xem` (3 vai trò), `test_uc26_ac7_tai_xe_403_chua_dang_nhap_401` | Đạt | 11/11/2026 |
-| UC-26-AC8 | UI | Tài làm giao diện, Kiệt thử | CHƯA KIỂM | |
+| UC-26-AC8 | UI | `docs/test-evidence/UC-26/` (Tổng quan, khối "Bảng lãi lỗ": khoảng tháng, Chuyến / Xe / Tháng, dòng tổng, lãi âm tô màu, số chuyến chờ quyết toán, thiếu chi phí cố định). Báo cáo đặt ở trang Tổng quan của Quản lý, không có menu riêng | Đạt (Kiệt thử trên giao diện v3 0cef9cd) | 18/11/2026 |

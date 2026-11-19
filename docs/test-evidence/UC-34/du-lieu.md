@@ -15,3 +15,6 @@
 - Góp ý nhỏ (không chặn AC): xe chưa có khoản dầu được duyệt vẫn hiện chênh lệch âm (51D-307.77 "0 / 62,64 chưa duyệt dầu", chênh lệch −62,64), dễ hiểu nhầm là tiết kiệm dầu; nên để "–" khi chưa duyệt dầu.
 
 **Kết luận: AC7 đạt.**
+
+### Thử lại góp ý xe chưa duyệt dầu (19/11/2026, `dev` sau #61, có 3d8ebab)
+- 51D-306.66 ("0 / 0 chưa duyệt dầu") và 51D-307.77 ("0 / 62,64 chưa duyệt dầu"): cột Chênh lệch hiện **"–"**, không còn số âm giả. Ảnh `c-chua-duyet-dau-gach.png`.
