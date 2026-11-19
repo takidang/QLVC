@@ -561,20 +561,18 @@ export default function ChuyenChiTiet() {
 // UC-30: khối nhỏ gợi ý nguy cơ trễ gần phần thời gian dự kiến; chỉ gợi ý, không đổi ETA hay chặn thao tác
 function KhoiDuDoanTre({ d }: { d: DuDoanTre }) {
   if (!d.co_du_doan || d.xac_suat == null || !d.muc) return null
-  const phanTram = Math.round(d.xac_suat * 100)
+  // Không hiện %: dữ liệu train có tỷ lệ trễ nền 82%, nên "Thấp · 72%" dễ hiểu lầm (góp ý Kiệt #63)
   const yeuTo = (d.yeu_to ?? []).slice(0, 2)
   const nguon = tomTatNguon(d.nguon)
   return (
     <div className="ct-du-doan" title={nguon || undefined}>
       <div className="ct-du-doan-chinh">
-        <Nhan loai={`NGUY_CO_${d.muc}`}>
-          Nguy cơ trễ: {TEN_MUC_TRE[d.muc]} · {phanTram}%
-        </Nhan>
+        <Nhan loai={`NGUY_CO_${d.muc}`}>Nguy cơ trễ: {TEN_MUC_TRE[d.muc]}</Nhan>
         {yeuTo.length > 0 && (
           <ul className="ct-du-doan-yt" aria-label="Yếu tố chính">
             {yeuTo.map((y) => (
               <li key={y.ten}>
-                {y.ten} {y.huong === 'TANG' ? '↑' : '↓'}
+                {y.ten} {y.huong === 'TANG' ? 'làm tăng nguy cơ' : 'làm giảm nguy cơ'}
               </li>
             ))}
           </ul>

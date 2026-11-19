@@ -16,7 +16,7 @@ TEN_DAC_TRUNG = {
 
 
 def phan_muc(xac_suat: float, nguong: dict) -> str:
-    """THAP < ngưỡng trung bình (0,3) ≤ TRUNG_BINH < ngưỡng cao (0,6) ≤ CAO."""
+    """THAP < nguong["trung_binh"] ≤ TRUNG_BINH < nguong["cao"] ≤ CAO; ngưỡng đọc từ file mô hình (hiện 0,75 / 0,9)."""
     if xac_suat < nguong["trung_binh"]:
         return "THAP"
     if xac_suat < nguong["cao"]:
