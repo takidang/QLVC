@@ -52,4 +52,4 @@ Trên trang Tài khoản, người dùng xem hồ sơ của mình và tự đổ
 | UC-39-AC4 | API | `test_uc39_ac4_tra_dung_byte_va_header` (2 ca), `test_uc39_ac4_chua_co_anh_hoac_file_mat_404`, `test_uc39_ac4_hai_nguoi_chi_nhan_anh_cua_minh`, `test_uc39_ac4_chua_dang_nhap_401`, `test_uc39_unit_luu_tru_doc_*` (11 ca) | Đạt | 19/11/2026 |
 | UC-39-AC5 | API | `test_uc39_ac5_patch_put_ho_so_405`, `test_uc39_ac5_truong_la_trong_form_anh_khong_doi_csdl` | Đạt | 19/11/2026 |
 | UC-39-AC6 | API | `test_uc39_ac6_toi_co_co_anh_dai_dien` | Đạt | 19/11/2026 |
-| UC-39-AC7 | UI | Chờ Kiệt thử | Chờ Kiệt thử | — |
+| UC-39-AC7 | UI | `docs/test-evidence/UC-39/` (7 ảnh, `du-lieu.md`): tải / đổi / xóa ảnh, tệp sai loại, thông tin chỉ xem, tài xế GPLX còn 20 ngày tô cam, 390 px, bản tối | Đạt (Kiệt thử; 1 góp ý không chặn) | 19/11/2026 |
