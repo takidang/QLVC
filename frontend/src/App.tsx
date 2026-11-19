@@ -127,10 +127,12 @@ const Hieu = ({ den }: { den: string }) => (
 // Chỉ một mục (tài xế) thì không có cột menu: tiêu đề trang đã nói đủ. Màn hẹp: cột menu thành thanh đáy.
 function KhungTrang({
   nd,
+  phienBanAnh,
   loiThoat,
   onThoat,
 }: {
   nd: NguoiDung
+  phienBanAnh: number
   loiThoat: string
   onThoat: () => void
 }) {
@@ -171,7 +173,12 @@ function KhungTrang({
               {TEN_VAI_TRO[nd.vai_tro]}
             </span>
             <ChuongThongBao nguoiDungId={nd.id} vaiTro={nd.vai_tro} />
-            <MenuTaiKhoan nd={nd} tenVaiTro={TEN_VAI_TRO[nd.vai_tro]} onThoat={onThoat} />
+            <MenuTaiKhoan
+              nd={nd}
+              tenVaiTro={TEN_VAI_TRO[nd.vai_tro]}
+              phienBanAnh={phienBanAnh}
+              onThoat={onThoat}
+            />
           </div>
         </header>
         <main className="trang">
@@ -189,6 +196,7 @@ function KhungTrang({
 
 export default function App() {
   const [nd, setNd] = useState<NguoiDung | null | undefined>(undefined) // undefined = đang kiểm phiên
+  const [phienBanAnh, setPhienBanAnh] = useState(0) // tăng khi đổi/xóa ảnh hoặc đăng nhập lại để tránh dính cache
   const [loiThoat, setLoiThoat] = useState('')
 
   useEffect(() => {
@@ -199,11 +207,17 @@ export default function App() {
 
   if (nd === undefined) return <p className="dang-tai">Đang tải…</p>
 
+  function capNhatAnh(coAnh: boolean) {
+    setNd((cu) => (cu ? { ...cu, co_anh_dai_dien: coAnh } : cu))
+    setPhienBanAnh((v) => v + 1)
+  }
+
   async function thoat() {
     setLoiThoat('')
     try {
       await dangXuat()
       setNd(null)
+      setPhienBanAnh((v) => v + 1)
     } catch {
       // Cookie chưa bị xóa: báo rõ để người dùng máy chung không tưởng đã thoát
       setLoiThoat('Không đăng xuất được, kiểm tra mạng rồi thử lại')
@@ -219,7 +233,16 @@ export default function App() {
         <Route
           path="/dang-nhap"
           element={
-            nd ? <Navigate to={TRANG_CHU[nd.vai_tro]} replace /> : <DangNhap onXong={setNd} />
+            nd ? (
+              <Navigate to={TRANG_CHU[nd.vai_tro]} replace />
+            ) : (
+              <DangNhap
+                onXong={(moi) => {
+                  setNd(moi)
+                  setPhienBanAnh((v) => v + 1)
+                }}
+              />
+            )
           }
         />
         {(Object.keys(TRANG_CHU) as VaiTro[]).map((vt) => (
@@ -232,7 +255,7 @@ export default function App() {
               ) : !duocVao(nd, vt) ? (
                 <Navigate to={TRANG_CHU[nd.vai_tro]} replace />
               ) : (
-                <KhungTrang nd={nd} loiThoat={loiThoat} onThoat={thoat} />
+                <KhungTrang nd={nd} phienBanAnh={phienBanAnh} loiThoat={loiThoat} onThoat={thoat} />
               )
             }
           >
@@ -260,13 +283,22 @@ export default function App() {
             !nd ? (
               <Navigate to="/dang-nhap" replace />
             ) : (
-              <KhungTrang nd={nd} loiThoat={loiThoat} onThoat={thoat} />
+              <KhungTrang nd={nd} phienBanAnh={phienBanAnh} loiThoat={loiThoat} onThoat={thoat} />
             )
           }
         >
           <Route
             path="/tai-khoan"
-            element={nd && <TaiKhoan nd={nd} tenVaiTro={TEN_VAI_TRO[nd.vai_tro]} />}
+            element={
+              nd && (
+                <TaiKhoan
+                  nd={nd}
+                  tenVaiTro={TEN_VAI_TRO[nd.vai_tro]}
+                  phienBanAnh={phienBanAnh}
+                  onDoiAnh={capNhatAnh}
+                />
+              )
+            }
           />
           <Route path="/cai-dat" element={nd && <CaiDat vaiTro={nd.vai_tro} />} />
         </Route>
