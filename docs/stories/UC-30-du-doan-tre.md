@@ -1,6 +1,6 @@
 # UC-30: Dự đoán nguy cơ trễ chuyến
 
-- **Trạng thái:** Đang làm
+- **Trạng thái:** Hoàn thành 19/11/2026 – 7/7 AC (Đã duyệt 19/11/2026 – Tài: "duyệt"; AC7 Kiệt thử trên giao diện v3, PR #63)
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa)
 - **Đặc tả:** `docs/use-cases.md` (UC-30, mức C), `docs/nghiep-vu.md` mục 7, `docs/kien-truc.md` KT-08, `docs/api.md` mục 2.4
 - **Quy tắc nghiệp vụ liên quan:** không có BR chặn; AI chỉ gợi ý (nghiep-vu.md mục 7)
@@ -9,7 +9,7 @@
 ## Mô tả ngắn
 Điều phối mở chi tiết chuyến thấy nhãn "nguy cơ trễ" (thấp / trung bình / cao) kèm xác suất và các yếu tố chính. Chỉ là gợi ý: không chặn thao tác, không đổi ETA kế hoạch. Mô hình train sẵn ngoài backend; lỗi hoặc thiếu mô hình thì trả "không có gợi ý", lõi vẫn chạy.
 
-## Quyết định (Claude đề xuất, chờ Tài duyệt)
+## Quyết định (Tài duyệt 19/11/2026)
 1. **Dữ liệu train:** Kaggle "Delivery truck trips data" (ramakrishnanthiyagu): chuyến xe tải ở Ấn Độ có ETA kế hoạch, giờ đến thật, cờ đúng giờ / trễ, quãng đường. **Tài tải về** (Kaggle cần đăng nhập) và đọc giấy phép trên Data Card. File để ở `ml/data/`, **không commit** nếu giấy phép không cho phân phối lại. Không dùng dữ liệu demo (do `seed.demo` tự sinh bằng công thức, nghiep-vu.md cấm).
 2. **Đặc trưng chỉ lấy thứ cả dataset và hệ thống đều có** lúc lập chuyến: quãng đường (km tuyến), thời gian dự kiến (giờ, từ ETA kế hoạch), giờ khởi hành trong ngày, thứ trong tuần. Nhãn: trễ khi thực tế > kế hoạch.
 3. **Mô hình:** hồi quy logistic (đơn giản, giải thích được từng yếu tố). Train bằng script `ml/train_du_doan_tre.py` dùng `pandas`, `scikit-learn` — **chỉ cài cho `ml/`** (`ml/requirements.txt`), không thêm vào backend. Xuất hệ số và tham số chuẩn hóa ra `backend/app/modules/goi_y/mo_hinh_tre.json`.

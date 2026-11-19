@@ -1,6 +1,6 @@
 # UC-39: Hồ sơ cá nhân và ảnh đại diện
 
-- **Trạng thái:** Đang làm
+- **Trạng thái:** Hoàn thành 19/11/2026 – 7/7 AC (Tài chốt "cách 1" 19/11; AC7 Kiệt thử, PR #67)
 - **Tác nhân:** mọi người dùng đã đăng nhập (Quản lý, Điều phối, Kế toán, Tài xế)
 - **Đặc tả:** `docs/use-cases.md` (UC-39, mức C, thêm 19/11/2026 cho giao diện v3), `docs/api.md` mục Xác thực, `docs/security-rules.md` (upload)
 - **Quy tắc nghiệp vụ liên quan:** BR-57 (phân quyền ở máy chủ), BR-14, 15 (GPLX: chỉ xem)
