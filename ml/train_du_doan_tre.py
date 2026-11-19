@@ -31,7 +31,7 @@ FILE_MAU = GOC_REPO / "backend" / "tests" / "du_lieu" / "mau_du_doan_tre.json"
 COT_DUNG = ["BookingID_Date", "trip_start_date", "Planned_ETA", "TRANSPORTATION_DISTANCE_IN_KM", "ontime", "delay"]
 # Đúng thứ tự đặc trưng của module backend (TEN_DAC_TRUNG trong du_doan_tre.py)
 DAC_TRUNG = ["km", "thoi_gian_gio", "gio_khoi_hanh", "thu_trong_tuan"]
-NGUONG = {"trung_binh": 0.3, "cao": 0.6}
+NGUONG = {"trung_binh": 0.75, "cao": 0.9}  # theo tỷ lệ trễ nền 82% của dataset (Tài chốt 19/11)
 TEN_DATASET = "Kaggle ramakrishnanthiyagu/delivery-truck-trips-data"
 SEED = 42
 SO_MAU_XUAT = 20
