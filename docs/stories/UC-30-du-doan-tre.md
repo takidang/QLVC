@@ -51,3 +51,4 @@
 | UC-30-AC4 | API | `test_uc30_ac4_mo_hinh_loi_khong_co_goi_y`, `test_uc30_ac4_chuyen_huy_khong_co_goi_y`, `test_uc30_ac4_chuyen_khong_ton_tai` (api); `test_uc30_ac4_*` (unit) | Đạt | 19/11/2026 |
 | UC-30-AC5 | API | `test_uc30_ac5_khong_doi_du_lieu_chuyen` | Đạt | 19/11/2026 |
 | UC-30-AC6 | API | `test_uc30_ac6_phan_quyen` | Đạt | 19/11/2026 |
+| UC-30-AC7 | UI | `frontend/src/pages/dieu-phoi/ChuyenChiTiet.tsx` (`KhoiDuDoanTre`), `npm run typecheck`, `npm run build`, `npm run lint` | Chờ Kiệt thử trên giao diện v3 | 19/11/2026 |

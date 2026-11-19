@@ -1,10 +1,12 @@
 import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useOutletContext, useParams } from 'react-router-dom'
+import type { NguoiDung } from '../../api/auth'
 import {
   chiTietChuyen,
   danhSachChuyen,
   chotChuyen,
   donPhuHop,
+  duDoanTre,
   ghepDon,
   goDon,
   huyChuyen,
@@ -15,6 +17,9 @@ import {
   xeKhaDungChuyen,
   type Chuyen as ChuyenNgan,
   type ChuyenChiTiet as Chuyen,
+  type DuDoanTre,
+  type MucNguyCoTre,
+  type NguonDuDoanTre,
   type TaiXeKhaDung,
   type ViPhamGhep,
   type XacNhanChot,
@@ -72,6 +77,19 @@ const XAC_NHAN: Record<string, keyof XacNhanChot> = {
   'BR-23': 'xac_nhan_chay_rong',
   'BR-52': 'xac_nhan_lai_am',
 }
+const TEN_MUC_TRE: Record<MucNguyCoTre, string> = {
+  THAP: 'Thấp',
+  TRUNG_BINH: 'Trung bình',
+  CAO: 'Cao',
+}
+function tomTatNguon(nguon?: NguonDuDoanTre | null): string {
+  if (!nguon) return ''
+  const phan: string[] = []
+  if (nguon.dataset) phan.push(`Nguồn: ${nguon.dataset}`)
+  if (nguon.so_mau != null) phan.push(`${nguon.so_mau.toLocaleString('vi-VN')} mẫu`)
+  if (nguon.auc != null) phan.push(`AUC ${nguon.auc.toLocaleString('vi-VN')}`)
+  return phan.join(' · ')
+}
 
 // Chi tiết chuyến (giao diện v2, màn 03): đầu trang, số liệu, lịch trình dọc + bản đồ, tiền, dòng thời gian.
 // Chi tiết chuyến, thẻ Hàng (UC-13): tải, lịch trình, ghép và gỡ đơn; chốt / mở chốt (UC-15); hủy (UC-16)
@@ -88,10 +106,12 @@ export default function ChuyenChiTiet() {
   const [lanTai, setLanTai] = useState(0)
   const dieuHuong = useNavigate()
   const { pathname } = useLocation()
+  const nd = useOutletContext<NguoiDung | undefined>()
   const [cungNgay, setCungNgay] = useState<ChuyenNgan[]>([])
   const [xe, setXe] = useState<Xe | null>(null)
   const [taiXe, setTaiXe] = useState<TaiXe | null>(null)
   const [km, setKm] = useState<number | null>(null)
+  const [duDoan, setDuDoan] = useState<{ id: number; duLieu: DuDoanTre } | null>(null)
 
   useEffect(() => {
     let bo = false
@@ -145,6 +165,27 @@ export default function ChuyenChiTiet() {
         .then((t) => setKm(t.tong_km))
         .catch(() => setKm(null))
   }, [tuyenId])
+
+  // UC-30: chỉ gọi dự đoán nguy cơ trễ khi Điều phối / Quản lý xem chuyến chưa hủy; lỗi hoặc không có gợi ý thì im lặng (KT-08)
+  const duocXemDuDoan = nd?.vai_tro === 'DIEU_PHOI' || nd?.vai_tro === 'QUAN_LY'
+  const chuyenId = c?.id
+  const biHuy = c?.trang_thai === 'HUY'
+  useEffect(() => {
+    if (!duocXemDuDoan || !chuyenId || biHuy) return
+    let bo = false
+    duDoanTre(chuyenId)
+      .then(
+        (r) =>
+          !bo &&
+          setDuDoan(
+            r.co_du_doan && r.xac_suat != null && r.muc ? { id: chuyenId, duLieu: r } : null,
+          ),
+      )
+      .catch(() => !bo && setDuDoan(null))
+    return () => {
+      bo = true
+    }
+  }, [duocXemDuDoan, chuyenId, biHuy])
 
   // Chốt: thiếu xác nhận chạy rỗng (BR-23) hoặc lãi âm (BR-52) thì hỏi, đồng ý thì gửi lại kèm cờ
   async function chot(): Promise<Chuyen> {
@@ -342,6 +383,7 @@ export default function ChuyenChiTiet() {
                 )}
               </div>
             </div>
+            {duocXemDuDoan && !biHuy && duDoan?.id === c.id && <KhoiDuDoanTre d={duDoan.duLieu} />}
             {lyDoHuy !== null && (
               <form
                 className="thanh-cong-cu canh-bao"
@@ -513,6 +555,36 @@ export default function ChuyenChiTiet() {
         </div>
       </div>
     </section>
+  )
+}
+
+// UC-30: khối nhỏ gợi ý nguy cơ trễ gần phần thời gian dự kiến; chỉ gợi ý, không đổi ETA hay chặn thao tác
+function KhoiDuDoanTre({ d }: { d: DuDoanTre }) {
+  if (!d.co_du_doan || d.xac_suat == null || !d.muc) return null
+  const phanTram = Math.round(d.xac_suat * 100)
+  const yeuTo = (d.yeu_to ?? []).slice(0, 2)
+  const nguon = tomTatNguon(d.nguon)
+  return (
+    <div className="ct-du-doan" title={nguon || undefined}>
+      <div className="ct-du-doan-chinh">
+        <Nhan loai={`NGUY_CO_${d.muc}`}>
+          Nguy cơ trễ: {TEN_MUC_TRE[d.muc]} · {phanTram}%
+        </Nhan>
+        {yeuTo.length > 0 && (
+          <ul className="ct-du-doan-yt" aria-label="Yếu tố chính">
+            {yeuTo.map((y) => (
+              <li key={y.ten}>
+                {y.ten} {y.huong === 'TANG' ? '↑' : '↓'}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <small className="ct-du-doan-ghi-chu">
+        Gợi ý từ mô hình thử nghiệm, không thay đổi ETA
+        {nguon && <> · {nguon}</>}
+      </small>
+    </div>
   )
 }
 

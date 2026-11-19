@@ -114,7 +114,25 @@ export type SuCo = {
 // Vi phạm khi ghép/gỡ: don_id null là vi phạm của cả chuyến (tải, thể tích, giấy tờ, trùng lịch)
 export type ViPhamGhep = { don_id: number | null; ma: string; thong_diep: string }
 
+// UC-30: gợi ý nguy cơ trễ chuyến từ mô hình thử nghiệm (chỉ gợi ý, KT-08)
+export type MucNguyCoTre = 'THAP' | 'TRUNG_BINH' | 'CAO'
+export type YeuToDuDoanTre = { ten: string; huong: 'TANG' | 'GIAM' }
+export type NguonDuDoanTre = {
+  dataset?: string
+  ngay_train?: string
+  so_mau?: number
+  auc?: number
+}
+export type DuDoanTre = {
+  co_du_doan: boolean
+  xac_suat?: number | null
+  muc?: MucNguyCoTre | null
+  yeu_to?: YeuToDuDoanTre[] | null
+  nguon?: NguonDuDoanTre | null
+}
+
 export const chiTietChuyen = (id: number) => goi<ChuyenChiTiet>(`/api/chuyen/${id}`)
+export const duDoanTre = (id: number) => goi<DuDoanTre>(`/api/chuyen/${id}/du-doan-tre`)
 export const donPhuHop = (id: number) => goi<Don[]>(`/api/chuyen/${id}/don-phu-hop`)
 export const ghepDon = (id: number, don_ids: number[]) =>
   guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/ghep`, 'POST', { don_ids })
