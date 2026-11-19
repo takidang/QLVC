@@ -1,12 +1,14 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { BrowserRouter, Navigate, NavLink, Outlet, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Link, Navigate, NavLink, Outlet, Route, Routes } from 'react-router-dom'
 import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
 import { Ic, type TenIc } from './nhan'
 import { KhungThongBao } from './thongBao'
 import ChuongThongBao from './ChuongThongBao'
 import MenuTaiKhoan from './MenuTaiKhoan'
 import TimChung from './TimChung'
+import CaiDat from './pages/CaiDat'
 import DangNhap from './pages/DangNhap'
+import TaiKhoan from './pages/TaiKhoan'
 import BangGiaDanhSach from './pages/quan-ly/BangGiaDanhSach'
 import CauHinh from './pages/quan-ly/CauHinh'
 import NguoiDungDanhSach from './pages/quan-ly/NguoiDungDanhSach'
@@ -112,13 +114,13 @@ const menu = (nd: NguoiDung) =>
 // Thứ tự nhóm trên cột menu
 const NHOM = ['', 'Vận hành', 'Danh mục', 'Tài chính', 'Quản trị']
 
-const Hieu = () => (
-  <span className="hieu">
+const Hieu = ({ den }: { den: string }) => (
+  <Link to={den} className="hieu">
     <i aria-hidden="true">
       <Ic ten="chuyen" />
     </i>
     Quản lý vận tải
-  </span>
+  </Link>
 )
 
 // Khung trang sau đăng nhập (v3): cột menu trái theo nhóm, thanh trên có tìm chung, chuông, tài khoản.
@@ -138,7 +140,7 @@ function KhungTrang({
     <div className={coMenu ? 'khung' : 'khung mot'}>
       {coMenu && (
         <aside className="canh">
-          <Hieu />
+          <Hieu den={TRANG_CHU[nd.vai_tro]} />
           <nav aria-label="Chức năng">
             {NHOM.map((nhom) => {
               const ds = muc.filter((m) => (m.nhom ?? '') === nhom)
@@ -161,7 +163,7 @@ function KhungTrang({
       )}
       <div className="than">
         <header className="dau">
-          <Hieu />
+          <Hieu den={TRANG_CHU[nd.vai_tro]} />
           <TimChung vaiTro={nd.vai_tro} />
           <div className="ben-phai">
             <span className="ten">
@@ -252,6 +254,22 @@ export default function App() {
             ))}
           </Route>
         ))}
+        {/* Trang chung cho mọi vai trò đã đăng nhập (không hiện trên thanh menu bên trái) */}
+        <Route
+          element={
+            !nd ? (
+              <Navigate to="/dang-nhap" replace />
+            ) : (
+              <KhungTrang nd={nd} loiThoat={loiThoat} onThoat={thoat} />
+            )
+          }
+        >
+          <Route
+            path="/tai-khoan"
+            element={nd && <TaiKhoan nd={nd} tenVaiTro={TEN_VAI_TRO[nd.vai_tro]} />}
+          />
+          <Route path="/cai-dat" element={nd && <CaiDat vaiTro={nd.vai_tro} />} />
+        </Route>
         <Route
           path="*"
           element={<Navigate to={nd ? TRANG_CHU[nd.vai_tro] : '/dang-nhap'} replace />}

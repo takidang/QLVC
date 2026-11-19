@@ -1,6 +1,6 @@
 # UC-34: Hiệu suất xe theo tháng
 
-- **Trạng thái:** Đang làm – backend xong 6/7 AC (11/11/2026; duyệt 11/11/2026, Kiệt: "duyệt" – 6 quyết định như đề xuất). AC7 giao diện chờ Tài làm, Kiệt thử
+- **Trạng thái:** Hoàn thành 19/11/2026 – 7/7 AC (backend 11/11; AC7 giao diện v3 Kiệt thử 18/11, PR #60). Duyệt 11/11/2026, Kiệt: "duyệt" – 6 quyết định như đề xuất
 - **Tác nhân:** Quản lý (Kế toán xem)
 - **Đặc tả:** `docs/use-cases.md` mục 2 (UC-34, ưu tiên S; đặc tả rút gọn ở story này) · `docs/api.md` `GET /api/bao-cao/hieu-suat-xe` · `nghiep-vu.md` bảng chỉ số "Hiệu suất xe theo tháng" (% lấp đầy trung bình các chuyến không hủy; số chuyến chạy rỗng; Σ km; Σ lít dầu thực tế so với Σ dầu tham khảo), A8 (giữ góc nhìn chủ xe), mục 11 bước 8
 - **Quy tắc nghiệp vụ liên quan:** BR-23 (chạy rỗng), BR-70 (km đầu / cuối), BR-54 (khoản dầu ghi số lít), BR-57 (phân quyền); công thức lấp đầy mục 2.1
@@ -59,4 +59,4 @@ Quản lý chọn tháng, xem mỗi xe chạy mấy chuyến, mấy chuyến ch�
 | UC-34-AC4 | API | `test_uc34_ac4_xe_nam_bai_va_tong` | Đạt | 11/11/2026 |
 | UC-34-AC5 | API | `test_uc34_ac5_tham_so_sai_400` (3 ca), `test_uc34_ac5_mac_dinh_thang_nay` | Đạt | 11/11/2026 |
 | UC-34-AC6 | API | `test_uc34_ac6_phan_quyen` (4 vai trò), `test_uc34_ac6_chua_dang_nhap_401` | Đạt | 11/11/2026 |
-| UC-34-AC7 | UI | Tài làm giao diện, Kiệt thử | CHƯA KIỂM | |
+| UC-34-AC7 | UI | `docs/test-evidence/UC-34/` (Tổng quan, bảng "Hiệu suất xe": chọn tháng, mỗi xe một dòng, cột Chênh lệch (lít) dương tô màu; xe chưa duyệt dầu hiện "–" từ 3d8ebab) | Đạt (Kiệt thử trên giao diện v3 0cef9cd) | 18/11/2026 |

@@ -1,6 +1,6 @@
 # UC-27: Bảng cảnh báo cho Điều phối
 
-- **Trạng thái:** Đang làm – backend xong 7/8 AC (11/11/2026; duyệt 11/11/2026, Kiệt: "duyệt" – 7 quyết định như đề xuất). AC8 giao diện chờ Tài nối, Kiệt thử
+- **Trạng thái:** Hoàn thành 19/11/2026 – 8/8 AC (backend 11/11; AC8 giao diện v3 Kiệt thử 18/11, PR #60). Duyệt 11/11/2026, Kiệt: "duyệt" – 7 quyết định như đề xuất
 - **Tác nhân:** Điều phối (Quản lý kế thừa quyền Điều phối)
 - **Đặc tả:** `docs/use-cases.md` mục 2 (UC-27, ưu tiên S; đặc tả rút gọn ở story này) · `docs/api.md` `GET /api/canh-bao` · `nghiep-vu.md` BR-21, 43, 73, CFG-02, 09, 10 · khung "Cần chú ý" màn Chuyến của Tài (`ChuyenDanhSach.tsx`: "thay bằng GET /api/canh-bao khi làm UC-27")
 - **Quy tắc nghiệp vụ liên quan:** BR-21 (giấy tờ sắp hết hạn trong CFG-02 ngày, tính cả ngày thứ CFG-02), BR-43 (lượt quét thiếu GPS gắn cờ), BR-73 (trễ quá CFG-09, chồng chuyến kế tiếp; đơn chờ ghép còn dưới CFG-10 giờ tới hạn giao), BR-57 (phân quyền)
@@ -62,4 +62,4 @@
 | UC-27-AC5 | API | `test_uc27_ac5_thieu_gps` | Đạt | 11/11/2026 |
 | UC-27-AC6 | API | `test_uc27_ac6_cau_hinh_so_viec` | Đạt | 11/11/2026 |
 | UC-27-AC7 | API | `test_uc27_ac7_phan_quyen` (4 vai trò), `test_uc27_ac7_chua_dang_nhap_401` | Đạt | 11/11/2026 |
-| UC-27-AC8 | UI | Tài nối khung "Cần chú ý", Kiệt thử | CHƯA KIỂM | |
+| UC-27-AC8 | UI | `docs/test-evidence/UC-27/` (khung "Cần chú ý" màn Chuyến lấy `/api/canh-bao`: xe hạn đăng kiểm còn 20 ngày hiện khi CFG-02 = 30, biến mất khi CFG-02 = 10) | Đạt (Kiệt thử trên giao diện v3 7348c6c) | 18/11/2026 |

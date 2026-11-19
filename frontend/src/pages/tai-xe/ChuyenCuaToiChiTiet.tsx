@@ -12,6 +12,7 @@ import {
   type ChuyenCuaToiChiTiet as ChiTiet,
   type KetQuaQuet,
 } from '../../api/toi'
+import { dangGiamChuyenDong } from '../../nen'
 import { nenAnh } from '../../nenAnh'
 import { ChiPhi } from './ChiPhi'
 import { SuCoChuyen } from './SuCo'
@@ -70,10 +71,13 @@ export default function ChuyenCuaToiChiTiet() {
   // Còn điểm lấy chưa quét thì mới cần khối Lấy hàng (quét lấy); lấy hết rồi thì giao ở từng điểm
   const conLay = !!c?.lich_trinh.some((p) => p.viec === 'LAY' && p.trang_thai_don === 'DA_GHEP')
   const idDiem = (p: ChiTiet['lich_trinh'][number]) => `diem-${p.viec}-${p.don_id}`
-  // Cuộn tới một khối; máy bật giảm chuyển động thì nhảy thẳng
+  // Cuộn tới một khối; bật giảm chuyển động thì nhảy thẳng
   const toi = (id: string) =>
     document.getElementById(id)?.scrollIntoView({
-      behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      behavior:
+        dangGiamChuyenDong() || matchMedia('(prefers-reduced-motion: reduce)').matches
+          ? 'auto'
+          : 'smooth',
       block: 'start',
     })
 
