@@ -128,6 +128,6 @@ Cửa sổ khác: `cd frontend; npm run dev`. Đăng nhập `dieuphoi`, `ketoan`
 | `python` mở Microsoft Store | Cài lại Python, tick **Add to PATH**; hoặc tắt "App execution aliases" cho python trong Settings |
 | `docker: command not found` / không kết nối được | Chưa mở Docker Desktop, hoặc chưa khởi động lại máy sau khi cài WSL |
 | `docker compose` báo thiếu `POSTGRES_PASSWORD` | Chưa tạo `.env` ở thư mục gốc `QLVC` (không phải trong `backend/`) |
-| Cổng 5432 đã bị dùng | Máy đã cài PostgreSQL khác: tắt service đó, hoặc báo nhóm để đổi cổng |
+| Cổng 5432 đã bị dùng (`docker compose up` báo `port is already allocated` / `bind ... 5432`) | Máy đã cài PostgreSQL khác. PowerShell **chạy với quyền Administrator**: `Get-Service postgresql*` xem tên service, rồi `Stop-Service <tên>` (ví dụ `Stop-Service postgresql-x64-16`), chạy lại `docker compose up -d db`. Dùng xong muốn bật lại: `Start-Service <tên>` |
 | `npm ci` lỗi phiên bản | Kiểm tra `node --version` là v24 |
 | Không cài được package | Đúng: phiên bản đã ghim, muốn thêm package thì hỏi nhóm trước (CLAUDE.md) |
