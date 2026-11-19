@@ -31,11 +31,25 @@ Trên trang Tài khoản, người dùng xem hồ sơ của mình và tự đổ
 
 ## Ghi chú triển khai
 - File đã đổi:
-- Test đã viết:
+  - Backend: `backend/app/models/danh_muc.py` (cột `NguoiDung.anh_dai_dien`, property `co_anh_dai_dien`), `backend/alembic/versions/2026_11_19_1618-5367154f7c64_uc_39_anh_dai_dien.py` (revision `5367154f7c64`), `backend/app/luu_tru.py` (`doc`, kiểm dạng tên hex + `.jpg`/`.png` chặn traversal ở `doc`/`xoa`, `LOAI_ANH`), `backend/app/auth/{schemas,service,router}.py` (`GET /api/auth/ho-so`, `PUT/DELETE/GET /api/auth/anh-dai-dien`, thêm `co_anh_dai_dien` vào `NguoiDungRa`).
+  - Frontend: `frontend/src/api/auth.ts` (`HoSo`, `TaiXeHoSo`, `hoSo`, `doiAnhDaiDien`, `xoaAnhDaiDien`, `urlAnhDaiDien`, `NguoiDung.co_anh_dai_dien`), `frontend/src/pages/TaiKhoan.tsx`, `frontend/src/MenuTaiKhoan.tsx`, `frontend/src/App.tsx`, `frontend/src/index.css`.
+  - Tài liệu: `docs/use-cases.md`, `docs/api.md`, `docs/so-do.md`, `docs/giao-dien.md`, `docs/stories/UC-39-ho-so-ca-nhan.md`.
+- Test đã viết: `backend/tests/api/test_uc39_ho_so.py` (38 ca: AC1–AC6 và unit `luu_tru.doc`/`xoa`), cập nhật `backend/tests/api/test_uc01_dang_nhap.py` (`co_anh_dai_dien` trong phản hồi đăng nhập).
 - Lệnh chạy test:
-- Lệch đặc tả (nếu có) và đã sửa `docs/` chưa:
+  - `cd backend; .venv\Scripts\python -m alembic check`
+  - `cd backend; .venv\Scripts\python -m pytest -q`
+  - `cd backend; .venv\Scripts\python -m ruff check app tests`
+  - `cd frontend; npm run typecheck; npm run lint; npm run format; npm run build`
+- Lệch đặc tả (nếu có) và đã sửa `docs/` chưa: không lệch; đã cập nhật `docs/use-cases.md`, `docs/api.md`, `docs/so-do.md`, `docs/giao-dien.md` cùng commit.
 
 ## Truy vết và kết quả
 
 | AC | Loại | Test / Bằng chứng | Kết quả | Ngày |
 |---|---|---|---|---|
+| UC-39-AC1 | API | `test_uc39_ac1_vai_tro_khac_khong_co_tai_xe` (3 vai trò), `test_uc39_ac1_tai_xe_du_bon_truong`, `test_uc39_ac1_chua_dang_nhap_401` | Đạt | 19/11/2026 |
+| UC-39-AC2 | API | `test_uc39_ac2_tai_len_jpeg_va_png` (2 ca), `test_uc39_ac2_anh_dung_500kb`, `test_uc39_ac2_tu_choi_anh_sai_hoac_qua_lon` (5 ca), `test_uc39_ac2_thieu_file_va_chua_dang_nhap`, `test_uc39_ac2_rollback_xoa_file_moi_khi_csdl_loi` | Đạt | 19/11/2026 |
+| UC-39-AC3 | API | `test_uc39_ac3_doi_lan_hai_xoa_file_cu`, `test_uc39_ac3_loi_xoa_file_cu_khong_lam_hong_request`, `test_uc39_ac3_delete_xoa_file_va_delete_khi_chua_co`, `test_uc39_ac3_delete_chua_dang_nhap_401` | Đạt | 19/11/2026 |
+| UC-39-AC4 | API | `test_uc39_ac4_tra_dung_byte_va_header` (2 ca), `test_uc39_ac4_chua_co_anh_hoac_file_mat_404`, `test_uc39_ac4_hai_nguoi_chi_nhan_anh_cua_minh`, `test_uc39_ac4_chua_dang_nhap_401`, `test_uc39_unit_luu_tru_doc_*` (11 ca) | Đạt | 19/11/2026 |
+| UC-39-AC5 | API | `test_uc39_ac5_patch_put_ho_so_405`, `test_uc39_ac5_truong_la_trong_form_anh_khong_doi_csdl` | Đạt | 19/11/2026 |
+| UC-39-AC6 | API | `test_uc39_ac6_toi_co_co_anh_dai_dien` | Đạt | 19/11/2026 |
+| UC-39-AC7 | UI | Chờ Kiệt thử | Chờ Kiệt thử | — |

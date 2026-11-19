@@ -26,9 +26,13 @@
 
 | Phương thức | Đường dẫn | Vai trò | UC | BR / ghi chú |
 |---|---|---|---|---|
-| POST | `/api/auth/dang-nhap` | CK | UC-01 | Đặt cookie; giới hạn tần suất |
+| POST | `/api/auth/dang-nhap` | CK | UC-01 | Đặt cookie; giới hạn tần suất; trả `{id, ho_ten, vai_tro, co_anh_dai_dien}` |
 | POST | `/api/auth/dang-xuat` | Mọi vai trò | UC-01 | Xóa cookie |
-| GET | `/api/auth/toi` | Mọi vai trò | UC-01 | Thông tin và vai trò người đang đăng nhập |
+| GET | `/api/auth/toi` | Mọi vai trò | UC-01, UC-39 | Thông tin, vai trò và cờ `co_anh_dai_dien` của người đang đăng nhập |
+| GET | `/api/auth/ho-so` | Mọi vai trò | UC-39 | Hồ sơ chỉ xem của chính mình: `{id, ten_dang_nhap, ho_ten, vai_tro, trang_thai, co_anh_dai_dien, tai_xe}` (`tai_xe`: `{sdt, so_gplx, hang_gplx, han_gplx}` nếu là tài xế, `null` với vai trò khác). Không có `PATCH`/`PUT /ho-so` (405) |
+| PUT | `/api/auth/anh-dai-dien` | Mọi vai trò | UC-39 | multipart field `anh` (1 file): JPEG/PNG theo byte đầu, ≤ 500 KB (sai loại / rỗng → 400, > 500 KB → 413); tên file do máy chủ sinh, đổi lần sau xóa file cũ sau khi commit; trường lạ trong form bị bỏ qua; trả hồ sơ như `GET /api/auth/ho-so` |
+| DELETE | `/api/auth/anh-dai-dien` | Mọi vai trò | UC-39 | Xóa ảnh đại diện và file lưu của chính mình → 204 (chưa có ảnh vẫn 204) |
+| GET | `/api/auth/anh-dai-dien` | Mọi vai trò | UC-39 | Trả ảnh đại diện của chính người gọi theo cookie (`Content-Type` theo đuôi đã kiểm, `X-Content-Type-Options: nosniff`, `Cache-Control: private, no-cache`); chưa có hoặc file mất → 404 |
 | PUT | `/api/auth/mat-khau` | Mọi vai trò | UC-35 | `{mat_khau_cu, mat_khau_moi}` (mới 8–200 ký tự) → 204; chỉ của chính mình, trường lạ → 400. Sai mật khẩu cũ → 422 `SAI_MAT_KHAU_CU` (không dùng 401) và **tính như một lần đăng nhập sai**: 5 lần liên tiếp khóa 15 phút (429 `KHOA_TAM`, đăng nhập cũng bị khóa); mới trùng cũ → 422 `MAT_KHAU_TRUNG`. Đổi đúng thì xóa bộ đếm; phiên đang dùng vẫn còn hạn |
 | GET, POST | `/api/nguoi-dung` | QL | UC-02 | BR-57; `?vai_tro=&trang_thai=&tim=&trang=&so_dong=`; POST chỉ tạo `QUAN_LY`/`DIEU_PHOI`/`KE_TOAN` (tài xế tạo ở UC-04); trùng tên đăng nhập → 409 |
 | PATCH | `/api/nguoi-dung/{id}` | QL | UC-02 | `ten_dang_nhap`, `ho_ten`, `vai_tro`, `trang_thai` (khóa/mở, mở thì xóa khóa tạm); không nhận `mat_khau`. 409: đổi vai trò/trạng thái tài khoản tài xế (làm ở UC-04), tự đổi vai trò/trạng thái của mình, khóa/hạ Quản lý hoạt động cuối cùng |

@@ -39,7 +39,7 @@ def test_uc01_ac3_dang_nhap_dung_dat_cookie_httponly(client, tao_nguoi_dung):
     nd = tao_nguoi_dung()
     r = dang_nhap(client)
     assert r.status_code == 200
-    assert r.json() == {"id": nd.id, "ho_ten": nd.ho_ten, "vai_tro": "DIEU_PHOI"}
+    assert r.json() == {"id": nd.id, "ho_ten": nd.ho_ten, "vai_tro": "DIEU_PHOI", "co_anh_dai_dien": False}
     cookie = r.headers["set-cookie"]
     assert cookie.startswith("access_token=")
     for thuoc_tinh in ("HttpOnly", "Secure", "SameSite=strict", "Max-Age=28800", "Path=/"):

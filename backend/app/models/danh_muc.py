@@ -22,6 +22,11 @@ class NguoiDung(Base):
     trang_thai: Mapped[str] = mapped_column(String(20), default="HOAT_DONG")  # HOAT_DONG|NGUNG
     so_lan_sai: Mapped[int] = mapped_column(default=0)  # NFR-SEC-05
     khoa_den: Mapped[datetime | None]
+    anh_dai_dien: Mapped[str | None] = mapped_column(String(60))  # UC-39: tên file do máy chủ sinh
+
+    @property
+    def co_anh_dai_dien(self) -> bool:
+        return bool(self.anh_dai_dien)
 
 
 class TaiXe(Base):

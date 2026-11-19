@@ -1,3 +1,5 @@
+from datetime import date
+
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.modules.danh_muc.tai_xe.schemas import MatKhau
@@ -14,6 +16,30 @@ class NguoiDungRa(BaseModel):
     id: int
     ho_ten: str
     vai_tro: str
+    co_anh_dai_dien: bool
+
+
+class TaiXeHoSoRa(BaseModel):
+    """Thông tin tài xế chỉ xem trong hồ sơ cá nhân (UC-39-AC1)."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    sdt: str
+    so_gplx: str
+    hang_gplx: str
+    han_gplx: date
+
+
+class HoSoRa(BaseModel):
+    """UC-39: hồ sơ cá nhân của chính người đang đăng nhập; không lộ mật khẩu hay tên file ảnh."""
+
+    id: int
+    ten_dang_nhap: str
+    ho_ten: str
+    vai_tro: str
+    trang_thai: str
+    co_anh_dai_dien: bool
+    tai_xe: TaiXeHoSoRa | None = None
 
 
 class DoiMatKhauVao(BaseModel):

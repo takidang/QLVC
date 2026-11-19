@@ -62,8 +62,9 @@
 | UC-36 | Tìm kiếm chung (ô tìm trên thanh đầu: chuyến, đơn, xe, tài xế, khách) | Mọi vai trò | Chung | S | BR-57, 58 |
 | UC-37 | Thông báo theo vai trò (chuông trên thanh đầu) | Mọi vai trò | Chung | S | BR-57, 58 |
 | UC-38 | Tổng quan hôm nay (số liệu một ngày cho trang đầu) | Quản lý, Điều phối, Kế toán | Quyết toán | S | BR-57, 73 |
+| UC-39 | Hồ sơ cá nhân và ảnh đại diện (giao diện v3: trang Tài khoản) | Mọi vai trò | Chung | C | BR-14, 15, 57 |
 
-Số UC còn hiệu lực: 31 − 4 (UC-09, 14, 29, 31) + 3 (UC-32, 33, 34) + 4 (UC-35…38, thêm 12/11/2026 cho giao diện v2) = **34**.
+Số UC còn hiệu lực: 31 − 4 (UC-09, 14, 29, 31) + 3 (UC-32, 33, 34) + 4 (UC-35…38, thêm 12/11/2026 cho giao diện v2) + 1 (UC-39, thêm 19/11/2026 cho giao diện v3) = **35**.
 Ghi chú: UC-30 chỉ **gợi ý**; module phụ hỏng thì lõi vẫn chạy.
 
 ---
@@ -231,6 +232,11 @@ Ghi chú: UC-30 chỉ **gợi ý**; module phụ hỏng thì lõi vẫn chạy.
 ### UC-38 Tổng quan hôm nay
 - **Tác nhân:** Quản lý, Điều phối, Kế toán.
 - **Luồng chính:** mở trang Tổng quan (mặc định hôm nay, đổi được ngày) → số chuyến theo 6 trạng thái; đơn đã giao / thất bại / còn lại và tổng kg đã chở; tỉ lệ điểm đúng giờ (trễ không quá `CFG-09`; chưa quét thì không có tỉ lệ); doanh thu **dự kiến** (số thực ở quyết toán UC-24, báo cáo UC-26). Chỉ đọc.
+
+### UC-39 Hồ sơ cá nhân và ảnh đại diện
+- **Tác nhân:** mọi vai trò đã đăng nhập.
+- **Luồng chính:** mở trang Tài khoản → xem hồ sơ chỉ đọc (`ten_dang_nhap`, `ho_ten`, `vai_tro`, `trang_thai`; tài xế thêm SĐT, số / hạng / hạn GPLX, tô cảnh báo khi còn ≤ 30 ngày theo BR-21); tự tải lên / thay đổi / xóa **ảnh đại diện** (JPEG/PNG ≤ 500 KB, kiểm byte đầu ở máy chủ, tên file do máy chủ sinh; đổi ảnh thì xóa file cũ; xóa ảnh thì quay về chữ tắt).
+- **Phân quyền (BR-57):** chỉ xem và đổi ảnh của chính mình; không có API tự sửa họ tên, SĐT, vai trò, tên đăng nhập hay GPLX (chỉ Quản lý sửa ở UC-02 / UC-04). Ảnh trả qua cookie đăng nhập, không xem được ảnh người khác.
 
 > Các UC còn lại (UC-01…07, 10, 17, 25, 26, 27, 30, 34) là CRUD/xem báo cáo: đặc tả rút gọn khi làm story tương ứng.
 
