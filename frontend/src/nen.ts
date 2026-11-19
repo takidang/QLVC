@@ -9,14 +9,74 @@ export const CHE_DO = [
   { ma: 'sang', ten: 'Sáng' },
   { ma: 'toi', ten: 'Tối' },
 ] as const
-const KHOA = 'qlvc-che-do'
+const KHOA_CHE_DO = 'qlvc-che-do'
 const mayToi = matchMedia('(prefers-color-scheme: dark)')
 
-export const cheDoDaLuu = () => localStorage.getItem(KHOA) ?? ''
+export const cheDoDaLuu = () => localStorage.getItem(KHOA_CHE_DO) ?? ''
 export function apCheDo(ma: string) {
-  if (ma) localStorage.setItem(KHOA, ma)
-  else localStorage.removeItem(KHOA)
+  if (ma) localStorage.setItem(KHOA_CHE_DO, ma)
+  else localStorage.removeItem(KHOA_CHE_DO)
   document.documentElement.dataset.cheDo = ma || (mayToi.matches ? 'toi' : 'sang')
 }
+
+// Mật độ bảng và danh sách: '' = thoải mái (mặc định), 'gon' = thu gọn padding qua biến CSS
+export const MAT_DO = [
+  { ma: '', ten: 'Thoải mái' },
+  { ma: 'gon', ten: 'Gọn' },
+] as const
+const KHOA_MAT_DO = 'qlvc-mat-do'
+
+export const matDoDaLuu = () => (localStorage.getItem(KHOA_MAT_DO) === 'gon' ? 'gon' : '')
+export function apMatDo(ma: string) {
+  if (ma === 'gon') {
+    localStorage.setItem(KHOA_MAT_DO, 'gon')
+    document.documentElement.dataset.matDo = 'gon'
+  } else {
+    localStorage.removeItem(KHOA_MAT_DO)
+    delete document.documentElement.dataset.matDo
+  }
+}
+
+// Cỡ chữ: '' = vừa (mặc định), 'lon' = tăng cỡ chữ gốc ~112,5%
+export const CO_CHU = [
+  { ma: '', ten: 'Vừa' },
+  { ma: 'lon', ten: 'Lớn' },
+] as const
+const KHOA_CO_CHU = 'qlvc-co-chu'
+
+export const coChuDaLuu = () => (localStorage.getItem(KHOA_CO_CHU) === 'lon' ? 'lon' : '')
+export function apCoChu(ma: string) {
+  if (ma === 'lon') {
+    localStorage.setItem(KHOA_CO_CHU, 'lon')
+    document.documentElement.dataset.coChu = 'lon'
+  } else {
+    localStorage.removeItem(KHOA_CO_CHU)
+    delete document.documentElement.dataset.coChu
+  }
+}
+
+// Giảm chuyển động: '' = theo máy (mặc định), 'bat' = tắt transition/animation và số chạy NumberFlow
+export const GIAM_CHUYEN_DONG = [
+  { ma: '', ten: 'Theo máy' },
+  { ma: 'bat', ten: 'Bật' },
+] as const
+const KHOA_GIAM_CD = 'qlvc-giam-chuyen-dong'
+
+export const giamChuyenDongDaLuu = () => (localStorage.getItem(KHOA_GIAM_CD) === 'bat' ? 'bat' : '')
+export const dangGiamChuyenDong = () => giamChuyenDongDaLuu() === 'bat'
+export function apGiamChuyenDong(ma: string) {
+  if (ma === 'bat') {
+    localStorage.setItem(KHOA_GIAM_CD, 'bat')
+    document.documentElement.dataset.giamChuyenDong = 'bat'
+  } else {
+    localStorage.removeItem(KHOA_GIAM_CD)
+    delete document.documentElement.dataset.giamChuyenDong
+  }
+}
+
+// Áp toàn bộ tùy chọn đã lưu ngay khi khởi động app (main.tsx import file này trước App)
 apCheDo(cheDoDaLuu())
+apMatDo(matDoDaLuu())
+apCoChu(coChuDaLuu())
+apGiamChuyenDong(giamChuyenDongDaLuu())
 mayToi.addEventListener('change', () => apCheDo(cheDoDaLuu()))

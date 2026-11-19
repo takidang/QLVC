@@ -11,6 +11,7 @@ import {
 } from '../api/baoCao'
 import { LoiApi } from '../api/goi'
 import { tongQuanNgay, type TongQuanNgay } from '../api/tongQuan'
+import { dangGiamChuyenDong } from '../nen'
 import NumberFlow from '@number-flow/react'
 
 // Trang Tổng quan của Quản lý và Kế toán (UC-26 lãi lỗ, UC-34 hiệu suất xe).
@@ -375,7 +376,11 @@ function SoLieu({
     <div>
       <small>{nhan}</small>
       <b className={lai && so !== undefined && so < 0 ? 'tq-am' : undefined}>
-        {so === undefined ? '–' : <NumberFlow value={so} locales="vi-VN" suffix=" đ" />}
+        {so === undefined ? (
+          '–'
+        ) : (
+          <NumberFlow value={so} locales="vi-VN" suffix=" đ" animated={!dangGiamChuyenDong()} />
+        )}
       </b>
       {lai && so !== undefined && so < 0 && <em>Lỗ trong tháng</em>}
       {phu && <em>{phu}</em>}
