@@ -19,7 +19,7 @@ import { TEN_LOAI_SU_CO, type LoaiSuCo } from '../../api/suCo'
 import { danhSachTuyen, type Tuyen } from '../../api/tuyen'
 import { Ic, Nhan } from '../../nhan'
 import LichGio from './LichGio'
-import { NEN } from '../../nen'
+import { dangGiamChuyenDong, NEN } from '../../nen'
 import { ThongBao } from '../../thongBao'
 import NumberFlow from '@number-flow/react'
 
@@ -290,25 +290,28 @@ export default function ChuyenDanhSach() {
                 <>
                   <div>
                     <b>
-                      <NumberFlow value={caNgay.length} />
+                      <NumberFlow value={caNgay.length} animated={!dangGiamChuyenDong()} />
                     </b>
                     <span>chuyến</span>
                   </div>
                   <div>
                     <b>
-                      <NumberFlow value={dem('DANG_CHAY')} />
+                      <NumberFlow value={dem('DANG_CHAY')} animated={!dangGiamChuyenDong()} />
                     </b>
                     <span>đang chạy</span>
                   </div>
                   <div>
                     <b>
-                      <NumberFlow value={dem('LAP', 'DA_CHOT')} />
+                      <NumberFlow value={dem('LAP', 'DA_CHOT')} animated={!dangGiamChuyenDong()} />
                     </b>
                     <span>chưa xuất phát</span>
                   </div>
                   <div>
                     <b>
-                      <NumberFlow value={dem('HOAN_THANH', 'DA_QUYET_TOAN')} />
+                      <NumberFlow
+                        value={dem('HOAN_THANH', 'DA_QUYET_TOAN')}
+                        animated={!dangGiamChuyenDong()}
+                      />
                     </b>
                     <span>đã xong</span>
                   </div>

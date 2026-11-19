@@ -207,6 +207,17 @@ Bản thử làm lại toàn bộ cho hiện đại hơn, tách khỏi nhánh v2
 - **Đã soát với dữ liệu thật (16/11):** mọi màn của 4 vai trò, hộp thoại lập chuyến / tạo đơn / sửa xe, form tài xế 360 px, phiếu in, bản đồ; cả bản sáng và tối.
 - **Chưa làm:** màu biểu đồ bản tối chưa chạy bộ kiểm dataviz; bố cục bên trong từng màn vẫn như v2.
 
+## Menu tài khoản gọn, trang Tài khoản và trang Cài đặt (nhánh `tai/cai-dat-tai-khoan`)
+
+- **Menu tài khoản** (`MenuTaiKhoan.tsx`, bấm vòng tên tắt): thu gọn chỉ còn phần đầu (họ tên + vai trò), link **Tài khoản** (`/tai-khoan`), link **Cài đặt** (`/cai-dat`), link **Cấu hình hệ thống** (`/quan-ly/cau-hinh`, chỉ vai trò Quản lý), đường kẻ ngăn rồi nút **Đăng xuất**. Bấm link, bấm/Tab ra ngoài hoặc nhấn Esc đều đóng menu.
+- **Trang Tài khoản** (`/tai-khoan`, `pages/TaiKhoan.tsx`, mọi vai trò đã đăng nhập, không thêm vào cột menu trái): khối thông tin cá nhân chỉ đọc (họ tên, vai trò từ `NguoiDung` của `/api/auth/toi`, không gọi API mới) và khối **Đổi mật khẩu** mở sẵn (chuyển nguyên form UC-35 từ menu sang, kiểm 8–200 ký tự, nhập lại, báo toast).
+- **Trang Cài đặt** (`/cai-dat`, `pages/CaiDat.tsx`, mọi vai trò đã đăng nhập, không thêm vào cột menu trái): 4 tùy chọn hiển thị lưu `localStorage` trong `nen.ts`, áp ngay khi chọn và tự khôi phục lúc khởi động app:
+  1. **Giao diện** (`qlvc-che-do` → `data-che-do`): Theo máy / Sáng / Tối.
+  2. **Mật độ bảng** (`qlvc-mat-do` → `data-mat-do="gon"`): Thoải mái (mặc định) / Gọn (thu gọn padding bảng và thẻ danh sách qua biến CSS `--dem-*`).
+  3. **Cỡ chữ** (`qlvc-co-chu` → `data-co-chu="lon"`): Vừa (mặc định) / Lớn (tăng cỡ chữ gốc 112,5% qua `font-size` gốc và biến `--ty-le-chu`).
+  4. **Giảm chuyển động** (`qlvc-giam-chuyen-dong` → `data-giam-chuyen-dong="bat"`): Theo máy (mặc định) / Bật (tắt transition/animation bằng CSS và truyền `animated={false}` cho `NumberFlow`).
+  - Vai trò Quản lý có dòng dẫn tới **Cấu hình hệ thống** ở cuối trang. Tài xế (không có cột menu trái) có link quay lại "← Chuyến của tôi" và có thể bấm tên hệ thống trên thanh đầu để về trang chính.
+
 ## Còn phải quyết khi làm vào code
 
 - Nút đổi bộ màu trong Cài đặt (Tài làm sau).
