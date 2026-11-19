@@ -20,3 +20,7 @@ dist/
 
 # Báo cáo Word nộp thầy, giữ trên máy, không đưa lên repo
 baocao/
+
+# UC-30: dữ liệu Kaggle và môi trường train (không commit)
+ml/data/
+ml/.venv/

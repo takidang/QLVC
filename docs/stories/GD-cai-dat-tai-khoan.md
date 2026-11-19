@@ -1,6 +1,6 @@
 # GD: Menu tài khoản gọn, trang Tài khoản và trang Cài đặt
 
-- **Trạng thái:** Chờ Kiệt thử
+- **Trạng thái:** Hoàn thành 19/11/2026 – 5/5 AC (Kiệt thử, `docs/test-evidence/GD-cai-dat-tai-khoan/`)
 - **Tác nhân:** Quản lý, Điều phối, Kế toán, Tài xế
 - **Đặc tả:** `docs/giao-dien.md` (mục Giao diện v3 và mục Menu tài khoản gọn, trang Tài khoản, trang Cài đặt); `docs/stories/UC-35-doi-mat-khau.md`
 - **Quy tắc nghiệp vụ liên quan:** BR-57, NFR-USA-02 (chỉ thay đổi giao diện, giữ nguyên API UC-35)
@@ -42,8 +42,8 @@ Thu gọn menu xổ từ vòng tên tắt thành menu điều hướng ngắn g�
 
 | AC | Loại | Test / Bằng chứng | Kết quả | Ngày |
 |---|---|---|---|---|
-| GD-AC1 | UI | Chờ Kiệt thử | Chờ Kiệt thử | — |
-| GD-AC2 | UI | Chờ Kiệt thử | Chờ Kiệt thử | — |
-| GD-AC3 | UI | Chờ Kiệt thử | Chờ Kiệt thử | — |
-| GD-AC4 | UI | Chờ Kiệt thử | Chờ Kiệt thử | — |
-| GD-AC5 | UI | Chờ Kiệt thử | Chờ Kiệt thử | — |
+| GD-AC1 | UI | `docs/test-evidence/GD-cai-dat-tai-khoan/` `a-menu-dieuphoi.png`, `a-menu-quanly.png` | Đạt (Kiệt thử) | 19/11/2026 |
+| GD-AC2 | UI | `docs/test-evidence/GD-cai-dat-tai-khoan/` `h-…`, `i-…`, `j-tai-khoan-doi-xong.png` | Đạt (Kiệt thử) | 19/11/2026 |
+| GD-AC3 | UI | `docs/test-evidence/GD-cai-dat-tai-khoan/` `b-cai-dat-quan-ly.png`, `c-cai-dat-toi-gon-lon.png` | Đạt (Kiệt thử) | 19/11/2026 |
+| GD-AC4 | UI | `docs/test-evidence/GD-cai-dat-tai-khoan/` `k-…`, `l-…`, `m-tai-xe-cai-dat-390.png` | Đạt (Kiệt thử) | 19/11/2026 |
+| GD-AC5 | UI | `docs/test-evidence/GD-cai-dat-tai-khoan/` `d-…`, `e-…`, `f-…`, `g-tai-khoan-toi-lon.png` | Đạt (Kiệt thử) | 19/11/2026 |
