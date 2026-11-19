@@ -1,0 +1,182 @@
+[
+  {
+    "dac_trung": {
+      "km": 2205.0,
+      "thoi_gian_gio": 37.52,
+      "gio_khoi_hanh": 0.0,
+      "thu_trong_tuan": 5.0
+    },
+    "xac_suat_sklearn": 0.9485722777089554
+  },
+  {
+    "dac_trung": {
+      "km": 13.1,
+      "thoi_gian_gio": 8.057777777777778,
+      "gio_khoi_hanh": 11.0,
+      "thu_trong_tuan": 2.0
+    },
+    "xac_suat_sklearn": 0.8015304358295676
+  },
+  {
+    "dac_trung": {
+      "km": 65.0,
+      "thoi_gian_gio": 6.233333333333333,
+      "gio_khoi_hanh": 16.0,
+      "thu_trong_tuan": 2.0
+    },
+    "xac_suat_sklearn": 0.8676453043251042
+  },
+  {
+    "dac_trung": {
+      "km": 1153.0,
+      "thoi_gian_gio": 19.426388888888887,
+      "gio_khoi_hanh": 17.0,
+      "thu_trong_tuan": 0.0
+    },
+    "xac_suat_sklearn": 0.9706671841683895
+  },
+  {
+    "dac_trung": {
+      "km": 35.4,
+      "thoi_gian_gio": 3.3833333333333333,
+      "gio_khoi_hanh": 17.0,
+      "thu_trong_tuan": 1.0
+    },
+    "xac_suat_sklearn": 0.8950909081090089
+  },
+  {
+    "dac_trung": {
+      "km": 69.5,
+      "thoi_gian_gio": 6.666666666666667,
+      "gio_khoi_hanh": 19.0,
+      "thu_trong_tuan": 0.0
+    },
+    "xac_suat_sklearn": 0.9072267444888586
+  },
+  {
+    "dac_trung": {
+      "km": 51.0,
+      "thoi_gian_gio": 4.883333333333334,
+      "gio_khoi_hanh": 12.0,
+      "thu_trong_tuan": 4.0
+    },
+    "xac_suat_sklearn": 0.8097472436626866
+  },
+  {
+    "dac_trung": {
+      "km": 48.0,
+      "thoi_gian_gio": 7.5,
+      "gio_khoi_hanh": 18.0,
+      "thu_trong_tuan": 1.0
+    },
+    "xac_suat_sklearn": 0.8832346002704932
+  },
+  {
+    "dac_trung": {
+      "km": 245.0,
+      "thoi_gian_gio": 21.19638888888889,
+      "gio_khoi_hanh": 17.0,
+      "thu_trong_tuan": 4.0
+    },
+    "xac_suat_sklearn": 0.7850439483906189
+  },
+  {
+    "dac_trung": {
+      "km": 35.0,
+      "thoi_gian_gio": 3.35,
+      "gio_khoi_hanh": 17.0,
+      "thu_trong_tuan": 3.0
+    },
+    "xac_suat_sklearn": 0.8711968696969168
+  },
+  {
+    "dac_trung": {
+      "km": 160.0,
+      "thoi_gian_gio": 15.35,
+      "gio_khoi_hanh": 16.0,
+      "thu_trong_tuan": 0.0
+    },
+    "xac_suat_sklearn": 0.8624618448979163
+  },
+  {
+    "dac_trung": {
+      "km": 1178.0,
+      "thoi_gian_gio": 21.397777777777776,
+      "gio_khoi_hanh": 11.0,
+      "thu_trong_tuan": 4.0
+    },
+    "xac_suat_sklearn": 0.9322033172201512
+  },
+  {
+    "dac_trung": {
+      "km": 48.0,
+      "thoi_gian_gio": 7.5,
+      "gio_khoi_hanh": 18.0,
+      "thu_trong_tuan": 1.0
+    },
+    "xac_suat_sklearn": 0.8832346002704932
+  },
+  {
+    "dac_trung": {
+      "km": 45.0,
+      "thoi_gian_gio": 4.5,
+      "gio_khoi_hanh": 8.0,
+      "thu_trong_tuan": 4.0
+    },
+    "xac_suat_sklearn": 0.771430685181321
+  },
+  {
+    "dac_trung": {
+      "km": 1896.0,
+      "thoi_gian_gio": 31.649444444444445,
+      "gio_khoi_hanh": 22.0,
+      "thu_trong_tuan": 4.0
+    },
+    "xac_suat_sklearn": 0.9833676457691529
+  },
+  {
+    "dac_trung": {
+      "km": 40.0,
+      "thoi_gian_gio": 1.1797222222222221,
+      "gio_khoi_hanh": 15.0,
+      "thu_trong_tuan": 4.0
+    },
+    "xac_suat_sklearn": 0.8570832235567492
+  },
+  {
+    "dac_trung": {
+      "km": 229.0,
+      "thoi_gian_gio": 21.983333333333334,
+      "gio_khoi_hanh": 20.0,
+      "thu_trong_tuan": 0.0
+    },
+    "xac_suat_sklearn": 0.8668846035826353
+  },
+  {
+    "dac_trung": {
+      "km": 65.0,
+      "thoi_gian_gio": 6.233333333333333,
+      "gio_khoi_hanh": 17.0,
+      "thu_trong_tuan": 3.0
+    },
+    "xac_suat_sklearn": 0.8610108025395078
+  },
+  {
+    "dac_trung": {
+      "km": 177.0,
+      "thoi_gian_gio": 16.983333333333334,
+      "gio_khoi_hanh": 20.0,
+      "thu_trong_tuan": 1.0
+    },
+    "xac_suat_sklearn": 0.8709659998196831
+  },
+  {
+    "dac_trung": {
+      "km": 30.0,
+      "thoi_gian_gio": 3.0,
+      "gio_khoi_hanh": 12.0,
+      "thu_trong_tuan": 5.0
+    },
+    "xac_suat_sklearn": 0.8000534279159
+  }
+]

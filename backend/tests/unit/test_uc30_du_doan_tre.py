@@ -1,8 +1,14 @@
+import json
 import math
+from pathlib import Path
 
 import pytest
 
+from app.modules.goi_y import service
 from app.modules.goi_y.du_doan_tre import du_doan, phan_muc
+
+# 20 mẫu tập kiểm tra kèm xác suất scikit-learn, do ml/train_du_doan_tre.py xuất (AC2)
+FILE_MAU_SKLEARN = Path(__file__).resolve().parent.parent / "du_lieu" / "mau_du_doan_tre.json"
 
 NGUONG = {"trung_binh": 0.3, "cao": 0.6}
 MO_HINH = {
@@ -65,3 +71,13 @@ def test_uc30_ac4_mo_hinh_sai_raise(doi):
 def test_uc30_ac4_thieu_khoa_raise():
     with pytest.raises(KeyError):
         du_doan({k: v for k, v in MO_HINH.items() if k != "chan"}, CHUYEN)
+
+
+# AC2 – mô hình thật (mo_hinh_tre.json) tính bằng `math` khớp predict_proba của scikit-learn
+def test_uc30_ac2_khop_sklearn():
+    mo_hinh = json.loads(service.DUONG_DAN_MO_HINH.read_text(encoding="utf-8"))
+    mau = json.loads(FILE_MAU_SKLEARN.read_text(encoding="utf-8"))
+    assert len(mau) == 20
+    for m in mau:
+        xs = du_doan(mo_hinh, m["dac_trung"])["xac_suat"]
+        assert abs(xs - m["xac_suat_sklearn"]) < 1e-6

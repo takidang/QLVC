@@ -34,11 +34,19 @@
 - Test đã viết: `backend/tests/api/test_uc30_du_doan_tre.py` (AC3–AC6, file mô hình mẫu ghi vào `tmp_path` + `monkeypatch`), `backend/tests/unit/test_uc30_du_doan_tre.py` (ngưỡng, xác suất tính tay, mô hình sai định dạng).
 - Lệnh chạy test: `cd backend` → `.venv\Scripts\python -m pytest tests -q -k uc30`; `.venv\Scripts\python -m ruff check app tests`.
 - Lệch đặc tả (nếu có) và đã sửa `docs/` chưa: không lệch. Mọi lỗi mô hình (không có file, JSON hỏng, thiếu khóa, mảng lệch độ dài, `do_lech` = 0, đặc trưng lạ, `nguon` không phải object) đều bắt trong service, ghi `logging.warning`, trả 200 `{co_du_doan: false}`.
+- Đợt 2 (train thật, AC1, AC2): `ml/train_du_doan_tre.py`, `ml/requirements.txt` (pandas 3.1.1, scikit-learn 1.9.1, openpyxl 3.1.5, kagglehub 1.0.3), `ml/README.md`; xuất `backend/app/modules/goi_y/mo_hinh_tre.json` và `backend/tests/du_lieu/mau_du_doan_tre.json` (20 mẫu tập kiểm tra, chỉ 4 đặc trưng + xác suất scikit-learn); test `test_uc30_ac2_khop_sklearn` trong `backend/tests/unit/test_uc30_du_doan_tre.py`.
+- Dữ liệu: chỉ đọc 6 cột `BookingID_Date`, `trip_start_date`, `Planned_ETA`, `TRANSPORTATION_DISTANCE_IN_KM`, `ontime`, `delay` (không đọc cột tên, số điện thoại tài xế). Nhãn: `delay = R` → trễ, `ontime = G` → đúng giờ. 6880 dòng; bỏ 38 (nhãn mâu thuẫn / không có), 701 (thiếu km), 18 (km ≤ 0), 81 (thời gian dự kiến ≤ 0 hoặc > 240 giờ), 2259 (ETA mặc định = lúc đặt + 100 giờ, không phải kế hoạch thật) → **3783 mẫu**.
+- Mô hình: `StandardScaler` + `LogisticRegression(max_iter=1000)`, tách 75/25 phân tầng, seed 42 (train 2837, kiểm tra 946, tỷ lệ trễ 82%). Trên tập kiểm tra: **AUC 0,714; độ chính xác 0,852; recall 0,988** (ngưỡng 0,5). Hệ số (trên giá trị chuẩn hóa): km +0,849; thời gian dự kiến −1,150; giờ khởi hành +0,194; thứ trong tuần −0,203; chặn +1,681.
+- Độ tin cậy: tỷ lệ trễ trong dataset cao (82%), nên độ chính xác chỉ hơn mức "luôn đoán trễ" (0,82) một chút và đa số chuyến rơi vào mức `CAO`; AUC 0,714 mới là số đo khả năng xếp hạng. Dữ liệu Ấn Độ: mô hình khởi đầu, train lại khi có dữ liệu thật.
+- Lặp lại được: chạy train hai lần cho hai file JSON giống hệt từng byte (cùng SHA-256).
+- Lệnh: `ml\.venv\Scripts\python ml\train_du_doan_tre.py`; test như trên.
 
 ## Truy vết và kết quả
 
 | AC | Loại | Test / Bằng chứng | Kết quả | Ngày |
 |---|---|---|---|---|
+| UC-30-AC1 | Logic | `ml/train_du_doan_tre.py` (seed 42, chạy 2 lần ra JSON giống hệt) | Đạt: 3783 mẫu (train 2837 / kiểm tra 946), AUC 0,714, độ chính xác 0,852, recall 0,988 | 19/11/2026 |
+| UC-30-AC2 | Logic | `test_uc30_ac2_khop_sklearn` (unit; 20 mẫu tập kiểm tra, sai số < 1e-6) | Đạt | 19/11/2026 |
 | UC-30-AC3 | API | `test_uc30_ac3_du_doan_thanh_cong`, `test_uc30_ac3_muc_tai_bien` (api); `test_uc30_ac3_*` (unit) | Đạt (mô hình mẫu trong test) | 19/11/2026 |
 | UC-30-AC4 | API | `test_uc30_ac4_mo_hinh_loi_khong_co_goi_y`, `test_uc30_ac4_chuyen_huy_khong_co_goi_y`, `test_uc30_ac4_chuyen_khong_ton_tai` (api); `test_uc30_ac4_*` (unit) | Đạt | 19/11/2026 |
 | UC-30-AC5 | API | `test_uc30_ac5_khong_doi_du_lieu_chuyen` | Đạt | 19/11/2026 |
