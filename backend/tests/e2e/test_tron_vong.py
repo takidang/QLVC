@@ -7,7 +7,7 @@ mỗi vai trò một client đăng nhập riêng. Ảnh ghi vào thư mục tạ
 """
 
 from contextlib import ExitStack
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 
 import pytest
 from fastapi.testclient import TestClient
@@ -44,7 +44,7 @@ def loi(r, ma: int, ma_loi: str, buoc: str) -> None:
 def vong(db, kb, tao_nguoi_dung, tmp_path, monkeypatch):
     """Danh mục từ kb + bảng giá, tài khoản 4 vai trò; trả các client đã đăng nhập."""
     monkeypatch.setattr(luu_tru, "THU_MUC", tmp_path)
-    hom_qua = date.today() - timedelta(days=30)
+    hom_qua = datetime.now(GIO_VN).date() - timedelta(days=30)  # ngày theo giờ VN, không theo giờ máy (CI chạy UTC)
     for lay, giao, gia in (("TP.HCM", "Cần Thơ", 1500), ("TP.HCM", "Tiền Giang", 1000)):
         db.add(BangGia(tinh_lay=lay, tinh_giao=giao, don_gia_kg=gia, cuoc_toi_thieu=50000, hieu_luc_tu=hom_qua))
     for tx in (kb["an"], kb["dung"]):  # tài xế của kb chưa có mật khẩu
@@ -268,7 +268,7 @@ def test_e2e_tron_vong(vong):
     )
 
     # Bước 17 – báo cáo lãi lỗ theo chuyến của tháng này có chuyến với đúng lãi (UC-26)
-    thang = datetime.now(GIO_VN).strftime("%Y-%m")
+    thang = khoi_hanh.strftime("%Y-%m")  # báo cáo tính tháng theo ngày khởi hành giờ VN
     bc = kiem(ql.get("/api/bao-cao/lai-lo", params={"theo": "chuyen", "tu": thang, "den": thang}), 200, "bước 17")
     dong = [d for d in bc["du_lieu"] if d["chuyen_id"] == cid]
     assert len(dong) == 1 and dong[0]["lai"] == CUOC_A - tong_chi - LUONG_T01, f"bước 17: {dong}"
@@ -276,7 +276,7 @@ def test_e2e_tron_vong(vong):
     # Bước 18 – Kế toán thu nợ A: khoản sang DA_THU, có phiếu thu (BR-56)
     pt_a = cua_vong[0]["id"]
     thu = kiem(
-        kt.post("/api/phai-thu/da-thu", json={"phai_thu_ids": [pt_a], "ngay": date.today().isoformat()}),
+        kt.post("/api/phai-thu/da-thu", json={"phai_thu_ids": [pt_a], "ngay": nay.date().isoformat()}),
         200,
         "bước 18: đánh dấu đã thu",
     )

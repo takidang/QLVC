@@ -31,7 +31,11 @@ Một test tự động đi hết vòng nghiệp vụ chính bằng API thật, 
 - File đã đổi: `backend/tests/e2e/__init__.py`, `backend/tests/e2e/test_tron_vong.py` (mới). Không đổi code ứng dụng, không thêm gói, không thêm migration.
 - Kịch bản số: A TP.HCM → Cần Thơ 1.800 kg 6 m³ (cước 2.997.000), B TP.HCM → Tiền Giang 800 kg 2 m³ (800.000); định mức T01 1.000.000, tạm ứng 800.000; dầu khai 600.000 duyệt 580.000, cầu đường 200.000; lương 600.000 → lãi 1.617.000, chênh lệch tạm ứng +20.000 (tài xế nộp lại).
 - Test đã viết: `test_e2e_tron_vong` (18 bước, mỗi assert ghi bước).
-- Đã thử làm hỏng 3 chỗ trong code (bỏ kiểm BR-28 khi kết thúc chuyến; doanh thu quyết toán cộng cả đơn thất bại; phải thu lệch 1 đồng) → lần nào test cũng đỏ, rồi trả code lại.
+- **Bằng chứng test bắt được lỗi thật** (19/11, Kiệt): cố tình làm hỏng 3 chỗ trong code ứng dụng, chạy lại test, rồi trả code về như cũ (`git status` sạch, test xanh lại):
+  1. `app/modules/toi/service.py`: bỏ kiểm BR-28 khi kết thúc chuyến → đỏ ở bước 8.
+  2. `app/modules/tien/quyet_toan/service.py`: doanh thu cộng cả đơn thất bại → đỏ ở bước 14.
+  3. `app/modules/quet/service.py`: phải thu lệch 1 đồng so với cước → đỏ ở bước 10.
+- Sửa theo review #66 (Tài, 19/11): ngày bảng giá và ngày thu nợ lấy theo giờ VN (`datetime.now(GIO_VN).date()`), không theo giờ máy (CI chạy UTC, 0h–7h VN lệch 1 ngày); bước 17 lấy tháng từ ngày khởi hành. Còn để sau: chuyển fixture `kb` từ file test UC-13 sang `conftest.py` để dùng chung.
 - Lệnh chạy test: `cd backend; .venv\Scripts\python -m pytest tests/e2e -q`
 - Lệch đặc tả: không.
 
