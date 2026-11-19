@@ -1,6 +1,6 @@
 # UC-30: Dự đoán nguy cơ trễ chuyến
 
-- **Trạng thái:** Nháp (chờ Tài duyệt AC, gói cài cho `ml/`, và tải dataset)
+- **Trạng thái:** Đang làm
 - **Tác nhân:** Điều phối viên (Quản lý kế thừa)
 - **Đặc tả:** `docs/use-cases.md` (UC-30, mức C), `docs/nghiep-vu.md` mục 7, `docs/kien-truc.md` KT-08, `docs/api.md` mục 2.4
 - **Quy tắc nghiệp vụ liên quan:** không có BR chặn; AI chỉ gợi ý (nghiep-vu.md mục 7)
@@ -29,12 +29,17 @@
 | UC-30-AC7 | Giao diện: nhãn nguy cơ trễ trên chi tiết chuyến (phiên giao diện v2) | UI | NFR-USA-02 |
 
 ## Ghi chú triển khai
-- File đã đổi:
-- Test đã viết:
-- Lệnh chạy test:
-- Lệch đặc tả (nếu có) và đã sửa `docs/` chưa:
+- File đã đổi (đợt 1, backend, chưa có dataset): `backend/app/modules/goi_y/` (`du_doan_tre.py` tính thuần bằng `math`, `service.py` với hằng `DUONG_DAN_MO_HINH`, `router.py`, `schemas.py`), `backend/app/main.py` (gắn `goi_y_router`). Chưa có `mo_hinh_tre.json` thật: API trả `{co_du_doan: false}` cho tới khi đợt 2 train và xuất file (AC1, AC2, AC7 làm sau).
+- Đặc trưng: `km` = max `km_tu_diem_dau` của tuyến; `thoi_gian_gio` = kết thúc − khởi hành dự kiến (giờ); `gio_khoi_hanh`, `thu_trong_tuan` (Thứ Hai = 0) theo giờ Việt Nam (`GIO_VN` trong `app/thoi_gian.py`).
+- Test đã viết: `backend/tests/api/test_uc30_du_doan_tre.py` (AC3–AC6, file mô hình mẫu ghi vào `tmp_path` + `monkeypatch`), `backend/tests/unit/test_uc30_du_doan_tre.py` (ngưỡng, xác suất tính tay, mô hình sai định dạng).
+- Lệnh chạy test: `cd backend` → `.venv\Scripts\python -m pytest tests -q -k uc30`; `.venv\Scripts\python -m ruff check app tests`.
+- Lệch đặc tả (nếu có) và đã sửa `docs/` chưa: không lệch. Mọi lỗi mô hình (không có file, JSON hỏng, thiếu khóa, mảng lệch độ dài, `do_lech` = 0, đặc trưng lạ, `nguon` không phải object) đều bắt trong service, ghi `logging.warning`, trả 200 `{co_du_doan: false}`.
 
 ## Truy vết và kết quả
 
 | AC | Loại | Test / Bằng chứng | Kết quả | Ngày |
 |---|---|---|---|---|
+| UC-30-AC3 | API | `test_uc30_ac3_du_doan_thanh_cong`, `test_uc30_ac3_muc_tai_bien` (api); `test_uc30_ac3_*` (unit) | Đạt (mô hình mẫu trong test) | 19/11/2026 |
+| UC-30-AC4 | API | `test_uc30_ac4_mo_hinh_loi_khong_co_goi_y`, `test_uc30_ac4_chuyen_huy_khong_co_goi_y`, `test_uc30_ac4_chuyen_khong_ton_tai` (api); `test_uc30_ac4_*` (unit) | Đạt | 19/11/2026 |
+| UC-30-AC5 | API | `test_uc30_ac5_khong_doi_du_lieu_chuyen` | Đạt | 19/11/2026 |
+| UC-30-AC6 | API | `test_uc30_ac6_phan_quyen` | Đạt | 19/11/2026 |
