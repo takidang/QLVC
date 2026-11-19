@@ -209,8 +209,11 @@ Bản thử làm lại toàn bộ cho hiện đại hơn, tách khỏi nhánh v2
 
 ## Menu tài khoản gọn, trang Tài khoản và trang Cài đặt (nhánh `tai/cai-dat-tai-khoan`)
 
-- **Menu tài khoản** (`MenuTaiKhoan.tsx`, bấm vòng tên tắt): thu gọn chỉ còn phần đầu (họ tên + vai trò), link **Tài khoản** (`/tai-khoan`), link **Cài đặt** (`/cai-dat`), link **Cấu hình hệ thống** (`/quan-ly/cau-hinh`, chỉ vai trò Quản lý), đường kẻ ngăn rồi nút **Đăng xuất**. Bấm link, bấm/Tab ra ngoài hoặc nhấn Esc đều đóng menu.
-- **Trang Tài khoản** (`/tai-khoan`, `pages/TaiKhoan.tsx`, mọi vai trò đã đăng nhập, không thêm vào cột menu trái): khối thông tin cá nhân chỉ đọc (họ tên, vai trò từ `NguoiDung` của `/api/auth/toi`, không gọi API mới) và khối **Đổi mật khẩu** mở sẵn (chuyển nguyên form UC-35 từ menu sang, kiểm 8–200 ký tự, nhập lại, báo toast).
+- **Menu tài khoản** (`MenuTaiKhoan.tsx`, bấm vòng góc phải): vòng tròn hiện ảnh đại diện (`/api/auth/anh-dai-dien?v=...`) khi `co_anh_dai_dien` bật (lỗi tải thì tự về chữ tắt), mở ra phần đầu (họ tên + vai trò), link **Tài khoản** (`/tai-khoan`), link **Cài đặt** (`/cai-dat`), link **Cấu hình hệ thống** (`/quan-ly/cau-hinh`, chỉ vai trò Quản lý), đường kẻ ngăn rồi nút **Đăng xuất**. Bấm link, bấm/Tab ra ngoài hoặc nhấn Esc đều đóng menu.
+- **Trang Tài khoản** (`/tai-khoan`, `pages/TaiKhoan.tsx`, mọi vai trò đã đăng nhập, không thêm vào cột menu trái): gọi `GET /api/auth/ho-so` (UC-39), gồm 3 khối:
+  1. **Ảnh đại diện:** ảnh tròn (hoặc chữ tắt), nút **Chọn ảnh** (`accept="image/jpeg,image/png"`, nén bằng `nenAnh` trên trình duyệt trước khi gửi), nút **Xóa ảnh** khi đã có ảnh, báo toast kết quả, lỗi hiện thông điệp máy chủ; đổi / xóa ảnh cập nhật ngay vòng góc phải.
+  2. **Thông tin cá nhân** (chỉ xem, kèm dòng "Liên hệ Quản lý để thay đổi"): họ tên, tên đăng nhập, vai trò, trạng thái; riêng tài xế hiện thêm SĐT, số / hạng / hạn GPLX (hạn còn ≤ 30 ngày hoặc hết hạn tô cảnh báo bằng `HanGiayTo` theo BR-21).
+  3. **Đổi mật khẩu** mở sẵn (form UC-35, kiểm 8–200 ký tự, nhập lại, báo toast).
 - **Trang Cài đặt** (`/cai-dat`, `pages/CaiDat.tsx`, mọi vai trò đã đăng nhập, không thêm vào cột menu trái): 4 tùy chọn hiển thị lưu `localStorage` trong `nen.ts`, áp ngay khi chọn và tự khôi phục lúc khởi động app:
   1. **Giao diện** (`qlvc-che-do` → `data-che-do`): Theo máy / Sáng / Tối.
   2. **Mật độ bảng** (`qlvc-mat-do` → `data-mat-do="gon"`): Thoải mái (mặc định) / Gọn (thu gọn padding bảng và thẻ danh sách qua biến CSS `--dem-*`).

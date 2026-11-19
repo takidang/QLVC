@@ -308,6 +308,7 @@ erDiagram
     string trang_thai "HOAT_DONG|NGUNG"
     int so_lan_sai "NFR-SEC-05"
     datetime khoa_den "khóa tạm tới lúc này"
+    string anh_dai_dien "tên file ảnh đại diện do máy chủ sinh, null nếu chưa có (UC-39)"
   }
   KHACH_HANG {
     int id PK

@@ -1,18 +1,22 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import type { NguoiDung } from './api/auth'
+import { chuTat, urlAnhDaiDien, type NguoiDung } from './api/auth'
 
-// Menu tài khoản (bấm vòng tên tắt): họ tên + vai trò, Tài khoản, Cài đặt,
+// Menu tài khoản (bấm vòng ảnh đại diện / chữ tắt): họ tên + vai trò, Tài khoản, Cài đặt,
 // Cấu hình hệ thống (chỉ Quản lý), tách riêng nút Đăng xuất ở cuối.
 export default function MenuTaiKhoan({
   nd,
   tenVaiTro,
+  phienBanAnh,
   onThoat,
 }: {
   nd: NguoiDung
   tenVaiTro: string
+  phienBanAnh: number
   onThoat: () => void
 }) {
+  // Lưu phiên bản ảnh bị lỗi tải; khi phienBanAnh tăng sau lần đổi ảnh mới sẽ tự thử tải lại
+  const [loiAnhV, setLoiAnhV] = useState<number | null>(null)
   // Đóng khi bấm/Tab ra ngoài menu hoặc nhấn Esc
   const hop = useRef<HTMLDetailsElement>(null)
   const dong = () => {
@@ -34,16 +38,16 @@ export default function MenuTaiKhoan({
       document.removeEventListener('keydown', phim)
     }
   }, [])
-  const tat = nd.ho_ten
-    .split(' ')
-    .slice(-2)
-    .map((x) => x[0])
-    .join('')
-    .toUpperCase()
+  const tat = chuTat(nd.ho_ten)
+  const hienAnh = nd.co_anh_dai_dien && loiAnhV !== phienBanAnh
   return (
     <details className="menu-tk" ref={hop}>
       <summary className="tron" aria-label={`Tài khoản ${nd.ho_ten}`}>
-        {tat}
+        {hienAnh ? (
+          <img src={urlAnhDaiDien(phienBanAnh)} alt="" onError={() => setLoiAnhV(phienBanAnh)} />
+        ) : (
+          tat
+        )}
       </summary>
       <div className="menu-tk-hop">
         <div className="menu-tk-dau">
