@@ -1,7 +1,21 @@
-import { useRef, useState, type CSSProperties, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import { dangNhap, LoiApi, type NguoiDung } from '../api/auth'
 import { Link } from 'react-router-dom'
-import { NEN } from '../nen'
+import { dangHieuUng, NEN } from '../nen'
+import NenHat from '../NenHat'
+
+const CAU_PHU = 'Hệ thống quản lý vận tải'
+const CAU_GIOI_THIEU =
+  'Lập chuyến, theo dõi từng điểm dừng, giao hàng bằng quét mã và quyết toán theo chuyến.'
+
+// Tách từng ký tự inline-block; 4 chữ cái cuối ("n", "t", "ả", "i") nổi lên lệch nhịp (-0.12em…-0.3em) khi tải trang
+const NHO_CUOI: Record<number, { nho: string; tre: string }> = {
+  [CAU_PHU.length - 5]: { nho: '-0.12em', tre: '0ms' },
+  [CAU_PHU.length - 3]: { nho: '-0.18em', tre: '55ms' },
+  [CAU_PHU.length - 2]: { nho: '-0.24em', tre: '110ms' },
+  [CAU_PHU.length - 1]: { nho: '-0.3em', tre: '165ms' },
+}
+const KY_TU_PHU = [...CAU_PHU].map((ch, i) => ({ ch, i, nho: NHO_CUOI[i] }))
 
 export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }) {
   const [ten, setTen] = useState('')
@@ -9,6 +23,49 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
   const [loi, setLoi] = useState('')
   const [dangGui, setDangGui] = useState(false)
   const oMatKhau = useRef<HTMLInputElement>(null)
+  const [soKyTu, setSoKyTu] = useState(() => (dangHieuUng() ? 0 : CAU_GIOI_THIEU.length))
+  const [tro, setTro] = useState<'an' | 'go' | 'nhay'>(() => (dangHieuUng() ? 'go' : 'an'))
+
+  useEffect(() => {
+    if (!dangHieuUng()) return
+    let i = 0
+    let hNhay: ReturnType<typeof setTimeout> | undefined
+
+    const ketThucGo = () => {
+      clearInterval(hGo)
+      if (hNhay) clearTimeout(hNhay)
+      setSoKyTu(CAU_GIOI_THIEU.length)
+      setTro('an')
+    }
+
+    const hGo = setInterval(() => {
+      if (document.hidden || !dangHieuUng()) {
+        ketThucGo()
+        return
+      }
+      i += 1
+      if (i >= CAU_GIOI_THIEU.length) {
+        clearInterval(hGo)
+        setSoKyTu(CAU_GIOI_THIEU.length)
+        setTro('nhay')
+        // Con trỏ nháy đúng 2 lần (2 × 450 ms) rồi ẩn hẳn
+        hNhay = setTimeout(() => setTro('an'), 900)
+      } else {
+        setSoKyTu(i)
+      }
+    }, 35)
+
+    const khiAnTab = () => {
+      if (document.hidden || !dangHieuUng()) ketThucGo()
+    }
+    document.addEventListener('visibilitychange', khiAnTab)
+
+    return () => {
+      clearInterval(hGo)
+      if (hNhay) clearTimeout(hNhay)
+      document.removeEventListener('visibilitychange', khiAnTab)
+    }
+  }, [])
 
   async function gui(e: FormEvent) {
     e.preventDefault()
@@ -38,7 +95,21 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
         <form onSubmit={gui} noValidate>
           <div className="dn-giua">
             <h1>Đăng nhập</h1>
-            <p className="dn-phu">Hệ thống quản lý vận tải</p>
+            <p className="dn-phu" aria-label={CAU_PHU}>
+              <span aria-hidden="true">
+                {KY_TU_PHU.map(({ ch, i, nho }) => (
+                  <span
+                    key={i}
+                    className={nho ? 'dn-kt dn-kt-cuoi' : 'dn-kt'}
+                    style={
+                      nho ? ({ '--nho': nho.nho, '--tre': nho.tre } as CSSProperties) : undefined
+                    }
+                  >
+                    {ch}
+                  </span>
+                ))}
+              </span>
+            </p>
             <label>
               Tên đăng nhập
               <span className="dn-o">
@@ -90,8 +161,12 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
         </form>
 
         <section className="dn-hinh" style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}>
-          <p>
-            Lập chuyến, theo dõi từng điểm dừng, giao hàng bằng quét mã và quyết toán theo chuyến.
+          <NenHat />
+          <p aria-label={CAU_GIOI_THIEU}>
+            <span aria-hidden="true">
+              {CAU_GIOI_THIEU.slice(0, soKyTu)}
+              {tro !== 'an' && <i className={tro === 'nhay' ? 'dn-con-tro nhay' : 'dn-con-tro'} />}
+            </span>
           </p>
         </section>
       </div>

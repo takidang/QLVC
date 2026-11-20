@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router-dom'
 import { LoiApi } from '../api/goi'
 import { traCuu, type KetQuaTraCuu } from '../api/traCuu'
 import { NEN } from '../nen'
+import { useHienKhiCuon } from '../useHienKhiCuon'
 
 // Tên trạng thái đơn viết cho khách (không dùng từ nội bộ như "ghép", "thất bại")
 const TEN_CHO_KHACH: Record<string, string> = {
@@ -33,6 +34,7 @@ export default function TraCuu() {
   const [dangGui, setDangGui] = useState(false)
   const oMa = useRef<HTMLInputElement>(null)
   const oKq = useRef<HTMLHeadingElement>(null)
+  useHienKhiCuon(kq?.ma_don)
 
   async function gui(e: FormEvent) {
     e.preventDefault()
@@ -129,7 +131,7 @@ export default function TraCuu() {
         )}
 
         {kq && (
-          <section className="kinh tc-khung tc-kq" aria-live="polite">
+          <section key={kq.ma_don} className="kinh tc-khung tc-kq" aria-live="polite">
             <h2 ref={oKq} tabIndex={-1}>
               {TEN_CHO_KHACH[kq.trang_thai] ?? kq.trang_thai}
             </h2>

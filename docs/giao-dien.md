@@ -216,12 +216,28 @@ Bản thử làm lại toàn bộ cho hiện đại hơn, tách khỏi nhánh v2
   1. **Ảnh đại diện:** ảnh tròn (hoặc chữ tắt), nút **Chọn ảnh** (`accept="image/jpeg,image/png"`, nén bằng `nenAnh` trên trình duyệt trước khi gửi), nút **Xóa ảnh** khi đã có ảnh, báo toast kết quả, lỗi hiện thông điệp máy chủ; đổi / xóa ảnh cập nhật ngay vòng góc phải.
   2. **Thông tin cá nhân** (chỉ xem, kèm dòng "Liên hệ Quản lý để thay đổi"): họ tên, tên đăng nhập, vai trò, trạng thái; riêng tài xế hiện thêm SĐT, số / hạng / hạn GPLX (hạn còn ≤ 30 ngày hoặc hết hạn tô cảnh báo bằng `HanGiayTo` theo BR-21).
   3. **Đổi mật khẩu** mở sẵn (form UC-35, kiểm 8–200 ký tự, nhập lại, báo toast).
-- **Trang Cài đặt** (`/cai-dat`, `pages/CaiDat.tsx`, mọi vai trò đã đăng nhập, không thêm vào cột menu trái): 4 tùy chọn hiển thị lưu `localStorage` trong `nen.ts`, áp ngay khi chọn và tự khôi phục lúc khởi động app:
+- **Trang Cài đặt** (`/cai-dat`, `pages/CaiDat.tsx`, mọi vai trò đã đăng nhập, không thêm vào cột menu trái): 5 tùy chọn hiển thị lưu `localStorage` trong `nen.ts`, áp ngay khi chọn và tự khôi phục lúc khởi động app:
   1. **Giao diện** (`qlvc-che-do` → `data-che-do`): Theo máy / Sáng / Tối.
   2. **Mật độ bảng** (`qlvc-mat-do` → `data-mat-do="gon"`): Thoải mái (mặc định) / Gọn (thu gọn padding bảng và thẻ danh sách qua biến CSS `--dem-*`).
   3. **Cỡ chữ** (`qlvc-co-chu` → `data-co-chu="lon"`): Vừa (mặc định) / Lớn (tăng cỡ chữ gốc 112,5% qua `font-size` gốc và biến `--ty-le-chu`).
   4. **Giảm chuyển động** (`qlvc-giam-chuyen-dong` → `data-giam-chuyen-dong="bat"`): Theo máy (mặc định) / Bật (tắt transition/animation bằng CSS và truyền `animated={false}` cho `NumberFlow`).
+  5. **Hiệu ứng nâng cao** (`qlvc-hieu-ung` → `data-hieu-ung="bat" | "tat"`): Bật (mặc định khi chưa lưu) / Tắt ("Hạt nền, đàn con trỏ, chữ gõ ở màn đăng nhập và tổng quan. Tắt nếu máy chậm."). Hàm `dangHieuUng()` trả về `true` khi mục này đang bật và `giamChuyenDong()` là `false`.
   - Vai trò Quản lý có dòng dẫn tới **Cấu hình hệ thống** ở cuối trang. Tài xế (không có cột menu trái) có link quay lại "← Chuyến của tôi" và có thể bấm tên hệ thống trên thanh đầu để về trang chính.
+
+## Giao diện v4: hiệu ứng nâng cao (nhánh `tai/thu-giao-dien-v4`)
+
+Giữ nguyên toàn bộ bố cục, biến màu và thành phần của giao diện v3, bổ sung lớp hiệu ứng nâng cao có thể tắt trong **Cài đặt → Hiệu ứng nâng cao** (`qlvc-hieu-ung`, mặc định `bat`) và tự tắt hoàn toàn khi `giamChuyenDong()` (cài đặt Giảm chuyển động hoặc `prefers-reduced-motion: reduce`):
+
+- **Màn Đăng nhập (`DangNhap.tsx`, `NenHat.tsx`):**
+  - Form bên trái hiện tức thời để gõ ngay; khung ảnh bên phải (`.dn-hinh`) hiện mờ dần `220 ms`.
+  - Canvas `NenHat.tsx` phủ trên vùng ảnh (`pointer-events: none`), vẽ ~76 hạt dạng vệt ngắn (màn ≤ 600 px: 30 hạt) màu `--chay`, `--cam`, `--nhan-sang` và trắng, trôi chậm, dạt khỏi con trỏ chuột trong bán kính `120 px` rồi đàn hồi trôi về; tự co giãn theo `devicePixelRatio` và `ResizeObserver`, dừng `requestAnimationFrame` khi ẩn tab (`visibilitychange`) hoặc unmount.
+  - Dòng giới thiệu trên ảnh tự gõ một lần (`35 ms/ký tự`), gõ xong con trỏ nháy 2 lần rồi ẩn; thẻ `<p>` giữ `aria-label` câu đầy đủ, phần chữ đang gõ đặt `aria-hidden="true"`.
+  - Dòng thương hiệu phụ `"Hệ thống quản lý vận tải"` tách ký tự `inline-block`, 4 chữ cái cuối nổi lên lệch nhịp (`translateY(-0.12em…-0.3em)`, `600 ms`, trễ `300 ms`), giữ `aria-label` câu đầy đủ.
+- **Đàn con trỏ dựng trang (`DanConTro.tsx`):** gắn ở trang Tổng quan và màn Chuyến của Điều phối, chạy tối đa **một lần mỗi phiên trình duyệt** (`sessionStorage` khóa `qlvc-da-dung`), tổng thời lượng `≤ 1,5 s`. Ba con trỏ SVG kèm nhãn `"Điều phối"`, `"Kế toán"`, `"Tài xế"` (màu `--chay`, `--cam`, `--muc`) bay từ ngoài mép vào theo đường cong, mỗi con nhắm 1–2 khối `.kinh` đầu tiên đang thấy (các khối này mờ `opacity: 0.15` trước khi con trỏ tới, không đổi kích thước), kéo khung nét đứt kèm nhãn kích thước `W × H` rồi mở khối thật (`opacity 0 → 1`) và bay ra ngoài trước khi gỡ lớp phủ khỏi DOM. Bấm chuột, gõ phím hoặc cuộn trang bất kỳ lúc nào sẽ bỏ qua ngay và hiện đủ mọi khối.
+- **Khối `.kinh` hiện dần khi cuộn tới (`useHienKhiCuon.ts`):** dùng `IntersectionObserver` chung cho các khối `.kinh` nằm ngoài khung nhìn lúc tải trang (bỏ qua dòng bảng `tr` và phần tử trong danh sách `ul`/`ol`/`.ds-the`); lần đầu cuộn tới hiện `opacity 0 → 1` + `translateY(8px → 0)` trong `260 ms` (`cubic-bezier(0.16, 1, 0.3, 1)`), mỗi khối chỉ chạy một lần.
+- **Thanh tải trọng và độ đầy (`.xh-ray i`, `.day span i`, `.kx-thanh i`, `.ct-thanh i`, `.tq-xe-truc i`):** co giãn mượt `transition: width 180ms cubic-bezier(0.22, 1, 0.36, 1), background-color 150ms ease-out` khi thử ghép đơn hoặc đổi số liệu (chuyển động nhỏ báo trạng thái, giữ cả khi tắt Hiệu ứng nâng cao, chỉ tắt khi giảm chuyển động).
+- **Khung chi tiết hiện êm (`.qt-ct`, `.tc-kq`):** khi đổi chuyến ở Quyết toán, đổi khách ở Công nợ hoặc nhận kết quả ở Tra cứu đơn, khung chi tiết hiện êm `opacity 0 → 1` + `translateY(4px → 0)` trong `150 ms`.
+- **Logo cột menu trái (`.canh .hieu`):** khi rê chuột hoặc focus vào chữ `"Quản lý vận tải"` ở đầu cột menu trái, 3 chữ cái cuối (`t`, `ả`, `i`) nổi nhẹ lên lệch nhịp (`transition 200 ms`), rời chuột thì trở về.
 
 ## Còn phải quyết khi làm vào code
 
