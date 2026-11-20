@@ -12,7 +12,6 @@ import {
 import { LoiApi } from '../api/goi'
 import { tongQuanNgay, type TongQuanNgay } from '../api/tongQuan'
 import { dangGiamChuyenDong } from '../nen'
-import DanConTro from '../DanConTro'
 import NumberFlow from '@number-flow/react'
 
 // Trang Tổng quan của Quản lý và Kế toán (UC-26 lãi lỗ, UC-34 hiệu suất xe).
@@ -67,7 +66,6 @@ export default function TongQuan({ ketToan = false }: { ketToan?: boolean }) {
   const t = theoThang?.du_lieu.find((d) => d.thang === thang)
   return (
     <section className="noi-dung tong-quan">
-      <DanConTro />
       <div className="tq-dau">
         <div>
           <h1>Tổng quan</h1>

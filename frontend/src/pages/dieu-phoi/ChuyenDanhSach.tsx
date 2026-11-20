@@ -20,7 +20,6 @@ import { danhSachTuyen, type Tuyen } from '../../api/tuyen'
 import { Ic, Nhan } from '../../nhan'
 import LichGio from './LichGio'
 import { dangGiamChuyenDong, NEN } from '../../nen'
-import DanConTro from '../../DanConTro'
 import { ThongBao } from '../../thongBao'
 import NumberFlow from '@number-flow/react'
 
@@ -239,7 +238,6 @@ export default function ChuyenDanhSach() {
 
   return (
     <section className="noi-dung">
-      <DanConTro />
       {/* Hai cột độc lập: trái là tiêu đề, số liệu, lịch xe; phải là Cần chú ý, bản đồ.
           Mỗi cột tự xếp chồng nên không có khoảng trống do cột kia cao hơn */}
       <div className={ngay ? 'dau-luoi' : 'dau-luoi mot-cot'}>

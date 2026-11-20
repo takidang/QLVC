@@ -13,6 +13,7 @@ import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
 import { Ic, type TenIc } from './nhan'
 import { KhungThongBao } from './thongBao'
 import ChuongThongBao from './ChuongThongBao'
+import DanConTro from './DanConTro'
 import MenuTaiKhoan from './MenuTaiKhoan'
 import TimChung from './TimChung'
 import { useHienKhiCuon } from './useHienKhiCuon'
@@ -206,6 +207,7 @@ function KhungTrang({
           <Outlet context={nd} />
         </main>
       </div>
+      <DanConTro pathname={pathname} />
     </div>
   )
 }
