@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { dangHieuUng } from './nen'
 
-const KHOA_PHIEN = 'qlvc-da-dung'
 const T_VE = 1180
 const T_TONG = 1480
 
@@ -59,20 +58,11 @@ const diCong = (
 
 const muot = (t: number) => 1 - Math.pow(1 - Math.min(Math.max(t, 0), 1), 3)
 
-function chuaChayPhienNay(): boolean {
-  if (!dangHieuUng()) return false
-  try {
-    return !sessionStorage.getItem(KHOA_PHIEN)
-  } catch {
-    return false
-  }
-}
-
-// Đàn con trỏ dựng trang (v4): mỗi phiên trình duyệt chạy 1 lần (sessionStorage qlvc-da-dung), ≤ 1,6 s.
+// Đàn con trỏ dựng trang (v4): chạy mỗi lần mở trang có gắn component (Tổng quan, Chuyến; Tài chốt 20/11), ≤ 1,6 s.
 // 3 con trỏ SVG kèm nhãn Điều phối / Kế toán / Tài xế bay vào theo đường cong, kéo khung nét đứt kèm badge W × H
 // trên 1–2 khối .kinh đầu tiên đang thấy rồi hiện khối thật; bấm / phím / cuộn bất kỳ lúc nào bỏ qua ngay.
 export default function DanConTro() {
-  const [xong, setXong] = useState(() => !chuaChayPhienNay())
+  const [xong, setXong] = useState(() => !dangHieuUng())
   const lopPhuRef = useRef<HTMLDivElement>(null)
   const troRefs = useRef<(HTMLDivElement | null)[]>([])
   const khungRefs = useRef<(HTMLDivElement | null)[]>([])
@@ -80,7 +70,7 @@ export default function DanConTro() {
 
   useEffect(() => {
     const lopPhu = lopPhuRef.current
-    if (!lopPhu || !chuaChayPhienNay()) return
+    if (!lopPhu || !dangHieuUng()) return
 
     const vw = window.innerWidth
     const vh = window.innerHeight
@@ -128,19 +118,11 @@ export default function DanConTro() {
       m.el.dataset.danTro = 'hien'
     }
 
-    // xongThat: chạy hết hoặc người dùng bỏ qua → đánh dấu phiên, gỡ lớp phủ.
-    // Unmount giữa chừng (đổi trang, StrictMode chạy effect hai lần ở dev) thì chỉ dọn, không đánh dấu,
-    // để lần mount kế vẫn chạy được.
+    // xongThat: chạy hết hoặc người dùng bỏ qua → gỡ lớp phủ khỏi DOM.
+    // Unmount giữa chừng (đổi trang, StrictMode chạy effect hai lần ở dev) thì chỉ dọn, không setState.
     const donDep = (xongThat = true) => {
       if (daKetThuc) return
       daKetThuc = true
-      if (xongThat) {
-        try {
-          sessionStorage.setItem(KHOA_PHIEN, '1')
-        } catch {
-          // Bỏ qua nếu trình duyệt chặn sessionStorage
-        }
-      }
       if (raf) {
         cancelAnimationFrame(raf)
         raf = 0
