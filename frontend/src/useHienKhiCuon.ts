@@ -54,11 +54,20 @@ export function useHienKhiCuon(khoa?: string) {
     }
 
     quet()
-    const mo = new MutationObserver(quet)
+    // DOM đổi liên tục (số chạy, dữ liệu về): gộp lại, quét tối đa một lần mỗi khung hình
+    let rafQuet = 0
+    const mo = new MutationObserver(() => {
+      if (!rafQuet)
+        rafQuet = requestAnimationFrame(() => {
+          rafQuet = 0
+          quet()
+        })
+    })
     mo.observe(document.body, { childList: true, subtree: true })
 
     return () => {
       mo.disconnect()
+      cancelAnimationFrame(rafQuet)
       io.disconnect()
       for (const h of henGio) clearTimeout(h)
       for (const el of dangCho) {

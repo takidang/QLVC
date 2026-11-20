@@ -95,12 +95,6 @@ export default function DanConTro() {
 
     if (dsKhoi.length === 0) return
 
-    try {
-      sessionStorage.setItem(KHOA_PHIEN, '1')
-    } catch {
-      // Bỏ qua nếu trình duyệt chặn sessionStorage
-    }
-
     const mucTieu: MucTieu[] = dsKhoi.map((el) => {
       const r = el.getBoundingClientRect()
       el.dataset.danTro = 'cho'
@@ -134,9 +128,19 @@ export default function DanConTro() {
       m.el.dataset.danTro = 'hien'
     }
 
-    const donDep = () => {
+    // xongThat: chạy hết hoặc người dùng bỏ qua → đánh dấu phiên, gỡ lớp phủ.
+    // Unmount giữa chừng (đổi trang, StrictMode chạy effect hai lần ở dev) thì chỉ dọn, không đánh dấu,
+    // để lần mount kế vẫn chạy được.
+    const donDep = (xongThat = true) => {
       if (daKetThuc) return
       daKetThuc = true
+      if (xongThat) {
+        try {
+          sessionStorage.setItem(KHOA_PHIEN, '1')
+        } catch {
+          // Bỏ qua nếu trình duyệt chặn sessionStorage
+        }
+      }
       if (raf) {
         cancelAnimationFrame(raf)
         raf = 0
@@ -149,7 +153,8 @@ export default function DanConTro() {
       window.removeEventListener('wheel', boQua, true)
       window.removeEventListener('scroll', boQua, true)
       document.removeEventListener('visibilitychange', khiAnTab)
-      setXong(true)
+      if (xongThat) setXong(true)
+      else lopPhu.style.display = 'none'
     }
 
     function boQua() {
@@ -244,7 +249,7 @@ export default function DanConTro() {
     window.addEventListener('scroll', boQua, { capture: true, passive: true })
     document.addEventListener('visibilitychange', khiAnTab)
 
-    return donDep
+    return () => donDep(false)
   }, [])
 
   if (xong) return null
