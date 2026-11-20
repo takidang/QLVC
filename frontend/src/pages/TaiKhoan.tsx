@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ChangeEvent, type FormEvent } from 'react'
+import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import {
@@ -12,6 +12,7 @@ import {
   type HoSo,
   type NguoiDung,
 } from '../api/auth'
+import ChonTep from '../ChonTep'
 import { nenAnh } from '../nenAnh'
 import { DauDanhMuc, HanGiayTo, NhanHoatDong } from './danh-muc'
 
@@ -32,7 +33,6 @@ export default function TaiKhoan({
   const [loiAnh, setLoiAnh] = useState('')
   const [dangXuLyAnh, setDangXuLyAnh] = useState(false)
   const [loiHienAnhV, setLoiHienAnhV] = useState<number | null>(null)
-  const oFile = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     let bo = false
@@ -129,17 +129,15 @@ export default function TaiKhoan({
               )}
             </div>
             <div className="tk-anh-nut">
-              <input
-                ref={oFile}
-                type="file"
+              <ChonTep
                 accept="image/jpeg,image/png"
-                hidden
+                aria-label="Chọn ảnh đại diện"
                 onChange={chonAnh}
                 disabled={dangXuLyAnh}
+                nut={dangXuLyAnh ? 'Đang xử lý…' : 'Chọn ảnh'}
+                chinh
+                hienTrangThai={false}
               />
-              <button type="button" onClick={() => oFile.current?.click()} disabled={dangXuLyAnh}>
-                {dangXuLyAnh ? 'Đang xử lý…' : 'Chọn ảnh'}
-              </button>
               {coAnh && (
                 <button type="button" className="phu" onClick={xoaAnh} disabled={dangXuLyAnh}>
                   Xóa ảnh

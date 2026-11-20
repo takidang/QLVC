@@ -12,6 +12,7 @@ import {
   type LoaiChi,
 } from '../../api/chiPhi'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
+import ChonTep from '../../ChonTep'
 import { nenAnh } from '../../nenAnh'
 import { LOI_MANG, SO_ANH_TOI_DA } from './QuetLay'
 import { ThongBao } from '../../thongBao'
@@ -216,16 +217,13 @@ function FormChi({
         <input maxLength={500} value={ghiChu} onChange={(e) => setGhiChu(e.target.value)} />
       </label>
       {coAnh && (
-        <label>
-          Ảnh hóa đơn (tối đa {SO_ANH_TOI_DA})
-          <input
-            type="file"
-            accept="image/jpeg,image/png"
-            capture="environment"
-            multiple
-            onChange={(e) => setAnh([...(e.target.files ?? [])])}
-          />
-        </label>
+        <ChonTep
+          nhan={`Ảnh hóa đơn (tối đa ${SO_ANH_TOI_DA})`}
+          accept="image/jpeg,image/png"
+          capture="environment"
+          multiple
+          onChange={(e) => setAnh([...(e.target.files ?? [])])}
+        />
       )}
       {loi && (
         <p role="alert" className="loi">

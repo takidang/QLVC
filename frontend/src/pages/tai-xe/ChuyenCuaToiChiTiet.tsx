@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { LoiApi } from '../../api/goi'
+import ChonTep from '../../ChonTep'
 import { Nhan } from '../../nhan'
 import {
   TEN_TRANG_THAI,
@@ -143,7 +144,8 @@ export default function ChuyenCuaToiChiTiet() {
                 </div>
                 <strong>{keTiep.nut}</strong>
                 <p>
-                  {keTiep.dia_chi} · {keTiep.so_kien} kiện · {keTiep.ma_don}
+                  {keTiep.dia_chi} · {keTiep.so_kien} kiện ·{' '}
+                  <span className="khong-ngat">{keTiep.ma_don}</span>
                 </p>
                 <div className="ke-nut">
                   <button type="button" className="nut-to" onClick={() => toi(idDiem(keTiep))}>
@@ -310,16 +312,13 @@ function FormKm({ c, onXong }: { c: ChiTiet; onXong: (c: ChiTiet) => void }) {
           onChange={(e) => setKm(e.target.value)}
         />
       </label>
-      <label>
-        Ảnh đồng hồ km
-        <input
-          type="file"
-          accept="image/jpeg,image/png"
-          capture="environment"
-          required
-          onChange={(e) => setAnh(e.target.files?.[0] ?? null)}
-        />
-      </label>
+      <ChonTep
+        nhan="Ảnh đồng hồ km"
+        accept="image/jpeg,image/png"
+        capture="environment"
+        required
+        onChange={(e) => setAnh(e.target.files?.[0] ?? null)}
+      />
       {loi.length > 0 && (
         <ul role="alert" className="loi">
           {loi.map((x) => (

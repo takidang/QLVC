@@ -2,6 +2,7 @@ import QrScanner from 'qr-scanner'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { LoiApi } from '../../api/goi'
 import { layGps, lyDo, quetMa, type Gps, type KetQuaQuet, type LyDo } from '../../api/toi'
+import ChonTep from '../../ChonTep'
 import { nenAnh } from '../../nenAnh'
 
 export const LOI_MANG = 'Không gửi được, kiểm tra mạng rồi thử lại'
@@ -196,17 +197,14 @@ export function KhongLay({
           ))}
         </select>
       </label>
-      <label>
-        Ảnh hiện trường
-        <input
-          type="file"
-          accept="image/jpeg,image/png"
-          capture="environment"
-          multiple
-          required
-          onChange={(e) => setAnh([...(e.target.files ?? [])])}
-        />
-      </label>
+      <ChonTep
+        nhan="Ảnh hiện trường"
+        accept="image/jpeg,image/png"
+        capture="environment"
+        multiple
+        required
+        onChange={(e) => setAnh([...(e.target.files ?? [])])}
+      />
       {loi && (
         <p role="alert" className="loi">
           {loi}

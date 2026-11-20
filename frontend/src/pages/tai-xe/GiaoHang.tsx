@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent, type PointerEvent } from 'react'
 import { LoiApi } from '../../api/goi'
 import { layGps, quetMa, type KetQuaQuet } from '../../api/toi'
+import ChonTep from '../../ChonTep'
 import { nenAnh } from '../../nenAnh'
 import { Camera, LOI_MANG, SO_ANH_TOI_DA } from './QuetLay'
 
@@ -100,16 +101,13 @@ export function GiaoHang({ maDon, onXong }: { maDon: string; onXong: (kq: KetQua
           </button>
         </>
       )}
-      <label>
-        Ảnh giao hàng (tối đa {SO_ANH_TOI_DA})
-        <input
-          type="file"
-          accept="image/jpeg,image/png"
-          capture="environment"
-          multiple
-          onChange={(e) => setAnh([...(e.target.files ?? [])])}
-        />
-      </label>
+      <ChonTep
+        nhan={`Ảnh giao hàng (tối đa ${SO_ANH_TOI_DA})`}
+        accept="image/jpeg,image/png"
+        capture="environment"
+        multiple
+        onChange={(e) => setAnh([...(e.target.files ?? [])])}
+      />
       <label>
         Tên người nhận
         <input value={ten} maxLength={100} onChange={(e) => setTen(e.target.value)} />
