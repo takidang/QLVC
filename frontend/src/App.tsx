@@ -1,11 +1,22 @@
 import { useEffect, useState, type ReactNode } from 'react'
-import { BrowserRouter, Link, Navigate, NavLink, Outlet, Route, Routes } from 'react-router-dom'
+import {
+  BrowserRouter,
+  Link,
+  Navigate,
+  NavLink,
+  Outlet,
+  Route,
+  Routes,
+  useLocation,
+} from 'react-router-dom'
 import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
 import { Ic, type TenIc } from './nhan'
 import { KhungThongBao } from './thongBao'
 import ChuongThongBao from './ChuongThongBao'
+import DanConTro from './DanConTro'
 import MenuTaiKhoan from './MenuTaiKhoan'
 import TimChung from './TimChung'
+import { useHienKhiCuon } from './useHienKhiCuon'
 import CaiDat from './pages/CaiDat'
 import DangNhap from './pages/DangNhap'
 import TaiKhoan from './pages/TaiKhoan'
@@ -115,11 +126,15 @@ const menu = (nd: NguoiDung) =>
 const NHOM = ['', 'Vận hành', 'Danh mục', 'Tài chính', 'Quản trị']
 
 const Hieu = ({ den }: { den: string }) => (
-  <Link to={den} className="hieu">
+  <Link to={den} className="hieu" aria-label="Quản lý vận tải">
     <i aria-hidden="true">
       <Ic ten="chuyen" />
     </i>
-    Quản lý vận tải
+    <span aria-hidden="true">
+      Quản lý vận <span className="hieu-duoi">t</span>
+      <span className="hieu-duoi">ả</span>
+      <span className="hieu-duoi">i</span>
+    </span>
   </Link>
 )
 
@@ -136,6 +151,8 @@ function KhungTrang({
   loiThoat: string
   onThoat: () => void
 }) {
+  const { pathname } = useLocation()
+  useHienKhiCuon(pathname)
   const muc = menu(nd)
   const coMenu = muc.length > 1
   return (
@@ -190,6 +207,7 @@ function KhungTrang({
           <Outlet context={nd} />
         </main>
       </div>
+      <DanConTro pathname={pathname} />
     </div>
   )
 }

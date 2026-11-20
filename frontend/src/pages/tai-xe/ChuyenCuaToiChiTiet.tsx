@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { LoiApi } from '../../api/goi'
+import ChonTep from '../../ChonTep'
 import { Nhan } from '../../nhan'
 import {
   TEN_TRANG_THAI,
@@ -12,7 +13,7 @@ import {
   type ChuyenCuaToiChiTiet as ChiTiet,
   type KetQuaQuet,
 } from '../../api/toi'
-import { dangGiamChuyenDong } from '../../nen'
+import { giamChuyenDong } from '../../nen'
 import { nenAnh } from '../../nenAnh'
 import { ChiPhi } from './ChiPhi'
 import { SuCoChuyen } from './SuCo'
@@ -71,15 +72,18 @@ export default function ChuyenCuaToiChiTiet() {
   // Còn điểm lấy chưa quét thì mới cần khối Lấy hàng (quét lấy); lấy hết rồi thì giao ở từng điểm
   const conLay = !!c?.lich_trinh.some((p) => p.viec === 'LAY' && p.trang_thai_don === 'DA_GHEP')
   const idDiem = (p: ChiTiet['lich_trinh'][number]) => `diem-${p.viec}-${p.don_id}`
-  // Cuộn tới một khối; bật giảm chuyển động thì nhảy thẳng
-  const toi = (id: string) =>
-    document.getElementById(id)?.scrollIntoView({
-      behavior:
-        dangGiamChuyenDong() || matchMedia('(prefers-reduced-motion: reduce)').matches
-          ? 'auto'
-          : 'smooth',
-      block: 'start',
-    })
+  // Cuộn tới một khối rồi nháy viền một lần (.vua-toi) để mắt bắt đúng thẻ; giảm chuyển động thì nhảy thẳng, không nháy
+  const toi = (id: string) => {
+    const el = document.getElementById(id)
+    if (!el) return
+    const giam = giamChuyenDong()
+    el.scrollIntoView({ behavior: giam ? 'auto' : 'smooth', block: 'start' })
+    if (giam) return
+    el.classList.remove('vua-toi')
+    void el.offsetWidth // bấm lại lần nữa vẫn nháy: gỡ class, ép vẽ lại rồi gắn lại
+    el.classList.add('vua-toi')
+    el.addEventListener('animationend', () => el.classList.remove('vua-toi'), { once: true })
+  }
 
   return (
     <section className="noi-dung dien-thoai">
@@ -143,7 +147,8 @@ export default function ChuyenCuaToiChiTiet() {
                 </div>
                 <strong>{keTiep.nut}</strong>
                 <p>
-                  {keTiep.dia_chi} · {keTiep.so_kien} kiện · {keTiep.ma_don}
+                  {keTiep.dia_chi} · {keTiep.so_kien} kiện ·{' '}
+                  <span className="khong-ngat">{keTiep.ma_don}</span>
                 </p>
                 <div className="ke-nut">
                   <button type="button" className="nut-to" onClick={() => toi(idDiem(keTiep))}>
@@ -310,16 +315,13 @@ function FormKm({ c, onXong }: { c: ChiTiet; onXong: (c: ChiTiet) => void }) {
           onChange={(e) => setKm(e.target.value)}
         />
       </label>
-      <label>
-        Ảnh đồng hồ km
-        <input
-          type="file"
-          accept="image/jpeg,image/png"
-          capture="environment"
-          required
-          onChange={(e) => setAnh(e.target.files?.[0] ?? null)}
-        />
-      </label>
+      <ChonTep
+        nhan="Ảnh đồng hồ km"
+        accept="image/jpeg,image/png"
+        capture="environment"
+        required
+        onChange={(e) => setAnh(e.target.files?.[0] ?? null)}
+      />
       {loi.length > 0 && (
         <ul role="alert" className="loi">
           {loi.map((x) => (

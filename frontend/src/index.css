@@ -4855,3 +4855,541 @@ form.form-km > button {
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
 }
+
+/* ----- Sửa giao diện 20/11 (A): giữ chỗ khi tải, nhãn ngắn lịch giờ, màn tài xế hẹp, ô chọn file ----- */
+/* Tổng quan: khối giữ chỗ nền tĩnh cao gần bằng khối thật, nhịp mờ rất nhẹ (tắt khi giảm chuyển động) */
+.tq-cho {
+  position: relative;
+  background: var(--mat-2);
+  border-radius: var(--bo);
+  animation: tq-cho-nhip 1.6s ease-in-out infinite alternate;
+}
+/* Biểu đồ cột: khung SVG 560 × 220 + chú giải + dòng "Xem dạng bảng" */
+.tq-cho-cot {
+  aspect-ratio: 560 / 220;
+  margin-bottom: 56px;
+}
+.tq-cho-xe {
+  min-height: 160px;
+}
+.tq-cho-bang {
+  min-height: 200px;
+}
+/* Chỗ của một dòng lưu ý (.tq-luu-y) trong lúc đang tải */
+.tq-luu-y-cho {
+  height: 40px;
+  margin: 0 0 16px;
+}
+@keyframes tq-cho-nhip {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.6;
+  }
+}
+@media (max-width: 600px) {
+  .tq-cho-cot {
+    aspect-ratio: 340 / 220;
+    margin-bottom: 74px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tq-cho {
+    animation: none;
+  }
+}
+:root[data-giam-chuyen-dong='bat'] .tq-cho {
+  animation: none;
+}
+
+/* Lịch xe theo giờ: thanh hẹp (LichGio.tsx gắn data-ngan) hiện nhãn ngắn "→ điểm cuối" */
+.lg-ten-ngan {
+  display: none;
+}
+.lg-thanh[data-ngan] .lg-ten {
+  display: none;
+}
+.lg-thanh[data-ngan] .lg-ten-ngan {
+  display: inline;
+}
+
+/* Màn tài xế: mã đơn không ngắt giữa; điện thoại hẹp bỏ thụt trái của các khối cuối */
+.khong-ngat {
+  white-space: nowrap;
+}
+@media (max-width: 480px) {
+  .dt-cuoi {
+    margin-left: 0;
+  }
+}
+
+/* Ô chọn file (ChonTep.tsx): input thật trong suốt phủ lên hàng nút, vẫn Tab / bấm / required được */
+.chon-tep {
+  display: grid;
+  gap: 5px;
+}
+.chon-tep-hang {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+.chon-tep .chon-tep-o {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.chon-tep .chon-tep-o:disabled {
+  cursor: not-allowed;
+}
+.chon-tep-nut {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 6px 14px;
+  font-size: var(--co-chu);
+  font-weight: 500;
+  color: var(--muc);
+  background: var(--mat);
+  border: 1px solid var(--vien-dam);
+  border-radius: var(--bo);
+  transition: background 0.12s ease-out;
+}
+.chon-tep-nut.chinh {
+  color: var(--tren-muc);
+  background: var(--muc);
+  border-color: var(--muc);
+}
+.chon-tep-hang:hover .chon-tep-o:enabled + .chon-tep-nut {
+  background: var(--mat-2);
+}
+.chon-tep-hang:hover .chon-tep-o:enabled + .chon-tep-nut.chinh {
+  background: color-mix(in srgb, var(--muc) 86%, white);
+}
+.chon-tep-o:focus-visible + .chon-tep-nut {
+  outline: 2px solid var(--muc);
+  outline-offset: 2px;
+}
+.chon-tep-o:disabled + .chon-tep-nut,
+.chon-tep-o:disabled + .chon-tep-nut.chinh {
+  color: color-mix(in srgb, var(--muc) 45%, transparent);
+  background: color-mix(in srgb, var(--muc) 10%, var(--mat));
+  border-color: transparent;
+}
+.chon-tep-tt {
+  flex: 1 1 120px;
+  min-width: 0;
+  overflow: hidden;
+  font-size: calc(13px * var(--ty-le-chu));
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--phu);
+}
+form.form-km .chon-tep-nut {
+  min-height: 44px; /* nút cho ngón tay ở màn tài xế */
+}
+@media (prefers-reduced-motion: reduce) {
+  .chon-tep-nut {
+    transition: none;
+  }
+}
+
+/* ----- Chuyển động 20/11 (B): chỉ để báo trạng thái; tắt hết khi giảm chuyển động ----- */
+/* Lớp nổi mở ra từ nút bấm (menu tài khoản, chuông, tìm chung) và hộp thoại; đóng thì tức thời */
+@keyframes mo-lop-noi {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+.menu-tk-hop,
+.chuong-hop,
+.tim-hop {
+  transform-origin: top right;
+  animation: mo-lop-noi 140ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hop-thoai {
+  animation: mo-lop-noi 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* Nút lún nhẹ khi nhấn: màn cảm ứng không có hover, cần biết máy đã nhận cú chạm */
+button:enabled:active,
+.nut-to:active,
+.nut-vien:active {
+  transform: scale(0.98);
+  transition: transform 80ms cubic-bezier(0.2, 0, 0, 1);
+}
+/* Tài xế: điểm dừng / khối vừa cuộn tới nháy viền một lần (ChuyenCuaToiChiTiet.tsx gắn .vua-toi) */
+@keyframes vua-toi {
+  from {
+    outline-color: color-mix(in srgb, var(--chay) 70%, transparent);
+  }
+  to {
+    outline-color: transparent;
+  }
+}
+.vua-toi {
+  outline: 3px solid transparent;
+  outline-offset: 4px;
+  border-radius: var(--bo-the);
+  animation: vua-toi 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Đổi Sáng / Tối (nen.ts doiCheDo dùng View Transitions): làm mờ chéo ngắn */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 180ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-tk-hop,
+  .chuong-hop,
+  .tim-hop,
+  .hop-thoai,
+  .vua-toi {
+    animation: none;
+  }
+  button:enabled:active,
+  .nut-to:active,
+  .nut-vien:active {
+    transform: none;
+  }
+}
+:root[data-giam-chuyen-dong='bat'] :is(.menu-tk-hop, .chuong-hop, .tim-hop, .hop-thoai, .vua-toi) {
+  animation: none;
+}
+:root[data-giam-chuyen-dong='bat'] :is(button:enabled:active, .nut-to:active, .nut-vien:active) {
+  transform: none;
+}
+
+/* =====================================================================================
+   Giao diện v4: lớp hiệu ứng nâng cao (tắt khi giảm chuyển động hoặc tắt Hiệu ứng nâng cao;
+   riêng thanh độ đầy chỉ tắt khi giảm chuyển động)
+   ===================================================================================== */
+
+/* 1a & 1d. Màn đăng nhập: khung ảnh hiện mờ dần 220 ms, canvas hạt nền phủ vùng ảnh */
+@keyframes dn-hien-hinh {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.dn-hinh {
+  position: relative;
+  overflow: hidden;
+  animation: dn-hien-hinh 220ms ease-out;
+}
+.nen-hat {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.dn-hinh p {
+  position: relative;
+  z-index: 1;
+  min-height: 2.9em;
+}
+
+/* 1b. Con trỏ gõ chữ dòng giới thiệu trên ảnh màn đăng nhập: gõ xong nháy 2 lần rồi ẩn */
+@keyframes dn-nhay-tro {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+.dn-con-tro {
+  display: inline-block;
+  width: 2px;
+  height: 1.05em;
+  margin-left: 3px;
+  vertical-align: -0.15em;
+  background: var(--nhan-sang);
+  border-radius: 1px;
+}
+.dn-con-tro.nhay {
+  animation: dn-nhay-tro 450ms step-end 2 forwards;
+}
+
+/* 1c. Chữ thương hiệu màn đăng nhập: tách ký tự inline-block, 3–4 chữ cuối nổi lên lệch nhịp */
+@keyframes dn-nho-chu {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(var(--nho, -0.18em));
+  }
+}
+.dn-kt {
+  display: inline-block;
+  white-space: pre;
+}
+.dn-kt-cuoi {
+  animation: dn-nho-chu 600ms cubic-bezier(0.22, 1, 0.36, 1) calc(300ms + var(--tre, 0ms)) both;
+}
+
+/* 2. Đàn con trỏ dựng trang (DanConTro.tsx): lớp phủ cố định, không chặn chuột hay đọc màn hình */
+.dan-con-tro {
+  position: fixed;
+  inset: 0;
+  z-index: 38;
+  overflow: hidden;
+  pointer-events: none;
+  --dct-nen-khung: rgb(217 217 217 / 58%);
+}
+:root[data-che-do='toi'] .dan-con-tro {
+  --dct-nen-khung: rgb(217 217 217 / 14%);
+}
+.dct-lop-khung,
+.dct-lop-tro {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+.dct-khung {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border: 1.5px solid var(--mau-tro, var(--chay));
+  border-radius: var(--bo-the);
+  background: var(--dct-nen-khung);
+  opacity: 1;
+  pointer-events: none;
+  will-change: transform, width, height, opacity;
+  transition: opacity 200ms ease-out;
+}
+.dct-khung.xong {
+  opacity: 0;
+}
+.dct-kt {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  padding: 1px 6px;
+  font-size: 11px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.35;
+  white-space: nowrap;
+  color: var(--chu-tro, #fff);
+  background: var(--mau-tro, var(--chay));
+  border-radius: 5px;
+}
+.dct-tro {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.dct-hinh {
+  position: relative;
+  transform-origin: 0 0;
+  will-change: transform;
+}
+.dct-svg {
+  position: absolute;
+  display: block;
+  overflow: visible;
+  filter: drop-shadow(0 2px 4px rgb(16 21 31 / 28%));
+}
+/* Điểm nóng mũi tên ở (2, 2); điểm nóng dấu cộng ở tâm (10, 10) */
+.dct-mui-ten {
+  left: -2px;
+  top: -2px;
+  fill: var(--mau-tro, var(--chay));
+  stroke: var(--mat);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.dct-dau-cong {
+  left: -10px;
+  top: -10px;
+  fill: none;
+  stroke-linecap: round;
+}
+.dct-dau-cong .dct-vien {
+  stroke: var(--mat);
+  stroke-width: 3.6;
+}
+.dct-dau-cong .dct-net {
+  stroke: var(--mau-tro, var(--chay));
+  stroke-width: 1.7;
+}
+.dct-tro[data-hinh='mui-ten'] .dct-dau-cong,
+.dct-tro[data-hinh='dau-cong'] .dct-mui-ten {
+  display: none;
+}
+.dct-nhan {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  padding: 2px 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--chu-tro, #fff);
+  background: var(--mau-tro, var(--chay));
+  border-radius: 99px;
+  box-shadow: var(--bong-nho);
+}
+/* Trang mới đang chờ dữ liệu về (≤ 600 ms) trước khi đàn con trỏ đo khối: ẩn, giữ bố cục */
+.trang[data-dan-tro-doi] {
+  opacity: 0;
+}
+/* Khối chờ dựng: giữ nguyên kích thước, chỉ đổi opacity; dựng xong hiện bằng CSS transition */
+[data-dan-tro='cho'] {
+  opacity: 0;
+}
+[data-dan-tro='hien'] {
+  opacity: 1;
+  transition: opacity var(--dct-hien, 280ms) cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* 3. Khối .kinh hiện dần khi cuộn tới lần đầu */
+.kinh-cho-cuon {
+  opacity: 0;
+  transform: translateY(8px);
+}
+.kinh-hien-cuon {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 260ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 4. Thanh tải trọng / độ đầy có width động (áp cả khi tắt Hiệu ứng nâng cao, chỉ tắt khi giảm chuyển động) */
+.xh-ray i,
+.day span i,
+.kx-thanh i,
+.ct-thanh i,
+.tq-xe-truc i {
+  transition:
+    width 180ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 150ms ease-out;
+}
+
+/* 5. Khung chi tiết bên phải (Quyết toán, Công nợ) và khung kết quả Tra cứu hiện êm khi đổi mục */
+@keyframes hien-chi-tiet {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.qt-ct,
+.tc-kq {
+  animation: hien-chi-tiet 150ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 6. Chữ "Quản lý vận tải" ở đầu cột menu trái (.canh .hieu): rê chuột 3 chữ cái cuối nổi nhẹ lên */
+.hieu-duoi {
+  display: inline-block;
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.canh .hieu:hover .hieu-duoi:nth-of-type(1),
+.canh .hieu:focus-visible .hieu-duoi:nth-of-type(1) {
+  transform: translateY(-0.11em);
+}
+.canh .hieu:hover .hieu-duoi:nth-of-type(2),
+.canh .hieu:focus-visible .hieu-duoi:nth-of-type(2) {
+  transform: translateY(-0.18em);
+  transition-delay: 20ms;
+}
+.canh .hieu:hover .hieu-duoi:nth-of-type(3),
+.canh .hieu:focus-visible .hieu-duoi:nth-of-type(3) {
+  transform: translateY(-0.25em);
+  transition-delay: 40ms;
+}
+
+/* Tắt khi tắt Hiệu ứng nâng cao (trừ mục 4 thanh độ đầy) */
+:root[data-hieu-ung='tat'] :is(.nen-hat, .dan-con-tro, .dn-con-tro) {
+  display: none !important;
+}
+:root[data-hieu-ung='tat'] :is(.dn-hinh, .dn-kt-cuoi, .qt-ct, .tc-kq) {
+  animation: none !important;
+  transform: none !important;
+}
+:root[data-hieu-ung='tat'] :is([data-dan-tro='cho'], [data-dan-tro='hien']) {
+  opacity: 1 !important;
+  transition: none !important;
+}
+:root[data-hieu-ung='tat'] :is(.kinh-cho-cuon, .kinh-hien-cuon) {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+:root[data-hieu-ung='tat'] .hieu-duoi {
+  transition: none !important;
+  transform: none !important;
+}
+
+/* Tắt hoàn toàn mọi hiệu ứng (kể cả mục 4) khi bật Giảm chuyển động hoặc prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .nen-hat,
+  .dan-con-tro,
+  .dn-con-tro {
+    display: none !important;
+  }
+  .dn-hinh,
+  .dn-kt-cuoi,
+  .qt-ct,
+  .tc-kq {
+    animation: none !important;
+    transform: none !important;
+  }
+  [data-dan-tro='cho'],
+  [data-dan-tro='hien'],
+  .kinh-cho-cuon,
+  .kinh-hien-cuon {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .xh-ray i,
+  .day span i,
+  .kx-thanh i,
+  .ct-thanh i,
+  .tq-xe-truc i,
+  .hieu-duoi {
+    transition: none !important;
+    transform: none !important;
+  }
+}
+:root[data-giam-chuyen-dong='bat'] :is(.nen-hat, .dan-con-tro, .dn-con-tro) {
+  display: none !important;
+}
+:root[data-giam-chuyen-dong='bat'] :is(.dn-hinh, .dn-kt-cuoi, .qt-ct, .tc-kq) {
+  animation: none !important;
+  transform: none !important;
+}
+:root[data-giam-chuyen-dong='bat']
+  :is([data-dan-tro='cho'], [data-dan-tro='hien'], .kinh-cho-cuon, .kinh-hien-cuon) {
+  opacity: 1 !important;
+  transform: none !important;
+  transition: none !important;
+}
+:root[data-giam-chuyen-dong='bat']
+  :is(.xh-ray i, .day span i, .kx-thanh i, .ct-thanh i, .tq-xe-truc i, .hieu-duoi) {
+  transition: none !important;
+  transform: none !important;
+}

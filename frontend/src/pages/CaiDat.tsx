@@ -5,26 +5,30 @@ import {
   CHE_DO,
   CO_CHU,
   GIAM_CHUYEN_DONG,
+  HIEU_UNG,
   MAT_DO,
-  apCheDo,
+  doiCheDo,
   apCoChu,
   apGiamChuyenDong,
+  apHieuUng,
   apMatDo,
   cheDoDaLuu,
   coChuDaLuu,
   giamChuyenDongDaLuu,
+  hieuUngDaLuu,
   matDoDaLuu,
 } from '../nen'
 import { DauDanhMuc } from './danh-muc'
 
 type LuaChon = readonly { readonly ma: string; readonly ten: string }[]
 
-// Trang Cài đặt (mọi vai trò): 4 tùy chọn hiển thị, lưu localStorage và áp ngay không cần nút Lưu.
+// Trang Cài đặt (mọi vai trò): 5 tùy chọn hiển thị, lưu localStorage và áp ngay không cần nút Lưu.
 export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
   const [cheDo, setCheDo] = useState(cheDoDaLuu)
   const [matDo, setMatDo] = useState(matDoDaLuu)
   const [coChu, setCoChu] = useState(coChuDaLuu)
   const [giamCD, setGiamCD] = useState(giamChuyenDongDaLuu)
+  const [hieuUng, setHieuUng] = useState(hieuUngDaLuu)
 
   return (
     <section className="noi-dung cd-trang">
@@ -42,7 +46,7 @@ export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
           ds={CHE_DO}
           giaTri={cheDo}
           onChon={(ma) => {
-            apCheDo(ma)
+            doiCheDo(ma)
             setCheDo(ma)
           }}
         />
@@ -74,6 +78,16 @@ export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
           onChon={(ma) => {
             apGiamChuyenDong(ma)
             setGiamCD(ma)
+          }}
+        />
+        <MucCaiDat
+          tieuDe="Hiệu ứng nâng cao"
+          moTa="Hạt nền, đàn con trỏ, chữ gõ ở màn đăng nhập và tổng quan. Tắt nếu máy chậm."
+          ds={HIEU_UNG}
+          giaTri={hieuUng}
+          onChon={(ma) => {
+            apHieuUng(ma)
+            setHieuUng(hieuUngDaLuu())
           }}
         />
       </div>

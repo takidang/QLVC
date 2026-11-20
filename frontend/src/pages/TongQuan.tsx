@@ -123,16 +123,15 @@ export default function TongQuan({ ketToan = false }: { ketToan?: boolean }) {
             </li>
           )}
         </ul>
+      ) : !theoThang && !loi ? (
+        // Đang tải: giữ chỗ một dòng lưu ý để khi số liệu về khung này không đẩy biểu đồ xuống
+        <div className="tq-luu-y-cho" aria-hidden="true" />
       ) : null}
 
       <div className="tq-luoi">
         <section className="kinh tq-khoi">
           <h2>Lãi theo tháng</h2>
-          {theoThang ? (
-            <CotLai ds={theoThang.du_lieu} chon={thang} />
-          ) : (
-            <p className="ghi-chu">Đang tải…</p>
-          )}
+          {theoThang ? <CotLai ds={theoThang.du_lieu} chon={thang} /> : <GiuCho loai="cot" />}
           {theoThang && (
             <details className="tq-bang">
               <summary>Xem dạng bảng</summary>
@@ -172,13 +171,13 @@ export default function TongQuan({ ketToan = false }: { ketToan?: boolean }) {
 
         <section className="kinh tq-khoi">
           <h2>Lãi theo xe · {tenThang(thang)}</h2>
-          {theoXe ? <ThanhXe ds={theoXe.du_lieu} /> : <p className="ghi-chu">Đang tải…</p>}
+          {theoXe ? <ThanhXe ds={theoXe.du_lieu} /> : <GiuCho loai="xe" />}
         </section>
       </div>
 
       <section className="kinh tq-khoi">
         <h2>Hiệu suất xe · {tenThang(thang)}</h2>
-        {hieuSuat ? <BangHieuSuat ds={hieuSuat} /> : <p className="ghi-chu">Đang tải…</p>}
+        {hieuSuat ? <BangHieuSuat ds={hieuSuat} /> : <GiuCho loai="bang" />}
       </section>
 
       <BangLaiLo den={thang} />
@@ -358,6 +357,17 @@ function BangLaiLo({ den: denMacDinh }: { den: string }) {
         </div>
       )}
     </section>
+  )
+}
+
+// Khối giữ chỗ lúc đang tải: nền tĩnh cao gần bằng khối thật (CSS .tq-cho-*) để trang không nhảy khi số liệu về
+function GiuCho({ loai }: { loai: 'cot' | 'xe' | 'bang' }) {
+  return (
+    <div className={`tq-cho tq-cho-${loai}`}>
+      <span className="an-chu" role="status">
+        Đang tải…
+      </span>
+    </div>
   )
 }
 
@@ -623,29 +633,32 @@ function BangHieuSuat({ ds }: { ds: HieuSuatXe[] }) {
   )
 }
 
-// UC-38: tình hình hôm nay (mọi chuyến, không chỉ chuyến đã quyết toán). Lỗi thì ẩn cả khối, không chặn trang
+// UC-38: tình hình hôm nay (mọi chuyến, không chỉ chuyến đã quyết toán). Lỗi thì ẩn cả khối, không chặn trang.
+// Đang tải (tq === undefined) thì vẽ sẵn khung với số "–" để phần dưới không bị đẩy xuống khi số liệu về.
 function HomNay() {
   const homNay = new Date().toLocaleDateString('sv-SE')
   const [ngayChon, setNgayChon] = useState(homNay) // mặc định hôm nay, đổi được ngày khác
-  const [tq, setTq] = useState<TongQuanNgay | null>(null)
+  const [tq, setTq] = useState<TongQuanNgay | null | undefined>(undefined)
   useEffect(() => {
     tongQuanNgay(ngayChon)
       .then(setTq)
       .catch(() => setTq(null))
   }, [ngayChon])
-  if (!tq) return null
-  const tt = tq.chuyen.theo_trang_thai
-  const dg = tq.dung_gio
-  const ngay = new Date(`${tq.ngay}T00:00`).toLocaleDateString('vi-VN', {
+  if (tq === null) return null
+  const tt: Record<string, number> = tq?.chuyen.theo_trang_thai ?? {}
+  const dg = tq?.dung_gio
+  const ngayXem = tq?.ngay ?? ngayChon
+  const ngay = new Date(`${ngayXem}T00:00`).toLocaleDateString('vi-VN', {
     weekday: 'long',
     day: '2-digit',
     month: '2-digit',
   })
+  const cho = '\u00a0' // giữ chiều cao dòng phụ lúc đang tải
   return (
-    <section className="tq-hom-nay">
+    <section className="tq-hom-nay" aria-busy={!tq}>
       <div className="tq-hn-dau">
         <h2>
-          {tq.ngay === homNay ? 'Hôm nay' : 'Ngày'} · {ngay}
+          {ngayXem === homNay ? 'Hôm nay' : 'Ngày'} · {ngay}
         </h2>
         <input
           type="date"
@@ -663,34 +676,52 @@ function HomNay() {
       <div className="kinh tq-so">
         <div>
           <small>Chuyến</small>
-          <b>{tq.chuyen.tong}</b>
+          <b>{tq ? tq.chuyen.tong : '–'}</b>
           <em>
-            {tt.DANG_CHAY ?? 0} đang chạy · {(tt.HOAN_THANH ?? 0) + (tt.DA_QUYET_TOAN ?? 0)} xong ·{' '}
-            {(tt.LAP ?? 0) + (tt.DA_CHOT ?? 0)} chưa đi
+            {tq ? (
+              <>
+                {tt.DANG_CHAY ?? 0} đang chạy · {(tt.HOAN_THANH ?? 0) + (tt.DA_QUYET_TOAN ?? 0)}{' '}
+                xong · {(tt.LAP ?? 0) + (tt.DA_CHOT ?? 0)} chưa đi
+              </>
+            ) : (
+              cho
+            )}
           </em>
         </div>
         <div>
           <small>Đơn</small>
-          <b>{tq.don.tong}</b>
+          <b>{tq ? tq.don.tong : '–'}</b>
           <em>
-            {tq.don.da_giao} đã giao · {tq.don.that_bai} thất bại · {tq.don.con_lai} còn lại
+            {tq
+              ? `${tq.don.da_giao} đã giao · ${tq.don.that_bai} thất bại · ${tq.don.con_lai} còn lại`
+              : cho}
           </em>
         </div>
         <div>
           <small>Điểm dừng đúng giờ</small>
-          <b>{dg.ty_le === null ? '–' : `${Math.round(dg.ty_le * 100)}%`}</b>
+          <b>{!dg || dg.ty_le === null ? '–' : `${Math.round(dg.ty_le * 100)}%`}</b>
           <em>
-            {dg.da_quet ? `${dg.dung_gio} / ${dg.da_quet} điểm đã quét` : 'Chưa quét điểm nào'} ·
-            trễ quá {dg.nguong_tre_phut}′ tính là trễ
+            {dg ? (
+              <>
+                {dg.da_quet ? `${dg.dung_gio} / ${dg.da_quet} điểm đã quét` : 'Chưa quét điểm nào'}{' '}
+                · trễ quá {dg.nguong_tre_phut}′ tính là trễ
+              </>
+            ) : (
+              cho
+            )}
           </em>
         </div>
         <div>
           <small>Hàng đã chở</small>
-          <b>{tq.don.kg_da_cho.toLocaleString('vi-VN', { maximumFractionDigits: 0 })} kg</b>
+          <b>
+            {tq
+              ? `${tq.don.kg_da_cho.toLocaleString('vi-VN', { maximumFractionDigits: 0 })} kg`
+              : '–'}
+          </b>
         </div>
         <div>
           <small>Doanh thu dự kiến</small>
-          <b>{tq.doanh_thu_du_kien.toLocaleString('vi-VN')} đ</b>
+          <b>{tq ? `${tq.doanh_thu_du_kien.toLocaleString('vi-VN')} đ` : '–'}</b>
           <em>cước các đơn của chuyến trong ngày, chưa trừ đơn thất bại</em>
         </div>
       </div>

@@ -153,7 +153,7 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
           </ul>
         </aside>
 
-        <div className="qt-ct">
+        <div className="qt-ct" key={bang?.chuyen_id ?? 'trong'}>
           <ThongBao chu={thongBao} />
           {loi && (
             <p role="alert" className="loi">

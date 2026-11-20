@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { Chuyen } from '../../api/chuyen'
 
@@ -13,6 +13,12 @@ const LOP: Record<string, string> = {
   DA_QUYET_TOAN: 'xong',
   HUY: 'huy',
 }
+// Nhãn ngắn cho thanh hẹp: bỏ điểm đầu (thường là kho chung "TP.HCM"), chỉ giữ điểm cuối của tuyến
+const TACH = /\s+[–—→-]\s+/
+const tenNgan = (ten: string) => {
+  const phan = ten.split(TACH)
+  return phan.length > 1 ? `→ ${phan[phan.length - 1]}` : ten
+}
 
 // Lịch xe theo giờ: mỗi xe một hàng, mỗi chuyến một thanh từ giờ đi tới giờ kết thúc dự kiến.
 // `ds` đã xếp theo giờ đi; `ten` là tên trạng thái để ghi vào chú thích khi rê chuột.
@@ -25,9 +31,26 @@ export default function LichGio({ ds, ten }: { ds: Chuyen[]; ten: Record<string,
   const pt = (ms: number) => `${((ms - dau) / (cuoi - dau)) * 100}%`
   const xe = [...new Set(ds.map((c) => c.bien_so))]
   const [nay] = useState(Date.now) // lấy một lần lúc mở, không đổi giữa các lần vẽ lại
+  const khung = useRef<HTMLElement>(null)
+
+  // Thanh nào không đủ chỗ cho tên tuyến đầy đủ thì đổi sang nhãn ngắn (data-ngan); đo lại khi khung đổi cỡ.
+  // Bề rộng thanh vẫn theo giờ, chỉ đổi chữ bên trong.
+  useLayoutEffect(() => {
+    const el = khung.current
+    if (!el) return
+    const doLai = () =>
+      el.querySelectorAll<HTMLElement>('.lg-thanh').forEach((a) => {
+        delete a.dataset.ngan
+        if (a.scrollWidth > a.clientWidth + 1) a.dataset.ngan = ''
+      })
+    doLai()
+    const ro = new ResizeObserver(doLai)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [ds])
 
   return (
-    <section className="kinh lich-gio">
+    <section className="kinh lich-gio" ref={khung}>
       <h2>Lịch xe theo giờ</h2>
       <div className="lg-hang lg-dau" aria-hidden="true">
         <span />
@@ -57,7 +80,8 @@ export default function LichGio({ ds, ten }: { ds: Chuyen[]; ten: Record<string,
                     style={{ left: pt(di), width: `${((den - di) / (cuoi - dau)) * 100}%` }}
                     title={`${c.ma_chuyen} · ${c.ten_tuyen} · ${gio(di)} → ${gio(den)} · ${c.ten_tai_xe} · ${ten[c.trang_thai] ?? c.trang_thai}`}
                   >
-                    {c.ten_tuyen}
+                    <span className="lg-ten">{c.ten_tuyen}</span>
+                    <span className="lg-ten-ngan">{tenNgan(c.ten_tuyen)}</span>
                   </Link>
                 )
               })}

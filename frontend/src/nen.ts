@@ -73,10 +73,38 @@ export function apGiamChuyenDong(ma: string) {
     delete document.documentElement.dataset.giamChuyenDong
   }
 }
+// Tắt chuyển động khi người dùng bật trong Cài đặt hoặc hệ điều hành yêu cầu giảm chuyển động
+export const giamChuyenDong = () =>
+  dangGiamChuyenDong() || matchMedia('(prefers-reduced-motion: reduce)').matches
+
+// Hiệu ứng nâng cao (v4): 'bat' (mặc định khi chưa lưu) | 'tat'. Tắt hoàn toàn khi giảm chuyển động.
+export const HIEU_UNG = [
+  { ma: 'bat', ten: 'Bật' },
+  { ma: 'tat', ten: 'Tắt' },
+] as const
+const KHOA_HIEU_UNG = 'qlvc-hieu-ung'
+
+export const hieuUngDaLuu = (): 'bat' | 'tat' =>
+  localStorage.getItem(KHOA_HIEU_UNG) === 'tat' ? 'tat' : 'bat'
+export function apHieuUng(ma: string) {
+  const v = ma === 'tat' ? 'tat' : 'bat'
+  localStorage.setItem(KHOA_HIEU_UNG, v)
+  document.documentElement.dataset.hieuUng = v
+}
+export const dangHieuUng = () => hieuUngDaLuu() === 'bat' && !giamChuyenDong()
+
+// Người dùng bấm đổi chế độ: làm mờ chéo ngắn (View Transitions, CSS ::view-transition-*) thay vì đổi
+// màu cả màn trong một nhát. Lần áp lúc tải trang và khi máy đổi chế độ vẫn gọi apCheDo thẳng.
+export function doiCheDo(ma: string) {
+  const d = document as Document & { startViewTransition?: (cb: () => void) => unknown }
+  if (d.startViewTransition && !giamChuyenDong()) d.startViewTransition(() => apCheDo(ma))
+  else apCheDo(ma)
+}
 
 // Áp toàn bộ tùy chọn đã lưu ngay khi khởi động app (main.tsx import file này trước App)
 apCheDo(cheDoDaLuu())
 apMatDo(matDoDaLuu())
 apCoChu(coChuDaLuu())
 apGiamChuyenDong(giamChuyenDongDaLuu())
+document.documentElement.dataset.hieuUng = hieuUngDaLuu()
 mayToi.addEventListener('change', () => apCheDo(cheDoDaLuu()))

@@ -144,7 +144,7 @@ export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
           </ul>
         </aside>
 
-        <div className="qt-ct">
+        <div className="qt-ct" key={khach?.khach_hang_id ?? 'trong'}>
           {!khach && (
             <p className="kinh qt-trong">Chọn một khách bên trái để xem các khoản phải thu.</p>
           )}

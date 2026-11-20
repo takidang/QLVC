@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type FormEvent } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
 import { baoSuCo, suCoChuyen, TEN_LOAI_SU_CO, type LoaiSuCo, type SuCo } from '../../api/suCo'
 import { ngayGio } from '../../api/toi'
+import ChonTep from '../../ChonTep'
 import { nenAnh } from '../../nenAnh'
 import { LOI_MANG, SO_ANH_TOI_DA } from './QuetLay'
 import { ThongBao } from '../../thongBao'
@@ -125,16 +126,13 @@ function FormSuCo({
           onChange={(e) => setGhiChu(e.target.value)}
         />
       </label>
-      <label>
-        Ảnh (không bắt buộc, tối đa {SO_ANH_TOI_DA})
-        <input
-          type="file"
-          accept="image/jpeg,image/png"
-          capture="environment"
-          multiple
-          onChange={(e) => setAnh([...(e.target.files ?? [])])}
-        />
-      </label>
+      <ChonTep
+        nhan={`Ảnh (không bắt buộc, tối đa ${SO_ANH_TOI_DA})`}
+        accept="image/jpeg,image/png"
+        capture="environment"
+        multiple
+        onChange={(e) => setAnh([...(e.target.files ?? [])])}
+      />
       {loi && (
         <p role="alert" className="loi">
           {loi}
