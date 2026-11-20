@@ -530,7 +530,7 @@ export default function DanConTro({ pathname }: { pathname: string }) {
 
     let daHuy = false
     let raf = 0
-    let rafQuet = 0
+    let henYen = 0
     let henCho = 0
     let henDonCuoi = 0
     let mo: MutationObserver | null = null
@@ -564,10 +564,11 @@ export default function DanConTro({ pathname }: { pathname: string }) {
         cancelAnimationFrame(raf)
         raf = 0
       }
-      if (rafQuet) {
-        cancelAnimationFrame(rafQuet)
-        rafQuet = 0
+      if (henYen) {
+        window.clearTimeout(henYen)
+        henYen = 0
       }
+      document.querySelector('[data-dan-tro-doi]')?.removeAttribute('data-dan-tro-doi')
       if (henCho) {
         window.clearTimeout(henCho)
         henCho = 0
@@ -757,6 +758,17 @@ export default function DanConTro({ pathname }: { pathname: string }) {
           return
         }
 
+        // Đo lại khối đang dựng mỗi khung hình (dữ liệu về muộn làm khối đổi cỡ); khối bị thay thì bỏ qua
+        for (const v of hangViec) {
+          if (v.trangThai !== 'dang') continue
+          if (!v.el.isConnected) {
+            moKhoiThat(v)
+            continue
+          }
+          const r = v.el.getBoundingClientRect()
+          v.rect = { left: r.left, top: r.top, width: r.width, height: r.height }
+        }
+
         let conHoatDong = false
         for (const ct of dsTro) {
           if (ct.xong) continue
@@ -801,40 +813,33 @@ export default function DanConTro({ pathname }: { pathname: string }) {
       raf = requestAnimationFrame(buoc)
     }
 
-    // Nếu trang đã có khối .kinh nhìn thấy thì chạy luôn; nếu đang tải dữ liệu thì chờ tối đa ~600 ms
-    if (coKhoiKinhHienThi()) {
-      batDauChay()
-    } else {
-      const gocTheoDoi = document.querySelector('.than') ?? document.body
-      const thuChay = () => {
-        if (daHuy) return
-        if (coKhoiKinhHienThi()) {
-          if (mo) {
-            mo.disconnect()
-            mo = null
-          }
-          if (henCho) {
-            window.clearTimeout(henCho)
-            henCho = 0
-          }
-          batDauChay()
-        }
-      }
-      mo = new MutationObserver(() => {
-        if (!rafQuet) {
-          rafQuet = requestAnimationFrame(() => {
-            rafQuet = 0
-            thuChay()
-          })
-        }
-      })
-      mo.observe(gocTheoDoi, { childList: true, subtree: true })
-      henCho = window.setTimeout(() => {
-        henCho = 0
-        // Quá 600 ms không có khối .kinh thì bỏ qua lượt này, không hiện gì lạ
-        donSach(true)
-      }, CHO_KHOI_MS)
+    // Trang mới thường còn đang tải (khung giữ chỗ): đo lúc đó thì khung xám lệch khối thật.
+    // Tạm ẩn main.trang, đợi DOM trong .than yên 120 ms (tối đa 600 ms) rồi mới đo và dựng.
+    // batDauChay đặt data-dan-tro='cho' trong cùng lượt JS với lúc bỏ ẩn nên khối không lóe lên.
+    const trangEl = document.querySelector<HTMLElement>('.than main.trang')
+    trangEl?.setAttribute('data-dan-tro-doi', '')
+    const chayKhiYen = () => {
+      if (daHuy) return
+      mo?.disconnect()
+      mo = null
+      window.clearTimeout(henCho)
+      window.clearTimeout(henYen)
+      henCho = henYen = 0
+      if (coKhoiKinhHienThi()) batDauChay()
+      else donSach(true)
+      trangEl?.removeAttribute('data-dan-tro-doi')
     }
+    mo = new MutationObserver(() => {
+      window.clearTimeout(henYen)
+      henYen = window.setTimeout(chayKhiYen, 120)
+    })
+    mo.observe(document.querySelector('.than') ?? document.body, {
+      childList: true,
+      subtree: true,
+      characterData: true,
+    })
+    henYen = window.setTimeout(chayKhiYen, 120)
+    henCho = window.setTimeout(chayKhiYen, CHO_KHOI_MS)
 
     return () => {
       donSach(false)

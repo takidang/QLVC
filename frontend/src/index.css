@@ -5248,6 +5248,10 @@ button:enabled:active,
   border-radius: 99px;
   box-shadow: var(--bong-nho);
 }
+/* Trang mới đang chờ dữ liệu về (≤ 600 ms) trước khi đàn con trỏ đo khối: ẩn, giữ bố cục */
+.trang[data-dan-tro-doi] {
+  opacity: 0;
+}
 /* Khối chờ dựng: giữ nguyên kích thước, chỉ đổi opacity; dựng xong hiện bằng CSS transition */
 [data-dan-tro='cho'] {
   opacity: 0;
