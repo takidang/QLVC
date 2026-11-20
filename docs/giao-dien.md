@@ -165,6 +165,8 @@ Theo gợi ý video Tài xem: không chuyển sang shadcn/ui (phải thêm Tailw
 
 - **Sonner 2.0.8** (`frontend/src/thongBao.tsx`): `KhungThongBao` đặt ở gốc `App.tsx` (góc phải dưới, nền sáng, viền `--vien-dam`, bo 16 px, font của app); `<ThongBao chu={...} />` hiện thông báo **thành công** dạng toast tự biến mất, thay cho dòng chữ xanh giữa trang (lập chuyến, tạo / sửa / hủy đơn, chi phí cố định, công nợ, quyết toán, tạm ứng, chi phí và sự cố của tài xế). **Lỗi vẫn hiện tại chỗ**, cạnh chỗ cần sửa. Kết quả quét mã của tài xế vẫn hiện tại chỗ vì kèm cảnh báo.
 - **NumberFlow 0.6.2**: mỗi trang tối đa một điểm động. Tổng quan: các số tiền chạy khi đổi tháng. Màn Chuyến: bốn số đếm chạy khi đổi ngày. Tự tắt khi máy bật giảm chuyển động.
+- **Chuyển động báo trạng thái** (20/11, chỉ CSS, tắt hết khi giảm chuyển động): lớp nổi (menu tài khoản, chuông, tìm chung, hộp thoại) mở ra mờ dần + trượt 4 px trong 140–160 ms, đóng tức thời; nút lún `scale(0.98)` khi nhấn; màn tài xế bấm "Tới điểm" / "Gặp sự cố" thì thẻ đích nháy viền một lần 700 ms (`.vua-toi`); đổi Sáng / Tối trong Cài đặt làm mờ chéo 180 ms (`doiCheDo`, View Transitions). Không làm: hiện lần lượt từng dòng bảng, trượt cả trang khi chuyển menu, nhấp nháy liên tục trên nhãn cảnh báo, nâng thẻ khi rê chuột.
+- **Đang tải**: khối biểu đồ / bảng ở Tổng quan giữ chỗ bằng nền `--mat-2` cao gần bằng khối thật (`.tq-cho`) để trang không nhảy khi số liệu về. Ô chọn ảnh dùng `ChonTep.tsx` (nút "Chọn ảnh", dòng "Chưa chọn ảnh / Đã chọn N ảnh"), không để chữ của trình duyệt theo ngôn ngữ máy.
 - Không dùng: Vaul (để sau nếu form tài xế khó dùng), cmdk, Magic UI, Aceternity.
 - Gói JS chính tăng từ khoảng 412 KB lên 536 KB (gzip 159 KB) sau khi thêm hai gói và các màn mới.
 

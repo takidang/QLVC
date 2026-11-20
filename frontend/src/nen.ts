@@ -73,6 +73,17 @@ export function apGiamChuyenDong(ma: string) {
     delete document.documentElement.dataset.giamChuyenDong
   }
 }
+// Tắt chuyển động khi người dùng bật trong Cài đặt hoặc hệ điều hành yêu cầu giảm chuyển động
+export const giamChuyenDong = () =>
+  dangGiamChuyenDong() || matchMedia('(prefers-reduced-motion: reduce)').matches
+
+// Người dùng bấm đổi chế độ: làm mờ chéo ngắn (View Transitions, CSS ::view-transition-*) thay vì đổi
+// màu cả màn trong một nhát. Lần áp lúc tải trang và khi máy đổi chế độ vẫn gọi apCheDo thẳng.
+export function doiCheDo(ma: string) {
+  const d = document as Document & { startViewTransition?: (cb: () => void) => unknown }
+  if (d.startViewTransition && !giamChuyenDong()) d.startViewTransition(() => apCheDo(ma))
+  else apCheDo(ma)
+}
 
 // Áp toàn bộ tùy chọn đã lưu ngay khi khởi động app (main.tsx import file này trước App)
 apCheDo(cheDoDaLuu())

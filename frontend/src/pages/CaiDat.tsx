@@ -6,7 +6,7 @@ import {
   CO_CHU,
   GIAM_CHUYEN_DONG,
   MAT_DO,
-  apCheDo,
+  doiCheDo,
   apCoChu,
   apGiamChuyenDong,
   apMatDo,
@@ -42,7 +42,7 @@ export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
           ds={CHE_DO}
           giaTri={cheDo}
           onChon={(ma) => {
-            apCheDo(ma)
+            doiCheDo(ma)
             setCheDo(ma)
           }}
         />

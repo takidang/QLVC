@@ -5001,3 +5001,69 @@ form.form-km .chon-tep-nut {
     transition: none;
   }
 }
+
+/* ----- Chuyển động 20/11 (B): chỉ để báo trạng thái; tắt hết khi giảm chuyển động ----- */
+/* Lớp nổi mở ra từ nút bấm (menu tài khoản, chuông, tìm chung) và hộp thoại; đóng thì tức thời */
+@keyframes mo-lop-noi {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
+  }
+}
+.menu-tk-hop,
+.chuong-hop,
+.tim-hop {
+  transform-origin: top right;
+  animation: mo-lop-noi 140ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hop-thoai {
+  animation: mo-lop-noi 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+/* Nút lún nhẹ khi nhấn: màn cảm ứng không có hover, cần biết máy đã nhận cú chạm */
+button:enabled:active,
+.nut-to:active,
+.nut-vien:active {
+  transform: scale(0.98);
+  transition: transform 80ms cubic-bezier(0.2, 0, 0, 1);
+}
+/* Tài xế: điểm dừng / khối vừa cuộn tới nháy viền một lần (ChuyenCuaToiChiTiet.tsx gắn .vua-toi) */
+@keyframes vua-toi {
+  from {
+    outline-color: color-mix(in srgb, var(--chay) 70%, transparent);
+  }
+  to {
+    outline-color: transparent;
+  }
+}
+.vua-toi {
+  outline: 3px solid transparent;
+  outline-offset: 4px;
+  border-radius: var(--bo-the);
+  animation: vua-toi 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Đổi Sáng / Tối (nen.ts doiCheDo dùng View Transitions): làm mờ chéo ngắn */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 180ms;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .menu-tk-hop,
+  .chuong-hop,
+  .tim-hop,
+  .hop-thoai,
+  .vua-toi {
+    animation: none;
+  }
+  button:enabled:active,
+  .nut-to:active,
+  .nut-vien:active {
+    transform: none;
+  }
+}
+:root[data-giam-chuyen-dong='bat'] :is(.menu-tk-hop, .chuong-hop, .tim-hop, .hop-thoai, .vua-toi) {
+  animation: none;
+}
+:root[data-giam-chuyen-dong='bat'] :is(button:enabled:active, .nut-to:active, .nut-vien:active) {
+  transform: none;
+}
