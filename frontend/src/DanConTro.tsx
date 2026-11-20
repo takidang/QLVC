@@ -105,10 +105,31 @@ function hopLeHienThi(el: HTMLElement, vw: number, vh: number): KhungChuNhat | n
   return { left: r.left, top: r.top, width: r.width, height: r.height }
 }
 
+// Khối nội dung: .kinh ở các màn có menu; màn tài xế (khung .mot, không menu) dùng thẻ .the-*
+const KHOI_TRANG =
+  ':scope > main.trang .kinh, .khung.mot > :scope > main.trang :is(.the-chon, .the-chinh, .the)'
+
+// Màn hẹp: menu trái thành thanh đáy -> trả về mép trên của thanh; không có thì đáy màn
+function mepDuoiMenu(): number {
+  const vh = window.innerHeight
+  const r = document.querySelector('aside.canh')?.getBoundingClientRect()
+  return r && r.top > vh / 2 ? r.top : vh
+}
+
+// Cắt phần khối nằm dưới thanh menu đáy để con trỏ không đi xuống đè lên menu
+const catDuoi = (r: DOMRect, duoi: number): KhungChuNhat => ({
+  left: r.left,
+  top: r.top,
+  width: r.width,
+  height: Math.max(0, Math.min(r.height, duoi - 8 - r.top)),
+})
+
 function coKhoiKinhHienThi(): boolean {
   const vw = window.innerWidth
   const vh = window.innerHeight
-  const ds = document.querySelectorAll<HTMLElement>('.than .trang .kinh')
+  const than = document.querySelector<HTMLElement>('.than')
+  if (!than) return false
+  const ds = than.querySelectorAll<HTMLElement>(KHOI_TRANG)
   for (const el of ds) {
     if (hopLeHienThi(el, vw, vh)) return true
   }
@@ -118,6 +139,7 @@ function coKhoiKinhHienThi(): boolean {
 function chonKhoiDich(cheDo1: boolean): ViecKhoi[] {
   const vw = window.innerWidth
   const vh = window.innerHeight
+  const duoi = cheDo1 ? vh : mepDuoiMenu()
   const than = document.querySelector<HTMLElement>('.than')
   if (!than) return []
 
@@ -132,9 +154,7 @@ function chonKhoiDich(cheDo1: boolean): ViecKhoi[] {
   them(than.querySelectorAll<HTMLElement>(':scope > header.dau > *'))
   them(
     than.querySelectorAll<HTMLElement>(
-      cheDo1
-        ? ':scope > main.trang .kinh, :scope > main.trang .mo-dau'
-        : ':scope > main.trang .kinh',
+      cheDo1 ? `${KHOI_TRANG}, :scope > main.trang .mo-dau` : KHOI_TRANG,
     ),
   )
 
@@ -146,8 +166,10 @@ function chonKhoiDich(cheDo1: boolean): ViecKhoi[] {
     if (!cheDo1 && el.closest('.canh')) continue
     if (el.closest('.dan-con-tro')) continue
     daThay.add(el)
-    const rect = hopLeHienThi(el, vw, vh)
+    const rect = hopLeHienThi(el, vw, duoi)
     if (!rect) continue
+    rect.height = Math.min(rect.height, duoi - 8 - rect.top)
+    if (rect.height < 32) continue
     const br = getComputedStyle(el).borderRadius
     hopLe.push({ el, rect, boGoc: br && br !== '0px' ? br : 'var(--bo-the)' })
   }
@@ -537,6 +559,7 @@ export default function DanConTro({ pathname }: { pathname: string }) {
     let hangViec: ViecKhoi[] = []
     let dsTro: ConTro[] = []
     let langNghe = false
+    let duoiCam = window.innerHeight
 
     const goLangNghe = () => {
       if (!langNghe) return
@@ -585,6 +608,7 @@ export default function DanConTro({ pathname }: { pathname: string }) {
       xoaTrangThaiKhoi()
       lopPhu.replaceChildren()
       lopPhu.style.display = 'none'
+      lopPhu.style.clipPath = ''
       if (ghiNhanPhien) {
         if (cheDo1) ghiDaChayPhien()
         pathnameTruoc = pathname
@@ -608,9 +632,10 @@ export default function DanConTro({ pathname }: { pathname: string }) {
     function khiDoiCo() {
       const vw = window.innerWidth
       const vh = window.innerHeight
+      if (!cheDo1) duoiCam = mepDuoiMenu()
       for (const v of hangViec) {
         const r = v.el.getBoundingClientRect()
-        v.rect = { left: r.left, top: r.top, width: r.width, height: r.height }
+        v.rect = catDuoi(r, duoiCam)
         v.trongMan = r.top >= 0 && r.left >= 0 && r.bottom <= vh && r.right <= vw
       }
       if (!cheDo1) {
@@ -648,6 +673,18 @@ export default function DanConTro({ pathname }: { pathname: string }) {
       lopTro.className = 'dct-lop-tro'
       lopPhu.replaceChildren(lopKhung, lopTro)
       lopPhu.style.display = 'block'
+
+      // Chế độ 2 không vẽ gì lên menu: cắt lớp phủ bỏ cột menu trái hoặc thanh menu đáy (màn hẹp)
+      if (!cheDo1) {
+        duoiCam = mepDuoiMenu()
+        const canh = document.querySelector('aside.canh')?.getBoundingClientRect()
+        if (canh) {
+          lopPhu.style.clipPath =
+            duoiCam < window.innerHeight
+              ? `inset(0 0 ${window.innerHeight - duoiCam}px 0)`
+              : `inset(0 0 0 ${canh.right}px)`
+        }
+      }
 
       const vw = window.innerWidth
       const vh = window.innerHeight
@@ -765,8 +802,7 @@ export default function DanConTro({ pathname }: { pathname: string }) {
             moKhoiThat(v)
             continue
           }
-          const r = v.el.getBoundingClientRect()
-          v.rect = { left: r.left, top: r.top, width: r.width, height: r.height }
+          v.rect = catDuoi(v.el.getBoundingClientRect(), duoiCam)
         }
 
         let conHoatDong = false
