@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { danhSachCauHinh, suaCauHinh, type ThamSo } from '../../api/bangGia'
+import { quenNgayBaoTruoc } from '../../api/cauHinh'
 import { LoiApi } from '../../api/goi'
 import { DauDanhMuc } from '../danh-muc'
 
@@ -26,6 +27,7 @@ export default function CauHinh() {
     setDaLuu('')
     try {
       const r = await suaCauHinh(ma, nhap[ma])
+      if (ma === 'CFG-02') quenNgayBaoTruoc()
       setDs(r)
       setNhap({ ...nhap, [ma]: r.find((ts) => ts.ma === ma)?.gia_tri ?? nhap[ma] })
       setDaLuu(ma)

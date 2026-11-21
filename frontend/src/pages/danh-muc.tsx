@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useNgayBaoTruoc } from '../api/cauHinh'
 import { Ic, Nhan } from '../nhan'
 
 // Phần chung của các màn danh mục (06): đầu trang thấp hơn màn Chuyến (docs/giao-dien.md), nút thêm,
@@ -90,18 +91,18 @@ export const NhanHoatDong = ({ trangThai }: { trangThai: string }) =>
     <Nhan loai="HUY">Ngừng</Nhan>
   )
 
-// Giấy tờ: hết hạn đỏ, còn ≤ 30 ngày cam (CFG-02 mặc định, như khung "Cần chú ý" màn Chuyến)
-const NGAY_CANH_BAO = 30
+// Giấy tờ: hết hạn đỏ, còn ≤ CFG-02 ngày cam (như khung "Cần chú ý" màn Chuyến)
 // Số ngày từ hôm nay (giờ máy, Việt Nam) tới hạn; âm là đã quá hạn
 function soNgayToi(han: string) {
   const homNay = new Date(new Date().toLocaleDateString('sv-SE'))
   return Math.round((new Date(han).getTime() - homNay.getTime()) / 86_400_000)
 }
 export function HanGiayTo({ han }: { han: string }) {
+  const ngayBaoTruoc = useNgayBaoTruoc()
   const conLai = soNgayToi(han)
   const ngay = han.split('-').reverse().join('/')
   if (conLai < 0) return <span className="het-han">{ngay} · hết hạn</span>
-  if (conLai <= NGAY_CANH_BAO)
+  if (conLai <= ngayBaoTruoc)
     return (
       <span className="han-sap">
         {ngay} · còn {conLai} ngày
