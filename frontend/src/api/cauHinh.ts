@@ -13,7 +13,10 @@ export function ngayBaoTruoc(): Promise<number> {
         giaTri = r.ngay_bao_truoc
         return giaTri
       })
-      .catch(() => MAC_DINH)
+      .catch(() => {
+        cho = null // lỗi (mạng, hết phiên) thì lần dựng sau gọi lại, không nhớ 30 mãi
+        return MAC_DINH
+      })
   }
   return cho
 }
