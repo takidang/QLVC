@@ -30,7 +30,7 @@ export default function TaiXeDanhSach() {
   const [tim, setTim] = useState('')
   const [trangThai, setTrangThai] = useState('')
   const [trang, setTrang] = useState(1)
-  const [ds, setDs] = useState<{ du_lieu: TaiXe[]; tong: number }>({ du_lieu: [], tong: 0 })
+  const [ds, setDs] = useState<{ du_lieu: TaiXe[]; tong: number } | null>(null) // null = đang tải
   const [loiTai, setLoiTai] = useState('')
   const [dangSua, setDangSua] = useState<TaiXe | 'moi' | null>(null)
   const [lanTai, setLanTai] = useState(0) // tăng lên để tải lại sau khi thêm/sửa
@@ -68,12 +68,13 @@ export default function TaiXeDanhSach() {
     }
   }
 
-  const soTrang = Math.max(1, Math.ceil(ds.tong / SO_DONG))
+  const duLieu = ds?.du_lieu ?? []
+  const soTrang = Math.max(1, Math.ceil((ds?.tong ?? 0) / SO_DONG))
   return (
     <section className="noi-dung">
       <DauDanhMuc
         tieuDe="Tài xế"
-        phu={`${ds.tong} tài xế${trangThai === 'NGUNG' ? ' đang ngừng' : trangThai ? ' đang hoạt động' : ''} · GPLX sắp hết hạn tô cam`}
+        phu={`${ds ? `${ds.tong} tài xế${trangThai === 'NGUNG' ? ' đang ngừng' : trangThai ? ' đang hoạt động' : ''}` : '–'} · GPLX sắp hết hạn tô cam`}
         nut="Thêm tài xế"
         onNut={() => setDangSua('moi')}
       />
@@ -116,7 +117,7 @@ export default function TaiXeDanhSach() {
             </tr>
           </thead>
           <tbody>
-            {ds.du_lieu.map((tx) => (
+            {duLieu.map((tx) => (
               <tr key={tx.id} className={tx.trang_thai === 'NGUNG' ? 'mo' : undefined}>
                 <td>
                   <span className="tuyen">{tx.ho_ten}</span>
@@ -143,10 +144,10 @@ export default function TaiXeDanhSach() {
                 </td>
               </tr>
             ))}
-            {ds.du_lieu.length === 0 && (
+            {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={6} className="trong">
-                  Chưa có tài xế nào phù hợp
+                  {ds ? 'Chưa có tài xế nào phù hợp' : 'Đang tải…'}
                 </td>
               </tr>
             )}
@@ -159,7 +160,7 @@ export default function TaiXeDanhSach() {
           Trước
         </button>
         <span>
-          Trang {trang}/{soTrang} · {ds.tong} tài xế
+          Trang {trang}/{soTrang} · {ds ? `${ds.tong} tài xế` : '–'}
         </span>
         <button className="phu" disabled={trang >= soTrang} onClick={() => setTrang(trang + 1)}>
           Sau

@@ -31,7 +31,7 @@ export default function XeDanhSach() {
   const [tim, setTim] = useState('')
   const [trangThai, setTrangThai] = useState('')
   const [trang, setTrang] = useState(1)
-  const [ds, setDs] = useState<{ du_lieu: Xe[]; tong: number }>({ du_lieu: [], tong: 0 })
+  const [ds, setDs] = useState<{ du_lieu: Xe[]; tong: number } | null>(null) // null = đang tải
   const [loiTai, setLoiTai] = useState('')
   const [dangSua, setDangSua] = useState<Xe | 'moi' | null>(null)
   const [lanTai, setLanTai] = useState(0) // tăng lên để tải lại sau khi thêm/sửa
@@ -62,12 +62,13 @@ export default function XeDanhSach() {
     }
   }
 
-  const soTrang = Math.max(1, Math.ceil(ds.tong / SO_DONG))
+  const duLieu = ds?.du_lieu ?? []
+  const soTrang = Math.max(1, Math.ceil((ds?.tong ?? 0) / SO_DONG))
   return (
     <section className="noi-dung">
       <DauDanhMuc
         tieuDe="Xe"
-        phu={`${ds.tong} xe${trangThai === 'NGUNG' ? ' đang ngừng' : trangThai ? ' đang hoạt động' : ''} · giấy tờ sắp hết hạn tô cam`}
+        phu={`${ds ? `${ds.tong} xe${trangThai === 'NGUNG' ? ' đang ngừng' : trangThai ? ' đang hoạt động' : ''}` : '–'} · giấy tờ sắp hết hạn tô cam`}
         nut="Thêm xe"
         onNut={() => setDangSua('moi')}
       />
@@ -111,7 +112,7 @@ export default function XeDanhSach() {
             </tr>
           </thead>
           <tbody>
-            {ds.du_lieu.map((xe) => (
+            {duLieu.map((xe) => (
               <tr key={xe.id} className={xe.trang_thai === 'NGUNG' ? 'mo' : undefined}>
                 <td>
                   <span className="bien">{xe.bien_so}</span>
@@ -137,10 +138,10 @@ export default function XeDanhSach() {
                 </td>
               </tr>
             ))}
-            {ds.du_lieu.length === 0 && (
+            {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={7} className="trong">
-                  Chưa có xe nào phù hợp
+                  {ds ? 'Chưa có xe nào phù hợp' : 'Đang tải…'}
                 </td>
               </tr>
             )}
@@ -153,7 +154,7 @@ export default function XeDanhSach() {
           Trước
         </button>
         <span>
-          Trang {trang}/{soTrang} · {ds.tong} xe
+          Trang {trang}/{soTrang} · {ds ? `${ds.tong} xe` : '–'}
         </span>
         <button className="phu" disabled={trang >= soTrang} onClick={() => setTrang(trang + 1)}>
           Sau

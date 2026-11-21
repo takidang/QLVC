@@ -57,7 +57,7 @@ export default function DonDanhSach() {
   const [tim, setTim] = useState('')
   const [trangThai, setTrangThai] = useState('')
   const [trang, setTrang] = useState(1)
-  const [ds, setDs] = useState<{ du_lieu: Don[]; tong: number }>({ du_lieu: [], tong: 0 })
+  const [ds, setDs] = useState<{ du_lieu: Don[]; tong: number } | null>(null) // null = đang tải
   const [loiTai, setLoiTai] = useState('')
   const [moForm, setMoForm] = useState(false)
   const [vuaTao, setVuaTao] = useState<Don | null>(null)
@@ -82,12 +82,13 @@ export default function DonDanhSach() {
     }
   }, [tim, trangThai, trang, lanTai])
 
-  const soTrang = Math.max(1, Math.ceil(ds.tong / SO_DONG))
+  const duLieu = ds?.du_lieu ?? []
+  const soTrang = Math.max(1, Math.ceil((ds?.tong ?? 0) / SO_DONG))
   return (
     <section className="noi-dung">
       <DauDanhMuc
         tieuDe="Đơn hàng"
-        phu={`${ds.tong} đơn${trangThai ? ` ${(TEN_TRANG_THAI_DON[trangThai] ?? '').toLowerCase()}` : ''} · bấm mã đơn để in phiếu QR`}
+        phu={`${ds ? `${ds.tong} đơn${trangThai ? ` ${(TEN_TRANG_THAI_DON[trangThai] ?? '').toLowerCase()}` : ''}` : '–'} · bấm mã đơn để in phiếu QR`}
         nut="Tạo đơn"
         onNut={() => setMoForm(true)}
       />
@@ -146,7 +147,7 @@ export default function DonDanhSach() {
             </tr>
           </thead>
           <tbody>
-            {ds.du_lieu.map((d) => (
+            {duLieu.map((d) => (
               <tr key={d.id} className={d.trang_thai === 'HUY' ? 'mo huy' : undefined}>
                 <td>
                   <Link className="ma-don" to={`${d.id}/phieu`} title="Mở phiếu in QR">
@@ -198,10 +199,10 @@ export default function DonDanhSach() {
                 </td>
               </tr>
             ))}
-            {ds.du_lieu.length === 0 && (
+            {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={7} className="trong">
-                  Chưa có đơn nào phù hợp
+                  {ds ? 'Chưa có đơn nào phù hợp' : 'Đang tải…'}
                 </td>
               </tr>
             )}
@@ -213,7 +214,7 @@ export default function DonDanhSach() {
           Trước
         </button>
         <span>
-          Trang {trang}/{soTrang} · {ds.tong} đơn
+          Trang {trang}/{soTrang} · {ds ? `${ds.tong} đơn` : '–'}
         </span>
         <button className="phu" disabled={trang >= soTrang} onClick={() => setTrang(trang + 1)}>
           Sau
