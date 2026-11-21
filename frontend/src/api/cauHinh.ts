@@ -21,6 +21,12 @@ export function ngayBaoTruoc(): Promise<number> {
   return cho
 }
 
+// Quản lý vừa lưu cấu hình: bỏ số đã nhớ để trang sau trong cùng tab lấy số mới (góp ý Kiệt #75)
+export function quenNgayBaoTruoc() {
+  cho = null
+  giaTri = null
+}
+
 // shortcut: hiện 30 (mặc định CFG-02) tới khi số thật về; lỗi mạng thì giữ 30
 export function useNgayBaoTruoc(): number {
   const [ngay, setNgay] = useState(giaTri ?? MAC_DINH)
