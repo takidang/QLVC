@@ -141,7 +141,7 @@ QLVC/
 | Lập chuyến (UC-11) | `FOR UPDATE` dòng xe, dòng tài xế (chuyến chưa có) | — |
 | Hủy chuyến (UC-16) | `FOR UPDATE` dòng chuyến, rồi các dòng đơn theo id | — |
 | Đổi xe, tài xế (UC-12), chốt, mở chốt (UC-15) | `FOR UPDATE` dòng chuyến, dòng xe, dòng tài xế | — |
-| Bắt đầu chuyến (UC-18) | `FOR UPDATE` dòng chuyến (bấm hai lần thì lần sau đợi rồi nhận 409); xe chỉ đọc để kiểm km (BR-70) | — |
+| Bắt đầu chuyến (UC-18) | `FOR UPDATE` dòng chuyến, dòng xe, dòng tài xế; kiểm xe, tài xế không có chuyến khác `DANG_CHAY` (BR-26) rồi km (BR-70) | — |
 | Quét mã (UC-19, UC-20), ghi chi phí (UC-21) | `FOR SHARE` dòng chuyến, rồi `FOR UPDATE` dòng đơn / khoản chi phí. Kết thúc chuyến (`FOR UPDATE` dòng chuyến) phải đợi các lượt quét đang chạy | Quét lặp trả trạng thái hiện tại (BR-45) |
 | Kết thúc chuyến (UC-18) | `FOR UPDATE` dòng chuyến (đợi lượt quét đang chạy), rồi dòng xe (cập nhật `km_dong_ho`). Dòng đơn chỉ đọc: khóa chuyến đã chặn mọi lượt quét | — |
 | Kết thúc do sự cố (UC-32, BR-68) | `FOR UPDATE` dòng chuyến, dòng xe, rồi các dòng đơn theo id | — |

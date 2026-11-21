@@ -176,7 +176,7 @@ Thời điểm kiểm: G = khi ghép/gỡ đơn, C = khi chốt chuyến, X = kh
 | BR-23 | Chốt (`LAP → DA_CHOT`): kiểm lại toàn bộ nhóm A, B (giấy tờ, lịch có thể đã đổi); chuyến 0 đơn phải xác nhận "chạy rỗng"; chốt định mức và lương vào chuyến (BR-71) | Chặn |
 | BR-24 | Mở chốt (`DA_CHOT → LAP`) chỉ khi chuyến không còn tạm ứng `HIEU_LUC`. Muốn mở chốt thì Kế toán ghi thu hồi trước | Chặn |
 | BR-25 | Hủy chuyến chỉ khi trạng thái ∈ {`LAP`, `DA_CHOT`}, bắt buộc lý do; mọi đơn trong chuyến về `CHO_GHEP`; còn tạm ứng `HIEU_LUC` thì Kế toán ghi `DA_THU_HOI` trước (ghi nhật ký BR-62) | Chặn |
-| BR-26 | Bắt đầu (`DA_CHOT → DANG_CHAY`) chỉ do **tài xế của chuyến**, trong ngày khởi hành dự kiến; kiểm lại BR-11…15; nhập km (BR-70) | Chặn |
+| BR-26 | Bắt đầu (`DA_CHOT → DANG_CHAY`) chỉ do **tài xế của chuyến**, trong ngày khởi hành dự kiến; kiểm lại BR-11…15; nhập km (BR-70); xe và tài xế của chuyến không có chuyến khác đang `DANG_CHAY` (chuyến trước chạy trễ thì phải kết thúc trước) | Chặn |
 | BR-27 | ~~Xuất phát `DANG_BOC → DANG_CHAY`~~ | Bỏ ở 0.5 – gộp bước bốc hàng vào bước chạy |
 | BR-28 | Tài xế kết thúc (`DANG_CHAY → HOAN_THANH`) chỉ khi mọi đơn hiệu lực đã `DA_GIAO` hoặc `THAT_BAI`; nhập km cuối (BR-70) | Chặn |
 | BR-29 | Sau `DA_QUYET_TOAN`, chuyến và chi phí chỉ đọc | Chặn |

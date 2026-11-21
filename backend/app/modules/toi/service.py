@@ -137,8 +137,29 @@ def bat_dau(db: Session, nd: NguoiDung, chuyen_id: int, km: int, anh: bytes) -> 
         ngay = c.khoi_hanh_du_kien.astimezone(GIO_VN).strftime("%d/%m/%Y")
         raise LoiNghiepVu("BR-26", f"Chuyến {c.ma_chuyen} chạy ngày {ngay}, chỉ bắt đầu được trong ngày đó")
 
+    xe = db.get(Xe, c.xe_id, with_for_update=True)
+    tx = db.get(TaiXe, c.tai_xe_id, with_for_update=True)
+    # BR-26: xe và tài xế không có chuyến khác đang chạy (chuyến trước chạy trễ phải kết thúc trước)
+    dang_chay = db.scalar(
+        select(Chuyen)
+        .where(
+            Chuyen.id != c.id,
+            Chuyen.trang_thai == "DANG_CHAY",
+            or_(Chuyen.xe_id == c.xe_id, Chuyen.tai_xe_id == c.tai_xe_id),
+        )
+        .limit(1)
+    )
+    if dang_chay is not None:
+        if dang_chay.xe_id == c.xe_id:
+            tb = (
+                f"Xe {xe.bien_so} đang chạy chuyến {dang_chay.ma_chuyen}: chờ chuyến đó kết thúc, "
+                "hoặc báo Điều phối mở chốt để đổi xe"
+            )
+        else:
+            tb = f"Bạn đang chạy chuyến {dang_chay.ma_chuyen}, kết thúc chuyến đó trước"
+        raise LoiNghiepVu("BR-26", tb, 409)
+
     # Giấy tờ có thể hết hạn sau lúc lập chuyến: kiểm lại BR-11…15 bằng đúng hàm của UC-11
-    xe, tx = db.get(Xe, c.xe_id), db.get(TaiXe, c.tai_xe_id)
     ngay_ket_thuc = c.ket_thuc_du_kien.astimezone(GIO_VN).date()
     vp = xet_xe(XeXet(xe.bien_so, xe.trang_thai, xe.han_dang_kiem, xe.han_bao_hiem), ngay_ket_thuc) + xet_tai_xe(
         TaiXeXet(nd.ho_ten, tx.trang_thai, tx.hang_gplx, tx.han_gplx), ngay_ket_thuc, xe.ktt_toan_bo_kg
