@@ -51,6 +51,7 @@ Trên trang lịch trình (UC-17), tài xế nhập km đồng hồ, chụp ản
 | UC-18-AC9 | Sai trạng thái: bắt đầu chuyến `DANG_CHAY` / `HOAN_THANH` → 409; kết thúc chuyến `DA_CHOT` → 409; bấm Bắt đầu hai lần liên tiếp → lần hai 409, chỉ có 1 ảnh | API | ST-T |
 | UC-18-AC10 | Phân quyền: chuyến của tài xế khác, chuyến `LAP`, id không có → 404 (như UC-17), không lưu ảnh; Điều phối, Kế toán, Quản lý → 403; chưa đăng nhập → 401 | API | BR-26, BR-58 |
 | UC-18-AC11 | Giao diện (điện thoại 360 px): chuyến `DA_CHOT` có ô km + nút chụp ảnh + **Bắt đầu**; ảnh nén trên trình duyệt trước khi gửi; lỗi hiện tiếng Việt kèm mã BR; sau bắt đầu thẻ chuyển "Đang chạy" và hiện ô **Kết thúc**; còn đơn chưa xong thì hiện danh sách đơn còn lại | UI | NFR-USA-02, NFR-PER-03 |
+| UC-18-AC12 | Xe hoặc tài xế đang có chuyến khác `DANG_CHAY` (BR-26): (a) xe X1 có chuyến khác `DANG_CHAY` → An bắt đầu C01 bị chặn 409 `BR-26`, thông điệp có mã chuyến đang chạy, C01 giữ `DA_CHOT` và không lưu ảnh; (b) chuyến khác đã `HOAN_THANH` hoặc `HUY` → bắt đầu được (200); (c) tài xế An có chuyến khác `DANG_CHAY` trên xe khác → bị chặn 409 `BR-26` | API | BR-26 |
 
 ## Ghi chú triển khai
 - File đã đổi: `backend/app/luu_tru.py` (mới – kiểm và lưu ảnh, dùng chung cho UC-19…21, 33), `backend/app/modules/toi/{service,router}.py` (bắt đầu, kết thúc; tách `_chuyen_cua_toi` dùng chung với UC-17), `backend/requirements.txt` (`python-multipart==0.0.32`); `frontend/src/nenAnh.ts` (mới – nén ảnh bằng canvas, không thêm thư viện), `frontend/src/api/toi.ts` (`ghiKm`), `frontend/src/pages/tai-xe/ChuyenCuaToiChiTiet.tsx` (ô Bắt đầu / Kết thúc), `frontend/src/index.css`; `docs/api.md`. Không đụng `models/`, không thêm migration.
@@ -78,3 +79,4 @@ Trên trang lịch trình (UC-17), tài xế nhập km đồng hồ, chụp ản
 | UC-18-AC9 | API | `tests/api/test_uc18_bat_dau_ket_thuc.py::test_uc18_ac9_* (3 ca)` | Đạt | 31/10/2026 |
 | UC-18-AC10 | API | `tests/api/test_uc18_bat_dau_ket_thuc.py::test_uc18_ac10_* (5 ca)` | Đạt | 31/10/2026 |
 | UC-18-AC11 | UI | `docs/test-evidence/UC-18/` (4 ảnh, ca a–d ở `docs/test-evidence/UC-18/du-lieu.md`) – Kiệt thử | Đạt | 31/10/2026 |
+| UC-18-AC12 | API | `tests/api/test_uc18_bat_dau_ket_thuc.py::test_uc18_ac12_* (4 ca)` | CHƯA KIỂM | — |
