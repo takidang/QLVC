@@ -139,13 +139,17 @@ QLVC/
 | Ghép, gỡ đơn (UC-13) | `FOR UPDATE` dòng chuyến, dòng xe, dòng tài xế, rồi các dòng đơn theo id (BR-67 kiểm lại khoảng chiếm với chuyến khác của xe, tài xế) | Unique index một phần `GHEP(don_hang_id) WHERE hieu_luc` (BR-07) |
 | Sửa, hủy đơn (UC-10) | Đơn đang ghép: `FOR UPDATE` dòng chuyến, dòng xe, dòng tài xế, rồi dòng đơn (đơn vừa bị ghép / gỡ giữa lúc đọc và lúc khóa thì đọc lại); chưa ghép: chỉ dòng đơn | — |
 | Lập chuyến (UC-11) | `FOR UPDATE` dòng xe, dòng tài xế (chuyến chưa có) | — |
+| Hủy chuyến (UC-16) | `FOR UPDATE` dòng chuyến, rồi các dòng đơn theo id | — |
 | Đổi xe, tài xế (UC-12), chốt, mở chốt (UC-15) | `FOR UPDATE` dòng chuyến, dòng xe, dòng tài xế | — |
 | Bắt đầu chuyến (UC-18) | `FOR UPDATE` dòng chuyến (bấm hai lần thì lần sau đợi rồi nhận 409); xe chỉ đọc để kiểm km (BR-70) | — |
 | Quét mã (UC-19, UC-20), ghi chi phí (UC-21) | `FOR SHARE` dòng chuyến, rồi `FOR UPDATE` dòng đơn / khoản chi phí. Kết thúc chuyến (`FOR UPDATE` dòng chuyến) phải đợi các lượt quét đang chạy | Quét lặp trả trạng thái hiện tại (BR-45) |
 | Kết thúc chuyến (UC-18) | `FOR UPDATE` dòng chuyến (đợi lượt quét đang chạy), rồi dòng xe (cập nhật `km_dong_ho`). Dòng đơn chỉ đọc: khóa chuyến đã chặn mọi lượt quét | — |
 | Kết thúc do sự cố (UC-32, BR-68) | `FOR UPDATE` dòng chuyến, dòng xe, rồi các dòng đơn theo id | — |
+| Báo sự cố (UC-33) | `FOR UPDATE` dòng chuyến của tài xế | — |
+| Đóng sự cố (UC-32) | `FOR UPDATE` dòng sự cố | — |
 | Xử lý đơn thất bại (UC-22) | `FOR UPDATE` dòng đơn (không còn ghép hiệu lực nên không khóa chuyến) | — |
 | Tạm ứng (UC-23), quyết toán (UC-24) | `FOR UPDATE` dòng chuyến; duyệt chi phí: `FOR SHARE` dòng chuyến rồi `FOR UPDATE` khoản | Unique `QUYET_TOAN(chuyen_id)` |
+| Đánh dấu đã thu (UC-25) | `FOR UPDATE` các khoản phải thu theo id tăng dần | — |
 
 Mọi thao tác ghi chạy trong **một giao dịch**; lỗi ở bất kỳ bước nào thì rollback toàn bộ (NFR-REL-01). Thứ tự khóa luôn là **chuyến → xe → tài xế → đơn** (nhiều đơn thì theo id tăng dần) → khoản tiền của chuyến, bỏ qua bước không cần; không chỗ nào khóa ngược lại nên không deadlock. (Bản trước ghi "chuyến → đơn → xe → tài xế", khác code; sửa 21/11/2026 sau khi rà mọi `with_for_update` trong `backend/app/modules`.)
 
