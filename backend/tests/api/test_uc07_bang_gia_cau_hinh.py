@@ -190,3 +190,26 @@ def test_uc07_ac3_tinh_go_kieu_to_hop_van_khop(client, dang_nhap_voi, db):
     assert them(client, tinh_giao=to_hop).status_code == 201
     assert tra_gia(db, "TP.HCM", "Cần Thơ", date(2026, 10, 15)).don_gia_kg == 1500
     assert them(client, tinh_giao="Cần Thơ").status_code == 409  # trùng sau khi chuẩn hóa
+
+
+# CFG-02: mọi vai trò đã đăng nhập đều lấy được số ngày báo trước giấy tờ (UC-27, BR-21)
+def test_cau_hinh_ngay_bao_truoc_chua_dang_nhap(client):
+    assert client.get("/api/cau-hinh/ngay-bao-truoc").status_code == 401
+
+
+@pytest.mark.parametrize("vai_tro", ["TAI_XE", "DIEU_PHOI"])
+def test_cau_hinh_ngay_bao_truoc_mac_dinh(client, dang_nhap_voi, vai_tro):
+    dang_nhap_voi(vai_tro)
+    r = client.get("/api/cau-hinh/ngay-bao-truoc")
+    assert r.status_code == 200
+    assert r.json() == {"ngay_bao_truoc": 30}
+
+
+def test_cau_hinh_ngay_bao_truoc_theo_cfg02(client, dang_nhap_voi):
+    dang_nhap_voi("QUAN_LY")
+    assert client.put("/api/cau-hinh/CFG-02", json={"gia_tri": "10"}).status_code == 200
+    assert client.get("/api/cau-hinh/ngay-bao-truoc").json() == {"ngay_bao_truoc": 10}
+    dang_nhap_voi("TAI_XE")
+    r = client.get("/api/cau-hinh/ngay-bao-truoc")
+    assert r.status_code == 200
+    assert r.json() == {"ngay_bao_truoc": 10}
