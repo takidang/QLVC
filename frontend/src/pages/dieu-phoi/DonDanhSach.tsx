@@ -100,6 +100,7 @@ export default function DonDanhSach() {
       <ThongBao chu={thongBao} />
       <DonThatBaiCanXuLy
         lanTai={lanTai}
+        san={ds !== null || !!loiTai}
         onHuy={setDangHuy}
         onXong={(cau) => {
           setVuaTao(null)
@@ -575,10 +576,12 @@ function FormHuyDon({
 // BR-69), trả hàng (chỉ khi đã lấy), hủy (chỉ khi chưa lấy, dùng hộp hủy của UC-10)
 function DonThatBaiCanXuLy({
   lanTai,
+  san,
   onHuy,
   onXong,
 }: {
   lanTai: number
+  san: boolean
   onHuy: (d: Don) => void
   onXong: (cau: string) => void
 }) {
@@ -611,7 +614,8 @@ function DonThatBaiCanXuLy({
     }
   }
 
-  if (!ds.length && !loi) return null
+  // chờ bảng chính về rồi hiện cùng lúc, trang không nhảy hai lần
+  if (!san || (!ds.length && !loi)) return null
   return (
     <div className="kinh dm-chu-y">
       <div className="dm-chu-y-dau">
