@@ -27,6 +27,9 @@
 | UC-30-AC5 | Chỉ gợi ý: gọi dự đoán không đổi trạng thái, ETA, dữ liệu nào của chuyến; mọi thao tác lập / ghép / chốt không phụ thuộc kết quả | API | nghiep-vu mục 7 |
 | UC-30-AC6 | Phân quyền: Điều phối, Quản lý xem; Kế toán, Tài xế → 403; chưa đăng nhập → 401 | API | BR-57 |
 | UC-30-AC7 | Giao diện: nhãn nguy cơ trễ trên chi tiết chuyến (giao diện v3) | UI | NFR-USA-02 |
+| UC-30-AC8 | `GET /api/du-doan-tre?ngay=YYYY-MM-DD` trả `{du_lieu: [{chuyen_id, ma_chuyen, muc, xac_suat}]}` cho chuyến khởi hành dự kiến trong ngày (giờ VN) ở `LAP`, `DA_CHOT`, `DANG_CHAY`, sắp theo giờ khởi hành, `muc` và `xac_suat` khớp endpoint từng chuyến; chuyến ngày khác không có; mô hình thiếu/hỏng → 200 `{du_lieu: []}`; phân quyền Điều phối/Quản lý 200, Kế toán/Tài xế 403, chưa đăng nhập 401; thiếu hoặc sai định dạng `ngay` → 400; gọi API không đổi dữ liệu chuyến | API | KT-08 |
+| UC-30-AC9 | `yeu_to` trong hàm `du_doan` đủ 4 phần tử, mỗi phần tử có `ma` (khóa đặc trưng) và `gia_tri` (giá trị đầu vào của chuyến), không đổi xác suất và mức | Logic | — |
+| UC-30-AC10 | Giao diện: (1) chi tiết chuyến có tiêu đề "Dự đoán trễ (AI)", thanh 3 mức Thấp – Trung bình – Cao, đủ 4 yếu tố kèm giá trị và nút "Cách tính" giải thích mô hình; (2) danh sách chuyến theo ngày gắn nhãn "Nguy cơ trễ cao" cho chuyến mức `CAO`; (3) Tổng quan (Quản lý, không hiện với Kế toán) có khối "Dự đoán trễ hôm nay (AI)" | UI | NFR-USA-02 |
 
 ## Ghi chú triển khai
 - File đã đổi (đợt 1, backend, chưa có dataset): `backend/app/modules/goi_y/` (`du_doan_tre.py` tính thuần bằng `math`, `service.py` với hằng `DUONG_DAN_MO_HINH`, `router.py`, `schemas.py`), `backend/app/main.py` (gắn `goi_y_router`). Chưa có `mo_hinh_tre.json` thật: API trả `{co_du_doan: false}` cho tới khi đợt 2 train và xuất file (AC1, AC2, AC7 làm sau).
@@ -52,3 +55,6 @@
 | UC-30-AC5 | API | `test_uc30_ac5_khong_doi_du_lieu_chuyen` | Đạt | 19/11/2026 |
 | UC-30-AC6 | API | `test_uc30_ac6_phan_quyen` | Đạt | 19/11/2026 |
 | UC-30-AC7 | UI | `docs/test-evidence/UC-30/` (8 ảnh, `du-lieu.md`): Điều phối, Quản lý thấy nhãn; Kế toán 403; chuyến hủy không có nhãn; 390 px, bản tối | Đạt (Kiệt thử trên giao diện v3, 4 góp ý không chặn ghi trong `du-lieu.md`) | 19/11/2026 |
+| UC-30-AC8 | API | `test_uc30_ac8_*` (`backend/tests/api/test_uc30_du_doan_tre.py`) | CHƯA KIỂM | — |
+| UC-30-AC9 | Logic | `test_uc30_ac9_yeu_to_du_ma_va_gia_tri` (`backend/tests/unit/test_uc30_du_doan_tre.py`) | CHƯA KIỂM | — |
+| UC-30-AC10 | UI | Chi tiết chuyến (`ChuyenChiTiet.tsx`), danh sách theo ngày (`ChuyenDanhSach.tsx`), Tổng quan (`TongQuan.tsx`) | CHƯA KIỂM | — |

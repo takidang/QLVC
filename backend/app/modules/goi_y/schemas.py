@@ -4,8 +4,10 @@ from pydantic import BaseModel, Field
 
 
 class YeuTo(BaseModel):
+    ma: str
     ten: str
     huong: Literal["TANG", "GIAM"]
+    gia_tri: float
 
 
 class DuDoanTreRa(BaseModel):
@@ -15,3 +17,14 @@ class DuDoanTreRa(BaseModel):
     muc: Literal["THAP", "TRUNG_BINH", "CAO"] | None = None
     yeu_to: list[YeuTo] | None = None
     nguon: dict | None = None
+
+
+class DuDoanChuyenNgayRa(BaseModel):
+    chuyen_id: int
+    ma_chuyen: str
+    muc: Literal["THAP", "TRUNG_BINH", "CAO"]
+    xac_suat: float = Field(ge=0, le=1)
+
+
+class DuDoanNgayRa(BaseModel):
+    du_lieu: list[DuDoanChuyenNgayRa]
