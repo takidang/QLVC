@@ -648,6 +648,13 @@ function KhoiDuDoanTre({ d }: { d: DuDoanTre }) {
             {d.nguon?.auc != null && <> (độ chính xác AUC {d.nguon.auc.toLocaleString('vi-VN')})</>}
             .
           </p>
+          {/* shortcut: số trung bình ghi cứng theo mo_hinh_tre.json hiện tại; train lại thì sửa câu này */}
+          <p>
+            "Làm tăng / làm giảm nguy cơ" là so với một chuyến trung bình trong dữ liệu học: khoảng
+            249 km, dự kiến 15 giờ, khởi hành khoảng 15 giờ 30, giữa tuần. Ví dụ đường ngắn hơn 249
+            km thì ít rủi ro hơn; thời gian dự kiến dài (dư giờ) cũng làm giảm nguy cơ; đi muộn
+            trong ngày hoặc đầu tuần làm tăng nguy cơ.
+          </p>
           <p>
             Mức nguy cơ theo khả năng trễ: Thấp dưới 75%, Trung bình 75–90%, Cao từ 90%. Dữ liệu học
             có 82% chuyến bị trễ nên phần lớn chuyến ở mức Trung bình.
