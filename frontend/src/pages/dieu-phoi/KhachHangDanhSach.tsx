@@ -10,7 +10,7 @@ export default function KhachHangDanhSach() {
   const [tim, setTim] = useState('')
   const [trangThai, setTrangThai] = useState('')
   const [trang, setTrang] = useState(1)
-  const [ds, setDs] = useState<{ du_lieu: KhachHang[]; tong: number }>({ du_lieu: [], tong: 0 })
+  const [ds, setDs] = useState<{ du_lieu: KhachHang[]; tong: number } | null>(null) // null = đang tải
   const [loiTai, setLoiTai] = useState('')
   const [dangSua, setDangSua] = useState<KhachHang | 'moi' | null>(null)
   const [lanTai, setLanTai] = useState(0) // tăng lên để tải lại sau khi thêm/sửa
@@ -43,12 +43,17 @@ export default function KhachHangDanhSach() {
     }
   }
 
-  const soTrang = Math.max(1, Math.ceil(ds.tong / SO_DONG))
+  const duLieu = ds?.du_lieu ?? []
+  const soTrang = Math.max(1, Math.ceil((ds?.tong ?? 0) / SO_DONG))
   return (
     <section className="noi-dung">
       <DauDanhMuc
         tieuDe="Khách hàng"
-        phu={`${ds.tong} khách${trangThai === 'NGUNG' ? ' đang ngừng' : trangThai ? ' đang hoạt động' : ''}`}
+        phu={
+          ds
+            ? `${ds.tong} khách${trangThai === 'NGUNG' ? ' đang ngừng' : trangThai ? ' đang hoạt động' : ''}`
+            : '–'
+        }
         nut="Thêm khách hàng"
         onNut={() => setDangSua('moi')}
       />
@@ -91,7 +96,7 @@ export default function KhachHangDanhSach() {
             </tr>
           </thead>
           <tbody>
-            {ds.du_lieu.map((kh) => (
+            {duLieu.map((kh) => (
               <tr key={kh.id} className={kh.trang_thai === 'NGUNG' ? 'mo' : undefined}>
                 <td className="tuyen">{kh.ten}</td>
                 <td className="ma">{kh.sdt}</td>
@@ -110,10 +115,10 @@ export default function KhachHangDanhSach() {
                 </td>
               </tr>
             ))}
-            {ds.du_lieu.length === 0 && (
+            {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={6} className="trong">
-                  Chưa có khách hàng nào phù hợp
+                  {ds ? 'Chưa có khách hàng nào phù hợp' : 'Đang tải…'}
                 </td>
               </tr>
             )}
@@ -126,7 +131,7 @@ export default function KhachHangDanhSach() {
           Trước
         </button>
         <span>
-          Trang {trang}/{soTrang} · {ds.tong} khách
+          Trang {trang}/{soTrang} · {ds ? `${ds.tong} khách` : '–'}
         </span>
         <button className="phu" disabled={trang >= soTrang} onClick={() => setTrang(trang + 1)}>
           Sau
