@@ -636,7 +636,7 @@ function BangHieuSuat({ ds }: { ds: HieuSuatXe[] }) {
 // UC-38: tình hình hôm nay (mọi chuyến, không chỉ chuyến đã quyết toán). Lỗi thì ẩn cả khối, không chặn trang.
 // Đang tải (tq === undefined) thì vẽ sẵn khung với số "–" để phần dưới không bị đẩy xuống khi số liệu về.
 function HomNay() {
-  const homNay = new Date().toLocaleDateString('sv-SE')
+  const [homNay] = useState(() => new Date().toLocaleDateString('sv-SE')) // tính một lần khi dựng, không mỗi lần vẽ
   const [ngayChon, setNgayChon] = useState(homNay) // mặc định hôm nay, đổi được ngày khác
   const [tq, setTq] = useState<TongQuanNgay | null | undefined>(undefined)
   useEffect(() => {
