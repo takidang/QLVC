@@ -151,7 +151,10 @@ def bat_dau(db: Session, nd: NguoiDung, chuyen_id: int, km: int, anh: bytes) -> 
     )
     if dang_chay is not None:
         if dang_chay.xe_id == c.xe_id:
-            tb = f"Xe {xe.bien_so} đang chạy chuyến {dang_chay.ma_chuyen}, chờ chuyến đó kết thúc rồi bắt đầu"
+            tb = (
+                f"Xe {xe.bien_so} đang chạy chuyến {dang_chay.ma_chuyen}: chờ chuyến đó kết thúc, "
+                "hoặc báo Điều phối mở chốt để đổi xe"
+            )
         else:
             tb = f"Bạn đang chạy chuyến {dang_chay.ma_chuyen}, kết thúc chuyến đó trước"
         raise LoiNghiepVu("BR-26", tb, 409)
