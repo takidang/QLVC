@@ -240,7 +240,7 @@ Thời điểm kiểm: G = khi ghép/gỡ đơn, C = khi chốt chuyến, X = kh
 
 | Mã | Quy tắc | Mức | Kiểm khi |
 |---|---|---|---|
-| BR-63 | ETA điểm dừng = giờ khởi hành + `phut_tu_diem_dau` của nút + Σ phút dừng của các điểm đứng trước (phút dừng mỗi điểm hiện bằng `CFG-08`, mục 2.1). Thứ tự điểm dừng: theo thứ tự nút; trong cùng một nút, các điểm LẤY trước rồi tới các điểm GIAO. Điểm LẤY: đầu khung giờ lấy sớm trước, đơn không có khung xếp sau, cùng thì theo mã đơn. Điểm GIAO: hạn giao sớm trước, cùng hạn thì theo mã đơn | — | Mỗi lần tính lịch trình |
+| BR-63 | ETA điểm dừng = giờ khởi hành + `phut_tu_diem_dau` của nút + Σ phút dừng của các điểm đứng trước (phút dừng mỗi điểm hiện bằng `CFG-08`, mục 2.1). Thứ tự điểm dừng: theo thứ tự nút; trong cùng một nút, các điểm LẤY trước rồi tới các điểm GIAO. Điểm LẤY: đầu khung giờ lấy sớm trước, đơn không có khung xếp sau, cùng thì theo mã đơn. Điểm GIAO: hạn giao sớm trước, cùng hạn thì theo mã đơn. Mã đơn là `DH-` + 6 ký tự ngẫu nhiên nên thứ tự hai điểm cùng nút, cùng khung/hạn trên máy thật có thể khác kịch bản mục 11; ETA mỗi nút, kết thúc dự kiến và số liệu không đổi (chốt 21/11/2026, Tài – Kiệt) | — | Mỗi lần tính lịch trình |
 | BR-64 | Kết thúc dự kiến = ETA điểm cuối + phút dừng điểm cuối + `CFG-05`. Chuyến 0 đơn (chạy rỗng): giờ khởi hành + thời gian toàn tuyến + `CFG-05`. Khoảng chiếm = [khởi hành, kết thúc dự kiến) | — | Mỗi lần tính lịch trình |
 | BR-65 | Giờ lái dự kiến = `phut_tu_diem_dau` của nút cuối, không tính phút dừng và `CFG-05`. Chuyến qua nửa đêm chia theo phần giao với từng ngày (làm rõ BR-18, 19) | — | X, C |
 | BR-66 | Tuyến có thời gian chạy (`phut_tu_diem_dau` nút cuối) ≤ 10 giờ | Chặn | Khi lưu tuyến |
@@ -415,7 +415,7 @@ Thời điểm kiểm: G = khi ghép/gỡ đơn, C = khi chốt chuyến, X = kh
 
 ## 10. Hướng phát triển (ngoài phạm vi)
 
-Xe thuê ngoài (A2) · COD (A5) · yêu cầu gửi hàng do khách tự tạo (A4) · OR-Tools gợi ý ghép đơn (UC-29) · điều chỉnh cước tay (BR-61, UC-31) · luồng duyệt tạm ứng vượt định mức · sổ tạm ứng cộng dồn · bảng lương tháng · lịch bảo dưỡng · bảng kê công nợ · biên bản kiểm tra xe trước khi chạy · cảnh báo quét sai vị trí (BR-44) · xe đến sớm đứng chờ và dịch ETA (BR-05) · nút "đã đến điểm" để đo phút dừng thật · kiểm tải theo từng đoạn · GPS liên tục, hành vi lái xe · xe lạnh · giờ cấm tải · tuyến dài nhiều tài xế (A7) · quét mã từng kiện, giao một phần, chia chặng/trung chuyển · rơ moóc · hóa đơn điện tử · chế độ offline cho tài xế · KPI nhân viên.
+Xe thuê ngoài (A2) · COD (A5) · yêu cầu gửi hàng do khách tự tạo (A4) · OR-Tools gợi ý ghép đơn (UC-29) · điều chỉnh cước tay (BR-61, UC-31) · luồng duyệt tạm ứng vượt định mức · sổ tạm ứng cộng dồn · bảng lương tháng · lịch bảo dưỡng · bảng kê công nợ · biên bản kiểm tra xe trước khi chạy · cảnh báo quét sai vị trí (BR-44) · xe đến sớm đứng chờ và dịch ETA (BR-05) · nút "đã đến điểm" để đo phút dừng thật · hai đơn cùng nút, cùng khung/hạn: đơn tạo trước lấy/giao trước thay cho theo mã đơn (BR-63) · kiểm tải theo từng đoạn · GPS liên tục, hành vi lái xe · xe lạnh · giờ cấm tải · tuyến dài nhiều tài xế (A7) · quét mã từng kiện, giao một phần, chia chặng/trung chuyển · rơ moóc · hóa đơn điện tử · chế độ offline cho tài xế · KPI nhân viên.
 
 ---
 
@@ -479,6 +479,7 @@ Bảng giá (đ/kg): HCM→Cần Thơ 1.500 · Long An→Cần Thơ 1.200 · HCM
 | 6 | Cần Thơ | Giao Đ1 | 12:10 | 14:00 | ✔ |
 
 - Nếu xếp ngược thứ tự giao ở Cần Thơ: Đ2 12:10 > 12:00 ✖ → ca test của BR-63.
+- Điểm 1, 2: Đ1, Đ4 cùng nút TP.HCM, không khung giờ, nên xếp theo mã đơn (BR-63); bảng giả sử mã Đ1 đứng trước. Mã thật sinh ngẫu nhiên nên trên máy thật có thể lấy Đ4 lúc 06:00 rồi Đ1 lúc 06:20; từ điểm 3 trở đi ETA và mọi số liệu giữ nguyên.
 - Thử ghép thêm Đ8 ✖ (ca test BR-67): bản thân Đ8 hợp lệ (tải 4.100 kg, kịp hạn), nhưng thêm một điểm lấy ở HCM và một điểm giao ở Tiền Giang trước Cần Thơ, nên ETA giao Đ2 = 06:00 + 270′ + 6 × 20′ = 12:30 > 12:00. Lỗi nằm ở **đơn đã ghép**, không phải đơn mới → không ghép.
 - Lấp đầy = max(3.800/5.000, 11/20) = 76%. Kết thúc dự kiến = 12:10 + 20′ + 60′ = 13:30 (BR-64), không chồng C00 lúc 13:45 (BR-17). Lãi dự kiến = 5.237.000 − 1.000.000 − 600.000 = 3.637.000 (BR-52).
 
