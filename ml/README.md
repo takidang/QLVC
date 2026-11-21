@@ -15,6 +15,12 @@ ml\.venv\Scripts\python -c "import kagglehub; print(kagglehub.dataset_download('
 ```
 Chép `Delivery truck trip data.xlsx` vào `ml/data/`. Thư mục này bị gitignore: file có tên, số điện thoại tài xế, **không commit**.
 
+## Nguồn và giấy phép
+- Dataset: "Delivery truck trips data" của Ram Thiagu (Kaggle `ramakrishnanthiyagu`), bản duy nhất 04/02/2021: https://www.kaggle.com/datasets/ramakrishnanthiyagu/delivery-truck-trips-data
+- Giấy phép: **CC BY-SA 3.0** (https://creativecommons.org/licenses/by-sa/3.0/), theo trường `licenseName` của Kaggle API và khung "License" trên trang dataset, đối chiếu 21/11/2026. Mô tả dataset không ghi nguồn gốc ban đầu.
+- Nhóm đã biến đổi: lọc 6880 → 3783 chuyến, chỉ giữ 4 đặc trưng (quãng đường, thời gian dự kiến, giờ khởi hành, thứ trong tuần) và nhãn trễ; không giữ cột nào về tài xế, khách, xe.
+- Hai tệp dẫn xuất từ dataset nằm trong repo, cùng giấy phép CC BY-SA 3.0: `backend/app/modules/goi_y/mo_hinh_tre.json` (hệ số mô hình) và `backend/tests/du_lieu/mau_du_doan_tre.json` (20 mẫu đặc trưng để test).
+
 ## Train
 Từ gốc repo:
 ```
