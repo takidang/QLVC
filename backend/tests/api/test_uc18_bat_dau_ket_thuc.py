@@ -228,6 +228,7 @@ def test_uc18_ac3_nhieu_vi_pham_va_bien(client, kb, db):
     c = kb["chuyen"](kb["an"], khoi_hanh=hom_nay(23, 30))
     x1 = lai(db, kb["x1"])
     x1.trang_thai, x1.han_bao_hiem = "NGUNG", _ngay_kt(kb) - timedelta(days=1)
+    db.get(Chuyen, kb["c01"].id).trang_thai = "HOAN_THANH"  # kết thúc c01 để không bị chặn BR-26 (AC12) trước giấy tờ
     db.commit()
     r = bat_dau(client, c.id, km=120000)
     assert r.status_code == 422 and [v["ma"] for v in r.json()["chi_tiet"]] == ["BR-11", "BR-13"]
@@ -401,3 +402,57 @@ def test_uc18_ac10_vai_tro_khac(client, kb, dang_nhap_voi, vai_tro):
 def test_uc18_ac10_chua_dang_nhap(client, kb):
     assert bat_dau(client, kb["c01"].id).status_code == 401
     assert ket_thuc(client, kb["c01"].id).status_code == 401
+
+
+# AC12 – xe hoặc tài xế đang có chuyến khác DANG_CHAY (BR-26)
+def test_uc18_ac12_xe_dang_chay_chuyen_khac(client, kb, db, thu_muc_tam):
+    dang_chay = kb["chuyen"](kb["binh"], "DANG_CHAY", hom_nay(6))
+    dang_nhap(client)
+    r = bat_dau(client, kb["c01"].id)
+    assert r.status_code == 409 and r.json()["ma"] == "BR-26"
+    assert dang_chay.ma_chuyen in r.json()["thong_diep"]
+    assert kb["x1"].bien_so in r.json()["thong_diep"]
+    assert lai(db, kb["c01"]).trang_thai == "DA_CHOT"
+    assert dem(db, Tep) == 0 and list(thu_muc_tam.iterdir()) == []
+
+
+@pytest.mark.parametrize("tt", ["HOAN_THANH", "HUY"])
+def test_uc18_ac12_chuyen_khac_da_xong_hoac_huy_duoc(client, kb, tt):
+    kb["chuyen"](kb["binh"], tt, hom_nay(6))
+    dang_nhap(client)
+    r = bat_dau(client, kb["c01"].id)
+    assert r.status_code == 200, r.text
+    assert r.json()["trang_thai"] == "DANG_CHAY"
+
+
+def test_uc18_ac12_tai_xe_dang_chay_xe_khac(client, kb, db, thu_muc_tam):
+    x2 = Xe(
+        bien_so="51C-222.22",
+        tai_trong_kg=5000,
+        the_tich_m3=20,
+        ktt_toan_bo_kg=9500,
+        han_dang_kiem=HAN_XA,
+        han_bao_hiem=HAN_XA,
+        km_dong_ho=50000,
+    )
+    db.add(x2)
+    db.flush()
+    dang_chay = Chuyen(
+        ma_chuyen="CH-99",
+        tuyen_id=kb["c01"].tuyen_id,
+        xe_id=x2.id,
+        tai_xe_id=kb["an"].id,
+        khoi_hanh_du_kien=hom_nay(6),
+        ket_thuc_du_kien=hom_nay(13),
+        dieu_phoi_id=kb["c01"].dieu_phoi_id,
+        trang_thai="DANG_CHAY",
+    )
+    db.add(dang_chay)
+    db.commit()
+    dang_nhap(client)
+    r = bat_dau(client, kb["c01"].id)
+    assert r.status_code == 409 and r.json()["ma"] == "BR-26"
+    assert dang_chay.ma_chuyen in r.json()["thong_diep"]
+    assert "Bạn đang chạy chuyến" in r.json()["thong_diep"]
+    assert lai(db, kb["c01"]).trang_thai == "DA_CHOT"
+    assert dem(db, Tep) == 0 and list(thu_muc_tam.iterdir()) == []
