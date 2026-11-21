@@ -2,6 +2,7 @@ import { useEffect, useState, type CSSProperties, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   danhSachChuyen,
+  duDoanTreNgay,
   phutDoc,
   TEN_CO,
   lapChuyen,
@@ -183,6 +184,28 @@ export default function ChuyenDanhSach() {
   useEffect(() => {
     viecHomNay().then(setViec)
   }, [])
+
+  // UC-30: gọi dự đoán nguy cơ trễ theo ngày khi đang xem một ngày cụ thể; lỗi thì im lặng (KT-08)
+  const [nguyCoCao, setNguyCoCao] = useState<{ ngay: string; ids: Set<number> }>({
+    ngay: '',
+    ids: new Set(),
+  })
+  useEffect(() => {
+    if (!ngay) return
+    let bo = false
+    duDoanTreNgay(ngay)
+      .then((r) => {
+        if (bo) return
+        setNguyCoCao({
+          ngay,
+          ids: new Set(r.du_lieu.filter((x) => x.muc === 'CAO').map((x) => x.chuyen_id)),
+        })
+      })
+      .catch(() => !bo && setNguyCoCao({ ngay, ids: new Set() }))
+    return () => {
+      bo = true
+    }
+  }, [ngay, lanTai])
 
   // Xem theo ngày: lấy cả ngày một lượt để đếm theo trạng thái, lọc trạng thái tại chỗ.
   // shortcut: tối đa 100 chuyến một ngày, đủ cho nhà xe nhỏ. Mọi ngày: máy chủ lọc và phân trang như cũ.
@@ -556,6 +579,9 @@ export default function ChuyenDanhSach() {
                       <Nhan loai={c.trang_thai}>
                         {TEN_TRANG_THAI[c.trang_thai] ?? c.trang_thai}
                       </Nhan>
+                      {ngay && nguyCoCao.ngay === ngay && nguyCoCao.ids.has(c.id) && (
+                        <Nhan loai="NGUY_CO_CAO">Nguy cơ trễ cao</Nhan>
+                      )}
                       {td?.co.map((x) => (
                         <Nhan
                           key={x}

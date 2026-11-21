@@ -9,9 +9,11 @@ import {
   type HieuSuatXe,
   type LaiLo,
 } from '../api/baoCao'
+import { duDoanTreNgay, type DuDoanChuyenNgay } from '../api/chuyen'
 import { LoiApi } from '../api/goi'
 import { tongQuanNgay, type TongQuanNgay } from '../api/tongQuan'
 import { dangGiamChuyenDong } from '../nen'
+import { Nhan } from '../nhan'
 import NumberFlow from '@number-flow/react'
 
 // Trang Tổng quan của Quản lý và Kế toán (UC-26 lãi lỗ, UC-34 hiệu suất xe).
@@ -88,6 +90,7 @@ export default function TongQuan({ ketToan = false }: { ketToan?: boolean }) {
       )}
 
       <HomNay />
+      {!ketToan && <DuDoanTreHomNay />}
 
       {/* Hàng số liệu của tháng đang chọn */}
       <h2 className="tq-tieu-de">
@@ -725,6 +728,52 @@ function HomNay() {
           <em>cước các đơn của chuyến trong ngày, chưa trừ đơn thất bại</em>
         </div>
       </div>
+    </section>
+  )
+}
+
+// UC-30: khối gợi ý dự đoán trễ hôm nay cho Quản lý (Kế toán không thấy). Trống hoặc lỗi thì ẩn cả khối.
+function DuDoanTreHomNay() {
+  const [homNay] = useState(() => new Date().toLocaleDateString('sv-SE'))
+  const [ds, setDs] = useState<DuDoanChuyenNgay[] | null>(null)
+  useEffect(() => {
+    let bo = false
+    duDoanTreNgay(homNay)
+      .then((r) => !bo && setDs(r.du_lieu))
+      .catch(() => !bo && setDs(null))
+    return () => {
+      bo = true
+    }
+  }, [homNay])
+
+  if (!ds || ds.length === 0) return null
+  const cao = ds.filter((x) => x.muc === 'CAO')
+  const tb = ds.filter((x) => x.muc === 'TRUNG_BINH').length
+  const thap = ds.filter((x) => x.muc === 'THAP').length
+  const demMuc: string[] = []
+  if (tb > 0) demMuc.push(`${tb} chuyến mức Trung bình`)
+  if (thap > 0) demMuc.push(`${thap} ${demMuc.length ? '' : 'chuyến '}mức Thấp`)
+
+  return (
+    <section className="kinh tq-khoi ct-du-doan-tq">
+      <h2>Dự đoán trễ hôm nay (AI)</h2>
+      {cao.length > 0 ? (
+        <ul className="ct-du-doan-tq-ds">
+          {cao.map((x) => (
+            <li key={x.chuyen_id}>
+              <Link to={`/dieu-phoi/chuyen/${x.chuyen_id}`} className="bien-so">
+                {x.ma_chuyen}
+              </Link>
+              <Nhan loai="NGUY_CO_CAO">Nguy cơ trễ cao</Nhan>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p>
+          Hôm nay không có chuyến nguy cơ trễ cao
+          {demMuc.length > 0 && ` (${demMuc.join(', ')})`}
+        </p>
+      )}
     </section>
   )
 }

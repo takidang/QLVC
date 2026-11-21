@@ -116,7 +116,12 @@ export type ViPhamGhep = { don_id: number | null; ma: string; thong_diep: string
 
 // UC-30: gợi ý nguy cơ trễ chuyến từ mô hình thử nghiệm (chỉ gợi ý, KT-08)
 export type MucNguyCoTre = 'THAP' | 'TRUNG_BINH' | 'CAO'
-export type YeuToDuDoanTre = { ten: string; huong: 'TANG' | 'GIAM' }
+export type YeuToDuDoanTre = {
+  ma: string
+  ten: string
+  huong: 'TANG' | 'GIAM'
+  gia_tri: number
+}
 export type NguonDuDoanTre = {
   dataset?: string
   ngay_train?: string
@@ -130,9 +135,20 @@ export type DuDoanTre = {
   yeu_to?: YeuToDuDoanTre[] | null
   nguon?: NguonDuDoanTre | null
 }
+export type DuDoanChuyenNgay = {
+  chuyen_id: number
+  ma_chuyen: string
+  muc: MucNguyCoTre
+  xac_suat: number
+}
+export type DuDoanNgay = {
+  du_lieu: DuDoanChuyenNgay[]
+}
 
 export const chiTietChuyen = (id: number) => goi<ChuyenChiTiet>(`/api/chuyen/${id}`)
 export const duDoanTre = (id: number) => goi<DuDoanTre>(`/api/chuyen/${id}/du-doan-tre`)
+export const duDoanTreNgay = (ngay: string) =>
+  goi<DuDoanNgay>(`/api/du-doan-tre?${query({ ngay })}`)
 export const donPhuHop = (id: number) => goi<Don[]>(`/api/chuyen/${id}/don-phu-hop`)
 export const ghepDon = (id: number, don_ids: number[]) =>
   guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/ghep`, 'POST', { don_ids })
