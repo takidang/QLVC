@@ -1,17 +1,17 @@
 # Báo cáo kiểm thử theo tiêu chí chấp nhận
 
-> Sinh từ bảng "Truy vết và kết quả" của các story trong `docs/stories/` (lệnh `story report` của skill `story-flow`), chỉ lấy số liệu từ story, không ước lượng. Cập nhật 19/11/2026 theo `dev`. Story còn **Nháp** (chưa duyệt tiêu chí) không tính. Chuỗi truy vết: use case → tiêu chí chấp nhận (AC) → test case → bằng chứng; mỗi AC loại Logic / API có test tự động, loại UI có ảnh chụp trong `docs/test-evidence/`.
+> Sinh từ bảng "Truy vết và kết quả" của các story trong `docs/stories/` (lệnh `story report` của skill `story-flow`), chỉ lấy số liệu từ story, không ước lượng. Cập nhật 21/11/2026 theo `dev`. Story còn **Nháp** (chưa duyệt tiêu chí) không tính. Chuỗi truy vết: use case → tiêu chí chấp nhận (AC) → test case → bằng chứng; mỗi AC loại Logic / API có test tự động, loại UI có ảnh chụp trong `docs/test-evidence/`.
 
 ## Tổng hợp
 
-- **38 story**, **367 tiêu chí** (AC): **367 đạt**, **0 chưa kiểm**, **0 không đạt**.
+- **38 story**, **368 tiêu chí** (AC): **368 đạt**, **0 chưa kiểm**, **0 không đạt**.
 - Story hoàn thành: 38/38.
 
 ## Theo loại tiêu chí
 
 | Loại | Số AC | Đạt | Chưa kiểm | Không đạt |
 |---|---|---|---|---|
-| API | 293 | 293 | 0 | 0 |
+| API | 294 | 294 | 0 | 0 |
 | UI | 45 | 45 | 0 | 0 |
 | Logic | 25 | 25 | 0 | 0 |
 | Dữ liệu | 3 | 3 | 0 | 0 |
@@ -36,7 +36,7 @@
 | UC-15 | Chốt / mở chốt chuyến | 11 | 11 | 0 | 0 | Hoàn thành |
 | UC-16 | Hủy chuyến | 10 | 10 | 0 | 0 | Hoàn thành |
 | UC-17 | Xem chuyến được giao | 10 | 10 | 0 | 0 | Hoàn thành |
-| UC-18 | Bắt đầu / kết thúc chuyến | 11 | 11 | 0 | 0 | Hoàn thành |
+| UC-18 | Bắt đầu / kết thúc chuyến | 12 | 12 | 0 | 0 | Hoàn thành |
 | UC-19 | Quét mã lấy hàng / báo không lấy được | 15 | 15 | 0 | 0 | Hoàn thành |
 | UC-20 | Quét mã giao hàng / báo giao không được | 16 | 16 | 0 | 0 | Hoàn thành |
 | UC-21 | Ghi chi phí | 14 | 14 | 0 | 0 | Hoàn thành |
