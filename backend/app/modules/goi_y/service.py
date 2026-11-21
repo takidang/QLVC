@@ -84,8 +84,8 @@ def du_doan_ngay(db: Session, ngay: date) -> DuDoanNgayRa:
         du_lieu = []
         for c in chuyen_ds:
             km = km_theo_tuyen.get(c.tuyen_id)
-            if km is None:
-                raise ValueError(f"Tuyến {c.tuyen_id} không có nút")
+            if km is None:  # tuyến không có nút: bỏ riêng chuyến này (như endpoint từng chuyến), chuyến khác vẫn có
+                continue
             kq = du_doan(mo_hinh, _dac_trung_tu_km(c, km))
             du_lieu.append(
                 DuDoanChuyenNgayRa(
