@@ -333,7 +333,7 @@ Thời điểm kiểm: G = khi ghép/gỡ đơn, C = khi chốt chuyến, X = kh
 - **UC-30 dự đoán nguy cơ trễ** của chuyến. Gợi ý ghép đơn bằng OR-Tools (UC-29) đã bỏ ở 0.5, chuyển sang hướng phát triển.
 - **Ranh giới:** AI chỉ **gợi ý** cho Điều phối. Mọi quy tắc chặn (tải, tuyến, hạn giao, giấy tờ, giờ lái, tiền) dùng công thức cố định ở mục 2.1 để kết quả luôn như nhau, test được và giải thích được bằng mã BR. Kết quả AI không chặn thao tác, không đổi ETA kế hoạch.
 - **Nguồn dữ liệu train:**
-  1. Dataset công khai (Kaggle "Delivery Truck Trips Data" – cần kiểm tra nội dung và giấy phép). Cột khác hệ thống nên cần bước **chuyển đổi** sang khái niệm của đồ án: quãng đường, giờ khởi hành, số điểm dừng, thời gian dự kiến, thời gian thực tế, có trễ hay không.
+  1. Dataset công khai (Kaggle "Delivery Truck Trips Data", giấy phép CC BY-SA 3.0, kiểm 21/11/2026, ghi công và tệp dẫn xuất ở `ml/README.md`). Cột khác hệ thống nên cần bước **chuyển đổi** sang khái niệm của đồ án: quãng đường, giờ khởi hành, số điểm dừng, thời gian dự kiến, thời gian thực tế, có trễ hay không.
   2. Dữ liệu của chính hệ thống: train lại dần khi có lượt quét thật.
   - Không train trên dữ liệu tự sinh bằng công thức của hệ thống (mô hình chỉ học lại công thức, không có giá trị).
 - **Dữ liệu hệ thống thu để học** (đã có trong ERD): ETA kế hoạch và giờ quét thực tế từng điểm (ra độ trễ), giờ khởi hành/kết thúc thực tế, tuyến, xe, tài xế, số điểm dừng, tải, cờ giao trễ, lý do thất bại kèm `phia`, km đầu/cuối, số lít dầu.
