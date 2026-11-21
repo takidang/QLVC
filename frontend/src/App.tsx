@@ -12,6 +12,7 @@ import {
 import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
 import { Ic, type TenIc } from './nhan'
 import { KhungThongBao } from './thongBao'
+import BatLoiTrang from './BatLoiTrang'
 import ChuongThongBao from './ChuongThongBao'
 import DanConTro from './DanConTro'
 import MenuTaiKhoan from './MenuTaiKhoan'
@@ -206,9 +207,11 @@ function KhungTrang({
               {loiThoat}
             </p>
           )}
-          <Suspense fallback={<p className="ghi-chu">Đang tải…</p>}>
-            <Outlet context={nd} />
-          </Suspense>
+          <BatLoiTrang key={pathname}>
+            <Suspense fallback={<p className="ghi-chu">Đang tải…</p>}>
+              <Outlet context={nd} />
+            </Suspense>
+          </BatLoiTrang>
         </main>
       </div>
       <DanConTro pathname={pathname} />
@@ -249,34 +252,68 @@ export default function App() {
   return (
     <BrowserRouter>
       <KhungThongBao />
-      <Suspense fallback={<p className="ghi-chu">Đang tải…</p>}>
-        <Routes>
-          {/* UC-28: trang công khai cho khách, không cần đăng nhập */}
-          <Route path="/tra-cuu" element={<TraCuu />} />
-          <Route
-            path="/dang-nhap"
-            element={
-              nd ? (
-                <Navigate to={TRANG_CHU[nd.vai_tro]} replace />
-              ) : (
-                <DangNhap
-                  onXong={(moi) => {
-                    setNd(moi)
-                    setPhienBanAnh((v) => v + 1)
-                  }}
-                />
-              )
-            }
-          />
-          {(Object.keys(TRANG_CHU) as VaiTro[]).map((vt) => (
+      <BatLoiTrang>
+        <Suspense fallback={<p className="ghi-chu">Đang tải…</p>}>
+          <Routes>
+            {/* UC-28: trang công khai cho khách, không cần đăng nhập */}
+            <Route path="/tra-cuu" element={<TraCuu />} />
             <Route
-              key={vt}
-              path={TRANG_CHU[vt]}
+              path="/dang-nhap"
+              element={
+                nd ? (
+                  <Navigate to={TRANG_CHU[nd.vai_tro]} replace />
+                ) : (
+                  <DangNhap
+                    onXong={(moi) => {
+                      setNd(moi)
+                      setPhienBanAnh((v) => v + 1)
+                    }}
+                  />
+                )
+              }
+            />
+            {(Object.keys(TRANG_CHU) as VaiTro[]).map((vt) => (
+              <Route
+                key={vt}
+                path={TRANG_CHU[vt]}
+                element={
+                  !nd ? (
+                    <Navigate to="/dang-nhap" replace />
+                  ) : !duocVao(nd, vt) ? (
+                    <Navigate to={TRANG_CHU[nd.vai_tro]} replace />
+                  ) : (
+                    <KhungTrang
+                      nd={nd}
+                      phienBanAnh={phienBanAnh}
+                      loiThoat={loiThoat}
+                      onThoat={thoat}
+                    />
+                  )
+                }
+              >
+                <Route
+                  index
+                  element={
+                    TRANG_DAU[vt] ? (
+                      <Navigate to={TRANG_DAU[vt]} replace />
+                    ) : (
+                      <section className="noi-dung">
+                        <h1>Trang {TEN_VAI_TRO[vt]}</h1>
+                        <p className="ghi-chu">Chọn chức năng trên thanh menu.</p>
+                      </section>
+                    )
+                  }
+                />
+                {(TRANG_CON[vt] ?? []).map((t) => (
+                  <Route key={t.duong_dan} path={t.duong_dan} element={t.trang} />
+                ))}
+              </Route>
+            ))}
+            {/* Trang chung cho mọi vai trò đã đăng nhập (không hiện trên thanh menu bên trái) */}
+            <Route
               element={
                 !nd ? (
                   <Navigate to="/dang-nhap" replace />
-                ) : !duocVao(nd, vt) ? (
-                  <Navigate to={TRANG_CHU[nd.vai_tro]} replace />
                 ) : (
                   <KhungTrang
                     nd={nd}
@@ -288,54 +325,27 @@ export default function App() {
               }
             >
               <Route
-                index
+                path="/tai-khoan"
                 element={
-                  TRANG_DAU[vt] ? (
-                    <Navigate to={TRANG_DAU[vt]} replace />
-                  ) : (
-                    <section className="noi-dung">
-                      <h1>Trang {TEN_VAI_TRO[vt]}</h1>
-                      <p className="ghi-chu">Chọn chức năng trên thanh menu.</p>
-                    </section>
+                  nd && (
+                    <TaiKhoan
+                      nd={nd}
+                      tenVaiTro={TEN_VAI_TRO[nd.vai_tro]}
+                      phienBanAnh={phienBanAnh}
+                      onDoiAnh={capNhatAnh}
+                    />
                   )
                 }
               />
-              {(TRANG_CON[vt] ?? []).map((t) => (
-                <Route key={t.duong_dan} path={t.duong_dan} element={t.trang} />
-              ))}
+              <Route path="/cai-dat" element={nd && <CaiDat vaiTro={nd.vai_tro} />} />
             </Route>
-          ))}
-          {/* Trang chung cho mọi vai trò đã đăng nhập (không hiện trên thanh menu bên trái) */}
-          <Route
-            element={
-              !nd ? (
-                <Navigate to="/dang-nhap" replace />
-              ) : (
-                <KhungTrang nd={nd} phienBanAnh={phienBanAnh} loiThoat={loiThoat} onThoat={thoat} />
-              )
-            }
-          >
             <Route
-              path="/tai-khoan"
-              element={
-                nd && (
-                  <TaiKhoan
-                    nd={nd}
-                    tenVaiTro={TEN_VAI_TRO[nd.vai_tro]}
-                    phienBanAnh={phienBanAnh}
-                    onDoiAnh={capNhatAnh}
-                  />
-                )
-              }
+              path="*"
+              element={<Navigate to={nd ? TRANG_CHU[nd.vai_tro] : '/dang-nhap'} replace />}
             />
-            <Route path="/cai-dat" element={nd && <CaiDat vaiTro={nd.vai_tro} />} />
-          </Route>
-          <Route
-            path="*"
-            element={<Navigate to={nd ? TRANG_CHU[nd.vai_tro] : '/dang-nhap'} replace />}
-          />
-        </Routes>
-      </Suspense>
+          </Routes>
+        </Suspense>
+      </BatLoiTrang>
     </BrowserRouter>
   )
 }
