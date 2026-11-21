@@ -15,14 +15,14 @@ Bốn nhánh dài hạn, cộng nhánh ngắn cho từng use case. Claude của 
 git switch dev
 git pull
 git switch -c kiet/uc-02-nguoi-dung        # tên: <người>/uc-xx-<mô tả ngắn>
-# ... story-flow: story, code, test, cập nhật TIEN-DO phần mình ...
+# ... story-flow: story, code, test (không sửa TIEN-DO.md) ...
 git push -u origin kiet/uc-02-nguoi-dung
 gh pr create --base dev                     # tiêu đề: "UC-02 Người dùng – nhờ Tài review"
 ```
 - PR vào `dev` phải **CI xanh** và được **người kia review** (Claude của người kia chạy `ponytail-review` trên PR). Góp ý ghi dưới dạng đề xuất, người làm tự quyết sửa hay không.
 - Gộp xong thì xóa nhánh use case (`gh pr merge --merge --delete-branch`).
 - Làm lâu hơn 1–2 ngày thì kéo `dev` mới về nhánh mình (`git merge origin/dev`) để đỡ xung đột.
-- Việc tài liệu nhỏ của riêng mình (một dòng tiến độ, nhật ký) đi cùng nhánh use case; không có use case nào thì dùng nhánh `tai/tai-lieu-...` / `kiet/tai-lieu-...` như trên.
+- `TIEN-DO.md` không đi cùng nhánh use case (chốt 09/11, sau nhiều lần xung đột ở #17, #23, #24). Gộp xong một đợt PR thì người gộp cập nhật tiến độ một lần bằng PR riêng `tai/tien-do-...` / `kiet/tien-do-...` (kiểu #19), đóng story luôn trong đó. PR chỉ sửa phần của mình trong `TIEN-DO.md` (không kèm story, code) thì CI xanh là tự gộp, không cần người kia duyệt (chốt 09/11, Kiệt đồng ý). Việc tài liệu khác không thuộc use case nào dùng nhánh `tai/tai-lieu-...` / `kiet/tai-lieu-...`.
 
 ## 2. Lên `test` rồi `main` (trước mốc demo, báo cáo tuần)
 ```
@@ -47,6 +47,11 @@ gh pr create --base main --head hotfix
 
 ## 4. Lưu ý
 - File dùng chung (`backend/app/models/`, migration, `domain/trang_thai.py`): vẫn ghi "Đang chặn" trong `TIEN-DO.md` và commit **lên `dev` qua PR nhỏ** trước khi sửa.
-- `TIEN-DO.md`: mỗi người sửa phần mình trong nhánh của mình; mục chung chỉ thêm dòng – git gộp được, ít xung đột.
+- **Tránh xung đột (chốt 31/10, sau lần PR #5 và #6 đụng nhau):**
+  - `TIEN-DO.md`: mỗi người **chỉ sửa phần của mình**. Nhắn nhau (nhờ review, nhờ thử giao diện, báo xong việc) ghi vào **mô tả PR hoặc comment trên PR**, không thêm dòng vào mục chung nữa (hai người cùng chèn vào một chỗ là xung đột).
+  - Dữ liệu và kết quả thử giao diện: mỗi use case một file `docs/test-evidence/UC-xx/du-lieu.md`, không nối vào file chung.
+  - Danh sách cố định trong code (router ở `backend/app/main.py`, menu `TRANG_CON` ở `frontend/src/App.tsx`): chèn theo thứ tự chữ cái, không thêm vào cuối.
+  - PR nhỏ, review và gộp trong ngày. **Trước khi mở PR** chạy `git merge origin/dev` trên nhánh mình, sửa xung đột ngay.
+  - Không làm nhánh mới chồng lên nhánh chưa gộp (ví dụ UC-18 trên UC-17), trừ khi bắt buộc; nếu chồng thì gộp nhánh dưới trước.
 - Không `push --force` lên `main`, `dev`, `test`. Không sửa lịch sử đã push.
-- Nhánh cũ `kiet/nghiep-vu`, `kiet/uc-04` đã gộp hết, có thể xóa.
+- Nhánh cũ `kiet/nghiep-vu` giữ lại (nhóm chốt 30/10); `kiet/uc-04` đã gộp hết, có thể xóa.

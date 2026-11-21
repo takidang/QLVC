@@ -26,11 +26,17 @@
 
 | Phương thức | Đường dẫn | Vai trò | UC | BR / ghi chú |
 |---|---|---|---|---|
-| POST | `/api/auth/dang-nhap` | CK | UC-01 | Đặt cookie; giới hạn tần suất |
+| POST | `/api/auth/dang-nhap` | CK | UC-01 | Đặt cookie; giới hạn tần suất; trả `{id, ho_ten, vai_tro, co_anh_dai_dien}` |
 | POST | `/api/auth/dang-xuat` | Mọi vai trò | UC-01 | Xóa cookie |
-| GET | `/api/auth/toi` | Mọi vai trò | UC-01 | Thông tin và vai trò người đang đăng nhập |
-| GET, POST | `/api/nguoi-dung` | QL | UC-02 | BR-57 |
-| PATCH | `/api/nguoi-dung/{id}` | QL | UC-02 | Đổi vai trò, khóa tài khoản |
+| GET | `/api/auth/toi` | Mọi vai trò | UC-01, UC-39 | Thông tin, vai trò và cờ `co_anh_dai_dien` của người đang đăng nhập |
+| GET | `/api/auth/ho-so` | Mọi vai trò | UC-39 | Hồ sơ chỉ xem của chính mình: `{id, ten_dang_nhap, ho_ten, vai_tro, trang_thai, co_anh_dai_dien, tai_xe}` (`tai_xe`: `{sdt, so_gplx, hang_gplx, han_gplx}` nếu là tài xế, `null` với vai trò khác). Không có `PATCH`/`PUT /ho-so` (405) |
+| PUT | `/api/auth/anh-dai-dien` | Mọi vai trò | UC-39 | multipart field `anh` (1 file): JPEG/PNG theo byte đầu, ≤ 500 KB (sai loại / rỗng → 400, > 500 KB → 413); tên file do máy chủ sinh, đổi lần sau xóa file cũ sau khi commit; trường lạ trong form bị bỏ qua; trả hồ sơ như `GET /api/auth/ho-so` |
+| DELETE | `/api/auth/anh-dai-dien` | Mọi vai trò | UC-39 | Xóa ảnh đại diện và file lưu của chính mình → 204 (chưa có ảnh vẫn 204) |
+| GET | `/api/auth/anh-dai-dien` | Mọi vai trò | UC-39 | Trả ảnh đại diện của chính người gọi theo cookie (`Content-Type` theo đuôi đã kiểm, `X-Content-Type-Options: nosniff`, `Cache-Control: private, no-cache`); chưa có hoặc file mất → 404 |
+| PUT | `/api/auth/mat-khau` | Mọi vai trò | UC-35 | `{mat_khau_cu, mat_khau_moi}` (mới 8–200 ký tự) → 204; chỉ của chính mình, trường lạ → 400. Sai mật khẩu cũ → 422 `SAI_MAT_KHAU_CU` (không dùng 401) và **tính như một lần đăng nhập sai**: 5 lần liên tiếp khóa 15 phút (429 `KHOA_TAM`, đăng nhập cũng bị khóa); mới trùng cũ → 422 `MAT_KHAU_TRUNG`. Đổi đúng thì xóa bộ đếm; phiên đang dùng vẫn còn hạn |
+| GET, POST | `/api/nguoi-dung` | QL | UC-02 | BR-57; `?vai_tro=&trang_thai=&tim=&trang=&so_dong=`; POST chỉ tạo `QUAN_LY`/`DIEU_PHOI`/`KE_TOAN` (tài xế tạo ở UC-04); trùng tên đăng nhập → 409 |
+| PATCH | `/api/nguoi-dung/{id}` | QL | UC-02 | `ten_dang_nhap`, `ho_ten`, `vai_tro`, `trang_thai` (khóa/mở, mở thì xóa khóa tạm); không nhận `mat_khau`. 409: đổi vai trò/trạng thái tài khoản tài xế (làm ở UC-04), tự đổi vai trò/trạng thái của mình, khóa/hạ Quản lý hoạt động cuối cùng |
+| PUT | `/api/nguoi-dung/{id}/mat-khau` | QL | UC-02 | `{mat_khau}` 8–200 ký tự → 204; xóa bộ đếm sai và khóa tạm; mọi vai trò kể cả tài xế |
 | GET | `/api/cau-hinh` | QL | UC-07 | Danh sách CFG-xx (gồm CFG-08…10) |
 | PUT | `/api/cau-hinh/{ma}` | QL | UC-07 | Ghi người sửa, thời điểm |
 | GET, POST | `/api/bang-gia` | QL | UC-07 | BR-48; mỗi mức có `hieu_luc_tu`, danh sách kèm cờ `dang_ap_dung`; trùng cặp tỉnh (không phân biệt hoa thường) + ngày → 409 |
@@ -56,7 +62,7 @@
 | POST | `/api/khach-hang` | DP | UC-06 | SĐT chuẩn hóa về `0` + 9–10 số (BR-59) |
 | GET | `/api/khach-hang/{id}` | DP, KT | UC-06 | |
 | PATCH | `/api/khach-hang/{id}` | DP | UC-06 | `trang_thai` `HOAT_DONG`/`NGUNG`; không xóa (BR-60) |
-| GET | `/api/canh-bao` | DP | UC-27 | Giấy tờ sắp hết hạn (BR-21), lượt quét thiếu GPS (BR-43), chuyến trễ làm chồng chuyến kế tiếp, đơn chờ sắp quá hạn (BR-73), sự cố đang mở |
+| GET | `/api/canh-bao` | DP (QL) | UC-27 | Không tham số (tham số lạ → 400). Trả `{cau_hinh: {ngay_bao_truoc, nguong_tre_phut, gio_cho_ghep}, giay_to, chuyen_tre, su_co_mo, don_sap_qua_han, thieu_gps, so_viec}`. `giay_to` `[{doi_tuong: XE\|TAI_XE, id, ten, loai: DANG_KIEM\|BAO_HIEM\|GPLX, han, con_ngay, het_han}]`: xe, tài xế `HOAT_DONG` có hạn ≤ hôm nay + CFG-02 (BR-21), hạn gần trước. `chuyen_tre` `[{chuyen_id, ma_chuyen, bien_so, ten_tai_xe, tre_phut, ket_thuc_dang_chay, chong}]`: chuyến `DANG_CHAY` có cờ `TRE` hoặc `CHONG_LICH` (cách tính UC-32, BR-73). `su_co_mo` `[{su_co_id, chuyen_id, ma_chuyen, bien_so, ten_tai_xe, loai, ghi_chu, luc}]`, cũ trước. `don_sap_qua_han` `[{don_id, ma_don, ten_khach, tinh_lay, tinh_giao, han_giao, con_phut, qua_han}]`: đơn `CHO_GHEP` còn dưới CFG-10 giờ tới hạn (gồm đã quá hạn). `thieu_gps` `[{chuyen_id, ma_chuyen, ten_tai_xe, so_luot, luc_gan_nhat}]`: lượt quét thiếu GPS (BR-43) của chuyến đang chạy hoặc kết thúc trong 24 giờ |
 
 ### 2.3 Đơn hàng
 
@@ -64,13 +70,14 @@
 |---|---|---|---|---|
 | POST | `/api/don/tinh-cuoc` | DP | UC-08 | Tính thử, không lưu (BR-46…48) |
 | POST | `/api/don` | DP | UC-08 | Tạo đơn `CHO_GHEP`, chốt cước ngay (BR-31, 32, 48); thiếu bảng giá → 422 BR-48 |
-| GET | `/api/don` | DP, KT | UC-08 | Lọc `trang_thai`, `khach_hang_id`, `tu`, `den`, `sap_qua_han` |
+| GET | `/api/don` | DP, KT | UC-08 | Lọc `trang_thai`, `khach_hang_id`, `tu`, `den`, `sap_qua_han`. Mỗi đơn kèm `trang_thai_chuyen` (chuyến đang ghép, null nếu chưa ghép) để giao diện ẩn Sửa / Hủy khi chuyến không còn `LAP` (UC-10, BR-33, 34) |
 | GET | `/api/don/{id}` | DP, KT | — | Kèm lịch sử trạng thái, các lần ghép, đã lấy hàng hay chưa |
-| PATCH | `/api/don/{id}` | DP | UC-10 | BR-33: chỉ khi `CHO_GHEP`/`DA_GHEP`; tính lại cước từ bản sao giá; đang ghép thì kiểm BR-67 |
-| POST | `/api/don/{id}/huy` | DP | UC-10, UC-22 | BR-34, cần `ly_do`; nhận cả `THAT_BAI` chưa có lượt quét lấy |
-| GET | `/api/don/{id}/phieu` | DP | UC-08 | Phiếu gửi hàng có QR (PDF hoặc PNG) |
-| POST | `/api/don/{id}/ghep-lai` | DP | UC-22 | `THAT_BAI → CHO_GHEP` (BR-36, 37, 69); `{han_giao?, nut_giu_id?, dia_chi_giu?, lat_giu?, lng_giu?}`; nơi giữ hàng bắt buộc khi đơn đã lấy |
-| POST | `/api/don/{id}/tra-hang` | DP | UC-22 | `THAT_BAI → TRA_HANG`, chỉ khi đơn đã có lượt quét lấy (BR-36) |
+| PATCH | `/api/don/{id}` | DP | UC-10 | BR-33: chỉ khi `CHO_GHEP`/`DA_GHEP` (đơn đang ghép: chuyến phải `LAP`, không thì 409 `BR-33`); gửi trường nào sửa trường đó, không sửa khách, nút lấy / giao (→ 400); kiểm lại BR-31; tính lại cước từ bản sao giá, cước đổi thì ghi nhật ký tiền (BR-62); đang ghép thì kiểm BR-67, vi phạm → 422 `VI_PHAM_SUA` |
+| POST | `/api/don/{id}/huy` | DP | UC-10, UC-22 | BR-34, cần `ly_do` (1–300 ký tự); `CHO_GHEP` → `HUY`; `DA_GHEP` ở chuyến `LAP` tự gỡ rồi hủy (gỡ làm đơn khác vi phạm → 422 `VI_PHAM_HUY`), chuyến đã chốt → 409; trạng thái khác → 409 `BR-34`. `THAT_BAI` (chuyến đã kết thúc): chưa có lượt quét `LAY` → `HUY`, đã có → 422 `BR-34` (UC-22) |
+| – | ~~`/api/don/{id}/phieu`~~ | DP | UC-08, UC-19 | Bỏ endpoint (Tài chốt 04/11): phiếu gửi hàng là **trang in ở frontend** `/dieu-phoi/don/{id}/phieu`, đọc `GET /api/don/{id}`, vẽ QR bằng gói `qrcode` (QR chỉ chứa mã đơn), in bằng Ctrl+P |
+| GET | `/api/don/can-xu-ly` | DP | UC-22 | Đơn `THAT_BAI` kèm `da_lay`, `so_lan_giao_tb_khach`, `nguong` (CFG-04), `ly_do_cuoi` (lý do của lần vào `THAT_BAI` gần nhất trong lịch sử trạng thái, gồm cả "Sự cố xe: …" khi kết thúc do sự cố; không có thì lấy lý do lượt quét), `cho_chuyen_xong` |
+| POST | `/api/don/{id}/ghep-lai` | DP | UC-22 | `THAT_BAI → CHO_GHEP` (BR-36, 37, 69); `{han_giao?, nut_giu_id?, dia_chi_giu?, lat_giu?, lng_giu?}`; chỉ khi chuyến đã kết thúc (ghép hết hiệu lực, không thì 409 `BR-36`); đạt CFG-04 lần giao thất bại phía khách → 422 `BR-37`; đã lấy (có lượt quét `LAY`) thì nơi giữ hàng bắt buộc, bỏ khung giờ lấy cũ; chưa lấy gửi nơi giữ → 422 `BR-69`; hạn mới kiểm BR-31; cước giữ nguyên |
+| POST | `/api/don/{id}/tra-hang` | DP | UC-22 | `THAT_BAI → TRA_HANG`, chỉ khi đơn đã có lượt quét lấy (BR-36), không thì 422 `BR-36`; body `{ly_do?}` tùy chọn (vào lịch sử) |
 
 ### 2.4 Chuyến (lõi)
 
@@ -78,49 +85,53 @@
 |---|---|---|---|---|
 | GET | `/api/chuyen/xe-kha-dung`, `/api/chuyen/tai-xe-kha-dung` | DP | UC-11 | `?tuyen_id=&khoi_hanh=` (có múi giờ), tài xế thêm `&xe_id=` không bắt buộc để lọc BR-14. Trả **mọi** xe / tài xế kèm `kha_dung` và `ly_do: [{ma, thong_diep}]` (xe: BR-11…13, 16; tài xế: `TAI_XE_NGUNG`, BR-14, 15, 17…19), khả dụng xếp trước |
 | POST | `/api/chuyen` | DP | UC-11 | `{tuyen_id, khoi_hanh_du_kien, xe_id, tai_xe_id}` → `LAP` (BR-22), mã `CH-yyMMdd-NN` theo ngày khởi hành. Vi phạm → 422, `ma` là BR đầu tiên, `chi_tiet` đủ mọi vi phạm; tuyến `NGUNG` → 422 `TUYEN_NGUNG`; giờ đã qua → 422 `KHOI_HANH_DA_QUA` |
-| GET | `/api/chuyen` | DP, KT | UC-11, UC-32 | Lọc trạng thái, ngày, tuyến. `?ngay=` trả **bảng chuyến trong ngày**: % đầy, tiến độ "đã xong/tổng điểm", cờ trễ (CFG-09), sự cố mở, đơn thất bại, chưa quyết toán |
-| GET | `/api/chuyen/{id}` | DP, KT | UC-13, UC-32 | UC-13 đã làm tổng quan + thẻ Hàng (cùng dạng với kết quả ghép ở mục 3.1). Đủ 5 thẻ ở UC-32: tổng quan, hàng (tải, thể tích, % đầy), lịch trình (điểm dừng suy ra theo BR-63; ETA kế hoạch từ khi chốt, giờ quét thực tế, độ trễ; kết thúc dự kiến khi đang chạy theo BR-73), dòng thời gian (km, lượt quét, chi phí, sự cố), tiền |
-| GET | `/api/chuyen/{id}/xe-kha-dung`, `/tai-xe-kha-dung` | DP | UC-12 | Như trên, cho chuyến đã có |
+| GET | `/api/chuyen` | DP, KT | UC-11, UC-32 | Lọc trạng thái, ngày, tuyến; `tu_khoa` (≤ 100 ký tự) khớp một phần mã chuyến, biển số, tên tài xế, không phân biệt hoa thường (UC-32-AC15). `?ngay=` trả **bảng chuyến trong ngày**: % đầy, tiến độ "đã xong/tổng điểm", cờ trễ (CFG-09), sự cố mở, đơn thất bại, chưa quyết toán | **UC-32 (đã làm):** có `ngay` thì mỗi chuyến kèm `theo_doi` `{xong, tong, ty_le_lap_day, co, chong, diem, tre_phut, vi_tri, ket_thuc_dang_chay}`; cờ `TRE` (quét trễ quá CFG-09), `SU_CO`, `THAT_BAI`, `CHUA_QUYET_TOAN`, `CHONG_LICH` (BR-73). Thêm 11/11 cho giao diện v2: `diem` là trạng thái từng điểm dừng theo thứ tự lịch trình (`XONG` / `THAT_BAI` / `DANG_TOI` / `CHUA`; điểm giao bị bỏ vì không lấy được và điểm của đơn thất bại do kết thúc sự cố tính `THAT_BAI`; `DANG_TOI` chỉ khi `DANG_CHAY`); `tre_phut` là trễ của lượt quét gần nhất so ETA kế hoạch, âm là sớm, `null` khi chưa quét; `vi_tri` `{lat, lng, luc, nut}` của lượt quét mới nhất có GPS, `null` khi chưa có (vị trí lúc quét, không theo dõi liên tục); `ket_thuc_dang_chay` là kết thúc dự kiến khi đang chạy (BR-73, cùng giá trị với chi tiết chuyến), `null` khi chuyến không `DANG_CHAY` (thêm 12/11 để bảng ngày hiện giờ mới của chuyến trễ).
+| GET | `/api/chuyen/{id}` | DP, KT | UC-13, UC-32 | UC-13 đã làm tổng quan + thẻ Hàng (cùng dạng với kết quả ghép ở mục 3.1). Đủ 5 thẻ ở UC-32: tổng quan, hàng (tải, thể tích, % đầy), lịch trình (điểm dừng suy ra theo BR-63; ETA kế hoạch từ khi chốt, giờ quét thực tế, độ trễ; kết thúc dự kiến khi đang chạy theo BR-73), dòng thời gian (km, lượt quét, chi phí, sự cố), tiền | **UC-32 (đã làm):** mỗi điểm lịch trình thêm `eta_ke_hoach`, `thuc_te` (giờ quét đầu tiên), `ket_qua` (`BO` = không lấy được nên bỏ điểm giao), `tre_phut`, `lat`, `lng` (tọa độ nút, vẽ bản đồ; nút chưa có tọa độ thì null); thêm `co`, `chong`, `ket_thuc_dang_chay` (BR-73), `ket_thuc_bat_thuong`, `ly_do_ket_thuc`, `km_bat_dau`, `km_ket_thuc`, `dong_thoi_gian` (`noi_dung` là chữ tiếng Việt, không hiện mã trạng thái / mã quét), `tien` (`dinh_muc`, `luong`, `tam_ung_hieu_luc`, `doanh_thu`), `su_co`. Đơn thất bại của chuyến đã kết thúc vẫn nằm trong `don`. Các trường này không có trong kết quả ghép / gỡ / chốt.
+| GET | `/api/chuyen/{id}/xe-kha-dung`, `/tai-xe-kha-dung` | DP | UC-12 | Như trên, cho chuyến đã có: không trùng lịch với chính nó, xe phải chở đủ đơn đang ghép (BR-01, 02); tài xế mặc định xét hạng theo xe hiện tại, `?xe_id=` để xét theo xe sắp đổi |
 | PUT | `/api/chuyen/{id}/phan-cong` | DP | UC-12 | `{xe_id, tai_xe_id}`; chỉ khi `LAP`; kiểm BR-11…19 và BR-67 |
 | GET | `/api/chuyen/{id}/don-phu-hop` | DP | UC-13 | Đơn `CHO_GHEP` đã lọc BR-03, 04 (nút lấy = nơi giữ hàng nếu có, BR-69), hạn giao gần trước, tối đa 200 |
 | POST | `/api/chuyen/{id}/ghep` | DP | UC-13 | **Chi tiết ở mục 3.1** |
 | POST | `/api/chuyen/{id}/go` | DP | UC-13 | `{don_ids}`; kiểm lại cả chuyến (BR-67); ghép hết hiệu lực, đơn `→ CHO_GHEP`. Trả như 3.1. Gỡ làm đơn khác vi phạm → 422 `VI_PHAM_GO` (`chi_tiet` như 3.1); đơn không đang ghép trong chuyến → 422 `DON_KHONG_THUOC_CHUYEN`; chuyến không `LAP` → 409 `BR-09` |
-| POST | `/api/chuyen/{id}/chot` | DP | UC-15 | BR-23, 71; trả cảnh báo lãi âm (BR-52), cần `xac_nhan_lai_am=true`; chuyến 0 đơn cần `xac_nhan_chay_rong=true` |
-| POST | `/api/chuyen/{id}/mo-chot` | DP | UC-15 | BR-24: còn tạm ứng `HIEU_LUC` → 409 |
-| POST | `/api/chuyen/{id}/huy` | DP | UC-16 | BR-25, cần `ly_do`; còn tạm ứng `HIEU_LUC` → 409 |
-| POST | `/api/chuyen/{id}/ket-thuc-su-co` | DP | UC-32 | Chỉ khi `DANG_CHAY`; `{ly_do, km_ket_thuc?}` (BR-68); đơn `DA_GHEP`, `DA_LAY` → `THAT_BAI` lý do "sự cố xe" |
-| POST | `/api/su-co/{id}/dong` | DP | UC-32 | `{cach_xu_ly}`; sự cố `MO → DONG` |
+| POST | `/api/chuyen/{id}/chot` | DP | UC-15 | Body tùy chọn `{xac_nhan_chay_rong, xac_nhan_lai_am}` (mặc định false). Kiểm lại nhóm A, B (BR-23): vi phạm → 422 `VI_PHAM_CHOT` (`chi_tiet` như 3.1); 0 đơn thiếu `xac_nhan_chay_rong` → 422 `BR-23`; lãi dự kiến âm thiếu `xac_nhan_lai_am` → 422 `BR-52` (chuyến rỗng chỉ cần xác nhận chạy rỗng). Lưu định mức, lương, ETA kế hoạch (BR-71). Trả như 3.1 (thêm `chay_rong`); chuyến không `LAP` → 409 `BR-09` |
+| POST | `/api/chuyen/{id}/mo-chot` | DP | UC-15 | BR-24: còn tạm ứng `HIEU_LUC` → 409 `BR-24`. Về `LAP`, xóa số đã chốt và ETA kế hoạch. Trả như 3.1; chuyến không `DA_CHOT` → 409 `BR-09` |
+| POST | `/api/chuyen/{id}/huy` | DP | UC-16 | BR-25: body `{ly_do}` bắt buộc, 1–300 ký tự (thiếu, rỗng, trường lạ → 400). Chuyến không ở `LAP`/`DA_CHOT` hoặc còn tạm ứng `HIEU_LUC` → 409 `BR-25`. Ghép hết hiệu lực, đơn → `CHO_GHEP`, lý do lưu ở lịch sử trạng thái chuyến và đơn. Trả như 3.1 |
+| POST | `/api/chuyen/{id}/ket-thuc-su-co` | DP | UC-32 | Chỉ khi `DANG_CHAY` (không thì 409 `BR-68`); `{ly_do, km_ket_thuc?}` (BR-68), lý do 1–300 ký tự; km phải > km bắt đầu (422 `BR-70`), có thì cập nhật km xe; đơn `DA_GHEP`, `DA_LAY` → `THAT_BAI` lý do "Sự cố xe: …", ghép hết hiệu lực (BR-36); chuyến `HOAN_THANH`, `ket_thuc_bat_thuong`, kết thúc dự kiến = giờ kết thúc thực tế. Trả chi tiết như `GET /api/chuyen/{id}` |
+| POST | `/api/su-co/{id}/dong` | DP | UC-32 | `{cach_xu_ly}` 1–500 ký tự; sự cố `MO → DONG`; đã đóng → 409 `SU_CO_DA_DONG`. Router `router_su_co` trong module chuyến |
 | GET | `/api/chuyen/{id}/du-doan-tre` | DP | UC-30 | Lỗi hoặc chưa có mô hình → `{ "co_du_doan": false }` |
 
 ### 2.5 Tài xế: chuyến, quét mã, sự cố
 
 | Phương thức | Đường dẫn | Vai trò | UC | BR / ghi chú |
 |---|---|---|---|---|
-| GET | `/api/toi/chuyen` | TX | UC-17 | Chỉ chuyến của mình (BR-58) |
-| GET | `/api/toi/chuyen/{id}` | TX | UC-17 | Lịch trình theo BR-63, đơn ở từng điểm |
-| POST | `/api/toi/chuyen/{id}/bat-dau` | TX | UC-18 | multipart: `km_bat_dau`, `anh_dong_ho`; BR-26 (gồm BR-11…15), BR-70 |
-| POST | `/api/toi/chuyen/{id}/ket-thuc` | TX | UC-18 | multipart: `km_ket_thuc`, `anh_dong_ho`; BR-28, BR-70, rồi xử lý BR-36 |
+| GET | `/api/toi/chuyen` | TX | UC-17 | Chỉ chuyến của mình (BR-58). `?nhom=can_lam` (mặc định: `DA_CHOT`, `DANG_CHAY`, đang chạy lên đầu) \| `da_xong` (`HOAN_THANH`, `DA_QUYET_TOAN`, mới nhất trước); không bao giờ có `LAP`, `HUY`; mỗi dòng có `so_don`, không có tiền |
+| GET | `/api/toi/chuyen/{id}` | TX | UC-17 | Lịch trình theo BR-63, đơn ở từng điểm (địa chỉ, người liên hệ, SĐT, hàng, khung/hạn, trạng thái đơn, `da_lay` = đã quét lấy trong chính chuyến này); giờ là ETA kế hoạch lưu lúc chốt (BR-71), chưa lưu thì tính lại; có `luong_tai_xe_chot`, không có cước/lãi/định mức. Chuyến người khác, `LAP`, `HUY`, id không có → cùng 404 |
+| POST | `/api/toi/chuyen/{id}/bat-dau` | TX | UC-18 | multipart: `km_bat_dau`, `anh_dong_ho`; BR-26 (đúng ngày khởi hành theo giờ VN, gồm BR-11…15 – vi phạm liệt kê trong `chi_tiet`), BR-70 (km ≥ km sàn của xe). Trả chi tiết chuyến như `GET /api/toi/chuyen/{id}`. Không phải chuyến của mình → 404; không ở `DA_CHOT` → 409 |
+| POST | `/api/toi/chuyen/{id}/ket-thuc` | TX | UC-18 | multipart: `km_ket_thuc`, `anh_dong_ho`; BR-28 (còn đơn → 422, `chi_tiet` có `ma_don`), BR-70 (km > km bắt đầu, cập nhật `km_dong_ho` xe), rồi xử lý BR-36. Không ở `DANG_CHAY` → 409. **Ảnh** (mọi API có ảnh): JPEG/PNG theo nội dung file, sai → 400; > 500 KB → 413 |
 | POST | `/api/toi/quet` | TX | UC-19, UC-20 | **Chi tiết ở mục 3.2** |
-| POST | `/api/toi/chuyen/{id}/chi-phi` | TX | UC-21 | multipart: loại, số tiền, `so_lit` (bắt buộc với dầu), ghi chú, ảnh (BR-54) |
-| PATCH, DELETE | `/api/toi/chi-phi/{id}` | TX | UC-21 | Chỉ khoản của mình khi `CHO_DUYET` |
-| POST | `/api/toi/chuyen/{id}/su-co` | TX | UC-33 | multipart: loại, ghi chú, ảnh; chuyến của mình `DANG_CHAY`; không đổi trạng thái chuyến |
+| GET | `/api/toi/chuyen/{id}/chi-phi` | TX | UC-21 | Khoản chi của chuyến mình (cũ trước, kèm `so_anh`), `tong_da_khai` (trừ khoản `TU_CHOI`), `tam_ung_da_nhan` (Σ tạm ứng `HIEU_LUC`). Chuyến người khác / `LAP` / `HUY` → 404 |
+| POST | `/api/toi/chuyen/{id}/chi-phi` | TX | UC-21 | multipart: `loai` (`DAU`/`CAU_DUONG`/`BOC_XEP`/`PHAT_SINH`), `so_tien` (1…10¹²), `so_lit` (> 0, 2 chữ số thập phân; **bắt buộc với dầu, cấm với loại khác**), `ghi_chu` (≤ 500), `anh` 1–5 (BR-54). Trường lạ, sai kiểu, dầu thiếu lít → 400; > 5 ảnh → 400 `QUA_NHIEU_ANH`; thiếu ghi chú / ảnh → 422 `BR-54`; chuyến người khác / `LAP` / `HUY` → 404; `DA_CHOT` → 409 `BR-54`, `DA_QUYET_TOAN` → 409 `BR-29`. Ghi được khi `DANG_CHAY`, `HOAN_THANH`; lưu `CHO_DUYET` + `NHAT_KY_TIEN` `TAO`. 201 trả khoản |
+| PATCH, DELETE | `/api/toi/chi-phi/{id}` | TX | UC-21 | Chỉ khoản của mình khi `CHO_DUYET`, chuyến chưa quyết toán (khác → 409 `BR-54` / `BR-29`; khoản người khác → 404). PATCH JSON `{loai?, so_tien?, so_lit?, ghi_chu?}` kiểm lại BR-54, không đổi ảnh, không gì thay đổi → 400 `KHONG_CO_THAY_DOI`, nhật ký `SUA`. DELETE xóa khoản + tệp, nhật ký `XOA` giữ giá trị cũ, 204 |
+| GET | `/api/toi/chuyen/{id}/su-co` | TX | UC-33 | Sự cố của chuyến mình, cũ trước: `[{id, chuyen_id, loai, ghi_chu, trang_thai (MO/DONG), cach_xu_ly, so_anh, luc}]`; chuyến người khác, `LAP`, `HUY`, không có → 404 |
+| POST | `/api/toi/chuyen/{id}/su-co` | TX | UC-33 | multipart: `loai` (`HONG_XE`/`TAI_NAN`/`KET_XE`/`THOI_TIET`/`KHAC`), `ghi_chu` 1–500 ký tự (NFC, bỏ khoảng trắng hai đầu; thiếu → 422 `THIEU_GHI_CHU`, dài → 400), `anh` 0–5 JPG/PNG ≤ 500 KB (sai loại, quá 5 → 400, quá lớn → 413); trường lạ, loại khác → 400. Chuyến người khác, `LAP`, `HUY` → 404; không `DANG_CHAY` → 409 `CHUYEN_KHONG_DANG_CHAY`. 201: sự cố `MO` như dòng GET; không đổi trạng thái chuyến, đơn. Điều phối đóng ở `/api/su-co/{id}/dong` (UC-32) |
 
 ### 2.6 Tiền: tạm ứng, chi phí, quyết toán, công nợ, báo cáo
 
 | Phương thức | Đường dẫn | Vai trò | UC | BR / ghi chú |
 |---|---|---|---|---|
-| POST | `/api/chuyen/{id}/tam-ung` | KT | UC-23 | BR-53: chuyến `DA_CHOT`/`DANG_CHAY`; tổng vượt định mức đã chốt → 422 |
-| PATCH | `/api/tam-ung/{id}` | KT | UC-23 | Kiểm lại BR-53 mỗi lần sửa; cần `ly_do` |
-| POST | `/api/tam-ung/{id}/thu-hoi` | KT | UC-23 | `HIEU_LUC → DA_THU_HOI`; dùng trước khi mở chốt hoặc hủy chuyến (BR-24, 25) |
-| GET | `/api/tam-ung` | KT, QL | UC-23 | Lọc `trang_thai`, `chuyen_id`, `tai_xe_id` |
-| POST | `/api/chi-phi/{id}/duyet` | KT | UC-24 | `{so_tien_duyet, ly_do?}`; lý do bắt buộc khi khác số khai |
-| POST | `/api/chi-phi/{id}/tu-choi` | KT | UC-24 | Cần `ly_do` |
-| GET | `/api/chuyen/{id}/quyet-toan` | KT | UC-24 | Bảng quyết toán dự kiến: định mức – thực tế – chênh lệch, dầu tham khảo, lý do lãi lệch dự kiến |
+| GET | `/api/chuyen/{id}/tam-ung` | KT, QL | UC-23 | Màn hình cấp: `{chuyen_id, ma_chuyen, trang_thai_chuyen, dinh_muc, tong_hieu_luc, con_duoc_cap, khoan: [...]}`; định mức = dầu + cầu đường + bốc xếp đã chốt; `con_duoc_cap` = định mức − tổng `HIEU_LUC` (không âm) là số gợi ý |
+| POST | `/api/chuyen/{id}/tam-ung` | KT | UC-23 | `{so_tien, hinh_thuc}` (`so_tien` số nguyên 1…10¹², `TIEN_MAT`/`CHUYEN_KHOAN`; sai, trường lạ → 400). Khóa dòng chuyến; chuyến không `DA_CHOT`/`DANG_CHAY` → 409 `BR-53`; tổng `HIEU_LUC` vượt định mức đã chốt → 422 `BR-53` (`chi_tiet` có `con_duoc_cap`). 201 trả khoản `{id, chuyen_id, ma_chuyen, tai_xe_id, ten_tai_xe, so_tien, hinh_thuc, trang_thai, tao_luc}`; tài xế là tài xế của chuyến |
+| PATCH | `/api/tam-ung/{id}` | KT | UC-23 | `{so_tien, hinh_thuc?, ly_do}` (`ly_do` 1–300 ký tự). Kiểm lại BR-53 (các khoản khác + số mới) → 422; khoản `DA_THU_HOI` hoặc chuyến không `DA_CHOT`/`DANG_CHAY`/`HOAN_THANH` → 409 `BR-53`, chuyến `DA_QUYET_TOAN` → 409 `BR-29`; số và hình thức giữ nguyên → 400 `KHONG_CO_THAY_DOI` |
+| POST | `/api/tam-ung/{id}/thu-hoi` | KT | UC-23 | `{ly_do?}` (bỏ trống: nhật ký ghi "Tài xế đã nộp lại tạm ứng"). `HIEU_LUC → DA_THU_HOI`; dùng trước khi mở chốt hoặc hủy chuyến (BR-24, 25). Trạng thái như PATCH; đã thu hồi → 409 |
+| GET | `/api/tam-ung` | KT, QL | UC-23 | Lọc `trang_thai`, `chuyen_id`, `tai_xe_id`; phân trang, mới nhất trước |
+| POST | `/api/chi-phi/{id}/duyet` | KT | UC-24 | `{so_tien_duyet, ly_do?}`: số nguyên 1 … số khai (lớn hơn → 422 `BR-55`); khác số khai mà thiếu lý do → 422 `BR-55`. Chỉ khi chuyến `HOAN_THANH` (khác → 409 `BR-55`, `DA_QUYET_TOAN` → 409 `BR-29`). Đổi quyết định được tới khi quyết toán; giống hệt lần trước → 400 `KHONG_CO_THAY_DOI`. Nhật ký `DUYET`. Trả khoản `{id, loai, so_tien_khai, so_tien_duyet, so_lit, ghi_chu, trang_thai, anh: [tep_id], tao_luc}` |
+| POST | `/api/chi-phi/{id}/tu-choi` | KT | UC-24 | `{ly_do}` bắt buộc; `so_tien_duyet` → null; điều kiện chuyến như duyệt; nhật ký `TU_CHOI` |
+| GET | `/api/chuyen/{id}/quyet-toan` | KT, QL | UC-24 | Chuyến `HOAN_THANH` (tạm tính) hoặc `DA_QUYET_TOAN` (kèm cách xử lý đã lưu); khác → 409 `BR-55`. Đơn giao / thất bại, doanh thu, `chi_theo_loai` (định mức – thực tế đã duyệt – chênh lệch), km, dầu tham khảo / thực tế (lít), khoản chi kèm id ảnh, `so_cho_duyet`, lương chốt / lương dùng, tạm ứng `HIEU_LUC`, chênh lệch, `xu_ly_goi_y`, lãi, lãi dự kiến, `ly_do_lech` (cộng lại = lãi − lãi dự kiến) |
 | POST | `/api/chuyen/{id}/quyet-toan` | KT | UC-24 | **Chi tiết ở mục 3.3** |
-| GET | `/api/phai-thu` | KT | UC-25 | Lọc `trang_thai_tt`, `khach_hang_id`; tổng nợ theo khách |
-| POST | `/api/phai-thu/da-thu` | KT | UC-25 | `{phai_thu_ids, ngay}`; đánh dấu một hoặc nhiều khoản `DA_THU` (BR-56) |
-| GET | `/api/bao-cao/lai-lo` | QL, KT (DP xem) | UC-26 | `?theo=chuyen\|xe\|thang&tu=&den=`; theo xe, tháng thì trừ chi phí cố định |
-| GET | `/api/bao-cao/hieu-suat-xe` | QL (KT xem) | UC-34 | `?thang=`; % lấp đầy trung bình, số chuyến chạy rỗng, km, dầu thực tế so với định mức |
+| GET | `/api/phai-thu` | KT, QL | UC-25 | Lọc `trang_thai_tt`, `khach_hang_id`; phân trang, đơn giao mới trước. `{du_lieu, tong, tong_tien}`; mỗi dòng `{id, don_hang_id, ma_don, khach_hang_id, ten_khach, ngay_giao, so_tien, trang_thai_tt, phieu_thu_id, ngay_thu}` |
+| GET | `/api/phai-thu/theo-khach` | KT, QL | UC-25 | Nợ theo khách (chỉ `CHUA_THU`): `[{khach_hang_id, ten_khach, so_khoan, tong_no}]`, nợ nhiều trước |
+| POST | `/api/phai-thu/da-thu` | KT | UC-25 | `{phai_thu_ids, ngay}`: 1–100 id không trùng, `ngay` dạng `YYYY-MM-DD` không sau hôm nay (sai → 400); id không có → 404; có khoản đã thu → 409 `BR-56` (cả lô không đổi); khoản của nhiều khách → 422 `BR-56`. Lập một `PHIEU_THU` cho khách, các khoản `DA_THU` + `phieu_thu_id`, mỗi khoản 1 dòng `NHAT_KY_TIEN` `DA_THU`; đơn giữ `DA_GIAO` (BR-56). Trả `{phieu_thu_id, khach_hang_id, tong_tien, ngay, so_khoan}` |
+| GET | `/api/bao-cao/lai-lo` | QL, KT, DP | UC-26 | `?theo=chuyen\|xe\|thang` (mặc định `thang`) `&tu=YYYY-MM&den=YYYY-MM` (mặc định tháng hiện tại; `tu > den`, quá 12 tháng, sai dạng, tham số lạ → 400). Chỉ chuyến `DA_QUYET_TOAN`, số đọc từ `QUYET_TOAN`; tháng theo khởi hành thực tế giờ VN. Trả `{theo, tu, den, du_lieu, tong, so_chuyen_cho_quyet_toan, thieu_chi_phi_co_dinh: [{xe_id, bien_so, thang}]}`. Dòng `chuyen`: `{chuyen_id, ma_chuyen, ngay, xe_id, bien_so, ten_tuyen, doanh_thu, tong_chi, luong_tai_xe, lai}`; dòng `xe`: `{xe_id, bien_so, so_chuyen, doanh_thu, tong_chi, luong_tai_xe, lai_chuyen, chi_phi_co_dinh, lai}` (`lai = lai_chuyen − chi_phi_co_dinh`, xe chỉ có chi phí cố định vẫn có dòng); dòng `thang`: như `xe` nhưng `thang` thay `xe_id, bien_so`, đủ mọi tháng kể cả tháng trống. `tong` có cả 7 cột số |
+| GET | `/api/bao-cao/hieu-suat-xe` | QL, KT | UC-34 | `?thang=YYYY-MM` (mặc định tháng hiện tại; sai dạng, tham số lạ → 400). Chuyến `HOAN_THANH`, `DA_QUYET_TOAN` khởi hành thực tế trong tháng (giờ VN). Trả `{thang, du_lieu, tong}`; mỗi xe `{xe_id, bien_so, so_chuyen, so_chuyen_rong, lap_day_tb, km, dau_thuc_te_lit, dau_tham_khao_lit, chenh_lech_lit, so_chuyen_chua_quyet_toan}`: `lap_day_tb` 0–1 (chạy rỗng tính 0; không có chuyến → null), dầu thực tế = Σ lít khoản dầu `DA_DUYET`, tham khảo = km × định mức / 100 (xe chưa có định mức → null). Có cả xe `HOAT_DONG` không chạy (dòng 0); theo biển số. `tong` cùng cột, `lap_day_tb` trung bình trên mọi chuyến. Số thập phân trả dạng số |
 
 Mọi endpoint ghi tiền đều ghi `NHAT_KY_TIEN` (BR-62).
 
@@ -128,9 +139,13 @@ Mọi endpoint ghi tiền đều ghi `NHAT_KY_TIEN` (BR-62).
 
 | Phương thức | Đường dẫn | Vai trò | UC | BR / ghi chú |
 |---|---|---|---|---|
-| GET | `/api/danh-muc/ly-do` | DP, TX | UC-19, 20, 22 | `?ap_dung=LAY\|GIAO`; mỗi lý do có `phia` (`KHACH`/`SU_CO_XE`) cho BR-37, 42 |
-| GET | `/api/tep/{id}/link` | DP, KT, TX (của chuyến mình) | — | Link có hạn 5 phút (NFR-SEC-04) |
+| GET | `/api/danh-muc/ly-do` | DP, TX | UC-19, 20, 22 | `?ap_dung=LAY\|GIAO` (bỏ trống: cả hai); trả `[{id, ten, ap_dung, phia}]`, `phia` (`KHACH`/`SU_CO_XE`) cho BR-37, 42. Danh mục nạp bằng migration `2a4c8d5f38e7` (12 lý do, `app/domain/ly_do.py`) |
+| GET | `/api/tep/{id}/link` | DP, KT, TX (của chuyến mình) | — | Link có hạn 5 phút (NFR-SEC-04). **UC-24 đã làm phần ảnh chi phí cho KT, QL** (tệp khác → 403): `{url, het_han}`, link ký HMAC |
+| GET | `/api/tep/{id}/anh?het=&ky=` | (link) | UC-24 | Mở ảnh từ link trên, không cần cookie; hết hạn / sai chữ ký → 403; `nosniff` |
 | POST | `/api/tra-cuu` | CK | UC-28 | **Chi tiết ở mục 3.4** |
+| GET | `/api/thong-bao` | Mọi vai trò | UC-37 | Không tham số (lạ → 400). Trả `{so_luong, thong_bao: [{loai, muc_do, tieu_de, noi_dung, doi_tuong: {loai, id}, luc}]}`, mới trước theo `luc`; tính lại mỗi lần, không lưu. `muc_do`: `KHAN` / `CAN_LAM` / `THONG_TIN`; `doi_tuong.loai`: `CHUYEN` / `DON` / `XE` / `TAI_XE`. `luc` là lúc sự việc xảy ra (giấy tờ: đầu ngày hôm nay), giao diện so với mốc lần mở chuông lưu trên trình duyệt để biết chưa đọc. DP, QL: `GIAY_TO`, `CHUYEN_TRE`, `SU_CO_MO`, `DON_SAP_QUA_HAN`, `THIEU_GPS` (từ UC-27), `DON_THAT_BAI` (đơn sẵn sàng xử lý, UC-22). KT: `CHO_QUYET_TOAN`, `CHI_PHI_CHO_DUYET` (gộp theo chuyến), `TAM_UNG_TREO` – đều của chuyến `HOAN_THANH`. TX (của mình): `CHUYEN_DUOC_GIAO` (`DA_CHOT`, khởi hành hôm nay / ngày mai), `SU_CO_DA_DONG`, `CHI_PHI_DA_XU_LY` (từ chối / duyệt khác số khai, trong 3 ngày, lần xử lý mới nhất) |
+| GET | `/api/tim?q=` | Mọi vai trò | UC-36 | Tìm chung, `q` 2–100 ký tự sau khi bỏ khoảng trắng (chuẩn NFC), thiếu / quá ngắn / tham số lạ → 400. Trả `{q, chuyen, don, xe, tai_xe, khach_hang}`, mỗi nhóm `{tong, ds}` với `ds` tối đa 5 dòng, `tong` là số khớp thật; luôn đủ 5 khóa, nhóm không được xem trả `{tong: 0, ds: []}`. Quyền: DP, QL cả 5 nhóm; KT chuyến, đơn, khách; TX chỉ chuyến của mình (không `LAP`, `HUY`). `chuyen`: `{id, ma_chuyen, trang_thai, bien_so, ten_tai_xe, khoi_hanh_du_kien}` (khớp mã chuyến, biển số, tên tài xế); `don`: `{id, ma_don, trang_thai, ten_khach, tinh_lay, tinh_giao}`; `xe`: `{id, bien_so, trang_thai}`; `tai_xe`: `{id, ho_ten, trang_thai}`; `khach_hang`: `{id, ten, sdt}` |
+| GET | `/api/tong-quan?ngay=` | QL, DP, KT | UC-38 | `ngay` YYYY-MM-DD (bỏ trống: hôm nay giờ VN; sai dạng / tham số lạ → 400); Tài xế 403. Chuyến của ngày = khởi hành dự kiến trong ngày (giờ VN). Trả `{ngay, chuyen: {tong, theo_trang_thai: {LAP, DA_CHOT, DANG_CHAY, HOAN_THANH, DA_QUYET_TOAN, HUY}}, don: {tong, da_giao, that_bai, con_lai, kg_da_cho}, dung_gio: {nguong_tre_phut, da_quet, dung_gio, ty_le}, doanh_thu_du_kien}`. Đơn theo kết quả trên chính chuyến (như UC-32), không tính chuyến hủy; `dung_gio` = điểm đã quét có trễ ≤ CFG-09 (sớm hoặc đúng ngưỡng vẫn đúng giờ), `ty_le` 0–1 hoặc `null` khi chưa quét điểm nào; `doanh_thu_du_kien` = tổng cước đơn của chuyến không hủy (gồm đơn thất bại; số thực ở quyết toán UC-24) |
 
 ---
 
@@ -183,19 +198,26 @@ Request:
 |---|---|---|
 | `ma_don` | Có | Đọc từ QR hoặc nhập tay |
 | `loai` | Có | `LAY`, `KHONG_LAY`, `GIAO`, `GIAO_THAT_BAI` (hai loại sau đưa đơn về `THAT_BAI`) |
-| `lat`, `lng`, `do_chinh_xac_m` | Không | Thiếu thì gắn cờ `thieu_gps` (BR-43) |
-| `anh` (1 hoặc nhiều) | Theo loại | Bắt buộc với `GIAO`, `KHONG_LAY`, `GIAO_THAT_BAI` (BR-41, 42); ≤ 500 KB mỗi ảnh |
+| `lat`, `lng`, `do_chinh_xac_m` | Không | Thiếu thì gắn cờ `thieu_gps` (BR-43); `do_chinh_xac_m` 0 ≤ … < 1.000.000 (cột `Numeric(8, 1)`) |
+| `anh` (1–5) | Theo loại | Bắt buộc với `GIAO`, `KHONG_LAY`, `GIAO_THAT_BAI` (BR-41, 42); ≤ 500 KB mỗi ảnh; quá 5 ảnh → 400 `QUA_NHIEU_ANH` (review PR #15). `LAY` gửi kèm thì bỏ qua |
 | `chu_ky` | Với `GIAO` | PNG |
 | `ten_nguoi_nhan` | Với `GIAO` | |
 | `ly_do_id` | Với `KHONG_LAY`, `GIAO_THAT_BAI` | Mã trong danh mục lý do |
 
-**Không có trường thời gian**: giờ quét lấy từ server.
+**Không có trường thời gian**: giờ quét lấy từ server. Gửi trường thời gian hoặc trường lạ bất kỳ → 400 (TC-BR43-02). Gửi một nửa tọa độ (chỉ `lat` hoặc chỉ `lng`) → 400. Lỗi: đơn không thuộc chuyến của mình, chưa ghép hoặc mã không có → 403 `BR-38` (cùng một câu); chuyến không `DANG_CHAY` → 409 `BR-38`; thất bại thiếu lý do / ảnh → 422 `BR-42`; ảnh sai loại 400, quá 500 KB 413. `GIAO`: thiếu ảnh, chữ ký hoặc tên người nhận (1–100 ký tự sau khi bỏ khoảng trắng) → 422 `BR-41`; chữ ký không phải PNG → 400. Giao thành công: ghép `ket_qua = DA_GIAO`, quá hạn giao (giờ máy chủ sau `han_giao`) → `giao_tre`, `canh_bao` `GIAO_TRE`; sinh `PHAI_THU` = cước, `CHUA_THU` + `NHAT_KY_TIEN` `TAO` (BR-56, 62). `GIAO_THAT_BAI` cần lý do áp dụng `GIAO` + ảnh, không sinh phải thu. Code ở `modules/quet/` (UC-19, UC-20).
 
 200:
 ```json
 { "ma_don": "DH-0012", "trang_thai": "DA_GIAO", "canh_bao": ["GIAO_TRE"], "lap_lai": false }
 ```
-`canh_bao` có thể gồm `THIEU_GPS` (BR-43), `GIAO_TRE` (BR-72). `lap_lai: true` khi đơn đã có kết quả từ trước (BR-45); khi đó không tạo bản ghi mới.
+`canh_bao` có thể gồm `THIEU_GPS` (BR-43), `GIAO_TRE` (BR-72). `lap_lai: true` khi quét lặp **cùng ý** với kết quả đã có (BR-45), ví dụ quét lấy đơn đã lấy; khi đó không tạo bản ghi mới, không lưu ảnh. Quét **trái kết quả** → 409, `chi_tiet[0].trang_thai` là trạng thái hiện tại (TC-BR39-02). Đơn còn `DA_GHEP` mà quét giao → 409 `BR-40` "chưa được quét lấy" (TC-BR40-02). Bảng đầy đủ (UC-20 quyết định 3):
+
+| Đơn đang | `LAY` | `KHONG_LAY` | `GIAO` | `GIAO_THAT_BAI` |
+|---|---|---|---|---|
+| `DA_GHEP` | → `DA_LAY` | → `THAT_BAI` | 409 `BR-40` | 409 `BR-40` |
+| `DA_LAY` | lặp (200) | 409 `BR-39` | → `DA_GIAO` | → `THAT_BAI` |
+| `DA_GIAO` | lặp (200) | 409 `BR-39` | lặp (200) | 409 `BR-40` |
+| `THAT_BAI` | 409 `BR-39` | lặp (200) | 409 `BR-40` | lặp (200) |
 
 Lỗi: 403 đơn không thuộc chuyến của tài xế đang đăng nhập (BR-38, chống IDOR); 409 chuyến của mình nhưng không ở `DANG_CHAY` (BR-38), hoặc sai trạng thái đơn (ví dụ giao khi chưa lấy, BR-40); 422 thiếu ảnh, chữ ký, lý do (BR-41, 42); 413 file quá lớn.
 
@@ -228,7 +250,7 @@ Request (số liệu tiền do server tính; Kế toán chỉ gửi phần phả
 }
 ```
 
-409: chuyến không ở `HOAN_THANH`; còn chi phí `CHO_DUYET` (BR-55). 422: thiếu hoặc sai `xu_ly_chenh_lech`; thiếu lương tay khi kết thúc do sự cố (BR-68). Sau khi thành công, mọi endpoint ghi tiền của chuyến trả 409 (BR-29).
+409: chuyến không ở `HOAN_THANH` (`BR-55`; đã quyết toán `BR-29`); còn chi phí `CHO_DUYET` (`BR-55`, `chi_tiet` có `chi_phi_ids`). 422: thiếu hoặc sai dấu `xu_ly_chenh_lech`; chênh lệch ≠ 0 mà thiếu `hinh_thuc` / `luc_xu_ly` hoặc `luc_xu_ly` ở tương lai (`BR-55`); thiếu lương tay hoặc lý do khi kết thúc do sự cố (`BR-68`). `luc_xu_ly` phải có múi giờ (thiếu → 400). Chênh lệch 0 thì `hinh_thuc`, `luc_xu_ly` bỏ qua. Nhật ký `QUYET_TOAN`, thêm `LUONG_TAY` nếu nhập tay. Sau khi thành công, mọi endpoint ghi tiền của chuyến trả 409 (BR-29).
 
 ### 3.4 `POST /api/tra-cuu` (UC-28)
 
@@ -249,3 +271,5 @@ Request: `{ "ma_don": "DH-0012", "sdt_4_so_cuoi": "6789" }`
 ```
 
 Không trả GPS, số điện thoại tài xế, cước (BR-59). Sai mã hoặc sai số → 404 với thông báo chung "Không tìm thấy đơn". Quá tần suất → 429.
+
+**UC-28 (đã làm 11/11):** không cần đăng nhập. `ma_don` 1–20 ký tự, bỏ khoảng trắng đầu cuối, không phân biệt hoa thường; `sdt_4_so_cuoi` đúng 4 chữ số, khớp 4 số cuối `sdt_lay` hoặc `sdt_nhan` của đơn; sai dạng / thừa trường → 400. `moc` đầu tiên là `CHO_GHEP` lúc tạo đơn (`tao_luc`), sau đó mỗi lần đổi trạng thái trong lịch sử; **không** trả lý do, người thao tác. Giới hạn: 10 lần **sai** (404) trong 60 giây từ một IP → lần sau 429 `QUA_TAN_SUAT` (kể cả đúng); tra đúng không tính. IP lấy từ kết nối (`request.client`), app không tự đọc `X-Forwarded-For`. **Khi chạy sau proxy (Render)** phải chạy `uvicorn ... --proxy-headers --forwarded-allow-ips="*"` để uvicorn lấy IP thật của khách từ header của proxy; không thì mọi khách chung IP proxy, một người sai 10 lần là khóa tra cứu của tất cả (góp ý Kiệt review #42). Bộ đếm trong bộ nhớ tiến trình (shortcut: một tiến trình uvicorn).

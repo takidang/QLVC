@@ -50,6 +50,7 @@ export const danhSachTuyen = (loc: {
   so_dong?: number
 }) => goi<DanhSach<Tuyen>>(`/api/tuyen?${query(loc)}`)
 export const themTuyen = (vao: TuyenVao) => guiJson<Tuyen>('/api/tuyen', 'POST', vao)
+export const xemTuyen = (id: number) => goi<Tuyen>(`/api/tuyen/${id}`)
 export const suaTuyen = (
   id: number,
   vao: Partial<Omit<TuyenVao, 'ma'>> & { trang_thai?: Tuyen['trang_thai'] },

@@ -96,6 +96,9 @@ flowchart LR
   HT(("Hệ thống<br/>hằng ngày"))
   subgraph CHUNG["Chung"]
     UC02(["UC-02 Người dùng, vai trò"])
+    UC35(["UC-35 Đổi mật khẩu"])
+    UC36(["UC-36 Tìm kiếm chung"])
+    UC37(["UC-37 Thông báo"])
   end
   subgraph XTX["Xe / Tài xế"]
     UC03(["UC-03 Quản lý xe"])
@@ -132,6 +135,7 @@ flowchart LR
     UC25(["UC-25 Công nợ"])
     UC26(["UC-26 Báo cáo lãi lỗ"])
     UC34(["UC-34 Hiệu suất xe"])
+    UC38(["UC-38 Tổng quan hôm nay"])
   end
   subgraph TRA["Tra cứu"]
     UC28(["UC-28 Tra cứu đơn"])
@@ -139,11 +143,11 @@ flowchart LR
   subgraph PHU["Phụ trợ"]
     UC30(["UC-30 Dự đoán trễ"])
   end
-  QL --- UC02 & UC07 & UC26 & UC34
-  DP --- UC03 & UC04 & UC05 & UC06 & UC08 & UC10 & UC11 & UC12 & UC13 & UC15 & UC16 & UC22 & UC27 & UC32
+  QL --- UC02 & UC07 & UC26 & UC34 & UC35 & UC36 & UC37 & UC38
+  DP --- UC03 & UC04 & UC05 & UC06 & UC08 & UC10 & UC11 & UC12 & UC13 & UC15 & UC16 & UC22 & UC27 & UC32 & UC35 & UC36 & UC37 & UC38
   DP -.- UC30
-  TX --- UC17 & UC18 & UC19 & UC20 & UC21 & UC33
-  KT --- UC23 & UC24 & UC25 & UC26 & UC03
+  TX --- UC17 & UC18 & UC19 & UC20 & UC21 & UC33 & UC35 & UC36 & UC37
+  KT --- UC23 & UC24 & UC25 & UC26 & UC03 & UC35 & UC36 & UC37 & UC38
   KH --- UC28
   HT --- UC27
 ```
@@ -304,6 +308,7 @@ erDiagram
     string trang_thai "HOAT_DONG|NGUNG"
     int so_lan_sai "NFR-SEC-05"
     datetime khoa_den "khóa tạm tới lúc này"
+    string anh_dai_dien "tên file ảnh đại diện do máy chủ sinh, null nếu chưa có (UC-39)"
   }
   KHACH_HANG {
     int id PK
@@ -625,6 +630,7 @@ Liên quan: BR-38…45, 72
 - Đơn không thuộc chuyến của tài xế đang đăng nhập → 403, chống IDOR. Chuyến của mình nhưng sai trạng thái → 409.
 - Khóa chuyến trước, đơn sau (thứ tự khóa ở `kien-truc.md` mục 6), để tài xế không kết thúc chuyến khi một lượt quét đang chạy.
 - Giao thành công sinh khoản phải thu ngay trong cùng giao dịch. Giao sau hạn vẫn cho giao, gắn cờ giao trễ.
+- Quét lại đơn đã có kết quả: cùng ý thì trả trạng thái hiện tại (BR-45), trái kết quả thì 409 – bảng đầy đủ ở `api.md` mục 3.2 (UC-19 quyết định 6, UC-20 quyết định 3).
 
 ```mermaid
 sequenceDiagram
@@ -645,8 +651,10 @@ sequenceDiagram
     SV-->>API: 403 [BR-38]
   else chuyến của mình nhưng không ở DANG_CHAY
     SV-->>API: 409 [BR-38]
-  else đơn đã có kết quả (DA_GIAO hoặc THAT_BAI)
-    SV-->>API: 200 kèm trạng thái hiện tại [BR-45]
+  else đơn đã có kết quả, quét lặp cùng ý (giao lại đơn DA_GIAO, báo thất bại lại đơn THAT_BAI)
+    SV-->>API: 200 kèm trạng thái hiện tại, không ghi gì [BR-45]
+  else đơn đã có kết quả, quét trái kết quả (giao đơn THAT_BAI, báo thất bại đơn DA_GIAO)
+    SV-->>API: 409 kèm trạng thái hiện tại [BR-40]
   else đơn đang DA_GHEP
     SV-->>API: 409 "đơn chưa được quét lấy" [BR-40]
   else hợp lệ

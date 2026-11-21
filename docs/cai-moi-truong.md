@@ -62,7 +62,11 @@ python -m venv .venv
 .venv\Scripts\uvicorn app.main:app --reload
 ```
 
-Mở http://localhost:8000/api/health → `{"trang_thai":"ok"}`. Trong VS Code chọn interpreter `backend\.venv` để có gợi ý code.
+Mở http://localhost:8000/api/health → `{"trang_thai":"ok"}`.
+
+Tài khoản để thử: `.venv\Scripts\python -m app.tai_khoan_demo` tạo (hoặc đặt lại mật khẩu, mở khóa) `quanly`, `dieuphoi`, `ketoan`, `taixe`, mật khẩu chung **`demo12345`**. Quên mật khẩu thì chạy lại lệnh này. Bản demo (`APP_ENV=demo`) phải truyền mật khẩu riêng: `python -m app.tai_khoan_demo <mật khẩu>`.
+
+Trong VS Code chọn interpreter `backend\.venv` để có gợi ý code.
 
 ## 6. Frontend (cửa sổ PowerShell khác)
 
@@ -83,6 +87,40 @@ cd ..\frontend;  npm run lint;  npm run build
 
 Cả bốn lệnh không báo lỗi là xong. Ghi vào nhật ký của mình trong `docs/TIEN-DO.md`.
 
+## 8. Dữ liệu demo (máy chạy demo – máy Kiệt)
+
+Cần đã cài `requirements-dev.txt` (mục 5): lệnh nạp gọi API qua `TestClient`, dùng gói `httpx` có trong đó.
+
+Demo dùng một CSDL **riêng, sạch** tên `qlvc_demo`, không đụng CSDL dev. Chuyển qua lại chỉ bằng cách đổi **tên CSDL ở cuối `DATABASE_URL`** trong `.env` (tự sửa, không gửi `.env` cho ai).
+
+**Chuẩn bị (một lần, trước ngày demo):**
+
+```powershell
+git switch dev; git pull
+docker compose up -d db
+docker compose exec db sh -c 'createdb -U "$POSTGRES_USER" qlvc_demo'
+# Sửa .env: DATABASE_URL=...:5432/<tên cũ>  →  ...:5432/qlvc_demo
+cd backend
+.venv\Scripts\alembic upgrade head
+.venv\Scripts\python -m seed.demo          # tạo danh mục + 7 ngày trước + hôm nay, khoảng 1 phút
+```
+
+**Sáng ngày demo** (chạy trong khoảng **7:00–18:00**, vì chuyến hôm nay tính quanh giờ chạy lệnh):
+
+```powershell
+cd backend
+.venv\Scripts\python -m seed.demo --ngay-moi   # thêm chuyến hôm nay: đang chạy (trễ, sự cố), vừa xong, đã quyết toán, sắp đi
+.venv\Scripts\uvicorn app.main:app             # không cần --reload khi demo
+```
+
+Cửa sổ khác: `cd frontend; npm run dev`. Đăng nhập `dieuphoi`, `ketoan`, `quanly`, `taixe` (hoặc `taixe01`…`taixe05`), mật khẩu `demo12345`.
+
+- Lệnh **không xóa** gì. CSDL đã có chuyến mà chạy không có `--ngay-moi` → dừng, báo dùng `--ngay-moi`. Hôm nay đã có chuyến → `--ngay-moi` cũng dừng.
+- Muốn làm lại từ đầu: `docker compose exec db sh -c 'dropdb -U "$POSTGRES_USER" qlvc_demo && createdb -U "$POSTGRES_USER" qlvc_demo'`, rồi chạy lại phần chuẩn bị (từ `alembic upgrade head`).
+- Bản đồ dùng nền OpenStreetMap: máy demo cần mạng.
+
+**Sau demo:** đổi `DATABASE_URL` về tên CSDL dev cũ. CSDL `qlvc_demo` để nguyên cho lần demo sau.
+
 ## Lỗi hay gặp
 
 | Lỗi | Cách xử lý |
@@ -90,6 +128,6 @@ Cả bốn lệnh không báo lỗi là xong. Ghi vào nhật ký của mình tr
 | `python` mở Microsoft Store | Cài lại Python, tick **Add to PATH**; hoặc tắt "App execution aliases" cho python trong Settings |
 | `docker: command not found` / không kết nối được | Chưa mở Docker Desktop, hoặc chưa khởi động lại máy sau khi cài WSL |
 | `docker compose` báo thiếu `POSTGRES_PASSWORD` | Chưa tạo `.env` ở thư mục gốc `QLVC` (không phải trong `backend/`) |
-| Cổng 5432 đã bị dùng | Máy đã cài PostgreSQL khác: tắt service đó, hoặc báo nhóm để đổi cổng |
+| Cổng 5432 đã bị dùng (`docker compose up` báo `port is already allocated` / `bind ... 5432`) | Máy đã cài PostgreSQL khác. PowerShell **chạy với quyền Administrator**: `Get-Service postgresql*` xem tên service, rồi `Stop-Service <tên>` (ví dụ `Stop-Service postgresql-x64-16`), chạy lại `docker compose up -d db`. Dùng xong muốn bật lại: `Start-Service <tên>` |
 | `npm ci` lỗi phiên bản | Kiểm tra `node --version` là v24 |
 | Không cài được package | Đúng: phiên bản đã ghim, muốn thêm package thì hỏi nhóm trước (CLAUDE.md) |

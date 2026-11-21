@@ -13,18 +13,27 @@ export class LoiApi extends Error {
   }
 }
 
+const MAT_KET_NOI = 'Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.'
+
 export async function goi<T>(url: string, init?: RequestInit): Promise<T> {
-  const r = await fetch(url, { credentials: 'same-origin', ...init })
+  let r: Response
+  try {
+    r = await fetch(url, { credentials: 'same-origin', ...init })
+  } catch {
+    throw new LoiApi(0, 'MAT_KET_NOI', MAT_KET_NOI) // mất mạng, máy chủ không trả lời
+  }
   if (r.status === 204) return undefined as T
   const body = await r.json().catch(() => ({}))
   if (!r.ok)
     throw new LoiApi(
       r.status,
       body.ma ?? 'LOI',
-      // Máy chủ không trả lỗi theo mẫu (404 đường dẫn sai, 502 backend tắt…): kèm mã HTTP để dễ dò
       body.thong_diep
         ? kemMaBr(body.thong_diep, body.ma)
-        : `Có lỗi (mã ${r.status}), vui lòng thử lại`,
+        : [502, 503, 504].includes(r.status)
+          ? MAT_KET_NOI // proxy/cổng báo backend tắt hoặc quá tải
+          : // Lỗi không theo mẫu khác (404 đường dẫn sai…): kèm mã HTTP để dễ dò
+            `Có lỗi (mã ${r.status}), vui lòng thử lại`,
       body.chi_tiet ?? [],
     )
   return body as T

@@ -169,7 +169,11 @@ def test_uc13_ac7_ghep_c01(client, dang_nhap_voi, db, kb):
         (kb[k], "CHO_GHEP", "DA_GHEP", dp.id) for k in ("d1", "d2", "d4")
     }
     assert db.get(Chuyen, c01).ket_thuc_du_kien == luc(13, 30)
-    assert client.get(f"/api/chuyen/{c01}").json() == c
+    # GET có thêm phần theo dõi của UC-32 (cờ, dòng thời gian, tiền, sự cố); phần còn lại giống kết quả ghép
+    them = {"co", "chong", "ket_thuc_dang_chay", "ket_thuc_bat_thuong", "ly_do_ket_thuc", "km_bat_dau", "km_ket_thuc"}
+    them |= {"dong_thoi_gian", "tien", "su_co"}
+    g = client.get(f"/api/chuyen/{c01}").json()
+    assert {k: v for k, v in g.items() if k not in them} == {k: v for k, v in c.items() if k not in them}
 
 
 # AC8 – ghép bị chặn, không ghép đơn nào trong lô
@@ -199,6 +203,18 @@ def test_uc13_ac8_ket_thuc_lui_chong_chuyen_khac(client, dang_nhap_voi, db, kb):
     assert r.status_code == 422
     assert [v["ma"] for v in r.json()["chi_tiet"]] == ["BR-17"]
     assert db.get(Chuyen, c01).ket_thuc_du_kien == luc(12, 50)  # không đổi
+
+
+def test_uc13_ac8_ket_thuc_lui_chong_chuyen_khac_cua_xe(client, dang_nhap_voi, db, kb):
+    # Như trên nhưng chuyến lúc 13:00 dùng cùng xe X1, tài xế khác → BR-16
+    dang_nhap_voi("DIEU_PHOI")
+    c01 = lap(client, kb)
+    lap(client, kb, gio=13, tai_xe="dung")
+    assert ghep(client, c01, kb["d1"], kb["d4"]).status_code == 200
+    r = ghep(client, c01, kb["d2"])
+    assert r.status_code == 422
+    assert [v["ma"] for v in r.json()["chi_tiet"]] == ["BR-16"]
+    assert trang_thai(db, kb["d2"]) == "CHO_GHEP"
 
 
 def test_uc13_ac8_ket_thuc_sang_ngay_sau_het_dang_kiem(client, dang_nhap_voi, kb):

@@ -9,9 +9,9 @@
 |---|---|---|
 | Nền móng: models, migration, đăng nhập, khung frontend | 18/10 | Xong 16/10 |
 | UC-03 mẫu + docs/mau-use-case.md | 25/10 | Xong 24/10 |
-| Vòng tối thiểu: tạo đơn → ghép → chốt → quét → giao | 08/11 | Chưa bắt đầu |
-| Quyết toán chạy được | 29/11 | Chưa bắt đầu |
-| UC-30 dự đoán trễ (phần AI) | 06/12 | Chưa bắt đầu |
+| Vòng tối thiểu: tạo đơn → ghép → chốt → quét → giao | 08/11 | Xong 08/11 (gộp UC-20, PR #16) |
+| Quyết toán chạy được | 29/11 | Xong 10/11 (gộp UC-24, PR #33) |
+| UC-30 dự đoán trễ (phần AI) | 06/12 | Xong 19/11 (PR #63) |
 | Nộp LMS | 21–27/12 | |
 
 ## Đang chặn / cần người kia
@@ -32,6 +32,9 @@
 - 30/10 – Tài → Kiệt: **thử giao diện UC-11 Lập chuyến** (`UC-11-AC12`; backend xong, 315 test). `git pull`, chạy backend + frontend như lần thử UC-05. Dùng dữ liệu đã có trên máy Kiệt (tuyến T01, xe, tài xế An hạng C, Bình hạng B); cần thêm 1 xe khối lượng toàn bộ 9.500 kg và 1 xe trạng thái Ngừng nếu chưa có. Menu **Chuyến** → Lập chuyến: (a) T01, ngày mai 06:00 → hiện danh sách xe và tài xế; xe Ngừng hiện "không dùng được" kèm lý do (BR-11); (b) chọn xe 9.500 kg → Bình mờ, lý do hạng GPLX (BR-14); (c) chọn An → Lập chuyến → "Đã lập chuyến CH-yyMMdd-01", kết thúc dự kiến 11:30; (d) lập chuyến khác cùng xe lúc 10:00 → xe đó mờ, lý do trùng lịch chuyến vừa lập (BR-16); (e) chọn giờ hôm qua → Lập chuyến báo "Giờ khởi hành đã qua". Chụp (a)…(e) vào `docs/test-evidence/UC-11/`, điền dòng AC12 trong `docs/stories/UC-11-lap-chuyen.md` (Đạt/Không đạt, ngày, "Kiệt thử"); sai chỗ nào ghi vào "Đang chặn", không tự sửa code của Tài.
 - 30/10 – Tài → Kiệt: **thử giao diện UC-13 Ghép đơn** (`UC-13-AC13`), làm sau khi thử UC-11. Cần thêm dữ liệu: bảng giá `Long An → Cần Thơ` 1.200 và `TP.HCM → Tiền Giang` 1.000 (tối thiểu 50.000); xe tải 5.000 kg, thể tích 20 m³; 4 đơn cho **ngày mai**: Đ1 TP.HCM → Cần Thơ 1.800 kg 6 m³ hạn 14:00; Đ2 Long An → Cần Thơ 1.200 kg 3 m³, lấy 06:30–09:00, hạn 12:00; Đ4 TP.HCM → Tiền Giang 800 kg 2 m³ hạn 18:00; Đ8 TP.HCM → Tiền Giang 300 kg 1 m³ hạn 18:00. Lập chuyến T01 ngày mai 06:00 với xe đó, bấm **mã chuyến** để mở trang chi tiết: (a) chưa có đơn: lịch trình trống, lãi dự kiến âm tô đỏ; (b) chọn Đ1, Đ4 → Ghép → lịch trình 4 điểm; (c) ghép Đ2 → 6 điểm, ETA 06:00 / 06:20 / 07:40 / 09:00 / 11:50 (giao Đ2) / 12:10 (giao Đ1), tải 3.800 / 5.000 kg, lấp đầy 76%, lãi 3.637.000 đ; (d) ghép Đ8 → bảng vi phạm: đơn Đ2, BR-06, ETA giao 12:30 sau hạn 12:00, Đ8 không được ghép; (e) chọn Đ4 ở bảng đơn đang ghép → Gỡ → lịch trình còn 4 điểm, Đ4 về danh sách chờ ghép. Chụp (a)…(e) vào `docs/test-evidence/UC-13/`, điền dòng AC13 trong `docs/stories/UC-13-ghep-don.md`.
 - 30/10 – **Nhóm chốt quy trình nhánh** (`docs/nhanh-git.md`): `main` bản ổn định (vai trò master, giữ tên), `dev` tích hợp, `test` thử trước khi lên `main`, `hotfix` sửa gấp. Mỗi use case một nhánh `tai/uc-xx-...` / `kiet/uc-xx-...` tách từ `dev`, PR vào `dev`, CI xanh + người kia review mới gộp. Không push thẳng `main`, `dev`. Commit này là lần cuối ghi thẳng lên `main` để cả hai máy đọc được quy trình.
+- 30/10 – Kiệt → Tài: (1) đã thử UC-11-AC12 (5 ca) và UC-13-AC13 (5 ca + 1 ảnh phụ): **đạt hết**, ảnh `docs/test-evidence/UC-11/`, `UC-13/`, kết quả điền trong story; Tài xác nhận và đóng 2 story. (2) Lịch trình UC-13 lấy Đ4 trước Đ1 ở TP.HCM, kịch bản mục 11 ghi Đ1 trước – ETA vẫn đúng, Tài xem có cần sửa không. (3) UC-02 xong 11/11, nhờ review PR `kiet/uc-02-nguoi-dung` → `dev` (kết quả thử UC-11, 13 đi cùng PR này vì chung file dữ liệu thử).
+- 30/10 – Tài → Kiệt: **review 2 PR vào `dev`**: #3 (sửa sau review UC-13) và PR UC-12 Đổi xe/tài xế. Khi thử UC-13 thì thử thêm UC-12 (`UC-12-AC5`): trên trang chi tiết chuyến đang lập có đơn Đ1, Đ4 → "Đổi xe / tài xế" → xe nhỏ (tải 1.500 kg) hiện lý do BR-01; chọn xe khác đủ tải + tài xế khác → Lưu → biển số, tên tài xế đổi. Ảnh vào `docs/test-evidence/UC-12/`.
+- ~~31/10 – Kiệt → Tài: Kiệt **thêm migration thứ 3** (nạp danh mục lý do `LY_DO`: lý do lấy / giao không được kèm `phia` KHACH/SU_CO_XE cho BR-37, 42) trong nhánh UC-19 (`kiet/uc-19-quet-lay`, từ 04/11 tách thẳng từ `dev`; migration `2a4c8d5f38e7` đã viết, gạch dòng này khi PR UC-19 gộp). Tài chưa thêm migration tới khi dòng này được gạch; cần thêm thì nhắn Kiệt để nối sau migration này.~~ Xong 05/11: PR #15 (UC-19) đã gộp `dev`, migration `2a4c8d5f38e7` trên `dev`; UC-20 không thêm migration.
 
 ## Câu hỏi chờ thầy
 - ~~A1–A6 (nghiep-vu.md mục 1): chưa gửi~~ Nhóm tự chốt 16/10 (nghiep-vu.md mục 1).
@@ -44,12 +47,33 @@
 | UC-03 Xe (mẫu) | 2 | Xong | 13/13 | |
 | UC-06…09 Đơn tối thiểu | 3–4 | Xong | UC-06 6/6, UC-07 9/9, UC-08 11/11 | UC-08-AC11 Kiệt thử 25/10; UC-09 bỏ ở 0.5; phiếu QR làm cùng UC-19 |
 | UC-05 Tuyến và nút (nhận từ Kiệt 24/10) | 3 | Xong | 9/9 | AC9 Kiệt thử 25/10 |
-| UC-11…13, 15 Chuyến tối thiểu | 3–4 | Đang làm | UC-11 11/12, UC-13 12/13 | Giao diện UC-11, UC-13 chờ Kiệt thử; tiếp UC-12, UC-15 |
-| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Chưa bắt đầu | | |
-| UC-28, triển khai demo | 7 | Chưa bắt đầu | | |
-| UC-30 AI | 8 | Chưa bắt đầu | | |
+| UC-11…13, 15 Chuyến tối thiểu | 3–4 | Xong | UC-11 12/12, UC-12 5/5, UC-13 13/13, UC-15 11/11 | Đóng UC-12, 15 ngày 08/11 theo kết quả Kiệt thử (PR #18); lỗi nhỏ danh sách xe UC-12 đã sửa 08/11 (PR #20) |
+| UC-10, 16, 22, 32 (theo dõi chuyến) + làm dày UC-13, 15 | 5–6 | Xong | UC-16 10/10, UC-10 12/12, UC-22 12/12, UC-32 16/16 | UC-16 xong 08/11, UC-10 xong 10/11. UC-32 xong 12/11 (AC11 ca c, e Kiệt thử trên giao diện v2; AC16 giờ kết thúc dự kiến ở bảng ngày, PR #54). UC-22 xong 19/11 (AC12 ca e Kiệt thử trên giao diện v3, PR #60). Bản đồ chi tiết chuyến (Leaflet + OSM) đã vào `dev` (PR #25) |
+| UC-35…38 (đổi mật khẩu, tìm chung, thông báo, tổng quan hôm nay; thêm cho giao diện v2) | 7 | Xong | UC-35 5/5, UC-36 5/5, UC-37 5/5, UC-38 6/6 | Backend PR #50–52 (11–12/11), Kiệt thử giao diện v2 12/11 (PR #55, #56) |
+| Giao diện v3 "Giấy ngà, mực đêm" (giao diện chính cho demo) | 8 | Xong | – | Gộp `dev` 19/11 (PR #61): Kiệt thử thao tác lưu, màn tài xế trên iPhone, màn hẹp 1024 / 720 / 390 px, bản tối. Thêm 2 gói `@number-flow/react`, `sonner` |
+| Giao diện v4: chuyển động + hiệu ứng nâng cao | 8 | Xong | – | Gộp `dev` 20/11 (PR #69, Kiệt duyệt): chuyển động báo trạng thái, hạt nền đăng nhập, hiện khi cuộn, đàn con trỏ dựng trang (đầy đủ 1 lần mỗi phiên, đổi mục menu dựng nhanh vùng phải); tắt được ở Cài đặt "Hiệu ứng nâng cao". Thử 4 vai trò × 1440 / 1024 / 390 px |
+| UC-28, triển khai demo | 7 | Đang làm | UC-28 7/7, DEMO 6/6 | UC-28 xong 19/11 (AC7 trang tra cứu Kiệt thử trên giao diện v3, PR #60). Dữ liệu demo `python -m seed.demo` xong 11/11 (PR #46, Kiệt nạp thành công trên máy demo). README hướng dẫn chạy demo gộp 19/11 (PR #59, Kiệt duyệt). Lên Render để sau buổi báo cáo thầy (Tài chốt 19/11) |
+| UC-30 AI | 8 | Xong | 7/7 | Gộp `dev` 19/11 (PR #63): hồi quy logistic train ở `ml/` (dataset Kaggle, AUC 0,714), backend tính lại từ JSON, ngưỡng 0,75 / 0,9; AC7 Kiệt thử trên giao diện v3 |
+| Menu tài khoản, trang Tài khoản / Cài đặt, UC-39 ảnh đại diện | 8 | Xong | GD 5/5, UC-39 7/7 | Gộp `dev` 19/11 (PR #64, #67); Kiệt thử cả hai. Góp ý chưa làm: tô cam hạn GPLX đang cố định 30 ngày, chưa đọc CFG-02 (giống danh mục, khối xe) |
 
 ### Nhật ký Tài (mới nhất ở trên)
+- 19/11 (chiều): Gộp #63 UC-30 dự đoán trễ, #64 menu tài khoản + Cài đặt, #67 UC-39 ảnh đại diện; Kiệt gộp #59 README, #66 E2E trọn vòng. Đóng UC-30 (7/7), UC-39 (7/7). `docs/test-report.md`: 38 story, 367/367 AC đạt.
+- 20/11: Gộp #69 giao diện v4 vào `dev` (gồm nhánh `gd-chuyen-dong`): sửa theo góp ý xem video (giữ chỗ khi tải Tổng quan, nhãn ngắn lịch giờ, màn tài xế 390 px, ô chọn ảnh tiếng Việt), chuyển động nhỏ, hiệu ứng nâng cao; đàn con trỏ làm lại theo ý tưởng Swarm (không chép code), thử 4 vai trò × 3 cỡ màn.
+- 19/11: Gộp #61 giao diện v3 vào `dev` và #60 bằng chứng v3 của Kiệt. Đóng UC-22 (12/12, ca e) và UC-28 (7/7, trang tra cứu). 16–18/11: giao diện v3 "Giấy ngà, mực đêm", sửa theo Kiệt thử (màn hẹp 1024 / 720 / 390 px, nút khóa xám hẳn, cột chênh lệch dầu, Bảng lãi lỗ theo chuyến / xe / tháng chọn khoảng tháng có dòng tổng). README chạy demo (#59). Đóng #58 (tiến độ 12/11, gộp vào PR này).
+- 12/11: UC-35 đổi mật khẩu, UC-36 tìm chung, UC-37 thông báo, UC-38 tổng quan hôm nay (backend #50–52, 83 test mới, đều gộp `dev`); UC-30 chốt làm sau demo. Tài liệu: UC-35…38 vào `use-cases.md`, sơ đồ, `docs/test-report.md` (342 AC, 337 đạt, 5 chưa kiểm; #53, #57). Sửa theo Kiệt thử giao diện v2: `ket_thuc_dang_chay` ở bảng ngày, ảnh demo thật, `--ngay-moi` dọn chuyến treo (#54); đóng story UC-32, UC-35…38 theo ảnh bằng chứng (#55, #56). Review, approve #39, #43, #44, #45, #55 của Kiệt.
+- 11/11: Gộp #41 UC-32 AC12–15 (trạng thái điểm, trễ, vị trí quét, tìm chuyến), #42 UC-28 Tra cứu đơn, #46 dữ liệu demo; gộp của Kiệt #43 UC-26, #47 UC-34 (mở lại #45), #44 UC-27, #39 UC-33 (gỡ xung đột `main.py`). Sửa góp ý review: NFC cho `tu_khoa`, cờ `--proxy-headers` khi lên Render, seed chỉ chạy ở `APP_ENV=dev`.
+- 10/11: Gộp #34 sửa góp ý Kiệt thử UC-10, 22, 32 (dòng thời gian bằng chữ, lý do gần nhất "Sự cố xe", ẩn Sửa/Hủy khi chuyến đã chốt, BR-52 dấu phẩy; 789 passed) và #35 skill "Bước tiếp"; Kiệt gộp #36 ảnh bằng chứng. Đóng UC-10 (12/12). Review, approve #33 UC-24 của Kiệt.
+- 10/11: Review và gộp #29 UC-21 Chi phí (kèm nhãn điểm Lấy `da_lay`), #30 UC-25 Công nợ của Kiệt (gỡ xung đột 1 dòng `main.py`, 787 passed); gộp #28 CI chạy một lần mỗi PR, bỏ qua PR tài liệu.
+- 09/11: Gộp #25 bản đồ chi tiết chuyến (tọa độ điểm dừng, khóa vùng đất liền VN; ghi giấy phép gói trong PR) và #26 quy ước mới: PR code không sửa TIEN-DO, người gộp cập nhật một lần bằng PR riêng.
+- 09/11: Gộp #19…#24 sau khi Kiệt duyệt (gỡ xung đột TIEN-DO ở #23, #24); `dev` có UC-10, 22, 32.
+- 08/11: UC-32 Theo dõi chuyến: bảng chuyến trong ngày (tiến độ, % đầy, cờ trễ / sự cố / thất bại / chưa quyết toán / chồng lịch BR-73), chi tiết có giờ quét, trễ, dòng thời gian, tiền, sự cố; kết thúc do sự cố (BR-68), đóng sự cố; 24 test mới, toàn bộ 654 passed; 10/11 AC.
+- 08/11: Review và gộp #16 (UC-20), #17 (UC-23; gộp `dev` vào nhánh, sửa xung đột TIEN-DO phần Kiệt, 630 passed), #18 (Kiệt thử giao diện UC-12, 15, 16). Đóng UC-12 (5/5), UC-15 (11/11), UC-16 (10/10). Vòng tối thiểu mốc 08/11 đã vào `dev`.
+- 08/11: UC-22 Xử lý đơn thất bại: ghép lại (BR-37 chỉ đếm giao thất bại phía khách, BR-69 nơi giữ hàng, bỏ khung lấy cũ), trả hàng khi đã lấy, hủy khi chưa lấy (BR-34, 36), danh sách cần xử lý; 20 test mới; 11/12 AC; làm chung PR #23 với UC-10 (dùng chung endpoint hủy).
+- 08/11: UC-10 Sửa / hủy đơn: sửa khi chưa lấy (BR-33), cước tính lại từ bản sao giá + nhật ký tiền, đơn đang ghép kiểm lại cả chuyến (BR-67); hủy kèm lý do, đơn đang ghép tự gỡ (BR-34); 35 test mới, toàn bộ 665 passed; 11/12 AC. Sửa sau review: lỗi danh sách xe UC-12 (#20), 3 điểm màn tài xế (#21), trang Tạm ứng chống bấm hai lần (#22).
+- 04/11: UC-16 Hủy chuyến: chặn khi đã chạy hoặc còn tạm ứng (BR-25), đơn về chờ ghép, lý do vào lịch sử, chuyến hủy không chiếm lịch; 21 test mới, toàn bộ 459 passed; 9/10 AC. Gỡ xung đột PR #10, review và gộp #6 (UC-17), #11; #10 UC-15 vào `dev`.
+- 01/11: UC-15 Chốt / mở chốt chuyến: kiểm lại nhóm A, B, xác nhận chạy rỗng (BR-23) và lãi âm (BR-52), lưu định mức, lương, ETA kế hoạch (BR-71), mở chốt chặn khi còn tạm ứng (BR-24); 17 test mới, toàn bộ 412 passed; 10/11 AC, giao diện chờ Kiệt thử.
+- 01/11: Đóng UC-11 (12/12), UC-13 (13/13) theo kết quả Kiệt thử giao diện. Lệnh tạo tài khoản demo 4 vai trò (PR #8).
+- 30/10: UC-12 Đổi xe/tài xế (nhánh `tai/uc-12-doi-xe-tai-xe`): kiểm lại BR-11…19 và tải theo đơn đang ghép, danh sách khả dụng cho chuyến đã có, khối đổi trên trang chi tiết; 9 test mới, toàn bộ 363 passed; 4/5 AC.
 - 30/10: Chốt quy trình 4 nhánh `main` / `dev` / `test` / `hotfix` + nhánh use case (`docs/nhanh-git.md`, `CLAUDE.md`); tạo `test`, `hotfix`, đưa `dev` về đúng `main`.
 - 30/10: UC-13 Ghép/gỡ đơn: lịch trình ETA (BR-63, 64), kiểm lại cả chuyến (BR-01…06, 12, 13, 15…17, 67), lãi dự kiến, trang chi tiết chuyến; 39 test mới, toàn bộ 354 passed; 12/13 AC, giao diện chờ Kiệt thử. Review UC-11 sửa 2 mục.
 - 30/10: UC-11 Lập chuyến: backend + giao diện, BR-11…19, 64, 65 (khóa dòng chống hai người lập trùng xe), 49 test mới, toàn bộ 315 passed; 11/12 AC, giao diện chờ Kiệt thử.
@@ -69,33 +93,45 @@
 
 ## Kiệt
 
-> **Việc của Kiệt ngay bây giờ** (Tài ghi hộ 30/10, thay khối 24/10 đã xong: UC-04, thử UC-05/08, ca test BR). Claude của Kiệt: đọc khối này đầu phiên và báo Kiệt bước tiếp theo; Kiệt xong bước nào thì tự đánh dấu.
+> **Việc của Kiệt ngay bây giờ** (danh sách Tài gửi 19/11, thay khối 30/10 đã cũ). Claude của Kiệt: đọc khối này đầu phiên và báo Kiệt bước tiếp theo; xong bước nào thì đánh dấu.
 >
-> 0. **Nhánh git (chốt 30/10):** đọc `docs/nhanh-git.md`. Từ giờ không push thẳng lên `main`. Mỗi việc dưới đây làm trên nhánh tách từ `dev` (ví dụ `kiet/uc-11-thu-giao-dien`, `kiet/uml`, `kiet/uc-02-nguoi-dung`), xong mở PR vào `dev` để Tài review.
-> 1. **Cập nhật:** `git fetch` → `git switch dev` → `git pull` → mở Docker Desktop → `docker compose up -d db` → `cd backend; .venv\Scripts\python -m pytest` phải ra **354 passed** (không có migration mới).
-> 2. **Thử giao diện UC-11 Lập chuyến** (`UC-11-AC12`): 5 bước (a)…(e) ở dòng "30/10 – Tài → Kiệt: thử giao diện UC-11" trong mục chung phía trên. Ảnh vào `docs/test-evidence/UC-11/`, điền dòng AC12 trong `docs/stories/UC-11-lap-chuyen.md`.
-> 3. **Thử giao diện UC-13 Ghép đơn** (`UC-13-AC13`): dữ liệu cần tạo và 5 bước (a)…(e) ở dòng "30/10 – Tài → Kiệt: thử giao diện UC-13". Ảnh vào `docs/test-evidence/UC-13/`, điền dòng AC13 trong `docs/stories/UC-13-ghep-don.md`. Sai chỗ nào ghi vào "Đang chặn", không tự sửa code của Tài.
-> 4. **UML** (`docs/uml/README.md`, còn từ tuần 1).
-> 5. **UC-02 Người dùng** (`story new UC-02`, khuôn `docs/mau-use-case.md`): Quản lý xem danh sách, thêm tài khoản (Quản lý / Điều phối / Kế toán; tài xế tạo ở UC-04), đổi vai trò, khóa/mở (khóa có hiệu lực ngay như UC-01-AC7), đặt lại mật khẩu; đổi tên đăng nhập, mật khẩu của tài xế chuyển từ UC-04 sang đây (quyết định UC-04 số 4). Không cho Quản lý tự khóa hoặc tự hạ quyền chính mình (đề xuất – ghi vào story để Tài duyệt).
-> 6. **Quét tối thiểu UC-17…20** (tuần 3–4, phía tài xế, trang điện thoại 360 px): UC-17 xem chuyến được giao (BR-58: chỉ chuyến của mình), UC-18 bắt đầu/kết thúc chuyến kèm km và ảnh đồng hồ (BR-26, 28, 70), UC-19 quét mã lấy hàng / báo không lấy được, UC-20 quét mã giao / báo giao không được (BR-35, 38…43, 45, 72). Ca test sẵn ở `docs/ca-test-br.md` nhóm C, E, H. Lưu ý:
->    - Tài xế chỉ thấy chuyến từ `DA_CHOT`; chốt chuyến là UC-15 Tài đang làm. Trong test đặt `trang_thai = "DA_CHOT"` trực tiếp vào CSDL như `test_uc13_ac9_*`, không cần đợi.
->    - Lịch trình, ETA dùng lại `app/domain/lich_trinh.py` và `chi_tiet` trong `app/modules/chuyen/service.py` (UC-13), không viết lại.
->    - Upload ảnh theo `docs/security-rules.md`. Thư viện quét QR, thư viện in QR (phiếu đơn): **hỏi Tài trước khi cài package** (CLAUDE.md).
-> 7. **Sau đó theo kế hoạch:** UC-21 chi phí, UC-23 tạm ứng, UC-33 báo sự cố (tuần 5–6); UC-24 quyết toán, UC-25 công nợ (tuần 7); UC-26, 27, 34 và E2E (tuần 8).
-> 8. Không làm UC-11, 12, 13, 15 (Tài). Đụng `backend/app/models/` hoặc thêm migration thì ghi vào "Đang chặn" và commit trước.
+> 1. ✅ (xong 19/11) **Review và thử UC-30, PR #63**: review code, 1063 passed; thử AC7 trên giao diện v3 (Điều phối, Quản lý, Kế toán, chuyến hủy, 390 px, bản tối): đạt, 4 góp ý không chặn. Ảnh `docs/test-evidence/UC-30/`, dòng AC7 điền trong story.
+> 2. ✅ (xong 19/11) **Thử giao diện UC-26-AC8, UC-27-AC8, UC-34-AC7** trên v3 (ảnh PR #60) và đóng 3 story.
+> 3. ✅ (xong 19/11) **Review PR giao diện mới của Tài** (menu tài khoản gọn, trang Tài khoản, trang Cài đặt), thử theo story `GD-cai-dat-tai-khoan` khi Tài mở PR.
+> 4. **UML** (`docs/uml/README.md`): cần có trước buổi báo cáo.
+> 5. ✅ (xong 19/11, PR #66) **E2E**: một kịch bản chạy trọn vòng: lập đơn, lập chuyến, ghép, chốt, tài xế quét lấy và giao, quyết toán.
+> 6. **Trước buổi báo cáo**: gộp xong các PR thì đưa `dev` lên `test`, thử lại toàn bộ, mở PR `test` → `main` (`docs/nhanh-git.md`); Kiệt duyệt PR lên `main`.
+> 7. Không gấp, Kiệt tự quyết: việc "để sau" của UC-19/20 (GPS Safari iPhone, khối Kết thúc chuyến tràn khung iPhone, hỏi lại trước khi bấm Xác nhận giao).
 
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
 |---|---|---|---|---|
 | Phân tích lại nghiệp vụ 0.5 (nhánh `kiet/nghiep-vu`) | 1 | Xong | – | PR #1 merge 16/10 (Tài cập nhật hộ) |
 | Cài môi trường, danh sách ca test BR, vẽ UML | 1 | Đang làm | – | Cài môi trường xong 19/10 (theo báo cáo tuần 2; Tài sửa hộ 25/10). Ca test BR xong 29/10, Tài chốt 30/10 (Tài cập nhật hộ). Còn UML |
 | UC-04 Tài xế (chép mẫu) | 2 | Xong | 10/10 | Tài review, merge vào `main` 25/10 (Tài cập nhật hộ) |
-| UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Chưa bắt đầu | | UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
-| Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Chưa bắt đầu | | |
-| UC-24, 25 | 7 | Chưa bắt đầu | | |
-| UC-26, 27, 34 (hiệu suất xe, ưu tiên S – thiếu giờ thì cắt trước), E2E | 8 | Chưa bắt đầu | | |
+| UC-02 + Quét tối thiểu (UC-17…20) | 3–4 | Xong | UC-02 11/11, UC-17 10/10, UC-18 11/11, UC-19 15/15, UC-20 16/16 | UC-02 (PR #5), UC-17 (PR #6), UC-18 (PR #13), UC-19 (PR #15), UC-20 (PR #16) đã gộp `dev`. UC-20 xong 05/11 (40 test, kèm 3 góp ý review #15: tối đa 5 ảnh, trần độ chính xác GPS, xin vị trí lúc bấm; Safari iPhone đã gửi vị trí), gộp `dev` (PR #16, 08/11). Vòng tối thiểu mốc 08/11 chạy trọn trên giao diện. BR-44 để hướng phát triển (Tài chốt). UC-05 chuyển cho Tài 24/10 (Tài cập nhật hộ) |
+| Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Xong | UC-21 14/14, UC-23 14/14, UC-33 9/9 | UC-23 Tạm ứng gộp `dev` 08/11 (PR #17). UC-21 Chi phí (kèm nhãn điểm "Đã lấy") gộp `dev` 10/11 (PR #29). UC-33 Báo sự cố gộp `dev` 11/11 (PR #39) |
+| UC-24, 25 | 7 | Xong | UC-24 14/14, UC-25 10/10 | UC-25 Công nợ gộp `dev` 10/11 (PR #30). UC-24 Quyết toán gộp `dev` 10/11 (PR #33, sớm hơn mốc 29/11); trang Công nợ, Quyết toán cho Quản lý (chỉ xem) làm cùng UC-24 |
+| UC-26, 27, 34 (hiệu suất xe, ưu tiên S – thiếu giờ thì cắt trước), E2E | 8 | Xong | UC-26 8/8, UC-27 8/8, UC-34 7/7, E2E 6/6 | Backend gộp `dev` 11/11 (PR #43, #44, #47). Giao diện v3 Kiệt thử 18/11 (PR #60), đóng 3 story 19/11. E2E chạy trọn vòng (test API 18 bước) gộp `dev` 19/11 (PR #66) |
 
 ### Nhật ký Kiệt (mới nhất ở trên)
-- 29/10: Danh sách ca test BR (`docs/ca-test-br.md`): 70 BR còn hiệu lực, 180 ca theo nhóm A…H, mỗi ca ✖ chỉ vi phạm một BR, có ca biên; thêm dữ liệu X3…X8, Cường, Dũng, Đ9…Đ15. Commit dữ liệu và kết quả thử giao diện UC-04, 05, 08 (`docs/test-evidence/du-lieu-thu-giao-dien.md`).
+- 19/11 (chiều): E2E chạy trọn vòng xong (6/6 AC, 18 bước, làm hỏng 3 chỗ để chứng minh test đỏ; sửa 2 góp ý review: ngày theo giờ VN, tháng báo cáo theo khởi hành), gộp `dev` (#66). Thử, review #64 Cài đặt / Tài khoản (5/5 AC) và #67 UC-39 ảnh đại diện (AC7 đạt, 1102 passed); review README #59. Tiếp theo: UML.
+- 19/11: Review, thử UC-30 Dự đoán nguy cơ trễ (PR #63): 1063 passed, AC7 giao diện v3 đạt, 4 góp ý không chặn ("Thấp · 72%" dễ hiểu lầm, mũi tên yếu tố, làm tròn tại ngưỡng, docstring ngưỡng cũ). Đóng UC-26 (8/8), UC-27 (8/8), UC-34 (7/7). Thay khối "Việc của Kiệt" bằng danh sách Tài gửi 19/11.
+- 16–18/11: Thử giao diện v3 (thao tác lưu, màn hẹp 1024 / 720 / 390 px, bản tối, chạy trọn chuyến trên iPhone thật), chọn v3, mở PR #61; bằng chứng UC-22 ca e, UC-26, 27, 28, 34 (PR #60). Kiểm README chạy demo (PR #59), 2 góp ý.
+- 11/11: Backend xong UC-26 Báo cáo lãi lỗ (`GET /api/bao-cao/lai-lo` theo chuyến / xe / tháng, 18 test), UC-27 Bảng cảnh báo (`GET /api/canh-bao` 5 nhóm, 14 test), UC-34 Hiệu suất xe (`GET /api/bao-cao/hieu-suat-xe`, 13 test); gộp `dev` (#43, #44, #47). Đóng UC-33 Báo sự cố (9/9 AC, #39). Review, duyệt #41, #42, #46 (dữ liệu demo) của Tài. Tiếp theo: nạp dữ liệu demo, thử màn tài xế v2 trên điện thoại, thử giao diện UC-26, 27, 34 khi Tài nối.
+- 10/11: Gộp #33 UC-24 Quyết toán (14/14 AC: duyệt / điều chỉnh / từ chối chi phí, bảng quyết toán, khóa sổ BR-29, link ảnh chứng từ ký HMAC 5 phút; 61 test, thử giao diện 12/12 ca; sửa góp ý Tài: ghi "tạm tính" cạnh lãi chuyến kết thúc do sự cố), gộp #35, #36 (ảnh thử UC-10, 22, 32), approve #34. Thử lại màn đăng nhập v2 (571d7f2) đạt.
+- 10/11: Tài gộp #29 UC-21 Chi phí (14/14 AC, 52 test, thử giao diện đạt) và #30 UC-25 Công nợ (10/10 AC, 26 test, thử giao diện đạt), 787 passed. 08–09/11: review, duyệt #19…#28 của Tài; thử giao diện UC-12, 15, 16 (PR #18). Tiếp theo: UC-24 Quyết toán.
+- 07/11: Đóng UC-23 (14/14 AC): thử giao diện 7/7 ca (cấp, vượt định mức, sửa, thu hồi, mở chốt bị chặn rồi được); sửa bước ô số tiền và câu báo khi sửa vượt định mức.
+- 07/11: UC-23 Tạm ứng: module `tien/tam_ung/` (cấp, sửa, thu hồi, xem; BR-53 kiểm ở mọi lần cấp và sửa, khóa dòng chuyến, nhật ký tiền BR-62, đã quyết toán → BR-29), thêm `GET /api/chuyen/{id}/tam-ung` (gợi ý số còn được cấp); trang Kế toán **Tạm ứng**; 49 test, toàn bộ 590 passed; 13/14 AC. PR #16 (UC-20) chờ Tài review.
+- 05/11: Đóng UC-20 (16/16 AC): thử giao diện 10/10 ca (máy tính 360 px; iPhone Safari qua tunnel: quét xác nhận, ký ngón tay, có GPS; kết thúc chuyến CH-261031-01 → vòng tối thiểu chạy trọn); 581 passed. Để sau: khối Kết thúc chuyến tràn khung iPhone, hỏi lại trước Xác nhận giao.
+- 05/11: UC-20 Quét giao: `GIAO` (ảnh + chữ ký PNG + tên, BR-41), giao trễ (BR-72), sinh phải thu + nhật ký tiền (BR-56, 62), `GIAO_THAT_BAI` (BR-42), đơn chưa lấy 409 BR-40, bảng quét lặp / trái kết quả; giao diện quét xác nhận + ô ký canvas; xin vị trí lúc bấm (Safari); 40 test, toàn bộ 581 passed; 14/16 AC. Gộp #15 (UC-19).
+- 04/11: Đóng UC-19 (15/15 AC): thử giao diện 12/12 ca (phiếu QR, tài xế 360 px, camera iPhone qua Cloudflare Tunnel có GPS thật); 541 passed. Để sau: GPS Safari iPhone, BR-44.
+- 04/11: UC-19 giao diện: khối Lấy hàng (camera `qr-scanner` + gõ mã), Không lấy được (lý do + ảnh), phiếu in QR (`qrcode`), cho phép Cloudflare Tunnel trong Vite; chờ thử giao diện.
+- 04/11: UC-19 Quét lấy hàng (backend): `POST /api/toi/quet` ở module `quet/` (BR-38, 39, 42, 43, 45: không thuộc chuyến 403, chuyến chưa chạy 409, quét lặp cùng ý trả trạng thái hiện tại, trái kết quả 409 BR-39, trường lạ 400), `GET /api/danh-muc/ly-do`, migration nạp 12 lý do; 50 test, toàn bộ 488 passed; 12/15 AC. Review PR #12 (UC-16) của Tài: đạt, 459 passed. Gộp `dev` mới vào UC-18, mở PR #13.
+- 31/10: UC-18 Bắt đầu / kết thúc chuyến: km + ảnh đồng hồ (BR-26, 70), kiểm lại giấy tờ BR-11…15 bằng hàm UC-11, kết thúc khi mọi đơn có kết quả (BR-28), gỡ đơn thất bại (BR-36); `app/luu_tru.py` kiểm/lưu ảnh dùng chung; thêm `python-multipart`; 32 test; thử giao diện đạt.
+- 31/10: UC-17 Xem chuyến được giao: danh sách cần làm / đã xong, lịch trình từng điểm cho tài xế (BR-58, 63, 71), chỉ hiện lương chuyến, chuyến người khác → 404; trang điện thoại; 14 test; thử giao diện đạt (sửa 1 lỗi kẹt "Đang tải…").
+- 30/10: Thử giao diện UC-11 (5 ca) và UC-13 (5 ca) cho Tài: đạt; thêm dữ liệu thử Phần 5, 6 vào `du-lieu-thu-giao-dien.md`.
+- 30/10: UC-02 Người dùng: Quản lý thêm (QL/ĐP/KT), sửa, đổi vai trò, khóa/mở (mở xóa khóa tạm), đặt lại mật khẩu; tài khoản tài xế chỉ đổi tên đăng nhập, họ tên, mật khẩu; chặn tự khóa và khóa Quản lý cuối (kể cả hai người khóa nhau cùng lúc). 41 test, toàn bộ 395 passed; thêm endpoint đặt lại mật khẩu vào `api.md`. Thử giao diện 6 ca đạt; 11/11 AC.
+- 29/10: Danh sách ca test BR (`docs/ca-test-br.md`): 70 BR còn hiệu lực, 180 ca theo nhóm A…H, mỗi ca ✖ chỉ vi phạm một BR, có ca biên; thêm dữ liệu X3…X8, Cường, Dũng, Đ9…Đ15. Commit dữ liệu và kết quả thử giao diện UC-04, 05, 08 (`docs/test-evidence/UC-xx/du-lieu.md` (mỗi UC một file)).
 - 25/10: UC-04 Tài xế: backend (thêm kèm tài khoản, sửa, ngừng khóa tài khoản), hàm BR-14 hạng GPLX cho UC-11, giao diện; 67 test, toàn bộ 266 passed; thử giao diện 10/10 AC đạt; ponytail-review sửa 2 mục. Thử giao diện UC-05, UC-08 cho Tài: đạt. Mở PR `kiet/uc-04`.
 - 15/10: Sửa nghiệp vụ 0.5 theo review của Tài: công thức BR-73, km khi kết thúc do sự cố, thứ tự điểm lấy, kịch bản mỗi ca ✖ chỉ một BR (thêm Đ8 cho BR-67); thêm mục Công thức, ETA kế hoạch lưu lúc chốt, dữ liệu cho AI; api, security-rules, kien-truc khớp 0.5. Nhận UC-33, UC-34.
 - 15/10: Nghiệp vụ 0.5: chuyến 6 trạng thái, đơn 7; ETA cộng phút dừng, kiểm lại cả chuyến khi ghép (BR-63…67); km, sự cố, kết thúc do sự cố, cảnh báo trễ (BR-68…73); bỏ UC-09, 14, 29, 31, thêm UC-32…34. Sửa nghiep-vu, use-cases, so-do; api, security-rules chỉ đổi tên trạng thái. Mở PR chờ Tài review.

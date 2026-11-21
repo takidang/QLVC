@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
+import { DauDanhMuc, OTim } from '../danh-muc'
 import { danhSachNut, suaNut, themNut, type Nut } from '../../api/tuyen'
 
 const SO_DONG = 50
@@ -29,57 +30,60 @@ export default function NutDanhSach() {
 
   return (
     <section className="noi-dung">
-      <div className="thanh-cong-cu">
-        <h1>Nút (tỉnh, kho)</h1>
-        <input
-          placeholder="Tìm tên hoặc tỉnh"
-          aria-label="Tìm tên hoặc tỉnh"
-          value={tim}
-          onChange={(e) => setTim(e.target.value)}
-        />
-        <button onClick={() => setDangSua('moi')}>Thêm nút</button>
-      </div>
-      <p className="ghi-chu">
-        Tỉnh của nút dùng để tra bảng giá: gõ đúng tên tỉnh như trong Bảng giá.
-      </p>
+      <DauDanhMuc
+        tieuDe="Nút"
+        phu="Tỉnh, thành và kho trên các tuyến. Tỉnh của nút dùng để tra bảng giá: gõ đúng tên tỉnh như trong Bảng giá."
+        nut="Thêm nút"
+        onNut={() => setDangSua('moi')}
+      />
       {loiTai && (
         <p role="alert" className="loi">
           {loiTai}
         </p>
       )}
-      <table>
-        <thead>
-          <tr>
-            <th>Tên</th>
-            <th>Tỉnh</th>
-            <th>Loại</th>
-            <th>Tọa độ</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {ds.du_lieu.map((n) => (
-            <tr key={n.id}>
-              <td className="bien-so">{n.ten}</td>
-              <td>{n.tinh}</td>
-              <td>{n.loai === 'KHO' ? 'Kho' : 'Tỉnh/thành'}</td>
-              <td className="ghi-chu">{n.lat && n.lng ? `${n.lat}, ${n.lng}` : '—'}</td>
-              <td className="hanh-dong">
-                <button className="phu" onClick={() => setDangSua(n)}>
-                  Sửa
-                </button>
-              </td>
-            </tr>
-          ))}
-          {ds.du_lieu.length === 0 && (
+      <div className="kinh bang-khung dm">
+        <div className="cong-cu">
+          <span className="ghi-chu">{ds.du_lieu.length} nút</span>
+          <OTim giaTri={tim} goiY="Tìm tên hoặc tỉnh" onDoi={setTim} />
+        </div>
+        <table>
+          <thead>
             <tr>
-              <td colSpan={5} className="trong">
-                Chưa có nút nào
-              </td>
+              <th>Tên</th>
+              <th>Tỉnh</th>
+              <th>Loại</th>
+              <th>Tọa độ</th>
+              <th>
+                <span className="an-chu">Thao tác</span>
+              </th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ds.du_lieu.map((n) => (
+              <tr key={n.id}>
+                <td className="tuyen">{n.ten}</td>
+                <td>{n.tinh}</td>
+                <td>
+                  <span className="bien">{n.loai === 'KHO' ? 'Kho' : 'Tỉnh/thành'}</span>
+                </td>
+                <td className="ma">{n.lat && n.lng ? `${n.lat}, ${n.lng}` : 'Chưa có tọa độ'}</td>
+                <td className="hanh-dong so">
+                  <button className="phu" onClick={() => setDangSua(n)}>
+                    Sửa
+                  </button>
+                </td>
+              </tr>
+            ))}
+            {ds.du_lieu.length === 0 && (
+              <tr>
+                <td colSpan={5} className="trong">
+                  Chưa có nút nào
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
       {ds.tong > SO_DONG && (
         <p className="ghi-chu">
           Đang hiện {SO_DONG}/{ds.tong} nút, gõ ô tìm để lọc.

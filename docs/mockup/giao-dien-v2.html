@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mẫu giao diện QLVC – bản D (sạch, theo 00-1)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --font: 'Be Vietnam Pro', system-ui, sans-serif;
+  --da: #C4C8BE;                       /* nền đá xám xanh */
+  --muc: #1B2420;                      /* mực xanh đen */
+  --phu: #47524B;
+  --kinh: rgb(250 250 247 / 62%);      /* tấm kính mờ */
+  --kinh-dac: rgb(250 250 247 / 86%);
+  --vien: color-mix(in srgb, var(--muc) 12%, transparent);
+  --vien-sang: rgb(255 255 255 / 70%);
+  --o-liu: #56624A;                    /* khối nhấn */
+  --cam: #C2410C;                      /* màu nhấn duy nhất: việc cần chú ý */
+  --chay: #1F6F8B; --chot: #6A55B8; --xong: #2F7D4F; --do: #B3261E; --xam: #6B736E;
+}
+* { box-sizing: border-box; }
+::selection { background: var(--muc); color: #fff; }
+body { margin: 0; font-family: var(--font); font-size: 14px; line-height: 1.45; color: var(--muc); background: var(--ngoai); }
+:focus-visible { outline: 2px solid var(--muc); outline-offset: 2px; }
+svg.ic { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+.ghi { font: 13px system-ui, sans-serif; color: #2c322e; padding: 12px 24px; background: #E9EBE5; }
+.san { display: flex; gap: 32px; padding: 28px 24px 40px; align-items: flex-start; flex-wrap: wrap; }
+.nen { background:
+    radial-gradient(900px 520px at 80% 6%, var(--sang1) 0%, transparent 62%),
+    radial-gradient(700px 520px at 6% 34%, var(--sang2) 0%, transparent 66%),
+    var(--da); }
+
+/* ===== Dùng chung ===== */
+.kinh { background: var(--kinh); border: 1px solid var(--vien-sang); border-radius: 16px; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); }
+.ma { font-size: 12.5px; color: var(--phu); font-variant-numeric: tabular-nums; }
+.bien { display: inline-block; font-size: 12.5px; font-weight: 500; padding: 1px 7px; border-radius: 5px; border: 1px solid color-mix(in srgb, var(--muc) 35%, transparent); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.chua { display: inline-block; font-size: 12.5px; padding: 1px 7px; border-radius: 5px; border: 1px dashed color-mix(in srgb, var(--muc) 35%, transparent); color: var(--phu); }
+
+.nhan { --mau: var(--xam); display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px 2px 6px; border-radius: 99px; font-size: 12.5px; font-weight: 500; white-space: nowrap; background: rgb(255 255 255 / 72%); border: 1px solid var(--vien); color: var(--muc); }
+.nhan svg { width: 14px; height: 14px; flex: none; color: var(--mau); --nen: #fff; }
+.nhan.chot { --mau: var(--chot); } .nhan.chay { --mau: var(--chay); } .nhan.xong { --mau: var(--xong); }
+.nhan.qt { background: var(--xong); border-color: var(--xong); color: #fff; }
+.nhan.qt svg { color: #fff; --nen: var(--xong); }
+.nhan.tre { background: var(--cam); border-color: var(--cam); color: #fff; }
+.nhan.suco { background: var(--do); border-color: var(--do); color: #fff; }
+.nhan.tre svg, .nhan.suco svg { color: #fff; }
+
+.doan { display: flex; gap: 3px; }
+.doan i { flex: 1; height: 5px; border-radius: 99px; background: color-mix(in srgb, var(--muc) 16%, transparent); }
+.doan i.x { background: var(--muc); }
+.doan i.c { background: var(--chay); }
+.doan i.f { background: var(--do); }
+
+.nut { font: inherit; font-weight: 500; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 18px; border-radius: 99px; border: 1px solid var(--vien); background: rgb(255 255 255 / 60%); color: var(--muc); cursor: pointer; }
+.nut:hover { background: rgb(255 255 255 / 90%); }
+.nut.chinh { background: var(--muc); border-color: var(--muc); color: #fff; }
+.nut.chinh:hover { background: color-mix(in srgb, var(--muc) 88%, white); }
+
+.vien-thuoc { display: inline-flex; gap: 2px; padding: 4px; border-radius: 99px; background: color-mix(in srgb, var(--muc) 8%, transparent); }
+.vien-thuoc a { display: flex; gap: 6px; align-items: baseline; padding: 7px 16px; border-radius: 99px; color: var(--phu); text-decoration: none; font-weight: 500; white-space: nowrap; }
+.vien-thuoc a em { font-style: normal; font-size: 12px; font-variant-numeric: tabular-nums; }
+.vien-thuoc a:hover { color: var(--muc); }
+.vien-thuoc a.on { background: rgb(255 255 255 / 88%); color: var(--muc); }
+
+/* ===== Máy tính ===== */
+.may { width: 1240px; border-radius: 20px; overflow: hidden; padding: 20px 28px 28px; position: relative; }
+.duong-nen { position: absolute; left: 0; top: 60px; width: 100%; height: 300px; pointer-events: none; }
+.thanh-tren { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; position: relative; }
+.logo { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; }
+.logo svg { width: 26px; height: 26px; }
+.ben-phai { display: flex; justify-content: flex-end; align-items: center; gap: 12px; color: var(--phu); }
+.tron { width: 36px; height: 36px; border-radius: 50%; background: var(--muc); color: #fff; display: grid; place-items: center; font-size: 12.5px; font-weight: 500; }
+
+.mo-dau { display: grid; grid-template-columns: 1fr 380px; gap: 40px; align-items: end; padding: 44px 4px 30px; position: relative; }
+.mo-dau h1 { margin: 0; font-size: 46px; font-weight: 300; letter-spacing: -0.03em; line-height: 1.15; }
+.mo-dau .ngay { margin: 6px 0 22px; color: var(--phu); font-size: 15px; }
+.vach { display: flex; gap: 4px; margin-bottom: 14px; }
+.vach i { width: 9px; height: 24px; border-radius: 2px; background: color-mix(in srgb, var(--muc) 18%, transparent); }
+.vach i.x { background: var(--muc); }
+.vach i.c { background: var(--chay); }
+.vach i.t { background: var(--cam); }
+.vach i.h { background: none; border: 1px solid color-mix(in srgb, var(--muc) 35%, transparent); }
+.so-lieu { display: flex; gap: 36px; align-items: flex-end; }
+.so-lieu div b { display: block; font-size: 32px; font-weight: 300; letter-spacing: -0.02em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.so-lieu div span { color: var(--phu); font-size: 13px; }
+.so-lieu .nut { margin-left: auto; }
+
+.chu-y { padding: 6px 0; }
+.chu-y h2 { margin: 0; padding: 10px 18px 8px; font-size: 14px; font-weight: 600; display: flex; justify-content: space-between; }
+.chu-y h2 em { font-style: normal; font-weight: 400; color: var(--phu); }
+.chu-y a { display: grid; grid-template-columns: 20px 1fr 18px; gap: 12px; align-items: center; padding: 11px 18px; color: inherit; text-decoration: none; border-top: 1px solid var(--vien); }
+.chu-y a:hover { background: rgb(255 255 255 / 45%); }
+.chu-y a > svg:first-child { color: var(--cam); }
+.chu-y a.do > svg:first-child { color: var(--do); }
+.chu-y strong { display: block; font-weight: 500; }
+.chu-y small { color: var(--phu); font-size: 12.5px; }
+
+.bang-khung { background: var(--kinh-dac); padding: 16px 6px 6px; position: relative; }
+.cong-cu { display: flex; gap: 10px; align-items: center; padding: 0 12px 14px; }
+.tim { margin-left: auto; width: 280px; display: flex; align-items: center; gap: 8px; padding: 0 14px; border: 1px solid var(--vien); border-radius: 99px; background: rgb(255 255 255 / 60%); color: var(--phu); }
+.tim input { flex: 1; font: inherit; border: 0; outline: 0; background: none; padding: 9px 0; color: var(--muc); caret-color: var(--cam); min-width: 0; }
+.tim input::placeholder { color: var(--phu); }
+.tim:focus-within { border-color: var(--muc); }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 12.5px; font-weight: 400; color: var(--phu); padding: 8px 14px; white-space: nowrap; }
+td { padding: 11px 14px; border-top: 1px solid var(--vien); vertical-align: middle; }
+tr.hang { cursor: pointer; }
+tr.hang:hover td { background: rgb(255 255 255 / 55%); }
+.gio { white-space: nowrap; font-variant-numeric: tabular-nums; }
+.gio b { display: block; font-size: 16px; font-weight: 500; }
+.gio small { font-size: 12.5px; color: var(--phu); }
+.gio small.tre { color: var(--cam); font-weight: 600; }
+.tuyen { font-weight: 500; }
+td small { display: block; font-size: 12.5px; color: var(--phu); }
+.tien-do { width: 128px; }
+.tien-do small { margin-top: 5px; font-variant-numeric: tabular-nums; }
+.tien-do small b { color: var(--do); font-weight: 500; }
+.day { display: flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.day span { width: 52px; height: 5px; border-radius: 99px; background: color-mix(in srgb, var(--muc) 14%, transparent); overflow: hidden; flex: none; }
+.day span i { display: block; height: 100%; background: var(--muc); }
+.day.cao { color: var(--cam); font-weight: 600; }
+.day.cao span i { background: var(--cam); }
+.tt { display: flex; gap: 5px; flex-wrap: wrap; }
+td.mui { width: 34px; padding-left: 0; color: color-mix(in srgb, var(--muc) 30%, transparent); }
+tr.hang:hover td.mui { color: var(--muc); }
+tr.mo .tuyen, tr.mo .gio b { color: var(--phu); font-weight: 400; text-decoration: line-through; text-decoration-thickness: 1px; }
+
+/* ===== Điện thoại 360 px ===== */
+.dt { width: 360px; height: 780px; border-radius: 30px; overflow: hidden; display: flex; flex-direction: column; font-size: 15px; position: relative; }
+.dt-cuon { flex: 1; overflow-y: auto; padding: 18px 14px 96px; scrollbar-width: none; display: grid; gap: 14px; align-content: start; }
+.dt-dau { display: flex; justify-content: space-between; align-items: center; color: var(--phu); font-size: 13.5px; padding: 0 4px; }
+.dt h2 { margin: 2px 4px 0; font-size: 32px; font-weight: 300; letter-spacing: -0.03em; line-height: 1.15; }
+.dt .vien-thuoc { display: flex; }
+.dt .vien-thuoc a { flex: 1; justify-content: center; }
+.the-chinh { background: var(--o-liu); color: #fff; border-radius: 20px; padding: 18px; display: grid; gap: 14px; }
+.the-chinh .dong { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.the-chinh .ma, .the-chinh .mo-chu { color: rgb(255 255 255 / 82%); }
+.the-chinh .ma { margin-right: auto; }
+.the-chinh .nhan { background: rgb(255 255 255 / 16%); border-color: rgb(255 255 255 / 30%); color: #fff; }
+.the-chinh .nhan svg { color: #fff; }
+.the-chinh .nhan.tre { background: #fff; border-color: #fff; color: var(--cam); }
+.the-chinh .nhan.tre svg { color: var(--cam); }
+.the-chinh h3 { margin: 0 0 6px; font-size: 23px; font-weight: 400; letter-spacing: -0.02em; line-height: 1.25; }
+.the-chinh .mo-chu { font-size: 13.5px; display: flex; gap: 8px; align-items: center; }
+.the-chinh .bien { border-color: rgb(255 255 255 / 55%); color: #fff; }
+.the-chinh .doan i { height: 6px; background: rgb(255 255 255 / 28%); }
+.the-chinh .doan i.x { background: #fff; }
+.the-chinh .doan i.c { background: #FFB48A; }
+.ke { border-top: 1px solid rgb(255 255 255 / 24%); padding-top: 14px; }
+.ke .luc { display: flex; justify-content: space-between; font-size: 13.5px; color: rgb(255 255 255 / 82%); }
+.ke strong { display: block; font-size: 19px; font-weight: 500; margin-top: 2px; }
+.ke p { margin: 2px 0 0; font-size: 13.5px; color: rgb(255 255 255 / 82%); }
+.the-chinh .nut { min-height: 52px; font-size: 15.5px; background: #fff; border-color: #fff; color: var(--muc); }
+.the-chinh .nut svg.ic { width: 20px; height: 20px; }
+.khoi { padding: 16px 18px; }
+.khoi h4 { margin: 0 0 12px; font-size: 13.5px; font-weight: 600; }
+.lich { list-style: none; margin: 0; padding: 0; }
+.lich li { display: grid; grid-template-columns: 16px 1fr auto; gap: 12px; align-items: start; padding-bottom: 14px; position: relative; }
+.lich li::before { content: ''; position: absolute; left: 7.500px; top: 16px; bottom: -2px; width: 1px; background: color-mix(in srgb, var(--muc) 28%, transparent); }
+.lich li:last-child { padding-bottom: 0; }
+.lich li:last-child::before { display: none; }
+.lich .cham { width: 16px; height: 16px; border-radius: 50%; border: 1px solid color-mix(in srgb, var(--muc) 40%, transparent); margin-top: 3px; display: grid; place-items: center; }
+.lich li.x .cham { background: var(--muc); border-color: var(--muc); }
+.lich li.x .cham svg { width: 9px; height: 9px; fill: none; stroke: #fff; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.lich li.c .cham { border-color: var(--chay); }
+.lich li.c .cham::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--chay); }
+.lich li.x span, .lich li.x time { color: var(--phu); }
+.lich li.c span { font-weight: 600; }
+.lich time { font-size: 13.5px; color: var(--phu); font-variant-numeric: tabular-nums; }
+.lich li.c time { color: var(--cam); font-weight: 600; }
+.hang-dt { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 14px 18px; color: inherit; text-decoration: none; }
+.hang-dt small { display: block; color: var(--phu); font-size: 13px; }
+.dt-day { position: absolute; left: 50%; bottom: 16px; transform: translateX(-50%); display: flex; gap: 2px; padding: 5px; border-radius: 99px; background: var(--muc); }
+.dt-day a { display: flex; align-items: center; gap: 7px; padding: 11px 16px; border-radius: 99px; color: rgb(255 255 255 / 80%); text-decoration: none; font-size: 13.5px; font-weight: 500; }
+.dt-day a.on { background: #fff; color: var(--muc); }
+.dt-day a svg.ic { width: 20px; height: 20px; }
+
+.bo-nhan { width: 1240px; padding: 16px 20px; border-radius: 16px; }
+.bo-nhan h4 { margin: 0 0 10px; font-size: 13.5px; font-weight: 600; }
+.bo-nhan div { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.bo-nhan hr { width: 1px; height: 18px; border: 0; background: var(--vien); margin: 0 6px; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-xe" viewBox="0 0 24 24"><path d="M2 6h11v10H2zM13 9h4l4 4v3h-8"/><circle cx="6.5" cy="17.5" r="2"/><circle cx="17" cy="17.5" r="2"/></symbol>
+  <symbol id="i-nguoi" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20.5c0-3.6 3.6-5.5 8-5.5s8 1.9 8 5.5"/></symbol>
+  <symbol id="i-cong" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-tim" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+  <symbol id="i-phai" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-dong-ho" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+  <symbol id="i-canh-bao" viewBox="0 0 24 24"><path d="M12 4 2.5 20h19zM12 10v4.5M12 17.2v.3"/></symbol>
+  <symbol id="i-qr" viewBox="0 0 24 24"><rect x="4" y="4" width="6" height="6"/><rect x="14" y="4" width="6" height="6"/><rect x="4" y="14" width="6" height="6"/><path d="M14 14h2.5v2.5H14zM18 18h2v2h-2zM18 14h2M14 18.5V20"/></symbol>
+  <symbol id="s-lap" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2.3 2.02"/></symbol>
+  <symbol id="s-chot" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="8" cy="8" r="2.2" fill="currentColor"/></symbol>
+  <symbol id="s-chay" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/></symbol>
+  <symbol id="s-xong" viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.25" fill="currentColor"/><path d="M5.2 8.2l1.9 1.9 3.7-4" fill="none" stroke="var(--nen)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="s-huy" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6 6l4 4M10 6l-4 4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  <symbol id="s-tre" viewBox="0 0 16 16"><circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 5v3.2l2 1.3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="s-suco" viewBox="0 0 16 16"><path d="M8 2.5 1.8 13.2h12.4z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M8 6.5v3M8 11.3v.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+</svg>
+
+<div class="ghi"><b>Bản D – sạch, theo tinh thần ảnh 00-1.</b> Dữ liệu, biển số, tên người đều là minh họa. Font trong file nháp này tải từ Google Fonts; code thật sẽ tự host.</div>
+
+<div class="san">
+
+  <!-- ============ MÁY TÍNH ============ -->
+  <div class="may nen">
+    <!-- Đường tuyến mảnh làm nền: mỗi chấm là một điểm dừng -->
+    <svg class="duong-nen" viewBox="0 0 1240 300" fill="none" aria-hidden="true">
+      <path d="M-20 250C160 250 220 120 400 130s230 110 400 60 240-150 460-130" style="stroke:color-mix(in srgb, var(--muc) 22%, transparent)" stroke-width="1"/>
+      <g fill="#F4F5F1" style="stroke:color-mix(in srgb, var(--muc) 45%, transparent)"><circle cx="150" cy="226" r="4"/><circle cx="400" cy="130" r="4"/><circle cx="1010" cy="96" r="4"/><circle cx="1180" cy="62" r="4"/></g>
+      <circle cx="690" cy="205" r="11" style="stroke:var(--cam)" stroke-opacity=".45"/><circle cx="690" cy="205" r="4.500" style="fill:var(--cam)"/>
+    </svg>
+
+    <header class="thanh-tren">
+      <div class="logo">
+        <svg viewBox="0 0 26 26" fill="none" style="stroke:var(--muc)" stroke-width="1.6" stroke-linecap="round"><path d="M4 20C9 20 8 6 13 6s4 14 9 14"/><circle cx="4" cy="20" r="1.800" style="fill:var(--muc)"/><circle cx="22" cy="20" r="1.800" style="fill:var(--cam);stroke:var(--cam)"/></svg>
+        Vận tải N8
+      </div>
+      <nav class="vien-thuoc">
+        <a class="on" href="#">Chuyến</a><a href="#">Đơn hàng</a><a href="#">Khách hàng</a><a href="#">Xe &amp; tài xế</a><a href="#">Tuyến &amp; giá</a>
+      </nav>
+      <div class="ben-phai">dieuphoi · Điều phối viên<span class="tron">ĐP</span></div>
+    </header>
+
+    <section class="mo-dau">
+      <div>
+        <h1>Chuyến hôm nay</h1>
+        <p class="ngay">Thứ Ba, 10 tháng 11 năm 2026</p>
+        <div class="vach" aria-label="12 chuyến theo giờ đi"><i class="x"></i><i class="x"></i><i class="t"></i><i class="c"></i><i class="c"></i><i class="c"></i><i class="h"></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="so-lieu">
+          <div><b>12</b><span>chuyến</span></div>
+          <div><b>4</b><span>đang chạy</span></div>
+          <div><b>5</b><span>chưa xuất phát</span></div>
+          <div><b>2</b><span>đã xong</span></div>
+          <button class="nut chinh"><svg class="ic"><use href="#i-cong"/></svg>Lập chuyến</button>
+        </div>
+      </div>
+      <aside class="kinh chu-y">
+        <h2>Cần chú ý <em>2 chuyến</em></h2>
+        <a href="#"><svg class="ic"><use href="#i-dong-ho"/></svg><span><strong>CH-1042 trễ 25 phút</strong><small>TP.HCM → Cần Thơ · dự kiến đến 11:10</small></span><svg class="ic"><use href="#i-phai"/></svg></a>
+        <a class="do" href="#"><svg class="ic"><use href="#i-canh-bao"/></svg><span><strong>CH-1047 chồng lịch</strong><small>Cùng xe 51C-123.45 với CH-1042 (BR-73)</small></span><svg class="ic"><use href="#i-phai"/></svg></a>
+      </aside>
+    </section>
+
+    <section class="kinh bang-khung">
+      <div class="cong-cu">
+        <nav class="vien-thuoc">
+          <a class="on" href="#">Tất cả <em>12</em></a><a href="#">Đang lập <em>2</em></a><a href="#">Đã chốt <em>3</em></a><a href="#">Đang chạy <em>4</em></a><a href="#">Hoàn thành <em>2</em></a><a href="#">Hủy <em>1</em></a>
+        </nav>
+        <label class="tim"><svg class="ic"><use href="#i-tim"/></svg><input placeholder="Tìm mã chuyến, biển số, tài xế" aria-label="Tìm chuyến"></label>
+      </div>
+      <table>
+        <thead><tr><th>Giờ đi</th><th>Tuyến</th><th>Xe · Tài xế</th><th>Điểm dừng</th><th>Độ đầy</th><th>Trạng thái</th><th></th></tr></thead>
+        <tbody id="than"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- ============ ĐIỆN THOẠI TÀI XẾ ============ -->
+  <div class="dt nen">
+    <div class="dt-cuon">
+      <div class="dt-dau"><span>Thứ Ba, 10/11 · Nguyễn Văn An</span><span class="tron">VA</span></div>
+      <h2>Chuyến của tôi</h2>
+      <nav class="vien-thuoc"><a class="on" href="#">Cần làm <em>2</em></a><a href="#">Đã xong <em>14</em></a></nav>
+
+      <section class="the-chinh">
+        <div class="dong"><span class="ma">CH-1042</span><span class="nhan chay" data-nhan="chay">Đang chạy</span><span class="nhan tre" data-nhan="tre">Trễ 25′</span></div>
+        <div>
+          <h3>TP.HCM → Cần Thơ</h3>
+          <div class="mo-chu"><span class="bien">51C-123.45</span>Khởi hành 06:30</div>
+        </div>
+        <div>
+          <div class="doan" data-d="xxxc--"></div>
+          <div class="mo-chu" style="margin-top:7px">Đã giao 3 / 6 điểm</div>
+        </div>
+        <div class="ke">
+          <div class="luc"><span>Điểm kế tiếp</span><span>dự kiến 09:40</span></div>
+          <strong>Vĩnh Long</strong>
+          <p>12 Phạm Thái Bường, Phường 4 · 2 kiện · DH-20391</p>
+        </div>
+        <button class="nut"><svg class="ic"><use href="#i-qr"/></svg>Quét mã giao hàng</button>
+      </section>
+
+      <section class="kinh khoi">
+        <h4>Lịch trình</h4>
+        <ol class="lich">
+          <li class="x"><i class="cham"><svg viewBox="0 0 10 10"><path d="M2 5.200l2 2 4-4.400"/></svg></i><span>Bến Lức</span><time>07:20</time></li>
+          <li class="x"><i class="cham"><svg viewBox="0 0 10 10"><path d="M2 5.200l2 2 4-4.400"/></svg></i><span>Tân An</span><time>07:55</time></li>
+          <li class="x"><i class="cham"><svg viewBox="0 0 10 10"><path d="M2 5.200l2 2 4-4.400"/></svg></i><span>Mỹ Tho</span><time>08:40</time></li>
+          <li class="c"><i class="cham"></i><span>Vĩnh Long</span><time>09:40</time></li>
+          <li><i class="cham"></i><span>Bình Minh</span><time>10:20</time></li>
+          <li><i class="cham"></i><span>Cần Thơ</span><time>11:10</time></li>
+        </ol>
+      </section>
+
+      <a class="kinh hang-dt" href="#">
+        <span class="gio"><b>13:00</b></span>
+        <span><span class="tuyen">Cần Thơ → TP.HCM</span><small>CH-1047 · 5 điểm</small></span>
+        <span class="nhan chot" data-nhan="chot">Đã chốt</span>
+      </a>
+    </div>
+
+    <nav class="dt-day">
+      <a class="on" href="#"><svg class="ic"><use href="#i-xe"/></svg>Chuyến</a>
+      <a href="#" aria-label="Quét mã"><svg class="ic"><use href="#i-qr"/></svg></a>
+      <a href="#" aria-label="Tài khoản"><svg class="ic"><use href="#i-nguoi"/></svg></a>
+    </nav>
+  </div>
+
+  <!-- ============ BỘ NHÃN ============ -->
+  <div class="bo-nhan nen">
+    <h4>Nhãn trạng thái chuyến và cờ</h4>
+    <div>
+      <span class="nhan" data-nhan="lap">Đang lập</span>
+      <span class="nhan chot" data-nhan="chot">Đã chốt</span>
+      <span class="nhan chay" data-nhan="chay">Đang chạy</span>
+      <span class="nhan xong" data-nhan="xong">Hoàn thành</span>
+      <span class="nhan qt" data-nhan="xong">Đã quyết toán</span>
+      <span class="nhan" data-nhan="huy">Hủy</span>
+      <hr>
+      <span class="nhan tre" data-nhan="tre">Trễ 25′</span>
+      <span class="nhan suco" data-nhan="suco">Chồng lịch</span>
+      <span class="nhan suco" data-nhan="suco">Sự cố</span>
+      <hr>
+      <span class="bien">51C-123.45</span>
+      <span class="chua">Chưa gán xe</span>
+    </div>
+  </div>
+</div>
+
+<script>
+// d: x = đã xong, c = đang tới, f = giao thất bại, - = chưa tới. Xếp theo giờ đi.
+const DS = [
+  { gio: '04:45', den: '08:10', ma: 'CH-1038', tuyen: 'TP.HCM → Bến Tre', xe: '51D-909.44', tx: 'Huỳnh Gia Huy', d: 'xxxxx', day: 88, tt: ['xong', 'Hoàn thành'] },
+  { gio: '05:30', den: '07:50', ma: 'CH-1039', tuyen: 'TP.HCM → Tân An', xe: '51C-808.17', tx: 'Đặng Hữu Lộc', d: 'xxfx', day: 60, tt: ['xong', 'Hoàn thành'] },
+  { gio: '06:30', den: '11:10', tre: true, ma: 'CH-1042', tuyen: 'TP.HCM → Cần Thơ', xe: '51C-123.45', tx: 'Nguyễn Văn An', d: 'xxxc--', day: 82, tt: ['chay', 'Đang chạy'], co: [['tre', 'Trễ 25′']] },
+  { gio: '07:00', den: '09:30', ma: 'CH-1043', tuyen: 'TP.HCM → Vũng Tàu', xe: '51D-678.90', tx: 'Trần Minh Khoa', d: 'xxc-', day: 64, tt: ['chay', 'Đang chạy'] },
+  { gio: '07:45', den: '14:20', ma: 'CH-1044', tuyen: 'TP.HCM → Đà Lạt', xe: '51C-555.12', tx: 'Lê Hoàng Phúc', d: 'xc-----', day: 91, tt: ['chay', 'Đang chạy'] },
+  { gio: '08:15', den: '10:30', ma: 'CH-1046', tuyen: 'TP.HCM → Mỹ Tho', xe: '51D-222.33', tx: 'Phạm Quốc Bảo', d: 'xxxc-', day: 71, tt: ['chay', 'Đang chạy'] },
+  { gio: '09:00', den: null, ma: 'CH-1041', tuyen: 'TP.HCM → Vũng Tàu', xe: '51D-444.56', tx: 'Võ Thanh Tùng', d: '---', day: 40, tt: ['huy', 'Hủy'], huy: true },
+  { gio: '13:00', den: '17:40', ma: 'CH-1047', tuyen: 'Cần Thơ → TP.HCM', xe: '51C-123.45', tx: 'Nguyễn Văn An', d: '-----', day: 97, tt: ['chot', 'Đã chốt'], co: [['suco', 'Chồng lịch']] },
+  { gio: '14:00', den: '15:10', ma: 'CH-1048', tuyen: 'TP.HCM → Biên Hòa', xe: '51D-444.56', tx: 'Võ Thanh Tùng', d: '---', day: 55, tt: ['chot', 'Đã chốt'] },
+  { gio: '15:30', den: '18:00', ma: 'CH-1049', tuyen: 'TP.HCM → Tây Ninh', xe: '51C-808.17', tx: 'Đặng Hữu Lộc', d: '----', day: 72, tt: ['chot', 'Đã chốt'] },
+  { gio: '16:00', den: '17:15', ma: 'CH-1050', tuyen: 'TP.HCM → Long An', xe: null, tx: 'Chưa gán tài xế', d: '--', day: 30, tt: ['lap', 'Đang lập'] },
+  { gio: '17:15', den: '18:20', ma: 'CH-1051', tuyen: 'TP.HCM → Bình Dương', xe: '51D-678.90', tx: 'Chưa gán tài xế', d: '---', day: 18, tt: ['lap', 'Đang lập'] },
+]
+
+const LOP = { lap: '', huy: '', chot: 'chot', chay: 'chay', xong: 'xong', tre: 'tre', suco: 'suco' }
+const nhan = (loai, chu) => `<span class="nhan ${LOP[loai]}" data-nhan="${loai}">${chu}</span>`
+
+document.getElementById('than').innerHTML = DS.map((c) => {
+  const xong = [...c.d].filter((k) => k === 'x').length
+  const hong = [...c.d].filter((k) => k === 'f').length
+  const diem = `${xong} / ${c.d.length} điểm` + (hong ? ` · <b>${hong} thất bại</b>` : '')
+  return `<tr class="hang${c.huy ? ' mo' : ''}">
+    <td class="gio"><b>${c.gio}</b>${c.den ? `<small class="${c.tre ? 'tre' : ''}">→ ${c.den}</small>` : ''}</td>
+    <td><div class="tuyen">${c.tuyen}</div><span class="ma">${c.ma}</span></td>
+    <td>${c.xe ? `<span class="bien">${c.xe}</span>` : '<span class="chua">Chưa gán xe</span>'}<small>${c.tx}</small></td>
+    <td><div class="tien-do"><div class="doan" data-d="${c.d}"></div><small>${diem}</small></div></td>
+    <td><div class="day${c.day > 95 ? ' cao' : ''}"><span><i style="width:${c.day}%"></i></span>${c.day}%</div></td>
+    <td><div class="tt">${nhan(...c.tt)}${(c.co || []).map((x) => nhan(...x)).join('')}</div></td>
+    <td class="mui"><svg class="ic"><use href="#i-phai"/></svg></td>
+  </tr>`
+}).join('')
+
+document.querySelectorAll('[data-nhan]').forEach((e) =>
+  e.insertAdjacentHTML('afterbegin', `<svg><use href="#s-${e.dataset.nhan}"/></svg>`))
+document.querySelectorAll('[data-d]').forEach((e) => {
+  e.innerHTML = [...e.dataset.d].map((k) => `<i class="${k === '-' ? '' : k}"></i>`).join('')
+})
+</script>
+<style>
+:root { --sang1: #E6E8E1; --sang2: #D3D7CC; --ngoai: #8F9488; }
+body.suong  { --da: #C3CAD3; --sang1: #E6EAEF; --sang2: #D2D9E1; --ngoai: #8D96A1; --muc: #172030; --phu: #44505F; --o-liu: #3F5673; }
+body.cat    { --da: #D2CABB; --sang1: #EEE9DF; --sang2: #DDD6C8; --ngoai: #9C9484; --muc: #261F17; --phu: #574D40; --o-liu: #6B5540; --cam: #B4380F; }
+body.ngoc   { --da: #BFCBC8; --sang1: #E3EBE9; --sang2: #CFDAD7; --ngoai: #8A9794; --muc: #14231F; --phu: #3F524D; --o-liu: #2F5F58; }
+body.oai    { --da: #CAC6CF; --sang1: #EAE7EE; --sang2: #D8D4DE; --ngoai: #948F9B; --muc: #211D29; --phu: #4F4959; --o-liu: #54486E; }
+.doi-mau { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 20; display: flex; gap: 4px; padding: 5px; border-radius: 99px; background: #fff; border: 1px solid rgb(0 0 0 / 15%); font: 13px system-ui, sans-serif; }
+.doi-mau button { font: inherit; display: flex; align-items: center; gap: 7px; padding: 7px 14px 7px 9px; border-radius: 99px; border: 0; background: none; color: #222; cursor: pointer; }
+.doi-mau button i { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgb(0 0 0 / 25%); }
+.doi-mau button.on { background: #1d1f1e; color: #fff; }
+</style>
+<div class="doi-mau">
+  <button class="on" data-mau=""><i style="background:linear-gradient(135deg,#C4C8BE 50%,#56624A 50%)"></i>Đá xám xanh</button>
+  <button data-mau="suong"><i style="background:linear-gradient(135deg,#C3CAD3 50%,#3F5673 50%)"></i>Sương xanh</button>
+  <button data-mau="cat"><i style="background:linear-gradient(135deg,#D2CABB 50%,#6B5540 50%)"></i>Cát ấm</button>
+  <button data-mau="ngoc"><i style="background:linear-gradient(135deg,#BFCBC8 50%,#2F5F58 50%)"></i>Ngọc xanh</button>
+  <button data-mau="oai"><i style="background:linear-gradient(135deg,#CAC6CF 50%,#54486E 50%)"></i>Oải hương</button>
+</div>
+<script>
+document.querySelectorAll('.doi-mau button').forEach((b) => (b.onclick = () => {
+  document.body.className = b.dataset.mau
+  document.querySelectorAll('.doi-mau button').forEach((x) => x.classList.toggle('on', x === b))
+}))
+</script>
+</body>
+</html>

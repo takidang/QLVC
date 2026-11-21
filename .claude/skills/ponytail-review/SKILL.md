@@ -92,6 +92,7 @@ End with:
 - `Verdict: Ship.` or `Verdict: fix 1 and 3 first.`
 - `Lean: -<N> lines possible.` when lean findings exist.
 - `Not checked:` one line, if something mattered and you could not check it.
+- `Bước tiếp:` one line — "gõ số để sửa (vd. `sửa 1, 3`)" when there are Must/Should fixes; otherwise "mở PR vào `dev`" (or, inside a story, the next step of `story-flow`).
 
 Nothing found: `What this change does:`, then `Looks good. Ship.` and one line
 on what you checked.

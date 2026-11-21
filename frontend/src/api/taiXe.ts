@@ -29,5 +29,6 @@ export function danhSachTaiXe(loc: {
 }
 
 export const themTaiXe = (vao: TaiXeVao) => guiJson<TaiXe>('/api/tai-xe', 'POST', vao)
+export const xemTaiXe = (id: number) => goi<TaiXe>(`/api/tai-xe/${id}`)
 export const suaTaiXe = (id: number, vao: TaiXeSua) =>
   guiJson<TaiXe>(`/api/tai-xe/${id}`, 'PATCH', vao)

@@ -16,6 +16,21 @@ export type Chuyen = {
   khoi_hanh_du_kien: string
   ket_thuc_du_kien: string
   trang_thai: string
+  // UC-32: chỉ có khi lọc theo ngày (bảng chuyến trong ngày)
+  theo_doi?: {
+    xong: number
+    tong: number
+    ty_le_lap_day: string
+    co: string[]
+    chong: string[]
+    // UC-32 mở rộng (PR #41): trạng thái từng điểm theo thứ tự lịch trình, phút trễ lượt quét gần nhất
+    // (âm là sớm), vị trí lượt quét có GPS gần nhất (lat, lng là chuỗi thập phân)
+    diem?: ('XONG' | 'THAT_BAI' | 'DANG_TOI' | 'CHUA')[]
+    tre_phut?: number | null
+    vi_tri?: { lat: string; lng: string; luc: string; nut: string } | null
+    // PR #54 (BR-73): kết thúc dự kiến + độ trễ lượt quét gần nhất; null khi chuyến không đang chạy
+    ket_thuc_dang_chay?: string | null
+  } | null
 }
 export type ChuyenVao = {
   tuyen_id: number
@@ -43,6 +58,7 @@ export type TaiXeKhaDung = {
 export const danhSachChuyen = (loc: {
   trang_thai?: string
   ngay?: string
+  tu_khoa?: string
   trang?: number
   so_dong?: number
 }) => goi<DanhSach<Chuyen>>(`/api/chuyen?${query(loc)}`)
@@ -59,6 +75,12 @@ export type DiemDung = {
   don_id: number
   ma_don: string
   eta: string
+  eta_ke_hoach?: string | null
+  thuc_te?: string | null
+  ket_qua?: string | null
+  tre_phut?: number | null
+  lat?: string | null
+  lng?: string | null
 }
 export type ChuyenChiTiet = Chuyen & {
   tai_trong: { da_dung_kg: string; toi_da_kg: number }
@@ -67,14 +89,86 @@ export type ChuyenChiTiet = Chuyen & {
   lich_trinh: DiemDung[]
   lai_du_kien: number
   canh_bao_lai_am: boolean
+  chay_rong: boolean
   don: Don[]
+  // UC-32: chỉ có ở GET chi tiết (không có trong kết quả ghép / gỡ / chốt)
+  co?: string[] | null
+  chong?: string[] | null
+  ket_thuc_dang_chay?: string | null
+  ket_thuc_bat_thuong?: boolean | null
+  ly_do_ket_thuc?: string | null
+  km_bat_dau?: number | null
+  km_ket_thuc?: number | null
+  dong_thoi_gian?: { luc: string; loai: string; noi_dung: string; nguoi?: string | null }[] | null
+  tien?: { dinh_muc: number; luong: number; tam_ung_hieu_luc: number; doanh_thu: number } | null
+  su_co?: SuCo[] | null
+}
+export type SuCo = {
+  id: number
+  loai: string
+  ghi_chu: string | null
+  trang_thai: string
+  cach_xu_ly: string | null
+  luc: string
 }
 // Vi phạm khi ghép/gỡ: don_id null là vi phạm của cả chuyến (tải, thể tích, giấy tờ, trùng lịch)
 export type ViPhamGhep = { don_id: number | null; ma: string; thong_diep: string }
 
+// UC-30: gợi ý nguy cơ trễ chuyến từ mô hình thử nghiệm (chỉ gợi ý, KT-08)
+export type MucNguyCoTre = 'THAP' | 'TRUNG_BINH' | 'CAO'
+export type YeuToDuDoanTre = { ten: string; huong: 'TANG' | 'GIAM' }
+export type NguonDuDoanTre = {
+  dataset?: string
+  ngay_train?: string
+  so_mau?: number
+  auc?: number
+}
+export type DuDoanTre = {
+  co_du_doan: boolean
+  xac_suat?: number | null
+  muc?: MucNguyCoTre | null
+  yeu_to?: YeuToDuDoanTre[] | null
+  nguon?: NguonDuDoanTre | null
+}
+
 export const chiTietChuyen = (id: number) => goi<ChuyenChiTiet>(`/api/chuyen/${id}`)
+export const duDoanTre = (id: number) => goi<DuDoanTre>(`/api/chuyen/${id}/du-doan-tre`)
 export const donPhuHop = (id: number) => goi<Don[]>(`/api/chuyen/${id}/don-phu-hop`)
 export const ghepDon = (id: number, don_ids: number[]) =>
   guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/ghep`, 'POST', { don_ids })
 export const goDon = (id: number, don_ids: number[]) =>
   guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/go`, 'POST', { don_ids })
+
+// UC-12: đổi xe, tài xế khi chuyến LAP
+export const xeKhaDungChuyen = (id: number) => goi<XeKhaDung[]>(`/api/chuyen/${id}/xe-kha-dung`)
+export const taiXeKhaDungChuyen = (id: number, xe_id?: number) =>
+  goi<TaiXeKhaDung[]>(`/api/chuyen/${id}/tai-xe-kha-dung?${query({ xe_id })}`)
+export const phanCong = (id: number, xe_id: number, tai_xe_id: number) =>
+  guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/phan-cong`, 'PUT', { xe_id, tai_xe_id })
+
+// Chốt (UC-15): máy chủ trả 422 BR-23 (chuyến rỗng) / BR-52 (lãi âm) khi thiếu xác nhận
+export type XacNhanChot = { xac_nhan_chay_rong?: boolean; xac_nhan_lai_am?: boolean }
+export const chotChuyen = (id: number, xn: XacNhanChot) =>
+  guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/chot`, 'POST', xn)
+export const moChotChuyen = (id: number) =>
+  goi<ChuyenChiTiet>(`/api/chuyen/${id}/mo-chot`, { method: 'POST' })
+
+// Hủy (UC-16): lý do bắt buộc; còn tạm ứng hoặc chuyến đã chạy → 409 BR-25
+export const huyChuyen = (id: number, ly_do: string) =>
+  guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/huy`, 'POST', { ly_do })
+
+// UC-32: kết thúc do sự cố (BR-68), đóng sự cố tài xế báo (UC-33)
+export const ketThucSuCo = (id: number, ly_do: string, km_ket_thuc: number | null) =>
+  guiJson<ChuyenChiTiet>(`/api/chuyen/${id}/ket-thuc-su-co`, 'POST', { ly_do, km_ket_thuc })
+export const dongSuCo = (id: number, cach_xu_ly: string) =>
+  guiJson<SuCo>(`/api/su-co/${id}/dong`, 'POST', { cach_xu_ly })
+// Cờ trên bảng chuyến trong ngày (UC-32)
+// Phút trễ dễ đọc: "25′", "3 giờ 21′"
+export const phutDoc = (n: number) => (n >= 60 ? `${Math.floor(n / 60)} giờ ${n % 60}′` : `${n}′`)
+export const TEN_CO: Record<string, string> = {
+  TRE: 'Trễ',
+  SU_CO: 'Sự cố',
+  THAT_BAI: 'Đơn thất bại',
+  CHUA_QUYET_TOAN: 'Chưa quyết toán',
+  CHONG_LICH: 'Chồng lịch',
+}

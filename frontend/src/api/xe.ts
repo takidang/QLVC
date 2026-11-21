@@ -28,6 +28,7 @@ export function danhSachXe(loc: {
 }
 
 export const themXe = (vao: XeVao) => guiJson<Xe>('/api/xe', 'POST', vao)
+export const xemXe = (id: number) => goi<Xe>(`/api/xe/${id}`)
 export const suaXe = (id: number, vao: XeSua) => guiJson<Xe>(`/api/xe/${id}`, 'PATCH', vao)
 
 type ChiPhiCoDinh = { xe_id: number; thang: string; so_tien: number | null }

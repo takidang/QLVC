@@ -20,6 +20,10 @@
 
 Thư viện cụ thể (đọc QR, nén ảnh, sinh kiểu từ OpenAPI…) chọn khi làm story tương ứng, **hỏi trước khi cài** (CLAUDE.md) và kiểm tra bảo mật như với skill.
 
+Đã chọn: nén ảnh bằng canvas, không thư viện (UC-18). QR (UC-19, Tài chốt 04/11): `qrcode` 1.5.4 vẽ QR trên phiếu in, `qr-scanner` 1.4.2 đọc QR bằng camera (chạy cả iPhone), giữ ô gõ mã tay; ghim đúng phiên bản trong `package.json`. Thử camera trên điện thoại qua Cloudflare Quick Tunnel (`vite.config.ts` cho phép `*.trycloudflare.com`), không thêm plugin HTTPS.
+
+Bản đồ (Tài chốt 08/11): `leaflet` 1.9.4 + `react-leaflet` 5.0.0 (+ `@types/leaflet`), nền OpenStreetMap (miễn phí, không khóa API, cần mạng khi demo). **Khóa vùng hiển thị** trong đất liền Việt Nam (kinh độ ≤ ~109,6°, mức phóng nhỏ nhất ~7) để không hiện vùng Hoàng Sa, Trường Sa (OSM có thể ghi tên không phải tiếng Việt); mỗi chuyến tự phóng vừa các điểm của nó (tuyến ≤ 10 giờ nên luôn gọn trong một vùng, cả khi thêm kho miền Bắc). Cần xem cả nước thì đổi nền sang nhà cung cấp Việt Nam (Goong, Vietmap – khóa API trong `.env`). Trình bày kiểu theo dõi đơn của các hãng giao hàng (bản đồ ở trên, dòng thời gian dọc ở dưới), chỉ học bố cục. Dùng ở chi tiết chuyến (sau UC-32) và tra cứu đơn UC-28.
+
 ---
 
 ## 2. Sơ đồ triển khai
@@ -123,7 +127,7 @@ QLVC/
 - Mỗi router khai báo vai trò được gọi bằng `Depends(can_vai_tro("DIEU_PHOI", "QUAN_LY"))` (BR-57). Sai vai trò → 403.
 - **Quản lý kế thừa quyền Điều phối** (ma trận mục 6 của `nghiep-vu.md`): `can_vai_tro` tự cho `QUAN_LY` qua khi danh sách có `DIEU_PHOI`.
 - Quyền sở hữu kiểm trong service, không chỉ ở router: tài xế chỉ thao tác chuyến có `tai_xe_id` là mình (BR-58, chống IDOR). Không phải của mình → 403, khớp sơ đồ 9 (BR-38).
-- Khách không đăng nhập; trang tra cứu giới hạn tần suất theo IP (NFR-SEC-05).
+- Khách không đăng nhập; trang tra cứu giới hạn tần suất theo IP (NFR-SEC-05). Trên Render (sau proxy) lệnh chạy phải có `uvicorn ... --proxy-headers --forwarded-allow-ips="*"` để lấy IP thật của khách; thiếu thì mọi khách chung IP proxy (UC-28, review #42).
 - Giới hạn tần suất đăng nhập (NFR-SEC-05): sai mật khẩu **5 lần liên tiếp** cho cùng một tên đăng nhập → khóa tài khoản đó **15 phút** (lần thứ 6 trả 429 kể cả mật khẩu đúng); đăng nhập đúng thì đếm lại. Bộ đếm lưu trong bảng `NGUOI_DUNG` (`so_lan_sai`, `khoa_den`) để không mất khi khởi động lại. Chốt 16/10/2026 (UC-01).
 
 ---
@@ -215,4 +219,4 @@ Chỉ khai tên trong `.env.example`; giá trị thật đặt ở `.env` (máy 
 | E2E luồng chính | `webapp-testing` (Playwright) | Máy dev, trước khi đóng story |
 | Hiệu năng | Locust hoặc k6 với 10.000 đơn | Máy dev, tuần 9 |
 
-GitHub Actions khi push (`.github/workflows/ci.yml`): backend `ruff check`, `ruff format --check`, pytest; frontend oxlint (lint đi kèm bản mẫu Vite), prettier, `tsc -b` + build; quét bí mật bằng binary gitleaks ghim phiên bản và checksum. Action bên ngoài ghim theo commit SHA. Phiên bản package ghim chính xác: `backend/requirements*.txt` dùng `==`, frontend commit `package-lock.json` và CI chạy `npm ci`. Mỗi use case làm theo `story-flow`.
+GitHub Actions (`.github/workflows/ci.yml`; chạy khi mở/cập nhật PR và khi push lên `main`, `dev`, `test`, `hotfix`; PR chỉ sửa `docs/`, `*.md` bỏ qua; có cache pip/npm, push mới hủy lượt cũ): backend `ruff check`, `ruff format --check`, pytest; frontend oxlint (lint đi kèm bản mẫu Vite), prettier, `tsc -b` + build; quét bí mật bằng binary gitleaks ghim phiên bản và checksum (`secrets.yml`, chạy cả với PR chỉ sửa tài liệu). Action bên ngoài ghim theo commit SHA. Phiên bản package ghim chính xác: `backend/requirements*.txt` dùng `==`, frontend commit `package-lock.json` và CI chạy `npm ci`. Mỗi use case làm theo `story-flow`.

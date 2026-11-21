@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { danhSachCauHinh, suaCauHinh, type ThamSo } from '../../api/bangGia'
 import { LoiApi } from '../../api/goi'
+import { DauDanhMuc } from '../danh-muc'
 
 const lucVN = (iso: string) => new Date(iso).toLocaleString('vi-VN')
 
@@ -35,58 +36,64 @@ export default function CauHinh() {
 
   return (
     <section className="noi-dung">
-      <h1>Cấu hình</h1>
-      <p className="ghi-chu">
-        Tham số dùng khi tính cước, lịch trình và cảnh báo (nghiệp vụ mục 3).
-      </p>
+      <DauDanhMuc
+        tieuDe="Cấu hình"
+        phu="Tham số dùng khi tính cước, lịch trình và cảnh báo (nghiệp vụ mục 3)."
+      />
       {loiTai && (
         <p role="alert" className="loi">
           {loiTai}
         </p>
       )}
-      <table>
-        <thead>
-          <tr>
-            <th>Mã</th>
-            <th>Tham số</th>
-            <th>Giá trị</th>
-            <th>Đơn vị</th>
-            <th>Sửa lần cuối</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {ds.map((ts) => (
-            <tr key={ts.ma}>
-              <td>{ts.ma}</td>
-              <td>{ts.ten}</td>
-              <td>
-                <input
-                  aria-label={ts.ten}
-                  value={nhap[ts.ma] ?? ''}
-                  onChange={(e) => setNhap({ ...nhap, [ts.ma]: e.target.value })}
-                  size={8}
-                />
-                {loi[ts.ma] && <div className="loi">{loi[ts.ma]}</div>}
-                {daLuu === ts.ma && <div className="thanh-cong">Đã lưu</div>}
-              </td>
-              <td>{ts.don_vi}</td>
-              <td className="ghi-chu">
-                {ts.luc ? `${ts.nguoi_sua ?? ''}, ${lucVN(ts.luc)}` : 'Mặc định'}
-              </td>
-              <td>
-                <button
-                  className="phu"
-                  disabled={nhap[ts.ma] === ts.gia_tri}
-                  onClick={() => luu(ts.ma)}
-                >
-                  Lưu
-                </button>
-              </td>
+      <div className="kinh bang-khung dm">
+        <table>
+          <thead>
+            <tr>
+              <th>Mã</th>
+              <th>Tham số</th>
+              <th>Giá trị</th>
+              <th>Đơn vị</th>
+              <th>Sửa lần cuối</th>
+              <th>
+                <span className="an-chu">Lưu</span>
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {ds.map((ts) => (
+              <tr key={ts.ma}>
+                <td>
+                  <span className="bien">{ts.ma}</span>
+                </td>
+                <td>{ts.ten}</td>
+                <td>
+                  <input
+                    aria-label={ts.ten}
+                    value={nhap[ts.ma] ?? ''}
+                    onChange={(e) => setNhap({ ...nhap, [ts.ma]: e.target.value })}
+                    size={8}
+                  />
+                  {loi[ts.ma] && <div className="loi">{loi[ts.ma]}</div>}
+                  {daLuu === ts.ma && <div className="thanh-cong">Đã lưu</div>}
+                </td>
+                <td>{ts.don_vi}</td>
+                <td className="ghi-chu">
+                  {ts.luc ? `${ts.nguoi_sua ?? ''}, ${lucVN(ts.luc)}` : 'Mặc định'}
+                </td>
+                <td>
+                  <button
+                    className="phu"
+                    disabled={nhap[ts.ma] === ts.gia_tri}
+                    onClick={() => luu(ts.ma)}
+                  >
+                    Lưu
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </section>
   )
 }
