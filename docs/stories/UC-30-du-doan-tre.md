@@ -55,6 +55,6 @@
 | UC-30-AC5 | API | `test_uc30_ac5_khong_doi_du_lieu_chuyen` | Đạt | 19/11/2026 |
 | UC-30-AC6 | API | `test_uc30_ac6_phan_quyen` | Đạt | 19/11/2026 |
 | UC-30-AC7 | UI | `docs/test-evidence/UC-30/` (8 ảnh, `du-lieu.md`): Điều phối, Quản lý thấy nhãn; Kế toán 403; chuyến hủy không có nhãn; 390 px, bản tối | Đạt (Kiệt thử trên giao diện v3, 4 góp ý không chặn ghi trong `du-lieu.md`) | 19/11/2026 |
-| UC-30-AC8 | API | `test_uc30_ac8_*` (`backend/tests/api/test_uc30_du_doan_tre.py`) | CHƯA KIỂM | — |
-| UC-30-AC9 | Logic | `test_uc30_ac9_yeu_to_du_ma_va_gia_tri` (`backend/tests/unit/test_uc30_du_doan_tre.py`) | CHƯA KIỂM | — |
-| UC-30-AC10 | UI | Chi tiết chuyến (`ChuyenChiTiet.tsx`), danh sách theo ngày (`ChuyenDanhSach.tsx`), Tổng quan (`TongQuan.tsx`) | CHƯA KIỂM | — |
+| UC-30-AC8 | API | `test_uc30_ac8_*` (`backend/tests/api/test_uc30_du_doan_tre.py`); toàn bộ 1130 passed | Đạt | 21/11/2026 |
+| UC-30-AC9 | Logic | `test_uc30_ac9_yeu_to_du_ma_va_gia_tri` (`backend/tests/unit/test_uc30_du_doan_tre.py`) | Đạt | 21/11/2026 |
+| UC-30-AC10 | UI | `docs/test-evidence/UC-30/` ảnh i–n, ca ở `du-lieu.md` mục AC10 (Tài thử bằng Playwright) | Đạt | 21/11/2026 |
