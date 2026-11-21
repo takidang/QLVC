@@ -4615,34 +4615,108 @@ form.form-km > button {
 }
 .ct-du-doan {
   display: grid;
-  gap: 5px;
-  padding-top: 10px;
-  border-top: 1px solid var(--vien);
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--bo);
+  background: var(--mat-2);
+  border: 1px solid var(--vien);
 }
-.ct-du-doan-chinh {
+.ct-du-doan-dau {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px 12px;
+  gap: 8px 10px;
+}
+.ct-du-doan-tieu-de {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muc);
+}
+.ct-du-doan-nut {
+  margin-left: auto;
+  padding: 3px 10px;
+  font-size: 12.5px;
+}
+.ct-du-doan-thang {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+  max-width: 340px;
+}
+.ct-du-doan-bac {
+  display: grid;
+  gap: 4px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--phu);
+}
+.ct-du-doan-o {
+  height: 8px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--muc) 12%, transparent);
+}
+.ct-du-doan-bac.chon {
+  color: var(--mau);
+  font-weight: 600;
+}
+.ct-du-doan-bac.chon.nc-thap {
+  --mau: var(--xong-chu);
+}
+.ct-du-doan-bac.chon.nc-tb {
+  --mau: var(--cam-chu);
+}
+.ct-du-doan-bac.chon.nc-cao {
+  --mau: var(--do-chu);
+}
+.ct-du-doan-bac.chon .ct-du-doan-o {
+  background: var(--mau);
 }
 .ct-du-doan-yt {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 0;
+  display: grid;
+  gap: 3px;
   margin: 0;
   padding: 0;
   list-style: none;
   font-size: 13px;
-  color: var(--phu);
-}
-.ct-du-doan-yt li + li::before {
-  content: '·';
-  margin: 0 7px;
+  color: var(--muc);
 }
 .ct-du-doan-ghi-chu {
   font-size: 12px;
   color: var(--phu);
   font-variant-numeric: tabular-nums;
+}
+.ct-du-doan-giai-thich {
+  display: grid;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: var(--bo);
+  background: var(--mat);
+  border: 1px solid var(--vien);
+  font-size: 13px;
+  color: var(--phu);
+}
+.ct-du-doan-giai-thich p {
+  margin: 0;
+}
+.ct-du-doan-tq {
+  margin-bottom: 18px;
+}
+.ct-du-doan-tq p {
+  margin: 0;
+  color: var(--phu);
+}
+.ct-du-doan-tq-ds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ct-du-doan-tq-ds li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
 /* ----- Menu tài khoản gọn + trang /tai-khoan và /cai-dat ----- */
