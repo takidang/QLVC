@@ -17,7 +17,7 @@ const dong = (n: number) => n.toLocaleString('vi-VN')
 export default function BangGiaDanhSach() {
   const [tim, setTim] = useState('')
   const [trang, setTrang] = useState(1)
-  const [ds, setDs] = useState<{ du_lieu: BangGia[]; tong: number }>({ du_lieu: [], tong: 0 })
+  const [ds, setDs] = useState<{ du_lieu: BangGia[]; tong: number } | null>(null) // null = đang tải
   const [loiTai, setLoiTai] = useState('')
   const [dangSua, setDangSua] = useState<BangGia | 'moi' | null>(null)
   const [lanTai, setLanTai] = useState(0)
@@ -38,7 +38,8 @@ export default function BangGiaDanhSach() {
     }
   }, [tim, trang, lanTai])
 
-  const soTrang = Math.max(1, Math.ceil(ds.tong / SO_DONG))
+  const duLieu = ds?.du_lieu ?? []
+  const soTrang = Math.max(1, Math.ceil((ds?.tong ?? 0) / SO_DONG))
   return (
     <section className="noi-dung">
       <DauDanhMuc
@@ -56,7 +57,7 @@ export default function BangGiaDanhSach() {
 
       <div className="kinh bang-khung dm">
         <div className="cong-cu">
-          <span className="ghi-chu">{ds.tong} mức giá</span>
+          <span className="ghi-chu">{ds ? `${ds.tong} mức giá` : '–'}</span>
           <OTim
             giaTri={tim}
             goiY="Tìm tỉnh"
@@ -80,7 +81,7 @@ export default function BangGiaDanhSach() {
             </tr>
           </thead>
           <tbody>
-            {ds.du_lieu.map((bg) => (
+            {duLieu.map((bg) => (
               <tr key={bg.id} className={bg.dang_ap_dung ? undefined : 'mo'}>
                 <td className="tuyen">
                   {bg.tinh_lay} → {bg.tinh_giao}
@@ -102,10 +103,10 @@ export default function BangGiaDanhSach() {
                 </td>
               </tr>
             ))}
-            {ds.du_lieu.length === 0 && (
+            {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={6} className="trong">
-                  Chưa có mức giá nào
+                  {ds ? 'Chưa có mức giá nào' : 'Đang tải…'}
                 </td>
               </tr>
             )}
@@ -118,7 +119,7 @@ export default function BangGiaDanhSach() {
           Trước
         </button>
         <span>
-          Trang {trang}/{soTrang} · {ds.tong} mức giá
+          Trang {trang}/{soTrang} · {ds ? `${ds.tong} mức giá` : '–'}
         </span>
         <button className="phu" disabled={trang >= soTrang} onClick={() => setTrang(trang + 1)}>
           Sau

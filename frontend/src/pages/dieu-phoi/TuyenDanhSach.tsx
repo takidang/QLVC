@@ -17,7 +17,7 @@ const gio = (phut: number) => `${Math.floor(phut / 60)} giờ ${phut % 60} phút
 
 export default function TuyenDanhSach() {
   const [tim, setTim] = useState('')
-  const [ds, setDs] = useState<{ du_lieu: Tuyen[]; tong: number }>({ du_lieu: [], tong: 0 })
+  const [ds, setDs] = useState<{ du_lieu: Tuyen[]; tong: number } | null>(null) // null = đang tải
   const [loiTai, setLoiTai] = useState('')
   const [dangSua, setDangSua] = useState<Tuyen | 'moi' | null>(null)
   const [canhBao, setCanhBao] = useState<{ ma: string; ds: string[] } | null>(null)
@@ -48,6 +48,7 @@ export default function TuyenDanhSach() {
     }
   }
 
+  const duLieu = ds?.du_lieu ?? []
   return (
     <section className="noi-dung">
       <DauDanhMuc
@@ -74,7 +75,7 @@ export default function TuyenDanhSach() {
 
       <div className="kinh bang-khung dm">
         <div className="cong-cu">
-          <span className="ghi-chu">{ds.du_lieu.length} tuyến</span>
+          <span className="ghi-chu">{ds ? `${duLieu.length} tuyến` : '–'}</span>
           <OTim giaTri={tim} goiY="Tìm mã hoặc tên tuyến" onDoi={setTim} />
         </div>
         <table>
@@ -93,7 +94,7 @@ export default function TuyenDanhSach() {
             </tr>
           </thead>
           <tbody>
-            {ds.du_lieu.map((t) => (
+            {duLieu.map((t) => (
               <tr key={t.id} className={t.trang_thai === 'NGUNG' ? 'mo' : undefined}>
                 <td>
                   <span className="bien">{t.ma}</span>
@@ -132,10 +133,10 @@ export default function TuyenDanhSach() {
                 </td>
               </tr>
             ))}
-            {ds.du_lieu.length === 0 && (
+            {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={8} className="trong">
-                  Chưa có tuyến nào
+                  {ds ? 'Chưa có tuyến nào' : 'Đang tải…'}
                 </td>
               </tr>
             )}

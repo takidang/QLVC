@@ -36,7 +36,7 @@ export default function NguoiDungDanhSach() {
   const [vaiTro, setVaiTro] = useState('')
   const [trangThai, setTrangThai] = useState('')
   const [trang, setTrang] = useState(1)
-  const [ds, setDs] = useState<{ du_lieu: TaiKhoan[]; tong: number }>({ du_lieu: [], tong: 0 })
+  const [ds, setDs] = useState<{ du_lieu: TaiKhoan[]; tong: number } | null>(null) // null = đang tải
   const [loiTai, setLoiTai] = useState('')
   const [toiId, setToiId] = useState<number>()
   const [dangSua, setDangSua] = useState<TaiKhoan | 'moi' | null>(null)
@@ -78,7 +78,8 @@ export default function NguoiDungDanhSach() {
     }
   }
 
-  const soTrang = Math.max(1, Math.ceil(ds.tong / SO_DONG))
+  const duLieu = ds?.du_lieu ?? []
+  const soTrang = Math.max(1, Math.ceil((ds?.tong ?? 0) / SO_DONG))
   const locTrang = (set: (v: string) => void) => (v: string) => {
     set(v)
     setTrang(1)
@@ -87,7 +88,7 @@ export default function NguoiDungDanhSach() {
     <section className="noi-dung">
       <DauDanhMuc
         tieuDe="Người dùng"
-        phu={`${ds.tong} tài khoản · tài xế khóa ở mục Tài xế`}
+        phu={`${ds ? `${ds.tong} tài khoản` : '–'} · tài xế khóa ở mục Tài xế`}
         nut="Thêm người dùng"
         onNut={() => setDangSua('moi')}
       />
@@ -135,7 +136,7 @@ export default function NguoiDungDanhSach() {
             </tr>
           </thead>
           <tbody>
-            {ds.du_lieu.map((tk) => (
+            {duLieu.map((tk) => (
               <tr key={tk.id} className={tk.trang_thai === 'NGUNG' ? 'mo' : undefined}>
                 <td>
                   <span className="tuyen">{tk.ho_ten}</span>
@@ -173,10 +174,10 @@ export default function NguoiDungDanhSach() {
                 </td>
               </tr>
             ))}
-            {ds.du_lieu.length === 0 && (
+            {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={4} className="trong">
-                  Chưa có người dùng nào phù hợp
+                  {ds ? 'Chưa có người dùng nào phù hợp' : 'Đang tải…'}
                 </td>
               </tr>
             )}
@@ -189,7 +190,7 @@ export default function NguoiDungDanhSach() {
           Trước
         </button>
         <span>
-          Trang {trang}/{soTrang} · {ds.tong} người dùng
+          Trang {trang}/{soTrang} · {ds ? `${ds.tong} người dùng` : '–'}
         </span>
         <button className="phu" disabled={trang >= soTrang} onClick={() => setTrang(trang + 1)}>
           Sau
