@@ -1,3 +1,4 @@
+import { useNgayBaoTruoc } from '../../api/cauHinh'
 import type { TaiXe } from '../../api/taiXe'
 import type { Xe } from '../../api/xe'
 
@@ -55,10 +56,11 @@ export default function KhoiXe({ xe, taiXe }: { xe: Xe | null; taiXe: TaiXe | nu
 }
 
 // Một hạn giấy tờ: chấm màu + tên + "còn N ngày"; thanh đầy khi còn ≥ 1 năm, ngắn dần khi tới hạn.
-// Hết hạn đỏ, còn ≤ 30 ngày (CFG-02 mặc định) cam
+// Hết hạn đỏ, còn ≤ CFG-02 ngày cam
 function Han({ ten, han, phu }: { ten: string; han: string; phu?: React.ReactNode }) {
+  const ngayBaoTruoc = useNgayBaoTruoc()
   const con = Math.round((new Date(han).getTime() - homNay()) / NGAY)
-  const muc = con < 0 ? 'het' : con <= 30 ? 'sap' : 'on'
+  const muc = con < 0 ? 'het' : con <= ngayBaoTruoc ? 'sap' : 'on'
   return (
     <li className={muc}>
       <div className="kx-dong">
