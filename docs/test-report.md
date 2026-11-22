@@ -4,16 +4,16 @@
 
 ## Tổng hợp
 
-- **38 story**, **368 tiêu chí** (AC): **368 đạt**, **0 chưa kiểm**, **0 không đạt**.
+- **38 story**, **371 tiêu chí** (AC): **371 đạt**, **0 chưa kiểm**, **0 không đạt**.
 - Story hoàn thành: 38/38.
 
 ## Theo loại tiêu chí
 
 | Loại | Số AC | Đạt | Chưa kiểm | Không đạt |
 |---|---|---|---|---|
-| API | 294 | 294 | 0 | 0 |
-| UI | 45 | 45 | 0 | 0 |
-| Logic | 25 | 25 | 0 | 0 |
+| API | 295 | 295 | 0 | 0 |
+| UI | 46 | 46 | 0 | 0 |
+| Logic | 26 | 26 | 0 | 0 |
 | Dữ liệu | 3 | 3 | 0 | 0 |
 | Tài liệu | 1 | 1 | 0 | 0 |
 
@@ -47,7 +47,7 @@
 | UC-26 | Báo cáo lãi lỗ theo chuyến / xe / tháng | 8 | 8 | 0 | 0 | Hoàn thành |
 | UC-27 | Bảng cảnh báo cho Điều phối | 8 | 8 | 0 | 0 | Hoàn thành |
 | UC-28 | Tra cứu đơn | 7 | 7 | 0 | 0 | Hoàn thành |
-| UC-30 | Dự đoán nguy cơ trễ chuyến | 7 | 7 | 0 | 0 | Hoàn thành |
+| UC-30 | Dự đoán nguy cơ trễ chuyến | 10 | 10 | 0 | 0 | Hoàn thành |
 | UC-32 | Theo dõi chuyến | 16 | 16 | 0 | 0 | Hoàn thành |
 | UC-33 | Báo sự cố | 9 | 9 | 0 | 0 | Hoàn thành |
 | UC-34 | Hiệu suất xe theo tháng | 7 | 7 | 0 | 0 | Hoàn thành |

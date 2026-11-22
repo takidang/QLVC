@@ -39,10 +39,10 @@ def test_uc30_ac3_xac_suat_va_yeu_to():
     assert kq["xac_suat"] == pytest.approx(0.8175744761936437, abs=1e-12)
     assert kq["muc"] == "CAO"
     assert kq["yeu_to"] == [
-        {"ten": "Quãng đường", "huong": "TANG"},  # 0,8
-        {"ten": "Giờ khởi hành", "huong": "TANG"},  # (-0,5) * (-1) = +0,5
-        {"ten": "Thời gian dự kiến", "huong": "TANG"},  # 0,4
-        {"ten": "Thứ trong tuần", "huong": "GIAM"},  # 0 → không lớn hơn 0
+        {"ma": "km", "ten": "Quãng đường", "huong": "TANG", "gia_tri": 200.0},  # 0,8
+        {"ma": "gio_khoi_hanh", "ten": "Giờ khởi hành", "huong": "TANG", "gia_tri": 8.0},  # (-0,5) * (-1) = +0,5
+        {"ma": "thoi_gian_gio", "ten": "Thời gian dự kiến", "huong": "TANG", "gia_tri": 4.0},  # 0,4
+        {"ma": "thu_trong_tuan", "ten": "Thứ trong tuần", "huong": "GIAM", "gia_tri": 3.0},  # 0 → không lớn hơn 0
     ]
 
 
@@ -81,3 +81,15 @@ def test_uc30_ac2_khop_sklearn():
     for m in mau:
         xs = du_doan(mo_hinh, m["dac_trung"])["xac_suat"]
         assert abs(xs - m["xac_suat_sklearn"]) < 1e-6
+
+
+# AC9 – mỗi yếu tố có mã đặc trưng và đúng giá trị đầu vào của chuyến
+def test_uc30_ac9_yeu_to_du_ma_va_gia_tri():
+    dau_vao = {"km": 170.5, "thoi_gian_gio": 7.75, "gio_khoi_hanh": 10, "thu_trong_tuan": 6}
+    kq = du_doan(MO_HINH, dau_vao)
+    yt = kq["yeu_to"]
+    assert len(yt) == 4
+    assert {y["ma"] for y in yt} == {"km", "thoi_gian_gio", "gio_khoi_hanh", "thu_trong_tuan"}
+    for y in yt:
+        assert isinstance(y["gia_tri"], float)
+        assert y["gia_tri"] == pytest.approx(float(dau_vao[y["ma"]]))

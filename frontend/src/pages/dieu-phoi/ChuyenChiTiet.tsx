@@ -24,6 +24,7 @@ import {
   type ViPhamGhep,
   type XacNhanChot,
   type XeKhaDung,
+  type YeuToDuDoanTre,
 } from '../../api/chuyen'
 import { ChonKhaDung, type KhaDung } from './ChuyenDanhSach'
 import { TEN_TRANG_THAI_DON, type Don } from '../../api/don'
@@ -81,6 +82,27 @@ const TEN_MUC_TRE: Record<MucNguyCoTre, string> = {
   THAP: 'Thấp',
   TRUNG_BINH: 'Trung bình',
   CAO: 'Cao',
+}
+const MUC_TRE_DS: { ma: MucNguyCoTre; ten: string; lop: string }[] = [
+  { ma: 'THAP', ten: 'Thấp', lop: 'nc-thap' },
+  { ma: 'TRUNG_BINH', ten: 'Trung bình', lop: 'nc-tb' },
+  { ma: 'CAO', ten: 'Cao', lop: 'nc-cao' },
+]
+const TEN_THU = ['Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy', 'Chủ nhật']
+function giaTriYeuTo(y: YeuToDuDoanTre): string {
+  if (y.gia_tri == null || Number.isNaN(y.gia_tri)) return ''
+  switch (y.ma) {
+    case 'km':
+      return `${y.gia_tri.toLocaleString('vi-VN', { maximumFractionDigits: 1 })} km`
+    case 'thoi_gian_gio':
+      return `${y.gia_tri.toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 })} giờ`
+    case 'gio_khoi_hanh':
+      return `${Math.round(y.gia_tri)} giờ`
+    case 'thu_trong_tuan':
+      return TEN_THU[Math.round(y.gia_tri)] ?? String(y.gia_tri)
+    default:
+      return y.gia_tri.toLocaleString('vi-VN')
+  }
 }
 function tomTatNguon(nguon?: NguonDuDoanTre | null): string {
   if (!nguon) return ''
@@ -383,7 +405,9 @@ export default function ChuyenChiTiet() {
                 )}
               </div>
             </div>
-            {duocXemDuDoan && !biHuy && duDoan?.id === c.id && <KhoiDuDoanTre d={duDoan.duLieu} />}
+            {duocXemDuDoan && !biHuy && duDoan?.id === c.id && (
+              <KhoiDuDoanTre key={c.id} d={duDoan.duLieu} />
+            )}
             {lyDoHuy !== null && (
               <form
                 className="thanh-cong-cu canh-bao"
@@ -558,30 +582,89 @@ export default function ChuyenChiTiet() {
   )
 }
 
-// UC-30: khối nhỏ gợi ý nguy cơ trễ gần phần thời gian dự kiến; chỉ gợi ý, không đổi ETA hay chặn thao tác
+// UC-30: khối gợi ý nguy cơ trễ gần phần thời gian dự kiến; chỉ gợi ý, không đổi ETA hay chặn thao tác
 function KhoiDuDoanTre({ d }: { d: DuDoanTre }) {
+  const [moGiaiThich, setMoGiaiThich] = useState(false)
   if (!d.co_du_doan || d.xac_suat == null || !d.muc) return null
   // Không hiện %: dữ liệu train có tỷ lệ trễ nền 82%, nên "Thấp · 72%" dễ hiểu lầm (góp ý Kiệt #63)
-  const yeuTo = (d.yeu_to ?? []).slice(0, 2)
+  const yeuTo = d.yeu_to ?? []
   const nguon = tomTatNguon(d.nguon)
   return (
     <div className="ct-du-doan" title={nguon || undefined}>
-      <div className="ct-du-doan-chinh">
+      <div className="ct-du-doan-dau">
+        <span className="ct-du-doan-tieu-de">Dự đoán trễ (AI)</span>
         <Nhan loai={`NGUY_CO_${d.muc}`}>Nguy cơ trễ: {TEN_MUC_TRE[d.muc]}</Nhan>
-        {yeuTo.length > 0 && (
-          <ul className="ct-du-doan-yt" aria-label="Yếu tố chính">
-            {yeuTo.map((y) => (
-              <li key={y.ten}>
-                {y.ten} {y.huong === 'TANG' ? 'làm tăng nguy cơ' : 'làm giảm nguy cơ'}
-              </li>
-            ))}
-          </ul>
-        )}
+        <button
+          type="button"
+          className="phu ct-du-doan-nut"
+          aria-expanded={moGiaiThich}
+          onClick={() => setMoGiaiThich((v) => !v)}
+        >
+          Cách tính
+        </button>
       </div>
+      <div
+        className="ct-du-doan-thang"
+        role="img"
+        aria-label={`Mức nguy cơ trễ: ${TEN_MUC_TRE[d.muc]}`}
+      >
+        {MUC_TRE_DS.map((m) => {
+          const chon = d.muc === m.ma
+          return (
+            <div key={m.ma} className={`ct-du-doan-bac${chon ? ` chon ${m.lop}` : ''}`}>
+              <span className="ct-du-doan-o" aria-hidden="true" />
+              <span className="ct-du-doan-ten">{m.ten}</span>
+            </div>
+          )
+        })}
+      </div>
+      {yeuTo.length > 0 && (
+        <ul className="ct-du-doan-yt" aria-label="Các yếu tố ảnh hưởng">
+          {yeuTo.map((y) => {
+            const gt = giaTriYeuTo(y)
+            return (
+              <li key={y.ma || y.ten}>
+                {y.ten}
+                {gt ? ` ${gt}` : ''} –{' '}
+                {y.huong === 'TANG' ? 'làm tăng nguy cơ' : 'làm giảm nguy cơ'}
+              </li>
+            )
+          })}
+        </ul>
+      )}
       <small className="ct-du-doan-ghi-chu">
         Gợi ý từ mô hình thử nghiệm, không thay đổi ETA
         {nguon && <> · {nguon}</>}
       </small>
+      {moGiaiThich && (
+        <div className="ct-du-doan-giai-thich">
+          <p>
+            Mô hình hồi quy logistic học từ{' '}
+            {d.nguon?.so_mau != null
+              ? `${d.nguon.so_mau.toLocaleString('vi-VN')} chuyến xe tải thật`
+              : 'các chuyến xe tải thật'}{' '}
+            (dataset Kaggle, Ấn Độ), dùng 4 yếu tố: quãng đường, thời gian dự kiến, giờ khởi hành và
+            thứ trong tuần
+            {d.nguon?.auc != null && <> (độ chính xác AUC {d.nguon.auc.toLocaleString('vi-VN')})</>}
+            .
+          </p>
+          {/* shortcut: số trung bình ghi cứng theo mo_hinh_tre.json hiện tại; train lại thì sửa câu này */}
+          <p>
+            "Làm tăng / làm giảm nguy cơ" là so với một chuyến trung bình trong dữ liệu học: khoảng
+            249 km, dự kiến 15 giờ, khởi hành khoảng 15 giờ 30, giữa tuần. Ví dụ đường ngắn hơn 249
+            km thì ít rủi ro hơn; thời gian dự kiến dài (dư giờ) cũng làm giảm nguy cơ; đi muộn
+            trong ngày hoặc đầu tuần làm tăng nguy cơ.
+          </p>
+          <p>
+            Mức nguy cơ theo khả năng trễ: Thấp dưới 75%, Trung bình 75–90%, Cao từ 90%. Dữ liệu học
+            có 82% chuyến bị trễ nên phần lớn chuyến ở mức Trung bình.
+          </p>
+          <p>
+            Đây chỉ là gợi ý tham khảo, không đổi giờ dự kiến của chuyến và sẽ học lại khi hệ thống
+            có dữ liệu chạy thật.
+          </p>
+        </div>
+      )}
     </div>
   )
 }

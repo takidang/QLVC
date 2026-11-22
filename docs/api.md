@@ -98,7 +98,8 @@
 | POST | `/api/chuyen/{id}/huy` | DP | UC-16 | BR-25: body `{ly_do}` bắt buộc, 1–300 ký tự (thiếu, rỗng, trường lạ → 400). Chuyến không ở `LAP`/`DA_CHOT` hoặc còn tạm ứng `HIEU_LUC` → 409 `BR-25`. Ghép hết hiệu lực, đơn → `CHO_GHEP`, lý do lưu ở lịch sử trạng thái chuyến và đơn. Trả như 3.1 |
 | POST | `/api/chuyen/{id}/ket-thuc-su-co` | DP | UC-32 | Chỉ khi `DANG_CHAY` (không thì 409 `BR-68`); `{ly_do, km_ket_thuc?}` (BR-68), lý do 1–300 ký tự; km phải > km bắt đầu (422 `BR-70`), có thì cập nhật km xe; đơn `DA_GHEP`, `DA_LAY` → `THAT_BAI` lý do "Sự cố xe: …", ghép hết hiệu lực (BR-36); chuyến `HOAN_THANH`, `ket_thuc_bat_thuong`, kết thúc dự kiến = giờ kết thúc thực tế. Trả chi tiết như `GET /api/chuyen/{id}` |
 | POST | `/api/su-co/{id}/dong` | DP | UC-32 | `{cach_xu_ly}` 1–500 ký tự; sự cố `MO → DONG`; đã đóng → 409 `SU_CO_DA_DONG`. Router `router_su_co` trong module chuyến |
-| GET | `/api/chuyen/{id}/du-doan-tre` | DP | UC-30 | Lỗi hoặc chưa có mô hình → `{ "co_du_doan": false }` |
+| GET | `/api/chuyen/{id}/du-doan-tre` | DP | UC-30 | `{co_du_doan, xac_suat, muc, yeu_to: [{ma, ten, huong, gia_tri}], nguon}`; lỗi, chưa có mô hình hoặc chuyến hủy → `{ "co_du_doan": false }` |
+| GET | `/api/du-doan-tre?ngay=YYYY-MM-DD` | DP | UC-30 | `ngay` bắt buộc (thiếu hoặc sai dạng → 400). Trả `{du_lieu: [{chuyen_id, ma_chuyen, muc, xac_suat}]}` cho chuyến khởi hành dự kiến trong ngày (giờ VN) ở `LAP`, `DA_CHOT`, `DANG_CHAY`, sắp theo giờ khởi hành; mô hình thiếu/hỏng → `{du_lieu: []}` (KT-08) |
 
 ### 2.5 Tài xế: chuyến, quét mã, sự cố
 
