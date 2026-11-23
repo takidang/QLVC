@@ -53,8 +53,10 @@
 | GET | `/api/xe/{id}` | DP, KT | UC-03 | |
 | PATCH | `/api/xe/{id}` | DP | UC-03 | Mọi trường trừ `km_dong_ho` (gửi lên → 400, BR-70); `trang_thai` `HOAT_DONG`/`NGUNG` (BR-11); không xóa (BR-60) |
 | GET, PUT | `/api/xe/{id}/chi-phi-co-dinh/{thang}` | KT | UC-03 | `{so_tien}`; tháng dạng `YYYY-MM`; ghi `NHAT_KY_TIEN` |
-| GET, POST | `/api/tai-xe` | DP | UC-04 | Tạo kèm tài khoản vai trò TX |
-| GET, PATCH | `/api/tai-xe/{id}` | DP | UC-04 | BR-60 |
+| GET | `/api/tai-xe` | DP, KT | UC-04 | KT chỉ xem (quyết toán lương, hiệu suất) |
+| POST | `/api/tai-xe` | DP | UC-04 | Tạo kèm tài khoản vai trò TX |
+| GET | `/api/tai-xe/{id}` | DP, KT | UC-04 | KT chỉ xem |
+| PATCH | `/api/tai-xe/{id}` | DP | UC-04 | BR-60 |
 | GET, POST | `/api/nut` | DP | UC-05 | Tỉnh hoặc kho, có tọa độ; tìm theo tên hoặc tỉnh |
 | PATCH | `/api/nut/{id}` | DP | UC-05 | Sửa tên, tọa độ; nút đã có đơn thì không đổi tỉnh (422) |
 | GET, POST | `/api/tuyen` | DP | UC-05 | Body gồm danh sách nút có thứ tự (phút, km, điểm nghỉ), định mức, lương khoán; BR-66 chặn > 10 giờ; trả kèm cảnh báo BR-20 |

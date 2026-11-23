@@ -10,7 +10,7 @@ from app.modules.bao_cao import service
 from app.thoi_gian import hom_nay_vn
 
 router = APIRouter(prefix="/api/bao-cao", tags=["bao-cao"])
-THANG = r"^\d{4}-(0[1-9]|1[0-2])$"
+THANG = r"^20\d{2}-(0[1-9]|1[0-2])$"  # năm 2000–2099: năm 0 hay 9999 làm tràn datetime
 
 
 def _chi_nhan(*truong: str):

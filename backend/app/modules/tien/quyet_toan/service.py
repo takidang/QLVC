@@ -103,7 +103,10 @@ def _khoa_khoan(db: Session, chi_phi_id: int, viec: str) -> ChiPhi:
         raise LoiNghiepVu("KHONG_TIM_THAY", "Không tìm thấy khoản chi phí", 404)
     c = db.get(Chuyen, chuyen_id, with_for_update={"read": True}, populate_existing=True)
     _kiem_hoan_thanh(c, viec)  # chỉ duyệt khi đã hoàn thành (quyết định 2)
-    return db.get(ChiPhi, chi_phi_id, with_for_update=True, populate_existing=True)
+    cp = db.get(ChiPhi, chi_phi_id, with_for_update=True, populate_existing=True)
+    if cp is None:  # tài xế xóa khoản trong lúc đợi khóa chuyến
+        raise LoiNghiepVu("KHONG_TIM_THAY", "Không tìm thấy khoản chi phí", 404)
+    return cp
 
 
 def duyet(db: Session, chi_phi_id: int, so_tien_duyet: int, ly_do: str | None, nd: NguoiDung) -> dict:

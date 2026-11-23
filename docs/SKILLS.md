@@ -13,6 +13,7 @@ Cập nhật lần cuối: 10/10/2026 (Tài kiểm tra mã).
 | `ponytail-review` | Skill | Review thay đổi trước khi merge, kể cả bảo mật theo `docs/security-rules.md` | "review commit cuối", "review PR này" |
 | `impeccable` | Skill | Dựng, critique, audit, polish giao diện web (màn điều phối, kế toán dùng mode **Operate**) | "critique màn X", "audit", "polish" |
 | `story-flow` | Skill | Làm một use case từ đầu đến cuối: story + tiêu chí chấp nhận → code + test → kiểm bằng chứng → đóng story; xuất bảng truy vết cho báo cáo kiểm thử | "story new UC-03", "story dev UC-03", "story done UC-03", "story report" |
+| `kiem-thu-kham-pha` | Skill (`.claude/skills/`) | Trước demo, báo cáo, phát hành: rà bảo mật (phụ thuộc, phân quyền từng endpoint, upload, khoá khi ghi tiền), cho agy phá thử API và giao diện, xác minh từng lỗi, sửa lỗi thật kèm test. Lần đầu 23/11: `docs/test-evidence/kiem-thu-kham-pha/bao-cao.md` | "phá thử", "kiểm thử khám phá", "quét bảo mật trước demo" |
 | `webapp-testing` | Skill (Anthropic) | Test E2E bằng Playwright cho luồng ghép đơn, quét mã, quyết toán | "test luồng X trên localhost" |
 | `engineering` | Plugin (Anthropic) | Chỉ dùng: `/architecture`, `/system-design`, `/testing-strategy`, `/documentation`, `/debug` | Gõ lệnh tương ứng |
 
@@ -33,6 +34,7 @@ Không dùng cho đồ án: `security-guidance` (tốn thêm usage mỗi lượt
 | `impeccable` | Rút gọn từ github.com/pbakaus/impeccable (Apache 2.0) | `d631a88` | **An toàn.** Chỉ SKILL.md. Không chạy `npx impeccable install` khi chưa kiểm tra. |
 | `do-an-chuyen-nganh-van-tai` | Tài viết | - | **An toàn.** Chỉ SKILL.md. |
 | `story-flow` | Tài viết, rút gọn từ `dev-story`, `story-done`, `test-evidence-review` của github.com/Donchitos/Claude-Code-Game-Studios (MIT) | `be8993b` | **An toàn.** Chỉ SKILL.md và một file mẫu. Không lấy hook hay script nào của repo gốc. |
+| `kiem-thu-kham-pha` | Tài viết (Claude Code soạn 23/11) | - | **An toàn.** SKILL.md, phiếu mẫu, `quet_route_fastapi.py` chỉ import app và in bảng route, không gọi mạng. |
 | `webapp-testing` | github.com/anthropics/skills | `dbd4588` | **An toàn.** `with_server.py` chạy lệnh server bạn đưa vào và chỉ kết nối `localhost`. |
 | `engineering` | github.com/anthropics/knowledge-work-plugins | v1.2.0, `ae1513e` | **Cần lưu ý.** Chỉ có SKILL.md, nhưng `.mcp.json` khai báo sẵn connector tới Slack, Linear, Asana, Atlassian, Notion, GitHub, PagerDuty, Datadog (URL chính thức). Không đăng nhập thì connector không làm gì. Chỉ đăng nhập Atlassian nếu nhóm dùng Jira. |
 

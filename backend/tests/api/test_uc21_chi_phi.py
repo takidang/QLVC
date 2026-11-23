@@ -378,3 +378,34 @@ def test_uc21_ghi_cho_khoa_chuyen(client, db, ch):
     s.close()
     t.join()
     assert ma(ket_qua[0]) == (409, "BR-29")  # đọc lại trạng thái mới sau khi được khóa
+
+
+# Kiểm thử khám phá 23/11: hai lần xóa cùng một khoản gửi song song → lần sau 404, không 500
+def test_uc21_xoa_song_song(client, db, ch):
+    from sqlalchemy import delete
+    from sqlalchemy.orm import Session
+
+    from app.db import get_engine
+
+    cp = ghi(client, ch["id"]).json()["id"]
+    s = Session(get_engine())
+    s.get(Chuyen, ch["id"], with_for_update=True)  # như lần xóa thứ nhất đang giữ dòng chuyến
+    ket_qua: list = []
+
+    def gui():
+        with TestClient(app, base_url="https://testserver") as c:
+            dang_nhap(c)
+            ket_qua.append(c.delete(f"/api/toi/chi-phi/{cp}"))
+
+    try:
+        t = threading.Thread(target=gui)
+        t.start()
+        t.join(1.5)
+        assert t.is_alive()  # đã đọc chuyen_id, đang đợi khóa
+        s.execute(delete(Tep).where(Tep.chi_phi_id == cp))
+        s.execute(delete(ChiPhi).where(ChiPhi.id == cp))
+        s.commit()  # lần xóa thứ nhất xong
+    finally:
+        s.close()
+    t.join()
+    assert ma(ket_qua[0]) == (404, "KHONG_TIM_THAY")
