@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 'react'
+import { useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { LoiApi } from '../api/goi'
 import { traCuu, type KetQuaTraCuu } from '../api/traCuu'
@@ -30,12 +30,11 @@ const luc = (iso: string) =>
 export default function TraCuu() {
   const [thamSo] = useSearchParams()
   const [ma, setMa] = useState(thamSo.get('ma') ?? '')
-  const [so, setSo] = useState(() => {
-    const v = thamSo.get('so') ?? ''
-    return /^\d{4}$/.test(v) ? v : ''
-  })
-  // Từ phiếu tra cứu ở trang đăng nhập đã có sẵn kết quả (state.kq): dùng luôn, khỏi gọi API lần nữa
-  const kqSan = (useLocation().state as { kq?: KetQuaTraCuu } | null)?.kq
+  // Từ phiếu tra cứu ở trang đăng nhập đã có sẵn kết quả (state.kq, state.so): dùng luôn, khỏi gọi API
+  // lần nữa. 4 số cuối SĐT không bao giờ nằm trên URL (api.md 3.4).
+  const sanTuPhieu = useLocation().state as { kq?: KetQuaTraCuu; so?: string } | null
+  const kqSan = sanTuPhieu?.kq
+  const [so, setSo] = useState(() => sanTuPhieu?.so ?? '')
   const coSan =
     !!kqSan && kqSan.ma_don.toUpperCase() === (thamSo.get('ma') ?? '').trim().toUpperCase()
   const [kq, setKq] = useState<KetQuaTraCuu | null>(coSan ? kqSan : null)
@@ -69,15 +68,6 @@ export default function TraCuu() {
       setDangGui(false)
     }
   }
-
-  // Vào từ phiếu tra cứu ở trang đăng nhập (?ma=&so=): tra một lần ngay khi mở
-  const daTuTra = useRef(false) // StrictMode chạy effect 2 lần: chỉ tra 1 lần (API tra cứu có giới hạn tần suất)
-  useEffect(() => {
-    if (daTuTra.current) return
-    daTuTra.current = true
-    if (!coSan && ma.trim() && /^\d{4}$/.test(so)) void gui()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   // Mốc mới nhất trên cùng; mốc đầu là trạng thái hiện tại
   const moc = kq ? [...kq.moc].reverse() : []
