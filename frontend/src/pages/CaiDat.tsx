@@ -7,28 +7,32 @@ import {
   GIAM_CHUYEN_DONG,
   HIEU_UNG,
   MAT_DO,
+  PHONG_CACH,
   doiCheDo,
   apCoChu,
   apGiamChuyenDong,
   apHieuUng,
   apMatDo,
+  apPhongCach,
   cheDoDaLuu,
   coChuDaLuu,
   giamChuyenDongDaLuu,
   hieuUngDaLuu,
   matDoDaLuu,
+  phongCachDaLuu,
 } from '../nen'
 import { DauDanhMuc } from './danh-muc'
 
 type LuaChon = readonly { readonly ma: string; readonly ten: string }[]
 
-// Trang Cài đặt (mọi vai trò): 5 tùy chọn hiển thị, lưu localStorage và áp ngay không cần nút Lưu.
+// Trang Cài đặt (mọi vai trò): 6 tùy chọn hiển thị, lưu localStorage và áp ngay không cần nút Lưu.
 export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
   const [cheDo, setCheDo] = useState(cheDoDaLuu)
   const [matDo, setMatDo] = useState(matDoDaLuu)
   const [coChu, setCoChu] = useState(coChuDaLuu)
   const [giamCD, setGiamCD] = useState(giamChuyenDongDaLuu)
   const [hieuUng, setHieuUng] = useState(hieuUngDaLuu)
+  const [phongCach, setPhongCach] = useState(phongCachDaLuu)
 
   return (
     <section className="noi-dung cd-trang">
@@ -48,6 +52,16 @@ export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
           onChon={(ma) => {
             doiCheDo(ma)
             setCheDo(ma)
+          }}
+        />
+        <MucCaiDat
+          tieuDe="Phong cách"
+          moTa="Thử nghiệm: phủ phong cách pixel (bảng màu Nostalgos 12, viền rõ, bóng cứng) lên giao diện. Chỉ có bản sáng; nội dung và thao tác giữ nguyên."
+          ds={PHONG_CACH}
+          giaTri={phongCach}
+          onChon={(ma) => {
+            apPhongCach(ma)
+            setPhongCach(ma)
           }}
         />
         <MucCaiDat

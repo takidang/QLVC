@@ -244,3 +244,11 @@ Giữ nguyên toàn bộ bố cục, biến màu và thành phần của giao di
 - Nút đổi bộ màu trong Cài đặt (Tài làm sau).
 - Thanh `<meter>` tải / thể tích ở chi tiết chuyến còn màu mặc định của trình duyệt (làm ở 03).
 - Thử trên máy chiếu trước buổi demo: tông nhạt, nét mảnh dễ bạc màu.
+
+## Phong cách Pixel (thử nghiệm, 24/11)
+
+- Trang Cài đặt có mục **Phong cách: Hiện tại / Pixel (thử nghiệm)**; mặc định *Hiện tại*. Lưu ở trình duyệt (`qlvc-phong-cach`), `nen.ts` đặt `data-phong-cach="pixel"` trên `<html>`.
+- `frontend/src/phong-cach-pixel.css` là **lớp áo**: chỉ đặt lại biến màu, bo góc, bóng của `index.css` và vài quy tắc (viền 2 px, bóng cứng, nút lún khi bấm, bỏ kính mờ). Không đổi bố cục, màn, luồng nghiệp vụ, API.
+- Bảng màu Nostalgos 12 (Lospec), **chỉ bản sáng**: bật Pixel thì luôn sáng (lựa chọn sáng/tối vẫn được lưu, tắt Pixel là về như cũ). Màu trạng thái được làm đậm để chữ trắng ≥ 4.5:1; đã đo mọi trang của 4 vai trò + đăng nhập, tra cứu: 0 lỗi JS, 0 chữ thiếu tương phản.
+- Quy ước: màn mới dùng biến màu (`var(--...)`), không viết mã màu cứng, để đúng ở cả hai phong cách.
+- Hiệu ứng chuyển động cho phong cách này: đề xuất ở nhánh thử `tai/agy-ui-moments`, làm sau.

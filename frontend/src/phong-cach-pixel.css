@@ -1,0 +1,85 @@
+/* Phong cách Pixel (THỬ NGHIỆM): lớp áo phủ lên giao diện hiện tại, chỉ đổi phần nhìn.
+   Bật ở trang Cài đặt → "Phong cách" (nen.ts đặt data-phong-cach="pixel" trên <html>); mặc định TẮT.
+   Không đổi bố cục, màn, luồng nghiệp vụ: chỉ đặt lại biến màu / bo góc / bóng của index.css
+   và vài quy tắc viền, bóng cứng, nút lún khi bấm.
+   Bảng màu (Lospec): Nostalgos 12, CHỈ BẢN SÁNG (đã chỉnh nhẹ để chữ trắng trên nền màu trạng
+   thái ≥ 4.5:1). Bật Pixel thì giao diện luôn sáng dù chế độ đang là Tối. Màn mới phải dùng biến màu (var(--...)), không viết mã màu cứng,
+   để đúng ở cả hai phong cách. Chi tiết: docs/giao-dien.md mục "Phong cách Pixel". */
+
+@media screen {
+  /* Chỉ có bản sáng: bật Pixel thì luôn sáng, kể cả khi chế độ đang là Tối (thắng khối tối của index.css) */
+  :root[data-phong-cach='pixel'],
+  :root[data-phong-cach='pixel'][data-che-do='toi'] {
+    color-scheme: light;
+    --giay: #dad4c9; /* Nostalgos cream */
+    --mat: #e9e4db;
+    --mat-2: #cfc8bb;
+    --noi: #f1ede5;
+    --muc: #272a32; /* charcoal */
+    --phu: #21525a; /* teal */
+    --tren-muc: #f1ede5;
+    --dem: #272a32;
+    --khoi-dam: #21525a;
+    --o-liu: #21525a; /* thương hiệu: teal */
+    --nhan-sang: #ffd183; /* butter */
+    --cam: #b8432f; /* coral làm đậm: chữ trắng đủ tương phản */
+    --chay: #2152a5; /* cobalt */
+    --chot: #844790; /* plum */
+    --xong: #2e6a5b; /* sage làm đậm */
+    --do: #a33a2b;
+    --xam: #5e636d;
+    --cam-chu: #a33a24;
+    --chay-chu: #2152a5;
+    --chot-chu: #844790;
+    --xong-chu: #255a4d;
+    --do-chu: #9a2f22;
+    --vien: color-mix(in srgb, var(--muc) 28%, transparent);
+    --vien-dam: color-mix(in srgb, var(--muc) 55%, transparent);
+    --vien-o: color-mix(in srgb, var(--muc) 70%, transparent);
+    --bo: 3px;
+    --bo-the: 4px;
+    --bong-mau: #272a32;
+    --bong: 4px 4px 0 var(--bong-mau);
+    --bong-nho: 2px 2px 0 var(--bong-mau);
+    --tren-dam-toi: #ffb48a;
+    --tren-dam-loi: #ff8a80;
+    /* Biểu đồ lãi / lỗ trên nền cream: đậm hơn để số lỗ đủ 4.5:1 */
+    --bd-lai: #2152a5;
+    --bd-lo: #a33a24;
+  }
+
+  /* Bóng cứng kiểu pixel không mờ: bỏ hiệu ứng kính mờ để khối rõ cạnh */
+  :root[data-phong-cach='pixel'] .kinh {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: var(--mat);
+    border: 2px solid var(--vien-dam);
+    box-shadow: var(--bong);
+  }
+
+  /* Nút: viền rõ, bấm thì "lún" xuống đúng bằng bóng (phản hồi tức thì, không chặn thao tác) */
+  :root[data-phong-cach='pixel'] :is(.nut-to, .nut-vien) {
+    border-width: 2px;
+    box-shadow: var(--bong-nho);
+  }
+  :root[data-phong-cach='pixel'] :is(.nut-to, .nut-vien):enabled:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
+  :root[data-phong-cach='pixel'][data-giam-chuyen-dong='bat']
+    :is(.nut-to, .nut-vien):enabled:active {
+    transform: none;
+  }
+
+  /* Ô nhập: viền 2 px, góc vuông nhỏ (theo --bo) */
+  :root[data-phong-cach='pixel']
+    :is(input, select, textarea):not([type='checkbox'], [type='radio'], [type='range']) {
+    border-width: 2px;
+  }
+
+  /* Tiêu đề: chữ đậm, khoảng chữ rộng hơn một chút cho cảm giác khối 8-bit (vẫn dùng Be Vietnam Pro để đọc rõ tiếng Việt) */
+  :root[data-phong-cach='pixel'] :is(h1, h2) {
+    letter-spacing: 0;
+    text-shadow: 2px 2px 0 color-mix(in srgb, var(--muc) 14%, transparent);
+  }
+}

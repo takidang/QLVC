@@ -16,7 +16,30 @@ export const cheDoDaLuu = () => localStorage.getItem(KHOA_CHE_DO) ?? ''
 export function apCheDo(ma: string) {
   if (ma) localStorage.setItem(KHOA_CHE_DO, ma)
   else localStorage.removeItem(KHOA_CHE_DO)
-  document.documentElement.dataset.cheDo = ma || (mayToi.matches ? 'toi' : 'sang')
+  // Phong cách Pixel chỉ có bản sáng: bật Pixel thì luôn sáng, lựa chọn sáng/tối vẫn được lưu
+  document.documentElement.dataset.cheDo =
+    phongCachDaLuu() === 'pixel' ? 'sang' : ma || (mayToi.matches ? 'toi' : 'sang')
+}
+
+// Phong cách (THỬ NGHIỆM): '' = hiện tại (mặc định), 'pixel' = lớp áo phong-cach-pixel.css (chỉ bản sáng)
+export const PHONG_CACH = [
+  { ma: '', ten: 'Hiện tại' },
+  { ma: 'pixel', ten: 'Pixel (thử nghiệm)' },
+] as const
+const KHOA_PHONG_CACH = 'qlvc-phong-cach'
+
+export function phongCachDaLuu() {
+  return localStorage.getItem(KHOA_PHONG_CACH) === 'pixel' ? 'pixel' : ''
+}
+export function apPhongCach(ma: string) {
+  if (ma === 'pixel') {
+    localStorage.setItem(KHOA_PHONG_CACH, 'pixel')
+    document.documentElement.dataset.phongCach = 'pixel'
+  } else {
+    localStorage.removeItem(KHOA_PHONG_CACH)
+    delete document.documentElement.dataset.phongCach
+  }
+  apCheDo(cheDoDaLuu())
 }
 
 // Mật độ bảng và danh sách: '' = thoải mái (mặc định), 'gon' = thu gọn padding qua biến CSS
@@ -102,7 +125,7 @@ export function doiCheDo(ma: string) {
 }
 
 // Áp toàn bộ tùy chọn đã lưu ngay khi khởi động app (main.tsx import file này trước App)
-apCheDo(cheDoDaLuu())
+apPhongCach(phongCachDaLuu())
 apMatDo(matDoDaLuu())
 apCoChu(coChuDaLuu())
 apGiamChuyenDong(giamChuyenDongDaLuu())
