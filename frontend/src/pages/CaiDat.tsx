@@ -53,18 +53,8 @@ export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
 
       <div className="kinh cd-ds">
         <MucCaiDat
-          tieuDe="Giao diện"
-          moTa={`Chọn nền sáng, nền tối hoặc tự động theo cài đặt của máy.${phongCach === 'pixel' ? ' (Pixel chỉ có bản sáng)' : ''}`}
-          ds={CHE_DO}
-          giaTri={cheDo}
-          onChon={(ma) => {
-            doiCheDo(ma)
-            setCheDo(ma)
-          }}
-        />
-        <MucCaiDat
           tieuDe="Phong cách"
-          moTa="Thử nghiệm: phủ phong cách pixel (bảng màu Nostalgos 12, viền rõ, bóng cứng) lên giao diện. Chỉ có bản sáng; nội dung và thao tác giữ nguyên."
+          moTa="Hiện tại hoặc Pixel (thử nghiệm): bảng màu Nostalgos 12, viền rõ, bóng cứng và hiệu ứng riêng. Pixel chỉ có bản sáng; nội dung và thao tác giữ nguyên."
           ds={PHONG_CACH}
           giaTri={phongCach}
           onChon={(ma) => {
@@ -72,6 +62,29 @@ export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
             setPhongCach(ma)
           }}
         />
+        {phongCach === 'pixel' ? (
+          <MucCaiDat
+            tieuDe="Hiệu ứng Pixel"
+            moTa="Chuyển trang, nút lún, rung ô lỗi, laser quét mã, con dấu đã giao, xe tải tra cứu… Tắt thì giữ màu, viền, bóng và bỏ chuyển động."
+            ds={HIEU_UNG_PIXEL}
+            giaTri={hieuUngPixel}
+            onChon={(ma) => {
+              apHieuUngPixel(ma)
+              setHieuUngPixel(hieuUngPixelDaLuu())
+            }}
+          />
+        ) : (
+          <MucCaiDat
+            tieuDe="Giao diện"
+            moTa="Chọn nền sáng, nền tối hoặc tự động theo cài đặt của máy."
+            ds={CHE_DO}
+            giaTri={cheDo}
+            onChon={(ma) => {
+              doiCheDo(ma)
+              setCheDo(ma)
+            }}
+          />
+        )}
         <MucCaiDat
           tieuDe="Mật độ bảng"
           moTa="Thu gọn khoảng trống dòng bảng và thẻ danh sách để xem được nhiều hơn."
@@ -104,7 +117,11 @@ export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
         />
         <MucCaiDat
           tieuDe="Hiệu ứng nâng cao"
-          moTa="Hạt nền, đàn con trỏ, chữ gõ ở màn đăng nhập và tổng quan. Tắt nếu máy chậm."
+          moTa={
+            phongCach === 'pixel'
+              ? 'Hạt nền, chữ gõ ở màn đăng nhập và tổng quan. Tắt nếu máy chậm.'
+              : 'Hạt nền, đàn con trỏ, chữ gõ ở màn đăng nhập và tổng quan. Tắt nếu máy chậm.'
+          }
           ds={HIEU_UNG}
           giaTri={hieuUng}
           onChon={(ma) => {
@@ -112,29 +129,16 @@ export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
             setHieuUng(hieuUngDaLuu())
           }}
         />
-        <MucCaiDat
-          tieuDe="Con trỏ đi theo"
-          moTa={
-            phongCach === 'pixel'
-              ? 'Đang dùng phong cách Pixel: con trỏ luôn tắt vì Pixel đã có hiệu ứng riêng.'
-              : 'Đàn con trỏ chạy theo thao tác trên màn hình. Cần bật Hiệu ứng nâng cao; hạt nền và chữ gõ không bị ảnh hưởng.'
-          }
-          ds={CON_TRO}
-          giaTri={conTro}
-          onChon={(ma) => {
-            apConTro(ma)
-            setConTro(conTroDaLuu())
-          }}
-        />
-        {phongCach === 'pixel' && (
+        {/* Pixel đã có hiệu ứng riêng nên đàn con trỏ luôn tắt: ẩn mục này khi đang dùng Pixel */}
+        {phongCach !== 'pixel' && (
           <MucCaiDat
-            tieuDe="Hiệu ứng Pixel"
-            moTa="Rung ô lỗi, lún nút, hiện lớp nổi theo kiểu pixel. Tắt thì giữ màu, viền, bóng và bỏ chuyển động."
-            ds={HIEU_UNG_PIXEL}
-            giaTri={hieuUngPixel}
+            tieuDe="Con trỏ đi theo"
+            moTa="Đàn con trỏ chạy theo thao tác trên màn hình. Cần bật Hiệu ứng nâng cao; hạt nền và chữ gõ không bị ảnh hưởng."
+            ds={CON_TRO}
+            giaTri={conTro}
             onChon={(ma) => {
-              apHieuUngPixel(ma)
-              setHieuUngPixel(hieuUngPixelDaLuu())
+              apConTro(ma)
+              setConTro(conTroDaLuu())
             }}
           />
         )}

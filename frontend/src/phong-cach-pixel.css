@@ -86,7 +86,6 @@
   /* Tiêu đề: chữ đậm, khoảng chữ rộng hơn một chút cho cảm giác khối 8-bit (vẫn dùng Be Vietnam Pro để đọc rõ tiếng Việt) */
   :root[data-phong-cach='pixel'] :is(h1, h2) {
     letter-spacing: 0;
-    text-shadow: 2px 2px 0 color-mix(in srgb, var(--muc) 14%, transparent);
   }
 }
 
