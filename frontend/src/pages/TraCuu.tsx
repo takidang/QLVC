@@ -178,7 +178,12 @@ export default function TraCuu() {
       <section
         className="dn-hinh tc-hinh"
         aria-hidden="true"
-        style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}
+        style={
+          {
+            // Pixel: dùng ảnh pixel art như màn đăng nhập
+            '--anh': `url(${phongCachDaLuu() === 'pixel' ? '/anh/dang-nhap-hoang-hon-pixel.png?v=3' : NEN.anh})`,
+          } as CSSProperties
+        }
       />
     </main>
   )

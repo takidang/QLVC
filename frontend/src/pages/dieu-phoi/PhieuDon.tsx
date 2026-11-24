@@ -30,7 +30,7 @@ export default function PhieuDon() {
     <section className="noi-dung phieu">
       <div className="vd-cong-cu khong-in">
         <Link to="../.." relative="path">
-          ← Đơn hàng
+          <span className="mui-ten-thuong">← </span>Đơn hàng
         </Link>
         {d && <button onClick={() => window.print()}>In phiếu</button>}
       </div>

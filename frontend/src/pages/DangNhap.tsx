@@ -270,7 +270,9 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
                   >
                     <LogoTK co={44} />
                     <TenThuongHieu />
-                    <span className="dn-goi-y">▶ Bấm vào logo để in phiếu đăng nhập</span>
+                    <span className="dn-goi-y">
+                      <span className="px-ky-phai">▶</span> Bấm vào logo để in phiếu đăng nhập
+                    </span>
                   </button>
                 ) : (
                   <div className="dn-may-logo">

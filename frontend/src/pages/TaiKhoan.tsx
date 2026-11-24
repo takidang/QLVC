@@ -107,7 +107,7 @@ export default function TaiKhoan({
     <section className="noi-dung cd-trang">
       {nd.vai_tro === 'TAI_XE' && (
         <Link to="/tai-xe/chuyen" className="ct-ve">
-          ← Chuyến của tôi
+          <span className="mui-ten-thuong">← </span>Chuyến của tôi
         </Link>
       )}
       <DauDanhMuc

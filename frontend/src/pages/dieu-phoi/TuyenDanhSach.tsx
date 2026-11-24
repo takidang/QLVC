@@ -353,23 +353,23 @@ function FormTuyen({
                 <td className="hanh-dong">
                   <button
                     type="button"
-                    className="phu"
+                    className="phu thuong"
                     disabled={i === 0}
                     onClick={() => doiCho(i, i - 1)}
                   >
-                    ↑
+                    <span className="px-ky-len">↑</span>
                   </button>
                   <button
                     type="button"
-                    className="phu"
+                    className="phu thuong"
                     disabled={i === dongNut.length - 1}
                     onClick={() => doiCho(i, i + 1)}
                   >
-                    ↓
+                    <span className="px-ky-xuong">↓</span>
                   </button>
                   <button
                     type="button"
-                    className="phu"
+                    className="phu nguy-hiem"
                     disabled={dongNut.length === 1}
                     onClick={() => setDongNut(dongNut.filter((_, j) => j !== i))}
                   >
