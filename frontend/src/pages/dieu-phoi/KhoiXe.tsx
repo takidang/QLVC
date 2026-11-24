@@ -1,6 +1,8 @@
 import { useNgayBaoTruoc } from '../../api/cauHinh'
 import type { TaiXe } from '../../api/taiXe'
 import type { Xe } from '../../api/xe'
+import { DangTaiPixel } from '../../HieuUngPixel'
+import { phongCachDaLuu } from '../../nen'
 
 // Khối "Xe & tài xế" ở chi tiết chuyến (lấy ý "Vehicle Information" của ảnh mẫu, nhưng chỉ dùng dữ liệu
 // có thật): thông số xe, km đồng hồ, các thanh "còn bao nhiêu ngày" tới hạn đăng kiểm, bảo hiểm, GPLX.
@@ -13,7 +15,12 @@ export default function KhoiXe({ xe, taiXe }: { xe: Xe | null; taiXe: TaiXe | nu
     <section className="kinh ct-khoi khoi-xe">
       <h2>Xe & tài xế</h2>
       {!xe ? (
-        <p className="ghi-chu">Đang tải…</p>
+        phongCachDaLuu() === 'pixel' ? (
+          /* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… */
+          <DangTaiPixel kieu="trang" />
+        ) : (
+          <p className="ghi-chu">Đang tải…</p>
+        )
       ) : (
         <>
           <div className="kx-so">

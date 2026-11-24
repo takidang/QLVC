@@ -1,6 +1,8 @@
 import { useEffect, useState, type FormEvent, type InputHTMLAttributes } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachTaiXe, suaTaiXe, themTaiXe, type HangGplx, type TaiXe } from '../../api/taiXe'
+import { DangTaiPixel } from '../../HieuUngPixel'
+import { phongCachDaLuu } from '../../nen'
 import { DauDanhMuc, HanGiayTo, LocTrangThai, NhanHoatDong, OTim } from '../danh-muc'
 
 const SO_DONG = 20
@@ -147,7 +149,14 @@ export default function TaiXeDanhSach() {
             {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={6} className="trong">
-                  {ds ? 'Chưa có tài xế nào phù hợp' : 'Đang tải…'}
+                  {ds ? (
+                    'Chưa có tài xế nào phù hợp'
+                  ) : phongCachDaLuu() === 'pixel' ? (
+                    /* Hiệu ứng Pixel: màn tải bảng kiểu Pixel thay chữ Đang tải… */
+                    <DangTaiPixel kieu="bang" soCot={6} />
+                  ) : (
+                    'Đang tải…'
+                  )}
                 </td>
               </tr>
             )}

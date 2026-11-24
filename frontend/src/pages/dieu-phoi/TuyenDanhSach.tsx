@@ -1,5 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
+import { DangTaiPixel } from '../../HieuUngPixel'
+import { phongCachDaLuu } from '../../nen'
 import { Nhan } from '../../nhan'
 import { DauDanhMuc, NhanHoatDong, OTim } from '../danh-muc'
 import {
@@ -136,7 +138,14 @@ export default function TuyenDanhSach() {
             {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={8} className="trong">
-                  {ds ? 'Chưa có tuyến nào' : 'Đang tải…'}
+                  {ds ? (
+                    'Chưa có tuyến nào'
+                  ) : phongCachDaLuu() === 'pixel' ? (
+                    /* Hiệu ứng Pixel: màn tải bảng kiểu Pixel thay chữ Đang tải… */
+                    <DangTaiPixel kieu="bang" soCot={6} />
+                  ) : (
+                    'Đang tải…'
+                  )}
                 </td>
               </tr>
             )}

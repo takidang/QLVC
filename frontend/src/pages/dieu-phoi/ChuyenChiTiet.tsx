@@ -29,8 +29,8 @@ import {
 import { ChonKhaDung, type KhaDung } from './ChuyenDanhSach'
 import { TEN_TRANG_THAI_DON, type Don } from '../../api/don'
 import { kemMaBr, LoiApi } from '../../api/goi'
-import { BangDinhNiemPhongPixel } from '../../HieuUngPixel'
-import { dangHieuUngPixel } from '../../nen'
+import { BangDinhNiemPhongPixel, DangTaiPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
 import { Nhan } from '../../nhan'
 import { CanhBaoTheoDoi, DongThoiGian, KhoiSuCo, KhoiTien } from './TheoDoiChuyen'
 import XepHang from './XepHang'
@@ -283,6 +283,9 @@ export default function ChuyenChiTiet() {
           <p role="alert" className="loi">
             {loi}
           </p>
+        ) : phongCachDaLuu() === 'pixel' ? (
+          /* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… */
+          <DangTaiPixel kieu="trang" />
         ) : (
           <p className="ghi-chu">Đang tải…</p>
         )}
@@ -493,7 +496,16 @@ export default function ChuyenChiTiet() {
           {/* Hàng 1: bản đồ lớn và lịch trình dọc */}
           <div className="ct2-hang ct2-hang-ban-do">
             <div className="ct2-ban-do">
-              <Suspense fallback={<p className="ghi-chu">Đang tải bản đồ…</p>}>
+              {/* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải bản đồ… */}
+              <Suspense
+                fallback={
+                  phongCachDaLuu() === 'pixel' ? (
+                    <DangTaiPixel kieu="trang" nhan="Đang tải bản đồ…" />
+                  ) : (
+                    <p className="ghi-chu">Đang tải bản đồ…</p>
+                  )
+                }
+              >
                 <BanDoChuyen
                   lichTrinh={c.lich_trinh}
                   viTri={c.trang_thai === 'DANG_CHAY' ? viTri : null}

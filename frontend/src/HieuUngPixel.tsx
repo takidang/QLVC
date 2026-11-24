@@ -1,5 +1,5 @@
-import { type CSSProperties } from 'react'
-import { dangHieuUngPixel } from './nen'
+import { useEffect, useState, type CSSProperties } from 'react'
+import { dangHieuUngPixel, phongCachDaLuu } from './nen'
 
 // Hiệu ứng Pixel: tia laser quét dọc và 4 góc ngắm 8-bit trên khung camera QR
 export function TiaLaserPixel() {
@@ -369,29 +369,152 @@ export function HopCartonGapNapPixel() {
 
 const DO_RONG_SKEL = ['72%', '90%', '58%', '82%', '64%', '48%', '76%'] as const
 
-// Hiệu ứng Pixel: khung tải skeleton quét theo bậc thay chữ "Đang tải…" ở các bảng chính
-export function KhungTaiBangPixel({ soHang = 4, soCot = 5 }: { soHang?: number; soCot?: number }) {
-  if (!dangHieuUngPixel()) return null
-  const hang = Array.from({ length: soHang }, (_, r) => r)
-  const cot = Array.from({ length: soCot }, (_, c) => c)
+// Hiệu ứng Pixel: lưới 5×7 vẽ chữ LOADING bằng ô vuông SVG sắc nét (không dùng font ngoài)
+const LUOI_LOADING: Record<string, readonly string[]> = {
+  L: ['10000', '10000', '10000', '10000', '10000', '10000', '11111'],
+  O: ['01110', '10001', '10001', '10001', '10001', '10001', '01110'],
+  A: ['01110', '10001', '10001', '11111', '10001', '10001', '10001'],
+  D: ['11110', '10001', '10001', '10001', '10001', '10001', '11110'],
+  I: ['01110', '00100', '00100', '00100', '00100', '00100', '01110'],
+  N: ['10001', '11001', '10101', '10011', '10001', '10001', '10001'],
+  G: ['01110', '10001', '10000', '10111', '10001', '10001', '01110'],
+}
+
+type OPixel = { x: number; y: number; w: number }
+
+const O_CHU_LOADING: readonly OPixel[] = (() => {
+  const ds: OPixel[] = []
+  const chu = 'LOADING'
+  for (let i = 0; i < chu.length; i++) {
+    const mau = LUOI_LOADING[chu[i]]
+    const gocX = i * 6
+    for (let y = 0; y < mau.length; y++) {
+      const hang = mau[y]
+      let x = 0
+      while (x < hang.length) {
+        if (hang[x] === '1') {
+          let dai = 1
+          while (x + dai < hang.length && hang[x + dai] === '1') dai++
+          ds.push({ x: gocX + x, y, w: dai })
+          x += dai
+        } else {
+          x++
+        }
+      }
+    }
+  }
+  return ds
+})()
+
+const THE_XUONG_TRANG = [0, 1, 2] as const
+
+function ChuLoadingPixel({ tiLe }: { tiLe: number }) {
   return (
-    <div className="px-skel-bang" aria-hidden="true">
-      {hang.map((r) => (
-        <div key={r} className="px-skel-hang">
-          {cot.map((c) => (
-            <span
-              key={c}
-              className="px-skel-thanh"
-              style={
-                {
-                  width: DO_RONG_SKEL[(r * 3 + c) % DO_RONG_SKEL.length],
-                  '--px-tre': `${(r * 2 + c) * 60}ms`,
-                } as CSSProperties
-              }
-            />
+    <svg
+      className="px-tai-svg"
+      viewBox="0 0 42 8"
+      width={42 * tiLe}
+      height={8 * tiLe}
+      shapeRendering="crispEdges"
+      aria-hidden="true"
+    >
+      <g className="px-tai-bong" transform="translate(1 1)">
+        {O_CHU_LOADING.map((o, i) => (
+          <rect key={`bong-${i}`} x={o.x} y={o.y} width={o.w} height={1} />
+        ))}
+      </g>
+      <g className="px-tai-net">
+        {O_CHU_LOADING.map((o, i) => (
+          <rect key={`chu-${i}`} x={o.x} y={o.y} width={o.w} height={1} />
+        ))}
+      </g>
+    </svg>
+  )
+}
+
+// Hiệu ứng Pixel: màn tải kiểu Pixel (cả trang hoặc trong bảng) thay chữ "Đang tải…"
+// Hiện ở phong cách Pixel kể cả khi tắt "Hiệu ứng Pixel"; chuyển động dừng qua CSS giảm chuyển động
+export function DangTaiPixel({
+  kieu = 'trang',
+  soHang = 4,
+  soCot = 5,
+  nhan = 'Đang tải dữ liệu…',
+}: {
+  kieu?: 'trang' | 'bang'
+  soHang?: number
+  soCot?: number
+  nhan?: string
+}) {
+  if (phongCachDaLuu() !== 'pixel') return null
+
+  if (kieu === 'bang') {
+    const hang = Array.from({ length: soHang }, (_, r) => r)
+    const cot = Array.from({ length: soCot }, (_, c) => c)
+    return (
+      <div className="px-tai px-tai-bang" role="status" aria-live="polite" aria-busy="true">
+        <span className="an-chu">Đang tải…</span>
+        <div className="px-tai-bang-dau" aria-hidden="true">
+          <ChuLoadingPixel tiLe={2} />
+          <div className="px-tai-ray nho">
+            <span className="px-tai-thanh-chay" />
+          </div>
+        </div>
+        <div className="px-tai-bang-ds" aria-hidden="true">
+          {hang.map((r) => (
+            <div key={r} className="px-tai-bang-hang">
+              {cot.map((c) => (
+                <span
+                  key={c}
+                  className="px-tai-xuong"
+                  style={
+                    {
+                      width: DO_RONG_SKEL[(r * 3 + c) % DO_RONG_SKEL.length],
+                      '--px-tre': `${(r * 2 + c) * 60}ms`,
+                    } as CSSProperties
+                  }
+                />
+              ))}
+            </div>
           ))}
         </div>
-      ))}
+      </div>
+    )
+  }
+
+  return (
+    <div className="px-tai px-tai-trang" role="status" aria-live="polite" aria-busy="true">
+      <span className="an-chu">Đang tải…</span>
+      <div className="px-tai-dau" aria-hidden="true">
+        <ChuLoadingPixel tiLe={4} />
+        <span className="px-tai-chu">{nhan}</span>
+        <div className="px-tai-ray">
+          <span className="px-tai-thanh-chay" />
+        </div>
+      </div>
+      <div className="px-tai-luoi" aria-hidden="true">
+        {THE_XUONG_TRANG.map((i) => (
+          <div key={i} className="px-tai-the">
+            <div className="px-tai-hang-dau">
+              <span
+                className="px-tai-xuong ngan"
+                style={{ '--px-tre': `${i * 120}ms` } as CSSProperties}
+              />
+              <span
+                className="px-tai-xuong huy-hieu"
+                style={{ '--px-tre': `${i * 120 + 60}ms` } as CSSProperties}
+              />
+            </div>
+            <span
+              className="px-tai-xuong dai"
+              style={{ '--px-tre': `${i * 120 + 100}ms` } as CSSProperties}
+            />
+            <span
+              className="px-tai-xuong vua"
+              style={{ '--px-tre': `${i * 120 + 160}ms` } as CSSProperties}
+            />
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -605,5 +728,53 @@ export function BienLaiNhietPixel({
         </div>
       </div>
     </div>
+  )
+}
+
+// Hiệu ứng Pixel: màn tải khi đổi trang, kiểu YouTube (không lóe): thanh nấc chạy ở mép trên + khung LOADING
+// phủ vùng nội dung tối thiểu 0,5 s; tắt khi đủ thời gian VÀ trong trang không còn chỗ nào đang tải
+// (.px-tai, [aria-busy='true']); tối đa 6 s để không kẹt. Gắn key theo đường dẫn ở App.tsx nên mỗi trang chạy lại.
+const TAI_TOI_THIEU_MS = 500
+const TAI_TOI_DA_MS = 6000
+
+export function ManTaiChuyenTrang() {
+  // 'dang': đang phủ; 'mo': mờ dần 250 ms cho nội dung hiện vào; 'het': gỡ hẳn
+  const [buoc, setBuoc] = useState<'dang' | 'mo' | 'het'>('dang')
+  useEffect(() => {
+    if (phongCachDaLuu() !== 'pixel') return
+    const batDau = Date.now()
+    let go = 0
+    const t = window.setInterval(() => {
+      const troiQua = Date.now() - batDau
+      const main = document.querySelector('main.trang')
+      const conTai = main
+        ? [...main.querySelectorAll(".px-tai, [aria-busy='true']")].some(
+            (e) => !e.closest('.px-phu-tai'),
+          )
+        : false
+      if ((troiQua >= TAI_TOI_THIEU_MS && !conTai) || troiQua >= TAI_TOI_DA_MS) {
+        window.clearInterval(t)
+        setBuoc('mo')
+        go = window.setTimeout(() => setBuoc('het'), 260)
+      }
+    }, 80)
+    return () => {
+      window.clearInterval(t)
+      window.clearTimeout(go)
+    }
+  }, [])
+  if (phongCachDaLuu() !== 'pixel') return null
+  return (
+    <>
+      <div
+        className={buoc === 'dang' ? 'px-thanh-tren' : 'px-thanh-tren xong'}
+        aria-hidden="true"
+      />
+      {buoc !== 'het' && (
+        <div className={buoc === 'mo' ? 'px-phu-tai mo' : 'px-phu-tai'}>
+          <DangTaiPixel kieu="trang" />
+        </div>
+      )}
+    </>
   )
 }

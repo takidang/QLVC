@@ -10,6 +10,8 @@ import {
   useLocation,
 } from 'react-router-dom'
 import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
+import { DangTaiPixel, ManTaiChuyenTrang } from './HieuUngPixel'
+import { phongCachDaLuu } from './nen'
 import { Ic, type TenIc } from './nhan'
 import { KhungThongBao } from './thongBao'
 import BatLoiTrang from './BatLoiTrang'
@@ -202,13 +204,24 @@ function KhungTrang({
           </div>
         </header>
         <main className="trang">
+          {/* Hiệu ứng Pixel: màn tải khi đổi trang (tối thiểu 0,5 s, tới khi dữ liệu về) */}
+          <ManTaiChuyenTrang key={`tai-${pathname}`} />
           {loiThoat && (
             <p role="alert" className="loi trang-loi">
               {loiThoat}
             </p>
           )}
           <BatLoiTrang key={pathname}>
-            <Suspense fallback={<p className="ghi-chu">Đang tải…</p>}>
+            {/* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… khi tải trang con */}
+            <Suspense
+              fallback={
+                phongCachDaLuu() === 'pixel' ? (
+                  <DangTaiPixel kieu="trang" />
+                ) : (
+                  <p className="ghi-chu">Đang tải…</p>
+                )
+              }
+            >
               <Outlet context={nd} />
             </Suspense>
           </BatLoiTrang>
@@ -230,7 +243,15 @@ export default function App() {
       .catch(() => setNd(null))
   }, [])
 
-  if (nd === undefined) return <p className="dang-tai">Đang tải…</p>
+  if (nd === undefined)
+    return phongCachDaLuu() === 'pixel' ? (
+      /* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… khi kiểm phiên */
+      <div className="dang-tai">
+        <DangTaiPixel kieu="trang" />
+      </div>
+    ) : (
+      <p className="dang-tai">Đang tải…</p>
+    )
 
   function capNhatAnh(coAnh: boolean) {
     setNd((cu) => (cu ? { ...cu, co_anh_dai_dien: coAnh } : cu))
@@ -253,7 +274,16 @@ export default function App() {
     <BrowserRouter>
       <KhungThongBao />
       <BatLoiTrang>
-        <Suspense fallback={<p className="ghi-chu">Đang tải…</p>}>
+        {/* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… khi tải tuyến trang */}
+        <Suspense
+          fallback={
+            phongCachDaLuu() === 'pixel' ? (
+              <DangTaiPixel kieu="trang" />
+            ) : (
+              <p className="ghi-chu">Đang tải…</p>
+            )
+          }
+        >
           <Routes>
             {/* UC-28: trang công khai cho khách, không cần đăng nhập */}
             <Route path="/tra-cuu" element={<TraCuu />} />

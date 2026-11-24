@@ -563,30 +563,6 @@
       transform: scaleY(0);
     }
   }
-  /* Chuyển trang: CHỈ vùng nội dung (main.trang) hiện dần theo dải ngang kiểu pixel, menu và thanh trên đứng yên.
-     Trang con gắn key theo đường dẫn (BatLoiTrang) nên mỗi lần đổi trang animation chạy lại; fill backwards
-     để sau khi xong không còn clip-path (tránh làm khung chứa cho hộp thoại position: fixed). */
-  @keyframes px-hien-noi-dung {
-    0% {
-      opacity: 0.35;
-      clip-path: inset(0 0 100% 0);
-    }
-    100% {
-      opacity: 1;
-      clip-path: inset(0 0 0 0);
-    }
-  }
-  :root[data-phong-cach='pixel']:not([data-hieu-ung-pixel='tat']):not([data-giam-chuyen-dong='bat'])
-    main.trang
-    > * {
-    animation: px-hien-noi-dung 450ms steps(6, end) backwards;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    :root[data-phong-cach='pixel'] main.trang > * {
-      animation: none;
-    }
-  }
-
   /* Hiệu ứng Pixel: 6. Đồng hồ km cuộn số (odometer) khi tài xế nhập/ghi km chuyến */
   @keyframes px-odo-hien {
     0% {
@@ -2081,14 +2057,17 @@
       .px-tep-nen-o,
       .px-bien-lai,
       .px-bl-den,
-      .px-bl-giay
+      .px-bl-giay,
+      .px-tai-thanh-chay
     ) {
     animation: none;
   }
   :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
     .tq-cho::after,
   :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
-    .px-skel-thanh::after {
+    .px-skel-thanh::after,
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
+    .px-tai-xuong::after {
     animation: none;
     display: none;
   }
@@ -2194,12 +2173,14 @@
         .px-tep-nen-o,
         .px-bien-lai,
         .px-bl-den,
-        .px-bl-giay
+        .px-bl-giay,
+        .px-tai-thanh-chay
       ) {
       animation: none;
     }
     :root[data-phong-cach='pixel'] .tq-cho::after,
-    :root[data-phong-cach='pixel'] .px-skel-thanh::after {
+    :root[data-phong-cach='pixel'] .px-skel-thanh::after,
+    :root[data-phong-cach='pixel'] .px-tai-xuong::after {
       animation: none;
       display: none;
     }
@@ -2411,5 +2392,268 @@
   :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
     button.phu:enabled:active {
     transform: none;
+  }
+}
+
+/* Hiệu ứng Pixel: 22. Màn tải kiểu Pixel (cả trang và ô bảng) thay chữ "Đang tải…" */
+@media screen {
+  @keyframes px-tai-nac {
+    0% {
+      transform: translateX(-110%);
+    }
+    100% {
+      transform: translateX(260%);
+    }
+  }
+  :root[data-phong-cach='pixel'] .px-tai {
+    position: relative;
+    display: grid;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+  }
+  :root[data-phong-cach='pixel'] .px-tai-trang {
+    padding: 16px;
+    background: var(--mat);
+    border: 2px solid var(--n-charcoal);
+    border-top: 6px solid var(--n-teal);
+    border-radius: var(--bo-the);
+    box-shadow: var(--bong);
+  }
+  :root[data-phong-cach='pixel'] .px-tai-dau {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    background: var(--noi);
+    border: 2px solid var(--n-charcoal);
+    border-radius: var(--bo);
+    box-shadow: var(--bong-nho);
+  }
+  :root[data-phong-cach='pixel'] .px-tai-svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+  :root[data-phong-cach='pixel'] .px-tai-bong {
+    fill: var(--n-rose);
+  }
+  :root[data-phong-cach='pixel'] .px-tai-net {
+    fill: var(--n-teal);
+  }
+  :root[data-phong-cach='pixel'] .px-tai-chu {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .px-tai-ray {
+    position: relative;
+    width: min(260px, 100%);
+    height: 14px;
+    overflow: hidden;
+    background: var(--mat-2);
+    border: 2px solid var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .px-tai-ray.nho {
+    width: 112px;
+    height: 10px;
+  }
+  :root[data-phong-cach='pixel'] .px-tai-ray::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0 8px,
+      color-mix(in srgb, var(--noi) 84%, transparent) 8px 10px
+    );
+  }
+  :root[data-phong-cach='pixel'] .px-tai-thanh-chay {
+    display: block;
+    width: 42%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      var(--n-teal) 0 40%,
+      var(--n-sky) 40% 75%,
+      var(--n-coral) 75% 100%
+    );
+    animation: px-tai-nac 1.2s steps(10, end) infinite;
+  }
+  :root[data-phong-cach='pixel'] .px-tai-luoi {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 10px;
+  }
+  :root[data-phong-cach='pixel'] .px-tai-the {
+    display: grid;
+    gap: 8px;
+    padding: 10px;
+    background: var(--noi);
+    border: 2px solid var(--n-charcoal);
+    border-top: 4px solid var(--n-coral);
+    border-radius: var(--bo);
+    box-shadow: var(--bong-nho);
+  }
+  :root[data-phong-cach='pixel'] .px-tai-the:nth-child(2) {
+    border-top-color: var(--n-sky);
+  }
+  :root[data-phong-cach='pixel'] .px-tai-the:nth-child(3) {
+    border-top-color: var(--n-plum);
+  }
+  :root[data-phong-cach='pixel'] .px-tai-hang-dau {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  :root[data-phong-cach='pixel'] .px-tai-xuong {
+    position: relative;
+    display: block;
+    height: 13px;
+    overflow: hidden;
+    background: var(--mat-2);
+    border: 1.5px solid var(--vien-dam);
+    border-radius: 2px;
+  }
+  :root[data-phong-cach='pixel'] .px-tai-xuong.ngan {
+    width: 44%;
+    height: 11px;
+  }
+  :root[data-phong-cach='pixel'] .px-tai-xuong.huy-hieu {
+    width: 28%;
+    height: 15px;
+    background: color-mix(in srgb, var(--n-butter) 45%, var(--mat-2));
+  }
+  :root[data-phong-cach='pixel'] .px-tai-xuong.dai {
+    width: 84%;
+    height: 14px;
+  }
+  :root[data-phong-cach='pixel'] .px-tai-xuong.vua {
+    width: 60%;
+    height: 11px;
+  }
+  :root[data-phong-cach='pixel'] .px-tai-xuong::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    width: 42%;
+    background: color-mix(in srgb, var(--n-butter) 58%, var(--noi));
+    transform: translateX(-120%);
+    animation: px-skel-quet 1.1s steps(8, end) var(--px-tre, 0ms) infinite;
+  }
+  :root[data-phong-cach='pixel'] .px-tai-bang {
+    gap: 8px;
+    padding: 4px 2px;
+  }
+  :root[data-phong-cach='pixel'] .px-tai-bang-dau {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 4px 8px;
+    background: var(--noi);
+    border: 2px solid var(--n-charcoal);
+    border-radius: var(--bo);
+  }
+  :root[data-phong-cach='pixel'] .px-tai-bang .px-tai-bong {
+    fill: var(--n-butter);
+  }
+  :root[data-phong-cach='pixel'] .px-tai-bang-ds {
+    display: grid;
+    gap: 8px;
+  }
+  :root[data-phong-cach='pixel'] .px-tai-bang-hang {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 12px;
+    align-items: center;
+    padding: 9px 8px;
+    background: var(--mat);
+    border: 2px solid var(--vien);
+    border-radius: var(--bo);
+  }
+  @media (max-width: 520px) {
+    :root[data-phong-cach='pixel'] .px-tai-luoi {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :root[data-phong-cach='pixel'] .px-tai-thanh-chay {
+      animation: none;
+    }
+    :root[data-phong-cach='pixel'] .px-tai-xuong::after {
+      animation: none;
+      display: none;
+    }
+  }
+}
+
+/* Màn tải khi đổi trang (ManTaiChuyenTrang): thanh nấc ở mép trên + khung LOADING phủ vùng nội dung, mờ dần khi xong */
+@media screen {
+  :root[data-phong-cach='pixel'] main.trang {
+    position: relative;
+  }
+  :root[data-phong-cach='pixel'] .px-phu-tai {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    display: grid;
+    align-content: start;
+    justify-items: center;
+    padding-top: 48px;
+    background: var(--giay);
+    transition: opacity 250ms steps(5, end);
+  }
+  :root[data-phong-cach='pixel'] .px-phu-tai.mo {
+    opacity: 0;
+    pointer-events: none;
+  }
+  @keyframes px-thanh-tren-chay {
+    from {
+      width: 0;
+    }
+    to {
+      width: 85%;
+    }
+  }
+  :root[data-phong-cach='pixel'] .px-thanh-tren {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 7;
+    height: 4px;
+    width: 85%;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--n-coral) 0 12px,
+      var(--n-butter) 12px 24px,
+      var(--n-sky) 24px 36px
+    );
+    animation: px-thanh-tren-chay 2.5s steps(12, end);
+    pointer-events: none;
+  }
+  :root[data-phong-cach='pixel'] .px-thanh-tren.xong {
+    width: 100%;
+    opacity: 0;
+    animation: none;
+    transition:
+      width 150ms steps(3, end),
+      opacity 200ms steps(4, end) 150ms;
+  }
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
+    :is(.px-thanh-tren, .px-phu-tai) {
+    animation: none;
+    transition: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :root[data-phong-cach='pixel'] :is(.px-thanh-tren, .px-phu-tai) {
+      animation: none;
+      transition: none;
+    }
   }
 }
