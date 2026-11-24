@@ -20,22 +20,23 @@ function LogoThuong({ co }: { co: number }) {
   )
 }
 
-// Bản Pixel: lưới ô vuông theo bảng màu Nostalgos — T vàng bơ, K san hô, viền than (tự sinh từ lưới)
+// Bản Pixel: lưới ô vuông, viền than tự sinh từ lưới
 const LUOI_TK = [
-  'TTTTTTTTT..KKK',
-  'TTTTTTTTT.KKK.',
-  'TTTTTTTTTKKK..',
-  '...TTT..KKK...',
-  '...TTT.KKK....',
-  '...TTTKKK.....',
-  '...TTTKKK.....',
-  '...TTT.KKK....',
-  '...TTT..KKK...',
-  '...TTT...KKK..',
-  '...TTT....KKK.',
-  '...TTT.....KKK',
+  'DDDDDDDDD..KKK',
+  'DDDDDDDDD.KKK.',
+  'DDDDDDDDDKKK..',
+  '...BBB..KKK...',
+  '...BBB.KKK....',
+  '...BBBKKK.....',
+  '...BBBKKK.....',
+  '...BBB.KKK....',
+  '...BBB..KKK...',
+  '...BBB...KKK..',
+  '...BBB....KKK.',
+  '...BBB.....KKK',
 ] as const
-const MAU_O: Record<string, string> = { T: '#ffd183', K: '#dc6250' }
+// Cùng màu với bản thường (thanh than, thân xanh, K đỏ); chỉ khác kiểu vẽ ô vuông
+const MAU_O: Record<string, string> = { D: '#3a3e45', B: '#2387bd', K: '#e2473b' }
 const RONG = LUOI_TK[0].length + 2
 const CAO = LUOI_TK.length + 2
 const O_LOGO: { x: number; y: number; mau: string }[] = (() => {

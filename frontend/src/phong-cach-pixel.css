@@ -2698,8 +2698,17 @@
   }
   :root[data-phong-cach='pixel'] .hieu i:has(.logo-tk) {
     width: auto;
-    background: transparent;
+    height: auto;
+    padding: 3px;
+    background: #fff;
+    border: 2px solid var(--n-charcoal);
     border-radius: 0;
+    box-shadow: 2px 2px 0 var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .thuong-hieu .logo-pixel {
+    padding: 2px;
+    background: #fff;
+    border: 2px solid var(--n-charcoal);
   }
 }
 
