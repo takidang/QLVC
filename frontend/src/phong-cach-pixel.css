@@ -2806,9 +2806,10 @@
 
 /* Đăng nhập ở Pixel: dòng phụ thẳng hàng (bỏ hiệu ứng chữ cuối nổi lệch), link Tra cứu thành nút nổi bật */
 @media screen {
-  :root[data-phong-cach='pixel'] .dn-kt-cuoi {
-    animation: none;
-    transform: none;
+  :root[data-phong-cach='pixel'] .dn-thuong-hieu .logo-pixel {
+    width: 56px;
+    height: auto;
+    filter: drop-shadow(3px 3px 0 var(--n-charcoal));
   }
   :root[data-phong-cach='pixel'] .dn-tra-cuu {
     color: var(--n-charcoal);

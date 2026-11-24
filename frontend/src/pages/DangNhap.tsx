@@ -3,19 +3,10 @@ import { dangNhap, LoiApi, type NguoiDung } from '../api/auth'
 import { Link } from 'react-router-dom'
 import { dangHieuUng, NEN } from '../nen'
 import NenHat from '../NenHat'
+import { LogoTK, TenThuongHieu } from '../LogoTK'
 
-const CAU_PHU = 'Hệ thống quản lý vận tải'
 const CAU_GIOI_THIEU =
   'Lập chuyến, theo dõi từng điểm dừng, giao hàng bằng quét mã và quyết toán theo chuyến.'
-
-// Tách từng ký tự inline-block; 4 chữ cái cuối ("n", "t", "ả", "i") nổi lên lệch nhịp (-0.12em…-0.3em) khi tải trang
-const NHO_CUOI: Record<number, { nho: string; tre: string }> = {
-  [CAU_PHU.length - 5]: { nho: '-0.12em', tre: '0ms' },
-  [CAU_PHU.length - 3]: { nho: '-0.18em', tre: '55ms' },
-  [CAU_PHU.length - 2]: { nho: '-0.24em', tre: '110ms' },
-  [CAU_PHU.length - 1]: { nho: '-0.3em', tre: '165ms' },
-}
-const KY_TU_PHU = [...CAU_PHU].map((ch, i) => ({ ch, i, nho: NHO_CUOI[i] }))
 
 export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }) {
   const [ten, setTen] = useState('')
@@ -93,23 +84,13 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
     <main className="dang-nhap">
       <div className="dn-khung">
         <form onSubmit={gui} noValidate>
+          {/* Logo và tên thương hiệu ở góc trên trái cột form (bản thường / Pixel do CSS chọn theo phong cách) */}
+          <div className="dn-thuong-hieu">
+            <LogoTK co={44} />
+            <TenThuongHieu />
+          </div>
           <div className="dn-giua">
             <h1>Đăng nhập</h1>
-            <p className="dn-phu" aria-label={CAU_PHU}>
-              <span aria-hidden="true">
-                {KY_TU_PHU.map(({ ch, i, nho }) => (
-                  <span
-                    key={i}
-                    className={nho ? 'dn-kt dn-kt-cuoi' : 'dn-kt'}
-                    style={
-                      nho ? ({ '--nho': nho.nho, '--tre': nho.tre } as CSSProperties) : undefined
-                    }
-                  >
-                    {ch}
-                  </span>
-                ))}
-              </span>
-            </p>
             <label>
               Tên đăng nhập
               <span className="dn-o">

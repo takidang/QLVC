@@ -325,6 +325,23 @@ body {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+/* Logo và tên thương hiệu ở góc trên trái cột form đăng nhập */
+.dn-thuong-hieu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--muc);
+}
+.dn-thuong-hieu .logo-thuong {
+  padding: 4px;
+  background: #fff;
+  border: 1px solid var(--vien-dam);
+  border-radius: 12px;
+  box-shadow: var(--bong-nho);
+}
 /* Lối tra cứu cho khách ngay dưới nút Đăng nhập */
 .dn-tra-cuu {
   display: flex;
