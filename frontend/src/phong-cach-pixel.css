@@ -1,6 +1,7 @@
 /* Logo TK và tên thương hiệu (LogoTK.tsx): mặc định hiện bản thường; bản Pixel chỉ hiện khi bật Pixel (trên màn hình) */
 .logo-pixel,
-.ten-pixel {
+.ten-pixel,
+.xh-container {
   display: none;
 }
 .hieu i:has(.logo-tk) {
@@ -2754,6 +2755,33 @@
     fill: color-mix(in srgb, var(--n-sky) 70%, #fff);
   }
   :root[data-phong-cach='pixel'] .xh-khoi.chon .xh-chu {
+    fill: var(--n-charcoal);
+  }
+}
+
+/* Thùng kiểu container ở Pixel (XepHang.tsx .xh-container) */
+@media screen {
+  :root[data-phong-cach='pixel'] .xh-container {
+    display: inline;
+  }
+  :root[data-phong-cach='pixel'] .xh-thung {
+    fill: color-mix(in srgb, var(--n-sky) 30%, var(--n-cream));
+  }
+  :root[data-phong-cach='pixel'] .xh-gan {
+    fill: color-mix(in srgb, var(--n-sky) 45%, var(--n-cream));
+  }
+  :root[data-phong-cach='pixel'] .xh-ray {
+    fill: var(--n-cobalt);
+    stroke: var(--n-charcoal);
+    stroke-width: 2;
+  }
+  :root[data-phong-cach='pixel'] .xh-goc {
+    fill: var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .xh-goc-lo {
+    fill: var(--n-cream);
+  }
+  :root[data-phong-cach='pixel'] .xh-chot {
     fill: var(--n-charcoal);
   }
 }
