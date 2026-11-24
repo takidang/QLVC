@@ -222,7 +222,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
       className="dn-hinh"
       style={
         {
-          '--anh': `url(${phongCachDaLuu() === 'pixel' ? NEN.anh.replace('.webp', '-pixel.png?v=3') : NEN.anh})`,
+          '--anh': `url(${phongCachDaLuu() === 'pixel' ? '/anh/dang-nhap-hoang-hon-pixel.png?v=3' : NEN.anh})`,
         } as CSSProperties
       }
     >
