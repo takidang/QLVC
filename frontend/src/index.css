@@ -325,6 +325,54 @@ body {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+/* Lối tra cứu cho khách ở đầu form đăng nhập */
+.dn-tra-cuu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  padding: 12px 14px;
+  color: var(--muc);
+  text-decoration: none;
+  background: var(--mat);
+  border: 1px solid var(--vien-dam);
+  border-left: 4px solid var(--o-liu);
+  border-radius: var(--bo);
+  transition:
+    border-color 0.15s ease-out,
+    background 0.15s ease-out;
+}
+.dn-tra-cuu:hover {
+  background: var(--noi);
+  border-color: var(--o-liu);
+}
+.dn-tra-cuu svg {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: var(--o-liu);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.dn-tra-cuu span {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+}
+.dn-tra-cuu small {
+  font-size: 0.8rem;
+  color: var(--phu);
+}
+.dn-tra-cuu i {
+  font-style: normal;
+  font-size: 1.2rem;
+  color: var(--o-liu);
+  transition: transform 0.15s ease-out;
+}
+.dn-tra-cuu:hover i {
+  transform: translateX(3px);
+}
 .dn-chan {
   width: 100%;
   max-width: 400px;

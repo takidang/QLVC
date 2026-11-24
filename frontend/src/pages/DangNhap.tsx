@@ -94,6 +94,18 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
       <div className="dn-khung">
         <form onSubmit={gui} noValidate>
           <div className="dn-giua">
+            {/* Lối vào cho khách: đặt đầu trang để khách vừa vào là thấy, không cần đăng nhập */}
+            <Link to="/tra-cuu" className="dn-tra-cuu">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="6.5" />
+                <path d="m16 16 4.5 4.5" />
+              </svg>
+              <span>
+                <b>Khách hàng? Tra cứu đơn hàng</b>
+                <small>Không cần đăng nhập: nhập mã đơn và 4 số cuối điện thoại.</small>
+              </span>
+              <i aria-hidden="true">→</i>
+            </Link>
             <h1>Đăng nhập</h1>
             <p className="dn-phu" aria-label={CAU_PHU}>
               <span aria-hidden="true">
@@ -154,10 +166,6 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
               </svg>
             </button>
           </div>
-
-          <p className="dn-chan">
-            Khách hàng? <Link to="/tra-cuu">Tra cứu đơn hàng</Link>
-          </p>
         </form>
 
         <section className="dn-hinh" style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}>

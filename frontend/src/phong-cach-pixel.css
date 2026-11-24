@@ -2810,30 +2810,25 @@
     animation: none;
     transform: none;
   }
-  :root[data-phong-cach='pixel'] .dn-chan a[href='/tra-cuu'] {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin: 0 4px;
-    padding: 5px 12px;
-    font-size: 0.95rem;
-    font-weight: 700;
+  :root[data-phong-cach='pixel'] .dn-tra-cuu {
     color: var(--n-charcoal);
-    text-decoration: none;
     background: var(--n-butter);
     border: 2px solid var(--n-charcoal);
     border-radius: var(--bo);
-    box-shadow: 3px 3px 0 var(--n-charcoal);
+    box-shadow: 4px 4px 0 var(--n-charcoal);
   }
-  :root[data-phong-cach='pixel'] .dn-chan a[href='/tra-cuu']::before {
-    content: '🔍';
-    font-size: 0.9em;
-  }
-  :root[data-phong-cach='pixel'] .dn-chan a[href='/tra-cuu']:hover {
+  :root[data-phong-cach='pixel'] .dn-tra-cuu:hover {
     background: var(--n-ochre);
   }
-  :root[data-phong-cach='pixel'] .dn-chan a[href='/tra-cuu']:active {
-    transform: translate(2px, 2px);
+  :root[data-phong-cach='pixel'] .dn-tra-cuu:active {
+    transform: translate(3px, 3px);
     box-shadow: none;
+  }
+  :root[data-phong-cach='pixel'] .dn-tra-cuu :is(svg, i) {
+    stroke: var(--n-charcoal);
+    color: var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .dn-tra-cuu small {
+    color: var(--n-charcoal);
   }
 }
