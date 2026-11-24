@@ -12,7 +12,8 @@ import {
 import { duDoanTreNgay, type DuDoanChuyenNgay } from '../api/chuyen'
 import { LoiApi } from '../api/goi'
 import { tongQuanNgay, type TongQuanNgay } from '../api/tongQuan'
-import { dangGiamChuyenDong, dangHieuUngPixel } from '../nen'
+import { DangTaiPixel } from '../HieuUngPixel'
+import { dangGiamChuyenDong, dangHieuUngPixel, phongCachDaLuu } from '../nen'
 import { Nhan } from '../nhan'
 import NumberFlow from '@number-flow/react'
 
@@ -284,7 +285,13 @@ function BangLaiLo({ den: denMacDinh }: { den: string }) {
         </ul>
       )}
       {!kq ? (
-        !loi && <p className="ghi-chu">Đang tải…</p>
+        !loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          /* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… */
+          <DangTaiPixel kieu="trang" />
+        ) : (
+          <p className="ghi-chu">Đang tải…</p>
+        ))
       ) : (
         <div className="tq-cuon">
           <table>

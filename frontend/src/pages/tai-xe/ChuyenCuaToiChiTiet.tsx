@@ -13,8 +13,8 @@ import {
   type ChuyenCuaToiChiTiet as ChiTiet,
   type KetQuaQuet,
 } from '../../api/toi'
-import { ConDauDaGiaoPixel, DongHoKmPixel } from '../../HieuUngPixel'
-import { dangHieuUngPixel, giamChuyenDong } from '../../nen'
+import { ConDauDaGiaoPixel, DangTaiPixel, DongHoKmPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel, giamChuyenDong, phongCachDaLuu } from '../../nen'
 import { nenAnh } from '../../nenAnh'
 import { ChiPhi } from './ChiPhi'
 import { SuCoChuyen } from './SuCo'
@@ -114,7 +114,14 @@ export default function ChuyenCuaToiChiTiet() {
           {loi}
         </p>
       )}
-      {!c && !loi && <p className="ghi-chu">Đang tải…</p>}
+      {!c &&
+        !loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          /* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… */
+          <DangTaiPixel kieu="trang" />
+        ) : (
+          <p className="ghi-chu">Đang tải…</p>
+        ))}
       {c && (
         <>
           {/* Khối chính: đậm khi đang chạy (điểm kế tiếp + tiến độ), nhạt khi chờ chạy / đã xong */}

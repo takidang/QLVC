@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import type { Don } from '../../api/don'
 import { goi, LoiApi } from '../../api/goi'
+import { DangTaiPixel } from '../../HieuUngPixel'
+import { phongCachDaLuu } from '../../nen'
 
 type DonPhieu = Don & { sdt_lay: string; sdt_nhan: string }
 const lucVN = (iso: string) =>
@@ -37,7 +39,14 @@ export default function PhieuDon() {
           {loi}
         </p>
       )}
-      {!d && !loi && <p className="ghi-chu">Đang tải…</p>}
+      {!d &&
+        !loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          /* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… */
+          <DangTaiPixel kieu="trang" />
+        ) : (
+          <p className="ghi-chu">Đang tải…</p>
+        ))}
       {d && (
         <article className="van-don" aria-label={`Phiếu gửi hàng ${d.ma_don}`}>
           <header className="vd-dau">

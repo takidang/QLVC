@@ -9,6 +9,8 @@ import {
   type TaiKhoan,
   type VaiTroTao,
 } from '../../api/nguoiDung'
+import { DangTaiPixel } from '../../HieuUngPixel'
+import { phongCachDaLuu } from '../../nen'
 import { Nhan } from '../../nhan'
 import { DauDanhMuc, LocTrangThai, OTim } from '../danh-muc'
 
@@ -177,7 +179,14 @@ export default function NguoiDungDanhSach() {
             {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={4} className="trong">
-                  {ds ? 'Chưa có người dùng nào phù hợp' : 'Đang tải…'}
+                  {ds ? (
+                    'Chưa có người dùng nào phù hợp'
+                  ) : phongCachDaLuu() === 'pixel' ? (
+                    /* Hiệu ứng Pixel: màn tải bảng kiểu Pixel thay chữ Đang tải… */
+                    <DangTaiPixel kieu="bang" soCot={4} />
+                  ) : (
+                    'Đang tải…'
+                  )}
                 </td>
               </tr>
             )}

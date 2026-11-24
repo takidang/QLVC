@@ -18,8 +18,8 @@ import { kemMaBr, LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachKhachHang, type KhachHang } from '../../api/khachHang'
 import { danhSachNut, type Nut } from '../../api/tuyen'
 import { Nhan } from '../../nhan'
-import { HopCartonGapNapPixel, KhungTaiBangPixel, KimCanPixel } from '../../HieuUngPixel'
-import { dangHieuUngPixel } from '../../nen'
+import { DangTaiPixel, HopCartonGapNapPixel, KimCanPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
 import { DauDanhMuc, LocTrangThai, OTim } from '../danh-muc'
 import { ThongBao } from '../../thongBao'
 
@@ -217,14 +217,9 @@ export default function DonDanhSach() {
                 <td colSpan={7} className="trong">
                   {ds ? (
                     'Chưa có đơn nào phù hợp'
-                  ) : dangHieuUngPixel() ? (
-                    <>
-                      {/* Hiệu ứng Pixel: khung tải skeleton quét theo bậc thay chữ Đang tải… */}
-                      <KhungTaiBangPixel soCot={6} />
-                      <span className="an-chu" role="status">
-                        Đang tải…
-                      </span>
-                    </>
+                  ) : phongCachDaLuu() === 'pixel' ? (
+                    /* Hiệu ứng Pixel: màn tải bảng kiểu Pixel thay chữ Đang tải… */
+                    <DangTaiPixel kieu="bang" soCot={6} />
                   ) : (
                     'Đang tải…'
                   )}

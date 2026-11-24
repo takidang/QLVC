@@ -7,6 +7,8 @@ import {
   type BangGia,
 } from '../../api/bangGia'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
+import { DangTaiPixel } from '../../HieuUngPixel'
+import { phongCachDaLuu } from '../../nen'
 import { Nhan } from '../../nhan'
 import { DauDanhMuc, OTim } from '../danh-muc'
 
@@ -106,7 +108,14 @@ export default function BangGiaDanhSach() {
             {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={6} className="trong">
-                  {ds ? 'Chưa có mức giá nào' : 'Đang tải…'}
+                  {ds ? (
+                    'Chưa có mức giá nào'
+                  ) : phongCachDaLuu() === 'pixel' ? (
+                    /* Hiệu ứng Pixel: màn tải bảng kiểu Pixel thay chữ Đang tải… */
+                    <DangTaiPixel kieu="bang" soCot={6} />
+                  ) : (
+                    'Đang tải…'
+                  )}
                 </td>
               </tr>
             )}

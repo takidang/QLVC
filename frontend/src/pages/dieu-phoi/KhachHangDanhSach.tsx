@@ -1,5 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
+import { DangTaiPixel } from '../../HieuUngPixel'
+import { phongCachDaLuu } from '../../nen'
 import { DauDanhMuc, LocTrangThai, NhanHoatDong, OTim } from '../danh-muc'
 import { danhSachKhachHang, suaKhachHang, themKhachHang, type KhachHang } from '../../api/khachHang'
 
@@ -118,7 +120,14 @@ export default function KhachHangDanhSach() {
             {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={6} className="trong">
-                  {ds ? 'Chưa có khách hàng nào phù hợp' : 'Đang tải…'}
+                  {ds ? (
+                    'Chưa có khách hàng nào phù hợp'
+                  ) : phongCachDaLuu() === 'pixel' ? (
+                    /* Hiệu ứng Pixel: màn tải bảng kiểu Pixel thay chữ Đang tải… */
+                    <DangTaiPixel kieu="bang" soCot={6} />
+                  ) : (
+                    'Đang tải…'
+                  )}
                 </td>
               </tr>
             )}

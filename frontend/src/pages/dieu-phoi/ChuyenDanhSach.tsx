@@ -20,8 +20,8 @@ import { TEN_LOAI_SU_CO, type LoaiSuCo } from '../../api/suCo'
 import { danhSachTuyen, type Tuyen } from '../../api/tuyen'
 import { Ic, Nhan } from '../../nhan'
 import LichGio from './LichGio'
-import { dangGiamChuyenDong, dangHieuUngPixel, NEN } from '../../nen'
-import { KhungTaiBangPixel } from '../../HieuUngPixel'
+import { dangGiamChuyenDong, NEN, phongCachDaLuu } from '../../nen'
+import { DangTaiPixel } from '../../HieuUngPixel'
 import { ThongBao } from '../../thongBao'
 import NumberFlow from '@number-flow/react'
 
@@ -391,7 +391,15 @@ export default function ChuyenDanhSach() {
                   <Ic ten="phai" />
                 </Link>
               ))}
-              {soViec === 0 && <p>{ds ? 'Không có việc nào cần chú ý.' : 'Đang tải…'}</p>}
+              {soViec === 0 &&
+                (ds ? (
+                  <p>Không có việc nào cần chú ý.</p>
+                ) : phongCachDaLuu() === 'pixel' ? (
+                  /* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… */
+                  <DangTaiPixel kieu="trang" />
+                ) : (
+                  <p>Đang tải…</p>
+                ))}
               {soViec > 0 && caNgay.length > canChuY.length && (
                 <p className="chu-y-het">
                   Hết việc cần chú ý · {caNgay.length - canChuY.length} chuyến khác trong ngày không
@@ -491,14 +499,9 @@ export default function ChuyenDanhSach() {
               <tr>
                 <td colSpan={soCot} className="trong">
                   {!ds ? (
-                    dangHieuUngPixel() ? (
-                      <>
-                        {/* Hiệu ứng Pixel: khung tải skeleton quét theo bậc thay chữ Đang tải… */}
-                        <KhungTaiBangPixel soCot={ngay ? 6 : 5} />
-                        <span className="an-chu" role="status">
-                          Đang tải…
-                        </span>
-                      </>
+                    phongCachDaLuu() === 'pixel' ? (
+                      /* Hiệu ứng Pixel: màn tải bảng kiểu Pixel thay chữ Đang tải… */
+                      <DangTaiPixel kieu="bang" soCot={ngay ? 6 : 5} />
                     ) : (
                       'Đang tải…'
                     )
