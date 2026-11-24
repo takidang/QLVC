@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
-import { useLocation } from 'react-router-dom'
+import { type CSSProperties } from 'react'
 import { dangHieuUngPixel } from './nen'
 
 // Hiệu ứng Pixel: tia laser quét dọc và 4 góc ngắm 8-bit trên khung camera QR
@@ -126,38 +125,6 @@ export function XeTaiHanhTrinhPixel({
           </span>
         ))}
       </div>
-    </div>
-  )
-}
-
-const TRANG_CHUYEN_HUONG = new Set(['/quan-ly', '/dieu-phoi', '/ke-toan', '/tai-xe'])
-const COT_CHUYEN_TRANG = [0, 1, 2, 3, 4, 5, 6, 7] as const
-
-// Hiệu ứng Pixel: chuyển trang khung hình 8-bit (che màn bằng dải ô vuông theo steps(), ≤ 250 ms)
-export function ChuyenTrangPixel() {
-  const { pathname } = useLocation()
-  const truoc = useRef(pathname)
-  const [lan, setLan] = useState(0)
-
-  useEffect(() => {
-    if (pathname === truoc.current) return
-    truoc.current = pathname
-    if (TRANG_CHUYEN_HUONG.has(pathname) || !dangHieuUngPixel()) return
-    setLan((n) => n + 1)
-  }, [pathname])
-
-  useEffect(() => {
-    if (lan === 0) return
-    const t = window.setTimeout(() => setLan(0), 240)
-    return () => window.clearTimeout(t)
-  }, [lan])
-
-  if (lan === 0 || !dangHieuUngPixel()) return null
-  return (
-    <div key={lan} className="px-chuyen-trang" aria-hidden="true">
-      {COT_CHUYEN_TRANG.map((i) => (
-        <span key={i} className="px-chuyen-o" style={{ '--px-i': i } as CSSProperties} />
-      ))}
     </div>
   )
 }

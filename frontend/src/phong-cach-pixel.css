@@ -564,24 +564,28 @@
       transform: scaleY(0);
     }
   }
-  :root[data-phong-cach='pixel'] .px-chuyen-trang {
-    position: fixed;
-    inset: 0;
-    z-index: 48;
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    pointer-events: none;
+  /* Chuyển trang: CHỈ vùng nội dung (main.trang) hiện dần theo dải ngang kiểu pixel, menu và thanh trên đứng yên.
+     Trang con gắn key theo đường dẫn (BatLoiTrang) nên mỗi lần đổi trang animation chạy lại; fill backwards
+     để sau khi xong không còn clip-path (tránh làm khung chứa cho hộp thoại position: fixed). */
+  @keyframes px-hien-noi-dung {
+    0% {
+      opacity: 0.35;
+      clip-path: inset(0 0 100% 0);
+    }
+    100% {
+      opacity: 1;
+      clip-path: inset(0 0 0 0);
+    }
   }
-  :root[data-phong-cach='pixel'] .px-chuyen-o {
-    background: repeating-conic-gradient(var(--muc) 0 25%, var(--o-liu) 0 50%) 0 0 / 16px 16px;
-    border-bottom: 3px solid var(--nhan-sang);
-    transform-origin: top center;
-    animation: px-che-man 180ms steps(4, end) calc(var(--px-i, 0) * 8ms) both;
+  :root[data-phong-cach='pixel']:not([data-hieu-ung-pixel='tat']):not([data-giam-chuyen-dong='bat'])
+    main.trang
+    > * {
+    animation: px-hien-noi-dung 450ms steps(6, end) backwards;
   }
-  :root[data-phong-cach='pixel']::view-transition-old(root),
-  :root[data-phong-cach='pixel']::view-transition-new(root) {
-    animation-duration: 200ms;
-    animation-timing-function: steps(4, end);
+  @media (prefers-reduced-motion: reduce) {
+    :root[data-phong-cach='pixel'] main.trang > * {
+      animation: none;
+    }
   }
 
   /* Hiệu ứng Pixel: 6. Đồng hồ km cuộn số (odometer) khi tài xế nhập/ghi km chuyến */
