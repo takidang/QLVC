@@ -2803,3 +2803,37 @@
     stroke-width: 2;
   }
 }
+
+/* Đăng nhập ở Pixel: dòng phụ thẳng hàng (bỏ hiệu ứng chữ cuối nổi lệch), link Tra cứu thành nút nổi bật */
+@media screen {
+  :root[data-phong-cach='pixel'] .dn-kt-cuoi {
+    animation: none;
+    transform: none;
+  }
+  :root[data-phong-cach='pixel'] .dn-chan a[href='/tra-cuu'] {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0 4px;
+    padding: 5px 12px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--n-charcoal);
+    text-decoration: none;
+    background: var(--n-butter);
+    border: 2px solid var(--n-charcoal);
+    border-radius: var(--bo);
+    box-shadow: 3px 3px 0 var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .dn-chan a[href='/tra-cuu']::before {
+    content: '🔍';
+    font-size: 0.9em;
+  }
+  :root[data-phong-cach='pixel'] .dn-chan a[href='/tra-cuu']:hover {
+    background: var(--n-ochre);
+  }
+  :root[data-phong-cach='pixel'] .dn-chan a[href='/tra-cuu']:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
+}
