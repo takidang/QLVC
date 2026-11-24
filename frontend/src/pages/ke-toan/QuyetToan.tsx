@@ -14,6 +14,8 @@ import {
 } from '../../api/quyetToan'
 import { TEN_HINH_THUC, type HinhThuc } from '../../api/tamUng'
 import { ngayGio } from '../../api/toi'
+import { DongHoDinhMucPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel } from '../../nen'
 import { ThongBao } from '../../thongBao'
 
 const dong = (so: number) => `${so.toLocaleString('vi-VN')} đ`
@@ -245,6 +247,10 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
 
               <section className="kinh qt-khoi">
                 <h3>Chi phí so với định mức</h3>
+                {/* Hiệu ứng Pixel: đồng hồ định mức (chi thực tế so với định mức, kim + vạch) */}
+                {dangHieuUngPixel() && (
+                  <DongHoDinhMucPixel thucTe={bang.tong_chi} dinhMuc={bang.dinh_muc} />
+                )}
                 <table>
                   <thead>
                     <tr>

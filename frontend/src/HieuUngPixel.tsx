@@ -161,3 +161,270 @@ export function ChuyenTrangPixel() {
     </div>
   )
 }
+
+const CHU_SO_ODO = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] as const
+
+// Hiệu ứng Pixel: đồng hồ km cuộn số (odometer) khi tài xế nhập hoặc vừa ghi km chuyến
+export function DongHoKmPixel({
+  giaTri,
+  vuaGhi = false,
+}: {
+  giaTri: string | number
+  vuaGhi?: boolean
+}) {
+  if (!dangHieuUngPixel()) return null
+  const trong = giaTri === '' || giaTri === null || giaTri === undefined
+  const so = trong ? 0 : Math.max(0, Math.min(999999, Math.round(Number(giaTri) || 0)))
+  const chuoi = String(so).padStart(6, '0')
+  return (
+    <div className={`px-odo${trong ? ' trong' : ''}${vuaGhi ? ' vua-ghi' : ''}`} aria-hidden="true">
+      <div className="px-odo-so">
+        {chuoi.split('').map((kt, i) => {
+          const d = Number(kt)
+          return (
+            <span key={i} className="px-odo-nhom">
+              {i === 3 && <span className="px-odo-cham">.</span>}
+              <span className="px-odo-cot">
+                <span
+                  className="px-odo-dai"
+                  style={{
+                    transform: `translate3d(0, -${d * 10}%, 0)`,
+                    transitionDelay: `${(5 - i) * 28}ms`,
+                  }}
+                >
+                  {CHU_SO_ODO.map((n) => (
+                    <span key={n} className="px-odo-o">
+                      {n}
+                    </span>
+                  ))}
+                </span>
+              </span>
+            </span>
+          )
+        })}
+      </div>
+      <span className="px-odo-dv">{vuaGhi ? 'km ✓' : 'km'}</span>
+    </div>
+  )
+}
+
+// Hiệu ứng Pixel: kim cân minh hoạ nhảy theo số kg khi nhập khối lượng đơn (không kiểm giới hạn)
+export function KimCanPixel({ kg }: { kg: string | number }) {
+  if (!dangHieuUngPixel()) return null
+  const v = Math.max(0, Number(kg) || 0)
+  // Thang log để cả đơn nhỏ (vài kg) lẫn đơn nặng (vài tấn) đều thấy kim nhích rõ
+  const tyLe = v <= 0 ? 0 : Math.min(1, Math.log10(1 + v) / Math.log10(1 + 5000))
+  const goc = -76 + tyLe * 152
+  return (
+    <div className="px-can" aria-hidden="true">
+      <svg className="px-can-svg" viewBox="0 0 120 66">
+        <path d="M12 58 A48 48 0 0 1 108 58 Z" className="px-can-mat" />
+        <path d="M18 58 A42 42 0 0 1 60 16" className="px-can-cung nhe" />
+        <path d="M60 16 A42 42 0 0 1 92 31" className="px-can-cung vua" />
+        <path d="M92 31 A42 42 0 0 1 102 58" className="px-can-cung nang" />
+        <g className="px-can-vach">
+          <line x1={16} y1={58} x2={23} y2={58} />
+          <line x1={29} y1={27} x2={34} y2={32} />
+          <line x1={60} y1={13} x2={60} y2={20} />
+          <line x1={91} y1={27} x2={86} y2={32} />
+          <line x1={104} y1={58} x2={97} y2={58} />
+        </g>
+        <g className="px-can-kim" style={{ transform: `rotate(${goc.toFixed(1)}deg)` }}>
+          <polygon points="60,17 63,58 57,58" className="px-can-mui" />
+          <circle cx={60} cy={58} r={4.5} className="px-can-truc" />
+        </g>
+      </svg>
+      <span className="px-can-so">
+        {v > 0 ? `${v.toLocaleString('vi-VN', { maximumFractionDigits: 2 })} kg` : '0 kg'}
+      </span>
+    </div>
+  )
+}
+
+// Hiệu ứng Pixel: đồng hồ định mức (chi thực tế so với định mức) trên màn Quyết toán
+export function DongHoDinhMucPixel({ thucTe, dinhMuc }: { thucTe: number; dinhMuc: number }) {
+  if (!dangHieuUngPixel()) return null
+  const tyLe = dinhMuc > 0 ? thucTe / dinhMuc : thucTe > 0 ? 1.25 : 0
+  const phanTram = dinhMuc > 0 ? Math.round(tyLe * 100) : thucTe > 0 ? 100 : 0
+  const tyLeKim = Math.min(1.25, Math.max(0, tyLe))
+  const goc = -80 + (tyLeKim / 1.25) * 160
+  const muc = tyLe > 1 ? 'vuot' : tyLe >= 0.8 ? 'gan' : 'on'
+  const nhanMuc =
+    muc === 'vuot' ? 'Vượt định mức' : muc === 'gan' ? 'Gần định mức' : 'Trong định mức'
+
+  return (
+    <div className={`px-dm ${muc}`} aria-hidden="true">
+      <div className="px-dm-khung">
+        <svg className="px-dm-svg" viewBox="0 0 164 74">
+          <path d="M22 64 A60 60 0 0 1 142 64" className="px-dm-nen" />
+          {/* 0% → 80% (-80° → +22.4°), 80% → 100% (+22.4° → +48°), 100% → 125% (+48° → +80°) */}
+          <path d="M22 64 A60 60 0 0 1 105 9" className="px-dm-vung on" />
+          <path d="M105 9 A60 60 0 0 1 127 24" className="px-dm-vung gan" />
+          <path d="M127 24 A60 60 0 0 1 142 64" className="px-dm-vung vuot" />
+          <g className="px-dm-vach">
+            <line x1={18} y1={64} x2={28} y2={64} />
+            <line x1={52} y1={13} x2={57} y2={21} />
+            <line x1={82} y1={2} x2={82} y2={11} />
+            <line x1={127} y1={20} x2={120} y2={27} className="px-dm-moc" />
+            <line x1={146} y1={64} x2={136} y2={64} />
+          </g>
+          <text x={11} y={72} className="px-dm-chu">
+            0%
+          </text>
+          <text x={128} y={16} className="px-dm-chu moc">
+            100%
+          </text>
+          <g className="px-dm-kim-boc" style={{ transform: `rotate(${goc.toFixed(1)}deg)` }}>
+            <g className="px-dm-kim-rung">
+              <line x1={82} y1={64} x2={82} y2={14} className="px-dm-kim" />
+              <circle cx={82} cy={64} r={5} className="px-dm-truc" />
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div className="px-dm-thong-tin">
+        <div className="px-dm-hang">
+          <span className="px-dm-pt">{phanTram}% định mức</span>
+          <span className="px-dm-den">{nhanMuc}</span>
+        </div>
+        <span className="px-dm-chi-tiet">
+          Thực tế {thucTe.toLocaleString('vi-VN')} đ / Định mức {dinhMuc.toLocaleString('vi-VN')} đ
+        </span>
+      </div>
+    </div>
+  )
+}
+
+// Hiệu ứng Pixel: đồng xu rơi vào két sau khi ghi thu công nợ thành công (tự mờ ≤ 1,4 s)
+export function DongXuRoiKetPixel() {
+  if (!dangHieuUngPixel()) return null
+  return (
+    <div className="px-xu-ket" aria-hidden="true">
+      <div className="px-xu-khung">
+        <svg
+          className="px-xu-svg"
+          viewBox="0 0 96 84"
+          width={96}
+          height={84}
+          shapeRendering="crispEdges"
+        >
+          {/* 3 đồng xu pixel rơi lệch nhịp vào khe két */}
+          <g className="px-xu px-xu-1">
+            <rect x={41} y={28} width={14} height={14} className="px-xu-vien" />
+            <rect x={43} y={30} width={10} height={10} className="px-xu-vang" />
+            <rect x={46} y={32} width={4} height={6} className="px-xu-tam" />
+          </g>
+          <g className="px-xu px-xu-2">
+            <rect x={33} y={26} width={12} height={12} className="px-xu-vien" />
+            <rect x={35} y={28} width={8} height={8} className="px-xu-vang" />
+            <rect x={38} y={30} width={2} height={4} className="px-xu-tam" />
+          </g>
+          <g className="px-xu px-xu-3">
+            <rect x={51} y={26} width={12} height={12} className="px-xu-vien" />
+            <rect x={53} y={28} width={8} height={8} className="px-xu-vang" />
+            <rect x={56} y={30} width={2} height={4} className="px-xu-tam" />
+          </g>
+          {/* Tia lóe pixel khi xu chạm két */}
+          <g className="px-xu-tia">
+            <rect x={22} y={36} width={4} height={4} className="px-xu-vang" />
+            <rect x={70} y={36} width={4} height={4} className="px-xu-vang" />
+            <rect x={28} y={24} width={4} height={4} className="px-ket-den" />
+            <rect x={64} y={24} width={4} height={4} className="px-ket-den" />
+          </g>
+          {/* Thân két sắt pixel */}
+          <g className="px-ket-than">
+            <rect x={16} y={40} width={64} height={38} className="px-ket-vien" />
+            <rect x={20} y={44} width={56} height={30} className="px-ket-mat" />
+            <rect x={36} y={42} width={24} height={4} className="px-ket-khe" />
+            <rect x={26} y={50} width={44} height={18} className="px-ket-cua" />
+            <rect x={56} y={56} width={8} height={6} className="px-xu-vang" />
+            <rect x={30} y={54} width={10} height={10} className="px-ket-den" />
+            <rect x={22} y={78} width={10} height={4} className="px-ket-vien" />
+            <rect x={64} y={78} width={10} height={4} className="px-ket-vien" />
+          </g>
+        </svg>
+        <span className="px-xu-chu">ĐÃ THU VÀO KÉT</span>
+      </div>
+    </div>
+  )
+}
+
+// Hiệu ứng Pixel: băng dính niêm phong kéo ngang thẻ chuyến sau khi chốt chuyến thành công
+export function BangDinhNiemPhongPixel() {
+  if (!dangHieuUngPixel()) return null
+  return (
+    <div className="px-niem-phong" aria-hidden="true">
+      <div className="px-np-bang">
+        <span className="px-np-chu">ĐÃ CHỐT CHUYẾN</span>
+      </div>
+      <div className="px-np-cuon" />
+    </div>
+  )
+}
+
+// Hiệu ứng Pixel: hộp carton gấp nắp đóng gói sau khi tạo đơn thành công (tự mờ ≤ 1,4 s)
+export function HopCartonGapNapPixel() {
+  if (!dangHieuUngPixel()) return null
+  return (
+    <div className="px-hop-carton" aria-hidden="true">
+      <div className="px-hop-khung">
+        <svg
+          className="px-hop-svg"
+          viewBox="0 0 96 82"
+          width={96}
+          height={82}
+          shapeRendering="crispEdges"
+        >
+          {/* Nắp trái & nắp phải gấp vào giữa */}
+          <g className="px-hop-nap-trai">
+            <rect x={20} y={24} width={28} height={10} className="px-hop-nap" />
+          </g>
+          <g className="px-hop-nap-phai">
+            <rect x={48} y={24} width={28} height={10} className="px-hop-nap" />
+          </g>
+          {/* Thân hộp carton pixel */}
+          <rect x={18} y={32} width={60} height={42} className="px-hop-vien" />
+          <rect x={22} y={36} width={52} height={34} className="px-hop-than" />
+          <rect x={54} y={36} width={20} height={34} className="px-hop-bong" />
+          {/* Đường băng keo niêm phong giữa hộp */}
+          <rect x={22} y={32} width={52} height={6} className="px-hop-keo" />
+          <rect x={44} y={36} width={8} height={14} className="px-hop-keo" />
+          {/* Nhãn vận đơn nhỏ trên mặt hộp */}
+          <rect x={26} y={52} width={16} height={12} className="px-hop-nhan" />
+          <rect x={28} y={55} width={10} height={2} className="px-hop-vien" />
+          <rect x={28} y={59} width={8} height={2} className="px-hop-vien" />
+        </svg>
+        <span className="px-hop-chu">ĐÃ ĐÓNG GÓI ĐƠN</span>
+      </div>
+    </div>
+  )
+}
+
+const DO_RONG_SKEL = ['72%', '90%', '58%', '82%', '64%', '48%', '76%'] as const
+
+// Hiệu ứng Pixel: khung tải skeleton quét theo bậc thay chữ "Đang tải…" ở các bảng chính
+export function KhungTaiBangPixel({ soHang = 4, soCot = 5 }: { soHang?: number; soCot?: number }) {
+  if (!dangHieuUngPixel()) return null
+  const hang = Array.from({ length: soHang }, (_, r) => r)
+  const cot = Array.from({ length: soCot }, (_, c) => c)
+  return (
+    <div className="px-skel-bang" aria-hidden="true">
+      {hang.map((r) => (
+        <div key={r} className="px-skel-hang">
+          {cot.map((c) => (
+            <span
+              key={c}
+              className="px-skel-thanh"
+              style={
+                {
+                  width: DO_RONG_SKEL[(r * 3 + c) % DO_RONG_SKEL.length],
+                  '--px-tre': `${(r * 2 + c) * 60}ms`,
+                } as CSSProperties
+              }
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  )
+}

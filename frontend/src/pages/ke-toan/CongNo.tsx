@@ -8,6 +8,8 @@ import {
 } from '../../api/congNo'
 import { LoiApi } from '../../api/goi'
 import { ngayGio } from '../../api/toi'
+import { DongXuRoiKetPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel } from '../../nen'
 import { ThongBao } from '../../thongBao'
 
 const dong = (so: number) => `${so.toLocaleString('vi-VN')} đ`
@@ -27,6 +29,14 @@ export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
   const [dangGui, setDangGui] = useState(false)
   const [thongBao, setThongBao] = useState('')
   const [loi, setLoi] = useState('')
+  // Hiệu ứng Pixel: cờ hiện đồng xu rơi vào két sau khi ghi thu công nợ thành công (≤ 1,4 s)
+  const [xuRoi, setXuRoi] = useState(0)
+
+  useEffect(() => {
+    if (xuRoi === 0) return
+    const t = window.setTimeout(() => setXuRoi(0), 1400)
+    return () => window.clearTimeout(t)
+  }, [xuRoi])
 
   const taiNo = useCallback(() => {
     noTheoKhach()
@@ -81,6 +91,8 @@ export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
     try {
       const r = await danhDauDaThu([...chon], ngay)
       setThongBao(`Đã lập phiếu thu #${r.phieu_thu_id}: ${dong(r.tong_tien)} (${r.so_khoan} khoản)`)
+      // Hiệu ứng Pixel: đồng xu rơi vào két sau khi API ghi thu trả thành công
+      if (dangHieuUngPixel()) setXuRoi((n) => n + 1)
       setChon(new Set())
       taiNo()
       taiKhoan()
@@ -99,6 +111,8 @@ export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
         đó và đánh dấu đã thu: hệ thống lập một phiếu thu, trạng thái đơn không đổi (BR-56).
       </p>
       <ThongBao chu={thongBao} />
+      {/* Hiệu ứng Pixel: đồng xu rơi vào két sau khi ghi thu công nợ thành công */}
+      {xuRoi > 0 && dangHieuUngPixel() && <DongXuRoiKetPixel key={xuRoi} />}
       {loi && (
         <p role="alert" className="loi">
           {loi}
