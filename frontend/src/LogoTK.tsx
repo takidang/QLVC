@@ -20,7 +20,7 @@ function LogoThuong({ co }: { co: number }) {
   )
 }
 
-// Bản Pixel: lưới ô vuông, viền than tự sinh từ lưới
+// Bản Pixel: lưới ô vuông, không viền chữ, đặt trên ô trắng bo góc kiểu pixel
 const LUOI_TK = [
   'DDDDDDDDD..KKK',
   'DDDDDDDDD.KKK.',
@@ -37,23 +37,21 @@ const LUOI_TK = [
 ] as const
 // Cùng màu với bản thường (thanh than, thân xanh, K đỏ); chỉ khác kiểu vẽ ô vuông
 const MAU_O: Record<string, string> = { D: '#3a3e45', B: '#2387bd', K: '#e2473b' }
-const RONG = LUOI_TK[0].length + 2
-const CAO = LUOI_TK.length + 2
-const O_LOGO: { x: number; y: number; mau: string }[] = (() => {
-  const co = (x: number, y: number) => LUOI_TK[y]?.[x] !== undefined && LUOI_TK[y][x] !== '.'
-  const ds: { x: number; y: number; mau: string }[] = []
-  for (let y = -1; y <= LUOI_TK.length; y++) {
-    for (let x = -1; x <= LUOI_TK[0].length; x++) {
-      if (co(x, y)) ds.push({ x: x + 1, y: y + 1, mau: MAU_O[LUOI_TK[y][x]] })
-      else {
-        let ke = false
-        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) ke ||= co(x + dx, y + dy)
-        if (ke) ds.push({ x: x + 1, y: y + 1, mau: '#272a32' })
-      }
-    }
-  }
-  return ds
-})()
+// Ô nền trắng bo góc kiểu pixel (cắt bậc thang 2 nấc ở 4 góc), chữ không viền
+const LE = 2
+const RONG = LUOI_TK[0].length + LE * 2
+const CAO = LUOI_TK.length + LE * 2
+const GOC_CAT = new Set(['0,0', '1,0', '0,1'])
+const catGoc = (x: number, y: number) => {
+  const gx = x < RONG / 2 ? x : RONG - 1 - x
+  const gy = y < CAO / 2 ? y : CAO - 1 - y
+  return GOC_CAT.has(`${gx},${gy}`)
+}
+const O_NEN: { x: number; y: number }[] = []
+for (let y = 0; y < CAO; y++) for (let x = 0; x < RONG; x++) if (!catGoc(x, y)) O_NEN.push({ x, y })
+const O_LOGO: { x: number; y: number; mau: string }[] = LUOI_TK.flatMap((hang, y) =>
+  [...hang].flatMap((c, x) => (c === '.' ? [] : [{ x: x + LE, y: y + LE, mau: MAU_O[c] }])),
+)
 
 function LogoPixel({ co }: { co: number }) {
   return (
@@ -65,6 +63,9 @@ function LogoPixel({ co }: { co: number }) {
       shapeRendering="crispEdges"
       aria-hidden="true"
     >
+      {O_NEN.map((o) => (
+        <rect key={`n-${o.x}-${o.y}`} x={o.x} y={o.y} width={1} height={1} fill="#fff" />
+      ))}
       {O_LOGO.map((o) => (
         <rect key={`${o.x}-${o.y}`} x={o.x} y={o.y} width={1} height={1} fill={o.mau} />
       ))}
