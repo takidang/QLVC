@@ -181,7 +181,6 @@ function KhungTrang({
               )
             })}
           </nav>
-          <p className="canh-chan">Đồ án chuyên ngành · Nhóm 8</p>
         </aside>
       )}
       <div className="than">

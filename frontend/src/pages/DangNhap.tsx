@@ -156,7 +156,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
           </div>
 
           <p className="dn-chan">
-            Khách hàng? <Link to="/tra-cuu">Tra cứu đơn hàng</Link> · Đồ án chuyên ngành · Nhóm 8
+            Khách hàng? <Link to="/tra-cuu">Tra cứu đơn hàng</Link>
           </p>
         </form>
 
