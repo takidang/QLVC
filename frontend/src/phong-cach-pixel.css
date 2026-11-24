@@ -3264,5 +3264,14 @@
 @media screen {
   :root[data-phong-cach='pixel'] .dn-hinh {
     image-rendering: pixelated;
+    /* Chỉ ảnh pixel art: bỏ lớp phủ xanh, khung viền than + bóng cứng */
+    background: var(--anh) center / cover no-repeat var(--n-charcoal);
+    border: 3px solid var(--n-charcoal);
+    border-radius: var(--bo-the);
+    box-shadow: 6px 6px 0 var(--n-charcoal);
+  }
+  /* Bỏ hạt rơi và dòng chữ giới thiệu trên ảnh */
+  :root[data-phong-cach='pixel'] .dn-hinh :is(.nen-hat, p) {
+    display: none;
   }
 }
