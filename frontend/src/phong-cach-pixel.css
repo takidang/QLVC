@@ -1,3 +1,17 @@
+/* Logo TK và tên thương hiệu (LogoTK.tsx): mặc định hiện bản thường; bản Pixel chỉ hiện khi bật Pixel (trên màn hình) */
+.logo-pixel,
+.ten-pixel {
+  display: none;
+}
+.hieu i:has(.logo-tk) {
+  background: #fff;
+}
+.thuong-hieu:has(.logo-tk) {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* Phong cách Pixel (THỬ NGHIỆM): lớp áo phủ lên giao diện hiện tại, chỉ đổi phần nhìn.
    Bật ở trang Cài đặt → "Phong cách" (nen.ts đặt data-phong-cach="pixel" trên <html>); mặc định TẮT.
    Không đổi bố cục, màn, luồng nghiệp vụ: chỉ đặt lại biến màu / bo góc / bóng của index.css
@@ -2655,5 +2669,82 @@
       animation: none;
       transition: none;
     }
+  }
+}
+
+@media screen {
+  :root[data-phong-cach='pixel'] :is(.logo-thuong, .ten-thuong) {
+    display: none;
+  }
+  :root[data-phong-cach='pixel'] .logo-pixel {
+    display: block;
+  }
+  :root[data-phong-cach='pixel'] .ten-pixel {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+  :root[data-phong-cach='pixel'] .ten-pixel small {
+    font-size: 0.62em;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    opacity: 0.85;
+  }
+  :root[data-phong-cach='pixel'] .hieu .logo-pixel {
+    width: 34px;
+    height: auto;
+  }
+  :root[data-phong-cach='pixel'] .hieu i:has(.logo-tk) {
+    width: auto;
+    background: transparent;
+    border-radius: 0;
+  }
+}
+
+/* Xếp hàng lên xe (XepHang.tsx) ở Pixel: chỉ vẽ thùng xe kiểu pixel, bỏ đầu xe/bánh; khối đơn nhiều màu */
+@media screen {
+  :root[data-phong-cach='pixel'] :is(.xh-dau, .xh-kinh, .xh-gam, .xh-banh, .xh-mam) {
+    display: none;
+  }
+  :root[data-phong-cach='pixel'] .xh-thung {
+    fill: var(--n-cream);
+    stroke: var(--n-charcoal);
+    stroke-width: 4;
+    rx: 0;
+  }
+  :root[data-phong-cach='pixel'] .xh-vach {
+    stroke: color-mix(in srgb, var(--n-charcoal) 35%, transparent);
+    stroke-dasharray: 4 4;
+  }
+  :root[data-phong-cach='pixel'] .xh-o {
+    stroke: var(--n-charcoal);
+    stroke-width: 2;
+    rx: 0;
+    filter: drop-shadow(2px 2px 0 var(--n-charcoal));
+  }
+  /* Ba màu luân phiên; chữ đen trên nền sáng, trắng trên nền đậm */
+  :root[data-phong-cach='pixel'] .xh-o.o0 {
+    fill: var(--n-butter);
+  }
+  :root[data-phong-cach='pixel'] .xh-o.o1 {
+    fill: #b8432f;
+  }
+  :root[data-phong-cach='pixel'] .xh-o.o2 {
+    fill: var(--n-teal);
+  }
+  :root[data-phong-cach='pixel'] .xh-khoi:has(.o0) .xh-chu {
+    fill: var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .xh-khoi:has(.o1, .o2) .xh-chu {
+    fill: #fff;
+  }
+  /* Khối đang chọn để gỡ: xanh trời nhạt, chữ đen */
+  :root[data-phong-cach='pixel'] .xh-khoi.chon .xh-o {
+    fill: color-mix(in srgb, var(--n-sky) 70%, #fff);
+  }
+  :root[data-phong-cach='pixel'] .xh-khoi.chon .xh-chu {
+    fill: var(--n-charcoal);
   }
 }

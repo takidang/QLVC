@@ -50,7 +50,7 @@ export default function PhieuDon() {
       {d && (
         <article className="van-don" aria-label={`Phiếu gửi hàng ${d.ma_don}`}>
           <header className="vd-dau">
-            <span>Quản lý vận tải</span>
+            <span>TAKI Logistics</span>
             <span>Phiếu gửi hàng</span>
           </header>
           <div className="vd-ma">
