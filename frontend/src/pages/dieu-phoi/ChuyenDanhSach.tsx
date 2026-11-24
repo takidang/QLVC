@@ -270,7 +270,12 @@ export default function ChuyenDanhSach() {
               khối nhấn đậm dần sang trái để chữ trắng đọc được */}
           <div
             className="mo-dau mo-dau-anh"
-            style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}
+            style={
+              {
+                '--anh': `url(${NEN.anh})`,
+                '--anh-pixel': `url(${NEN.bannerPixel})`,
+              } as CSSProperties
+            }
           >
             <h1>
               {!ngay

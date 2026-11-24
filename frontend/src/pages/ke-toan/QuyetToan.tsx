@@ -15,7 +15,8 @@ import {
 import { TEN_HINH_THUC, type HinhThuc } from '../../api/tamUng'
 import { ngayGio } from '../../api/toi'
 import { BienLaiNhietPixel, DongHoDinhMucPixel } from '../../HieuUngPixel'
-import { dangHieuUngPixel } from '../../nen'
+import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
+import { NoteLoi } from '../../NoteLoi'
 import { ThongBao } from '../../thongBao'
 
 const dong = (so: number) => `${so.toLocaleString('vi-VN')} đ`
@@ -181,11 +182,14 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
 
         <div className="qt-ct" key={bang?.chuyen_id ?? 'trong'}>
           <ThongBao chu={thongBao} />
-          {loi && (
-            <p role="alert" className="loi">
-              {loi}
-            </p>
-          )}
+          {loi &&
+            (phongCachDaLuu() === 'pixel' ? (
+              <NoteLoi noiDung={loi} kieu="nho" />
+            ) : (
+              <p role="alert" className="loi">
+                {loi}
+              </p>
+            ))}
 
           {bang && (
             <>

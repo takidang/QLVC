@@ -3,7 +3,8 @@ import { LoiApi } from '../../api/goi'
 import { layGps, quetMa, type KetQuaQuet } from '../../api/toi'
 import ChonTep from '../../ChonTep'
 import { DaiDieuKienGiaoPixel } from '../../HieuUngPixel'
-import { dangHieuUngPixel } from '../../nen'
+import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
+import { NoteLoi } from '../../NoteLoi'
 import { nenAnh } from '../../nenAnh'
 import { Camera, LOI_MANG, SO_ANH_TOI_DA } from './QuetLay'
 
@@ -125,11 +126,14 @@ export function GiaoHang({ maDon, onXong }: { maDon: string; onXong: (kq: KetQua
         <input value={ten} maxLength={100} onChange={(e) => setTen(e.target.value)} />
       </label>
       <KyTen onKy={setOKy} />
-      {loi && (
-        <p role="alert" className="loi">
-          {loi}
-        </p>
-      )}
+      {loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          <NoteLoi noiDung={loi} kieu="nho" />
+        ) : (
+          <p role="alert" className="loi">
+            {loi}
+          </p>
+        ))}
       <div className="hanh-dong">
         <button type="button" className="phu" disabled={dangGui} onClick={() => setMo(false)}>
           Thôi

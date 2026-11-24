@@ -14,7 +14,8 @@ import {
 import { LoiApi, loiTheoTruong } from '../../api/goi'
 import ChonTep from '../../ChonTep'
 import { NoiDungNutGuiPixel } from '../../HieuUngPixel'
-import { dangHieuUngPixel } from '../../nen'
+import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
+import { NoteLoi } from '../../NoteLoi'
 import { nenAnh } from '../../nenAnh'
 import { LOI_MANG, SO_ANH_TOI_DA } from './QuetLay'
 import { ThongBao } from '../../thongBao'
@@ -71,11 +72,14 @@ export function ChiPhi({ chuyenId, ghiDuoc }: { chuyenId: number; ghiDuoc: boole
         </p>
       )}
       <ThongBao chu={thongBao} />
-      {loi && (
-        <p role="alert" className="loi">
-          {loi}
-        </p>
-      )}
+      {loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          <NoteLoi noiDung={loi} kieu="nho" />
+        ) : (
+          <p role="alert" className="loi">
+            {loi}
+          </p>
+        ))}
       {cp && cp.khoan.length === 0 && <p className="ghi-chu">Chưa ghi khoản chi nào</p>}
       <ul className="ds-chi">
         {cp?.khoan.map((k) =>
@@ -241,11 +245,14 @@ function FormChi({
           onChange={(e) => setAnh([...(e.target.files ?? [])])}
         />
       )}
-      {loi && (
-        <p role="alert" className="loi">
-          {loi}
-        </p>
-      )}
+      {loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          <NoteLoi noiDung={loi} kieu="nho" />
+        ) : (
+          <p role="alert" className="loi">
+            {loi}
+          </p>
+        ))}
       <div className="hanh-dong">
         {onThoi && (
           <button type="button" className="phu" disabled={dangGui} onClick={onThoi}>

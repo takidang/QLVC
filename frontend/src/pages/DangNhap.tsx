@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { dangHieuUng, dangHieuUngPixel, NEN, phongCachDaLuu } from '../nen'
 import NenHat from '../NenHat'
 import { LogoTK, TenThuongHieu } from '../LogoTK'
+import { NoteLoi } from '../NoteLoi'
 
 const CAU_GIOI_THIEU =
   'Lập chuyến, theo dõi từng điểm dừng, giao hàng bằng quét mã và quyết toán theo chuyến.'
@@ -110,6 +111,9 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
   // Xé tờ đang hiện (nghiêng, rơi, mờ dần ~350 ms) rồi in tờ kia
   const doiPhieu = (loai: 'nv' | 'khach') => {
     if (xe || phieu === loai) return
+    // Đổi/xé phiếu mới thì bỏ tờ note lỗi của phiếu cũ
+    setLoi('')
+    setLoiKhach('')
     if (phieu === null || !dangHieuUngPixel()) return inPhieu(loai)
     setXe(true)
     window.setTimeout(() => inPhieu(loai), 350)
@@ -246,6 +250,8 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
   )
 
   if (pixel) {
+    // Lỗi của tờ phiếu đang hiện; ẩn ngay khi đang xé phiếu để không trơ lại tờ note cũ
+    const loiPhieu = xe ? '' : phieu === 'nv' ? loi : phieu === 'khach' ? loiKhach : ''
     return (
       <main className="dang-nhap">
         <div className="dn-khung">
@@ -306,6 +312,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
                               value={ten}
                               onChange={(e) => {
                                 setTen(e.target.value)
+                                setLoi('')
                                 setDau(null)
                               }}
                               autoComplete="username"
@@ -322,6 +329,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
                               value={matKhau}
                               onChange={(e) => {
                                 setMatKhau(e.target.value)
+                                setLoi('')
                                 setDau(null)
                               }}
                               autoComplete="current-password"
@@ -329,11 +337,6 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
                             />
                           </span>
                         </label>
-                        {loi && (
-                          <p role="alert" className="loi">
-                            {loi}
-                          </p>
-                        )}
                         <button disabled={dangGui}>
                           {dangGui ? 'Đang đăng nhập…' : 'Đăng nhập'}
                         </button>
@@ -361,6 +364,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
                               value={maDon}
                               onChange={(e) => {
                                 setMaDon(e.target.value)
+                                setLoiKhach('')
                                 setDau(null)
                               }}
                               autoCapitalize="characters"
@@ -378,6 +382,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
                               value={soCuoi}
                               onChange={(e) => {
                                 setSoCuoi(e.target.value.replace(/\D/g, '').slice(0, 4))
+                                setLoiKhach('')
                                 setDau(null)
                               }}
                               inputMode="numeric"
@@ -388,11 +393,6 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
                             />
                           </span>
                         </label>
-                        {loiKhach && (
-                          <p role="alert" className="loi">
-                            {loiKhach}
-                          </p>
-                        )}
                         <button disabled={dangGui}>{dangGui ? 'Đang tra cứu…' : 'Tra cứu'}</button>
                         <button type="button" className="dn-xe" onClick={() => doiPhieu('nv')}>
                           Nhân viên? Xé phiếu
@@ -402,6 +402,8 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
                   </div>
                 )}
               </div>
+              {/* Pixel: tờ note lỗi ghim cạnh phải tờ phiếu, đặt tuyệt đối theo khối máy in */}
+              {loiPhieu && <NoteLoi noiDung={loiPhieu} kieu="ghim" />}
             </div>
             <button
               type="button"

@@ -1,6 +1,11 @@
 // Ảnh nền (đăng nhập, đầu màn Chuyến, tra cứu): mỗi lần mở web chọn ngẫu nhiên một ảnh.
 const DS = ['/anh/dang-nhap-hoang-hon.webp', '/anh/dang-nhap-luot-ngang.webp']
-export const NEN = { anh: DS[Math.floor(Math.random() * DS.length)] }
+// Pixel: banner đầu màn Chuyến cũng chọn ngẫu nhiên một trong hai ảnh pixel (kho vận / cảng)
+const DS_BANNER_PIXEL = ['/anh/banner-kho-pixel.png', '/anh/banner-cang-pixel.png']
+export const NEN = {
+  anh: DS[Math.floor(Math.random() * DS.length)],
+  bannerPixel: DS_BANNER_PIXEL[Math.floor(Math.random() * DS_BANNER_PIXEL.length)],
+}
 
 // Chế độ sáng / tối (v3): '' = theo máy. Lưu trên trình duyệt; đặt data-che-do trên <html>
 // (index.css chỉ có một khối biến cho bản tối, nên "theo máy" cũng quy về sang / toi ở đây).

@@ -427,7 +427,10 @@ body {
     padding: 10px;
   }
   .dn-khung {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(
+      0,
+      1fr
+    ); /* 1fr trơn bị nội dung đẩy rộng hơn màn (Pixel: tràn 11 px ở 390 px) */
     grid-template-rows: auto 1fr;
   }
   .dn-hinh {
@@ -5568,4 +5571,25 @@ button:enabled:active,
   :is(.xh-ray i, .day span i, .kx-thanh i, .ct-thanh i, .tq-xe-truc i, .hieu-duoi) {
   transition: none !important;
   transform: none !important;
+}
+
+/* Gợi ý ghép: dòng sức chứa còn trống trên danh sách đơn chờ ghép */
+.xh-goi-y {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--phu);
+}
+.xh-goi-y strong {
+  color: var(--muc);
+}
+.xh-cho li .nhan {
+  margin-top: 4px;
+}
+/* Chừa sẵn chỗ thanh cuộn để trang không nhích 15 px khi hộp thoại khóa cuộn */
+html {
+  scrollbar-gutter: stable;
+}
+/* Hộp thoại đang mở: khóa cuộn trang nền */
+body:has(.nen-mo) {
+  overflow: hidden;
 }

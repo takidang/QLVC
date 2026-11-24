@@ -10,15 +10,17 @@ import {
   useLocation,
 } from 'react-router-dom'
 import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
-import { DangTaiPixel, ManTaiChuyenTrang } from './HieuUngPixel'
+import { SU_KIEN_HET_PHIEN } from './api/goi'
+import { DangTaiPixel } from './HieuUngPixel'
 import { LogoTK, TenThuongHieu } from './LogoTK'
 import { phongCachDaLuu } from './nen'
 import { Ic, type TenIc } from './nhan'
+import { toast } from 'sonner'
 import { KhungThongBao } from './thongBao'
 import BatLoiTrang from './BatLoiTrang'
 import ChuongThongBao from './ChuongThongBao'
 import DanConTro from './DanConTro'
-import { IcPixel } from './IcPixel'
+import DongDauPixel from './DongDauPixel'
 import MenuTaiKhoan from './MenuTaiKhoan'
 import TimChung from './TimChung'
 import { useHienKhiCuon } from './useHienKhiCuon'
@@ -175,7 +177,6 @@ function KhungTrang({
                   {ds.map((m) => (
                     <NavLink key={m.den} to={m.den}>
                       <Ic ten={m.duong_dan as TenIc} />
-                      <IcPixel ten={m.duong_dan as TenIc} />
                       {m.ten}
                     </NavLink>
                   ))}
@@ -204,14 +205,14 @@ function KhungTrang({
           </div>
         </header>
         <main className="trang">
-          {/* Hiệu ứng Pixel: màn tải khi đổi trang (tối thiểu 0,5 s, tới khi dữ liệu về) */}
-          <ManTaiChuyenTrang key={`tai-${pathname}`} />
+          <DongDauPixel />
           {loiThoat && (
             <p role="alert" className="loi trang-loi">
               {loiThoat}
             </p>
           )}
-          <BatLoiTrang key={pathname}>
+          {/* Đổi giữa các chuyến (/chuyen/:id) không dựng lại cả trang: chỉ phần chi tiết tự tải lại */}
+          <BatLoiTrang key={pathname.replace(/^(.*\/chuyen)\/\d+$/, '$1/:id')}>
             {/* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… khi tải trang con */}
             <Suspense
               fallback={
@@ -241,6 +242,29 @@ export default function App() {
     toi()
       .then(setNd)
       .catch(() => setNd(null))
+  }, [])
+
+  // Esc đóng hộp thoại trên cùng: mọi hộp thoại đều đóng khi bấm lớp nền .nen-mo nên bấm hộ lớp đó
+  // Esc khi bộ gõ đang soạn chữ chỉ huỷ việc soạn, không đóng hộp
+  useEffect(() => {
+    const khiNhanPhim = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || e.defaultPrevented || e.isComposing) return
+      const nen = Array.from(document.querySelectorAll<HTMLElement>('.nen-mo')).pop()
+      if (nen) nen.click()
+    }
+    document.addEventListener('keydown', khiNhanPhim)
+    return () => document.removeEventListener('keydown', khiNhanPhim)
+  }, [])
+
+  // API trả 401 giữa phiên (cookie hết hạn hoặc bị xóa): về trang đăng nhập thay vì ở lại trang trống lỗi
+  useEffect(() => {
+    const heiPhien = () => {
+      setNd(null)
+      // id cố định: nhiều yêu cầu cùng trả 401 chỉ hiện một thông báo
+      toast.error('Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại', { id: 'het-phien' })
+    }
+    window.addEventListener(SU_KIEN_HET_PHIEN, heiPhien)
+    return () => window.removeEventListener(SU_KIEN_HET_PHIEN, heiPhien)
   }, [])
 
   if (nd === undefined)
