@@ -2249,3 +2249,132 @@
     }
   }
 }
+
+/* Thêm màu: dùng đủ 12 màu Nostalgos (chỉ khi bật Pixel, chỉ đổi màu, không đổi bố cục) */
+@media screen {
+  :root[data-phong-cach='pixel'] {
+    --n-coral: #dc6250;
+    --n-rose: #deada5;
+    --n-cream: #dad4c9;
+    --n-butter: #ffd183;
+    --n-ochre: #eeb24a;
+    --n-sage: #55927f;
+    --n-teal: #21525a;
+    --n-charcoal: #272a32;
+    --n-cobalt: #2152a5;
+    --n-sky: #5a8bde;
+    --n-lavender: #b89ce9;
+    --n-plum: #844790;
+  }
+
+  /* Nền trang: chấm lưới mờ kiểu pixel */
+  :root[data-phong-cach='pixel'] body {
+    background-image: radial-gradient(
+      color-mix(in srgb, var(--n-teal) 14%, transparent) 1.5px,
+      transparent 1.5px
+    );
+    background-size: 16px 16px;
+  }
+
+  /* Menu bên: nền xanh rêu, mục đang chọn vàng bơ, nhãn nhóm kem (hồng trên xanh rêu chỉ 4.39:1) */
+  :root[data-phong-cach='pixel'] .canh {
+    background: var(--n-teal);
+    color: rgb(255 255 255 / 86%);
+  }
+  :root[data-phong-cach='pixel'] .canh h2 {
+    color: var(--n-cream);
+  }
+  :root[data-phong-cach='pixel'] .canh nav a svg {
+    color: var(--n-butter);
+  }
+  :root[data-phong-cach='pixel'] .canh nav a:hover {
+    background: color-mix(in srgb, var(--n-butter) 18%, transparent);
+  }
+  :root[data-phong-cach='pixel'] .canh nav a.active {
+    color: var(--n-charcoal);
+    background: var(--n-butter);
+    border-radius: var(--bo);
+    box-shadow: 2px 2px 0 var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .canh nav a.active svg {
+    color: var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .canh-chan {
+    color: var(--n-cream);
+  }
+
+  /* Thanh trên: dải 12 màu dưới chân */
+  :root[data-phong-cach='pixel'] .dau {
+    border-bottom: 4px solid transparent;
+    border-image: linear-gradient(
+        90deg,
+        var(--n-coral) 0 8.33%,
+        var(--n-rose) 0 16.66%,
+        var(--n-butter) 0 25%,
+        var(--n-ochre) 0 33.33%,
+        var(--n-sage) 0 41.66%,
+        var(--n-teal) 0 50%,
+        var(--n-cobalt) 0 58.33%,
+        var(--n-sky) 0 66.66%,
+        var(--n-lavender) 0 75%,
+        var(--n-plum) 0 83.33%,
+        var(--n-charcoal) 0 91.66%,
+        var(--n-cream) 0 100%
+      )
+      1;
+  }
+
+  /* Thẻ nội dung: viền trên luân phiên màu */
+  :root[data-phong-cach='pixel'] .kinh {
+    border-top-width: 6px;
+  }
+  :root[data-phong-cach='pixel'] .kinh:nth-of-type(6n + 1) {
+    border-top-color: var(--n-coral);
+  }
+  :root[data-phong-cach='pixel'] .kinh:nth-of-type(6n + 2) {
+    border-top-color: var(--n-ochre);
+  }
+  :root[data-phong-cach='pixel'] .kinh:nth-of-type(6n + 3) {
+    border-top-color: var(--n-sage);
+  }
+  :root[data-phong-cach='pixel'] .kinh:nth-of-type(6n + 4) {
+    border-top-color: var(--n-cobalt);
+  }
+  :root[data-phong-cach='pixel'] .kinh:nth-of-type(6n + 5) {
+    border-top-color: var(--n-plum);
+  }
+  :root[data-phong-cach='pixel'] .kinh:nth-of-type(6n) {
+    border-top-color: var(--n-sky);
+  }
+
+  /* Đầu bảng: nền hồng nhạt, chữ xanh rêu */
+  :root[data-phong-cach='pixel'] th {
+    color: var(--n-teal);
+    background: color-mix(in srgb, var(--n-rose) 38%, var(--mat));
+  }
+
+  /* Nút lớn và tab/bộ lọc đang chọn: vàng bơ */
+  :root[data-phong-cach='pixel'] .nut-to {
+    color: var(--n-charcoal);
+    background: var(--n-butter);
+  }
+  :root[data-phong-cach='pixel'] .vien-thuoc button[aria-pressed='true'],
+  :root[data-phong-cach='pixel'] .vien-thuoc a.active {
+    color: var(--n-charcoal);
+    background: var(--n-butter);
+  }
+  :root[data-phong-cach='pixel'] .vien-thuoc button:not([aria-pressed='true']):hover {
+    background: color-mix(in srgb, var(--n-rose) 40%, transparent);
+  }
+
+  /* Tiêu đề: bóng chữ hồng; liên kết xanh cobalt; viền focus san hô */
+  :root[data-phong-cach='pixel'] h1 {
+    text-shadow: 3px 3px 0 var(--n-rose);
+  }
+  :root[data-phong-cach='pixel'] main a:not([class]) {
+    color: var(--n-cobalt);
+  }
+  :root[data-phong-cach='pixel'] :focus-visible {
+    outline-color: var(--n-coral);
+  }
+}
