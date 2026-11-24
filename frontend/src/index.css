@@ -330,10 +330,16 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
+  align-self: flex-start;
   margin-bottom: 0;
+  padding: 8px 18px 8px 8px;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--muc);
+  background: var(--mat);
+  border: 1px solid var(--vien-dam);
+  border-radius: 16px;
+  box-shadow: var(--bong);
 }
 .dn-thuong-hieu .logo-thuong {
   padding: 4px;
