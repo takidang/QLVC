@@ -18,6 +18,8 @@ import { kemMaBr, LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachKhachHang, type KhachHang } from '../../api/khachHang'
 import { danhSachNut, type Nut } from '../../api/tuyen'
 import { Nhan } from '../../nhan'
+import { HopCartonGapNapPixel, KhungTaiBangPixel, KimCanPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel } from '../../nen'
 import { DauDanhMuc, LocTrangThai, OTim } from '../danh-muc'
 import { ThongBao } from '../../thongBao'
 
@@ -65,6 +67,14 @@ export default function DonDanhSach() {
   const [dangHuy, setDangHuy] = useState<Don | null>(null)
   const [thongBao, setThongBao] = useState('')
   const [lanTai, setLanTai] = useState(0)
+  // Hiệu ứng Pixel: cờ hiện hộp carton gấp nắp sau khi tạo đơn thành công (tự tắt ≤ 1,4 s)
+  const [hopDong, setHopDong] = useState(0)
+
+  useEffect(() => {
+    if (hopDong === 0) return
+    const t = window.setTimeout(() => setHopDong(0), 1400)
+    return () => window.clearTimeout(t)
+  }, [hopDong])
 
   useEffect(() => {
     let bo = false // yêu cầu cũ về muộn thì bỏ
@@ -98,6 +108,8 @@ export default function DonDanhSach() {
         }
       />
       <ThongBao chu={thongBao} />
+      {/* Hiệu ứng Pixel: hộp carton gấp nắp đóng gói sau khi tạo đơn thành công */}
+      {hopDong > 0 && dangHieuUngPixel() && <HopCartonGapNapPixel key={hopDong} />}
       <DonThatBaiCanXuLy
         lanTai={lanTai}
         san={ds !== null || !!loiTai}
@@ -203,7 +215,19 @@ export default function DonDanhSach() {
             {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={7} className="trong">
-                  {ds ? 'Chưa có đơn nào phù hợp' : 'Đang tải…'}
+                  {ds ? (
+                    'Chưa có đơn nào phù hợp'
+                  ) : dangHieuUngPixel() ? (
+                    <>
+                      {/* Hiệu ứng Pixel: khung tải skeleton quét theo bậc thay chữ Đang tải… */}
+                      <KhungTaiBangPixel soCot={6} />
+                      <span className="an-chu" role="status">
+                        Đang tải…
+                      </span>
+                    </>
+                  ) : (
+                    'Đang tải…'
+                  )}
                 </td>
               </tr>
             )}
@@ -230,6 +254,8 @@ export default function DonDanhSach() {
             setVuaTao(d)
             setThongBao('')
             setLanTai((n) => n + 1)
+            // Hiệu ứng Pixel: hộp carton gấp nắp sau khi API tạo đơn trả thành công
+            if (dangHieuUngPixel()) setHopDong((n) => n + 1)
           }}
         />
       )}
@@ -448,12 +474,16 @@ function FormTaoDon({
             </select>
           </label>
           {o('mo_ta', 'Mô tả hàng')}
-          {o('kg', 'Khối lượng thực (kg)', {
-            type: 'number',
-            min: 0.01,
-            step: 0.01,
-            required: true,
-          })}
+          <div className="px-o-kg">
+            {o('kg', 'Khối lượng thực (kg)', {
+              type: 'number',
+              min: 0.01,
+              step: 0.01,
+              required: true,
+            })}
+            {/* Hiệu ứng Pixel: kim cân minh hoạ nhảy theo số kg đang nhập (không kiểm giới hạn) */}
+            {dangHieuUngPixel() && <KimCanPixel kg={f.kg} />}
+          </div>
           {o('m3', 'Thể tích (m³)', { type: 'number', min: 0.01, step: 0.01, required: true })}
           {o('so_kien', 'Số kiện', { type: 'number', min: 1, required: true })}
         </div>

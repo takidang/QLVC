@@ -29,6 +29,8 @@ import {
 import { ChonKhaDung, type KhaDung } from './ChuyenDanhSach'
 import { TEN_TRANG_THAI_DON, type Don } from '../../api/don'
 import { kemMaBr, LoiApi } from '../../api/goi'
+import { BangDinhNiemPhongPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel } from '../../nen'
 import { Nhan } from '../../nhan'
 import { CanhBaoTheoDoi, DongThoiGian, KhoiSuCo, KhoiTien } from './TheoDoiChuyen'
 import XepHang from './XepHang'
@@ -126,6 +128,14 @@ export default function ChuyenChiTiet() {
   const [viPham, setViPham] = useState<ViPhamGhep[]>([])
   const [dangGui, setDangGui] = useState(false)
   const [lanTai, setLanTai] = useState(0)
+  // Hiệu ứng Pixel: cờ hiện băng dính niêm phong kéo ngang thẻ chuyến sau khi chốt thành công (≤ 1,4 s)
+  const [niemPhong, setNiemPhong] = useState(0)
+
+  useEffect(() => {
+    if (niemPhong === 0) return
+    const t = window.setTimeout(() => setNiemPhong(0), 1400)
+    return () => window.clearTimeout(t)
+  }, [niemPhong])
   const dieuHuong = useNavigate()
   const { pathname } = useLocation()
   const nd = useOutletContext<NguoiDung | undefined>()
@@ -239,6 +249,8 @@ export default function ChuyenChiTiet() {
       }
       const moi = await goi[viec]()
       setC(moi)
+      // Hiệu ứng Pixel: băng dính niêm phong kéo ngang thẻ chuyến sau khi API chốt chuyến thành công
+      if (viec === 'chot' && dangHieuUngPixel()) setNiemPhong((n) => n + 1)
       setLyDoHuy(null)
       setChonGhep([])
       setChonGo([])
@@ -352,6 +364,8 @@ export default function ChuyenChiTiet() {
           {/* Đầu chi tiết gọn một dòng: tên, mã, nhãn, số chính; hành động bên phải */}
           {/* Khối đầu có viền như ảnh mẫu 01: tên, mã, nhãn, số liệu, nút; cảnh báo và form hủy nằm trong khối */}
           <section className="kinh ct2-dau-khung">
+            {/* Hiệu ứng Pixel: băng dính niêm phong kéo ngang thẻ chuyến sau khi chốt thành công */}
+            {niemPhong > 0 && dangHieuUngPixel() && <BangDinhNiemPhongPixel key={niemPhong} />}
             <div className="ct-dau ct2-dau">
               <div>
                 <h1>{c.ten_tuyen}</h1>

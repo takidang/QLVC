@@ -2,7 +2,8 @@ import { useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { LoiApi } from '../api/goi'
 import { traCuu, type KetQuaTraCuu } from '../api/traCuu'
-import { NEN } from '../nen'
+import { XeTaiHanhTrinhPixel } from '../HieuUngPixel'
+import { dangHieuUngPixel, NEN } from '../nen'
 import { useHienKhiCuon } from '../useHienKhiCuon'
 
 // Tên trạng thái đơn viết cho khách (không dùng từ nội bộ như "ghép", "thất bại")
@@ -135,6 +136,8 @@ export default function TraCuu() {
             <h2 ref={oKq} tabIndex={-1}>
               {TEN_CHO_KHACH[kq.trang_thai] ?? kq.trang_thai}
             </h2>
+            {/* Hiệu ứng Pixel: xe tải pixel chạy trên dải mốc hành trình tới trạng thái hiện tại */}
+            {dangHieuUngPixel() && <XeTaiHanhTrinhPixel trangThai={kq.trang_thai} moc={kq.moc} />}
             <ol className="lt">
               {moc.map((m, i) => (
                 <li key={`${m.trang_thai}-${m.luc}`} className={i === 0 ? 'toi' : 'xong'}>

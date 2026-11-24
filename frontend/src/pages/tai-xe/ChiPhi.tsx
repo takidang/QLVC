@@ -13,6 +13,8 @@ import {
 } from '../../api/chiPhi'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
 import ChonTep from '../../ChonTep'
+import { NoiDungNutGuiPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel } from '../../nen'
 import { nenAnh } from '../../nenAnh'
 import { LOI_MANG, SO_ANH_TOI_DA } from './QuetLay'
 import { ThongBao } from '../../thongBao'
@@ -149,11 +151,20 @@ function FormChi({
   const [anh, setAnh] = useState<File[]>([])
   const [dangGui, setDangGui] = useState(false)
   const [loi, setLoi] = useState('')
+  // Hiệu ứng Pixel: cờ hiện "Xong ✓" ngắn trên nút gửi sau khi API thành công (≤ 1,2 s)
+  const [vuaXong, setVuaXong] = useState(false)
+
+  useEffect(() => {
+    if (!vuaXong) return
+    const t = window.setTimeout(() => setVuaXong(false), 1100)
+    return () => window.clearTimeout(t)
+  }, [vuaXong])
 
   async function gui(e: FormEvent) {
     e.preventDefault()
     if (coAnh && anh.length > SO_ANH_TOI_DA) return setLoi(`Tối đa ${SO_ANH_TOI_DA} ảnh`)
     setLoi('')
+    setVuaXong(false)
     setDangGui(true)
     const xong = await onGui(
       {
@@ -171,8 +182,12 @@ function FormChi({
       setGhiChu('')
       setAnh([])
       ;(e.target as HTMLFormElement).reset()
+      // Hiệu ứng Pixel: đổi nhãn nút sang "Xong ✓" sau khi ghi chi phí thành công
+      if (dangHieuUngPixel()) setVuaXong(true)
     }
   }
+
+  const huPixel = dangHieuUngPixel()
 
   return (
     <form className="form-km" onSubmit={gui}>
@@ -222,6 +237,7 @@ function FormChi({
           accept="image/jpeg,image/png"
           capture="environment"
           multiple
+          dangNen={dangGui && anh.length > 0}
           onChange={(e) => setAnh([...(e.target.files ?? [])])}
         />
       )}
@@ -236,7 +252,22 @@ function FormChi({
             Thôi
           </button>
         )}
-        <button disabled={dangGui}>{dangGui ? 'Đang gửi…' : nut}</button>
+        {/* Hiệu ứng Pixel: nút gửi giữ bề ngang và đổi chữ theo bậc "Đang gửi…" → "Xong ✓" */}
+        <button
+          disabled={dangGui}
+          aria-busy={dangGui || undefined}
+          className={
+            huPixel ? `px-nut-gui${dangGui ? ' dang-gui' : vuaXong ? ' vua-xong' : ''}` : undefined
+          }
+        >
+          {huPixel ? (
+            <NoiDungNutGuiPixel nhan={nut} dangGui={dangGui} vuaXong={vuaXong} />
+          ) : dangGui ? (
+            'Đang gửi…'
+          ) : (
+            nut
+          )}
+        </button>
       </div>
     </form>
   )

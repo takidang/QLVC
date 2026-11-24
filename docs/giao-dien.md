@@ -251,4 +251,6 @@ Giữ nguyên toàn bộ bố cục, biến màu và thành phần của giao di
 - `frontend/src/phong-cach-pixel.css` là **lớp áo**: chỉ đặt lại biến màu, bo góc, bóng của `index.css` và vài quy tắc (viền 2 px, bóng cứng, nút lún khi bấm, bỏ kính mờ). Không đổi bố cục, màn, luồng nghiệp vụ, API.
 - Bảng màu Nostalgos 12 (Lospec), **chỉ bản sáng**: bật Pixel thì luôn sáng (lựa chọn sáng/tối vẫn được lưu, tắt Pixel là về như cũ). Màu trạng thái được làm đậm để chữ trắng ≥ 4.5:1; đã đo mọi trang của 4 vai trò + đăng nhập, tra cứu: 0 lỗi JS, 0 chữ thiếu tương phản.
 - Quy ước: màn mới dùng biến màu (`var(--...)`), không viết mã màu cứng, để đúng ở cả hai phong cách.
+- Công tắc **Con trỏ đi theo** (Bật/Tắt, `qlvc-con-tro`): tắt thì `DanConTro` không chạy; hạt nền và chữ gõ vẫn theo "Hiệu ứng nâng cao".
+- Công tắc **Hiệu ứng Pixel** (chỉ hiện khi chọn Pixel; `qlvc-hieu-ung-pixel`, `data-hieu-ung-pixel="tat"`): tắt thì bỏ rung/lún/hiện lớp nổi, giữ màu, viền, bóng.
 - Hiệu ứng chuyển động cho phong cách này: đề xuất ở nhánh thử `tai/agy-ui-moments`, làm sau.

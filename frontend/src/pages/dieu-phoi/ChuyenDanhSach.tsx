@@ -20,7 +20,8 @@ import { TEN_LOAI_SU_CO, type LoaiSuCo } from '../../api/suCo'
 import { danhSachTuyen, type Tuyen } from '../../api/tuyen'
 import { Ic, Nhan } from '../../nhan'
 import LichGio from './LichGio'
-import { dangGiamChuyenDong, NEN } from '../../nen'
+import { dangGiamChuyenDong, dangHieuUngPixel, NEN } from '../../nen'
+import { KhungTaiBangPixel } from '../../HieuUngPixel'
 import { ThongBao } from '../../thongBao'
 import NumberFlow from '@number-flow/react'
 
@@ -489,11 +490,23 @@ export default function ChuyenDanhSach() {
             {soKhop === 0 && (
               <tr>
                 <td colSpan={soCot} className="trong">
-                  {!ds
-                    ? 'Đang tải…'
-                    : ngay && !trangThai && !loiTai
-                      ? 'Chưa có chuyến nào khởi hành ngày này. Bấm “Mọi ngày” để xem các ngày khác.'
-                      : 'Chưa có chuyến nào phù hợp'}
+                  {!ds ? (
+                    dangHieuUngPixel() ? (
+                      <>
+                        {/* Hiệu ứng Pixel: khung tải skeleton quét theo bậc thay chữ Đang tải… */}
+                        <KhungTaiBangPixel soCot={ngay ? 6 : 5} />
+                        <span className="an-chu" role="status">
+                          Đang tải…
+                        </span>
+                      </>
+                    ) : (
+                      'Đang tải…'
+                    )
+                  ) : ngay && !trangThai && !loiTai ? (
+                    'Chưa có chuyến nào khởi hành ngày này. Bấm “Mọi ngày” để xem các ngày khác.'
+                  ) : (
+                    'Chưa có chuyến nào phù hợp'
+                  )}
                 </td>
               </tr>
             )}

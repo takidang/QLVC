@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { dangHieuUng } from './nen'
+import { dangConTro } from './nen'
 
 const KHOA_PHIEN = 'qlvc-dan-tro-da-chay'
 const CHO_KHOI_MS = 600
@@ -533,7 +533,7 @@ export default function DanConTro({ pathname }: { pathname: string }) {
     luotRef.current = null
 
     const lopPhu = lopPhuRef.current
-    if (!lopPhu || !dangHieuUng()) {
+    if (!lopPhu || !dangConTro()) {
       if (!TRANG_GOC.has(pathname)) pathnameTruoc = pathname
       return
     }
@@ -626,7 +626,7 @@ export default function DanConTro({ pathname }: { pathname: string }) {
     }
 
     function khiAnTab() {
-      if (document.hidden || !dangHieuUng()) donSach(true)
+      if (document.hidden || !dangConTro()) donSach(true)
     }
 
     function khiDoiCo() {
@@ -647,7 +647,7 @@ export default function DanConTro({ pathname }: { pathname: string }) {
 
     const batDauChay = () => {
       if (daHuy) return
-      if (!dangHieuUng() || document.hidden) {
+      if (!dangConTro() || document.hidden) {
         donSach(true)
         return
       }
@@ -770,7 +770,7 @@ export default function DanConTro({ pathname }: { pathname: string }) {
 
       const buoc = (now: number) => {
         if (daHuy) return
-        if (!dangHieuUng() || document.hidden) {
+        if (!dangConTro() || document.hidden) {
           donSach(true)
           return
         }

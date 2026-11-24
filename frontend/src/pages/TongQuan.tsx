@@ -12,7 +12,7 @@ import {
 import { duDoanTreNgay, type DuDoanChuyenNgay } from '../api/chuyen'
 import { LoiApi } from '../api/goi'
 import { tongQuanNgay, type TongQuanNgay } from '../api/tongQuan'
-import { dangGiamChuyenDong } from '../nen'
+import { dangGiamChuyenDong, dangHieuUngPixel } from '../nen'
 import { Nhan } from '../nhan'
 import NumberFlow from '@number-flow/react'
 
@@ -374,6 +374,9 @@ function GiuCho({ loai }: { loai: 'cot' | 'xe' | 'bang' }) {
   )
 }
 
+// Hiệu ứng Pixel: nhịp cuộn theo bậc steps() cho số tiền KPI kiểu 8-bit trên @number-flow/react
+const NHIP_KPI_PIXEL: EffectTiming = { duration: 340, easing: 'steps(5, end)' }
+
 function SoLieu({
   nhan,
   so,
@@ -385,14 +388,26 @@ function SoLieu({
   phu?: string
   lai?: boolean
 }) {
+  // Hiệu ứng Pixel: gắn lớp CSS kiểu 8-bit và nhịp cuộn bậc khi bật Hiệu ứng Pixel
+  const batPixel = dangHieuUngPixel()
+  const lopSo =
+    `${lai && so !== undefined && so < 0 ? 'tq-am' : ''}${batPixel ? ' px-kpi-so' : ''}`.trim()
   return (
     <div>
       <small>{nhan}</small>
-      <b className={lai && so !== undefined && so < 0 ? 'tq-am' : undefined}>
+      <b className={lopSo || undefined}>
         {so === undefined ? (
           '–'
         ) : (
-          <NumberFlow value={so} locales="vi-VN" suffix=" đ" animated={!dangGiamChuyenDong()} />
+          <NumberFlow
+            className={batPixel ? 'px-kpi-nf' : undefined}
+            value={so}
+            locales="vi-VN"
+            suffix=" đ"
+            animated={!dangGiamChuyenDong()}
+            transformTiming={batPixel ? NHIP_KPI_PIXEL : undefined}
+            spinTiming={batPixel ? NHIP_KPI_PIXEL : undefined}
+          />
         )}
       </b>
       {lai && so !== undefined && so < 0 && <em>Lỗ trong tháng</em>}
@@ -724,7 +739,10 @@ function HomNay() {
         </div>
         <div>
           <small>Doanh thu dự kiến</small>
-          <b>{tq ? `${tq.doanh_thu_du_kien.toLocaleString('vi-VN')} đ` : '–'}</b>
+          {/* Hiệu ứng Pixel: số tiền KPI kiểu 8-bit khi bật Hiệu ứng Pixel */}
+          <b className={dangHieuUngPixel() ? 'px-kpi-so' : undefined}>
+            {tq ? `${tq.doanh_thu_du_kien.toLocaleString('vi-VN')} đ` : '–'}
+          </b>
           <em>cước các đơn của chuyến trong ngày, chưa trừ đơn thất bại</em>
         </div>
       </div>
