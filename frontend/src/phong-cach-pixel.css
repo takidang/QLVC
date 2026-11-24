@@ -2806,11 +2806,11 @@
 
 /* Đăng nhập ở Pixel: dòng phụ thẳng hàng (bỏ hiệu ứng chữ cuối nổi lệch), link Tra cứu thành nút nổi bật */
 @media screen {
-  /* Biển hiệu thương hiệu: nền xanh rêu, viền than, bóng cứng; TAKI kem, LOGISTICS vàng bơ */
+  /* Biển hiệu thương hiệu: nền xanh cobalt, viền than, bóng cứng; TAKI trắng, LOGISTICS vàng bơ */
   :root[data-phong-cach='pixel'] .dn-thuong-hieu {
     padding: 10px 22px 10px 10px;
-    color: var(--n-cream);
-    background: var(--n-teal);
+    color: #fff;
+    background: var(--n-cobalt);
     border: 3px solid var(--n-charcoal);
     border-radius: var(--bo);
     box-shadow: 5px 5px 0 var(--n-charcoal);
