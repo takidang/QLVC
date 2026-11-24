@@ -116,6 +116,31 @@ export function apHieuUng(ma: string) {
 }
 export const dangHieuUng = () => hieuUngDaLuu() === 'bat' && !giamChuyenDong()
 
+// Con trỏ đi theo: 'bat' (mặc định) | 'tat'. Độc lập với hạt nền và chữ gõ; vẫn tắt khi Hiệu ứng nâng cao tắt hoặc giảm chuyển động.
+export const CON_TRO = HIEU_UNG
+const KHOA_CON_TRO = 'qlvc-con-tro'
+export const conTroDaLuu = (): 'bat' | 'tat' =>
+  localStorage.getItem(KHOA_CON_TRO) === 'tat' ? 'tat' : 'bat'
+export function apConTro(ma: string) {
+  localStorage.setItem(KHOA_CON_TRO, ma === 'tat' ? 'tat' : 'bat')
+}
+export const dangConTro = () => conTroDaLuu() === 'bat' && dangHieuUng()
+
+// Hiệu ứng Pixel (chỉ có nghĩa khi Phong cách = Pixel): 'tat' thì giữ màu/viền/bóng, bỏ chuyển động riêng của Pixel
+export const HIEU_UNG_PIXEL = HIEU_UNG
+const KHOA_HU_PIXEL = 'qlvc-hieu-ung-pixel'
+export const hieuUngPixelDaLuu = (): 'bat' | 'tat' =>
+  localStorage.getItem(KHOA_HU_PIXEL) === 'tat' ? 'tat' : 'bat'
+export function apHieuUngPixel(ma: string) {
+  if (ma === 'tat') {
+    localStorage.setItem(KHOA_HU_PIXEL, 'tat')
+    document.documentElement.dataset.hieuUngPixel = 'tat'
+  } else {
+    localStorage.removeItem(KHOA_HU_PIXEL)
+    delete document.documentElement.dataset.hieuUngPixel
+  }
+}
+
 // Người dùng bấm đổi chế độ: làm mờ chéo ngắn (View Transitions, CSS ::view-transition-*) thay vì đổi
 // màu cả màn trong một nhát. Lần áp lúc tải trang và khi máy đổi chế độ vẫn gọi apCheDo thẳng.
 export function doiCheDo(ma: string) {
@@ -130,4 +155,5 @@ apMatDo(matDoDaLuu())
 apCoChu(coChuDaLuu())
 apGiamChuyenDong(giamChuyenDongDaLuu())
 document.documentElement.dataset.hieuUng = hieuUngDaLuu()
+apHieuUngPixel(hieuUngPixelDaLuu())
 mayToi.addEventListener('change', () => apCheDo(cheDoDaLuu()))

@@ -66,7 +66,7 @@
     transform: translate(2px, 2px);
     box-shadow: none;
   }
-  :root[data-phong-cach='pixel'][data-giam-chuyen-dong='bat']
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
     :is(.nut-to, .nut-vien):enabled:active {
     transform: none;
   }
@@ -184,7 +184,7 @@
   }
 
   /* Tắt mọi animation/transition mới khi bật tùy chọn Giảm chuyển động trong Cài đặt */
-  :root[data-phong-cach='pixel'][data-giam-chuyen-dong='bat']
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
     :is(
       input[aria-invalid='true'],
       select[aria-invalid='true'],
@@ -197,11 +197,13 @@
     ) {
     animation: none;
   }
-  :root[data-phong-cach='pixel'][data-giam-chuyen-dong='bat']
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
     :is([data-sonner-toast], .vien-thuoc button) {
     transition: none;
   }
-  :root[data-phong-cach='pixel'][data-giam-chuyen-dong='bat'] .vien-thuoc button:enabled:active {
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
+    .vien-thuoc
+    button:enabled:active {
     transform: none;
   }
 

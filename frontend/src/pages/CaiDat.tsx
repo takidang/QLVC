@@ -3,21 +3,27 @@ import { Link } from 'react-router-dom'
 import type { VaiTro } from '../api/auth'
 import {
   CHE_DO,
+  CON_TRO,
   CO_CHU,
   GIAM_CHUYEN_DONG,
   HIEU_UNG,
+  HIEU_UNG_PIXEL,
   MAT_DO,
   PHONG_CACH,
   doiCheDo,
   apCoChu,
+  apConTro,
   apGiamChuyenDong,
   apHieuUng,
+  apHieuUngPixel,
   apMatDo,
   apPhongCach,
   cheDoDaLuu,
   coChuDaLuu,
+  conTroDaLuu,
   giamChuyenDongDaLuu,
   hieuUngDaLuu,
+  hieuUngPixelDaLuu,
   matDoDaLuu,
   phongCachDaLuu,
 } from '../nen'
@@ -33,6 +39,8 @@ export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
   const [giamCD, setGiamCD] = useState(giamChuyenDongDaLuu)
   const [hieuUng, setHieuUng] = useState(hieuUngDaLuu)
   const [phongCach, setPhongCach] = useState(phongCachDaLuu)
+  const [conTro, setConTro] = useState(conTroDaLuu)
+  const [hieuUngPixel, setHieuUngPixel] = useState(hieuUngPixelDaLuu)
 
   return (
     <section className="noi-dung cd-trang">
@@ -46,7 +54,7 @@ export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
       <div className="kinh cd-ds">
         <MucCaiDat
           tieuDe="Giao diện"
-          moTa="Chọn nền sáng, nền tối hoặc tự động theo cài đặt của máy."
+          moTa={`Chọn nền sáng, nền tối hoặc tự động theo cài đặt của máy.${phongCach === 'pixel' ? ' (Pixel chỉ có bản sáng)' : ''}`}
           ds={CHE_DO}
           giaTri={cheDo}
           onChon={(ma) => {
@@ -104,6 +112,28 @@ export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
             setHieuUng(hieuUngDaLuu())
           }}
         />
+        <MucCaiDat
+          tieuDe="Con trỏ đi theo"
+          moTa="Đàn con trỏ chạy theo thao tác trên màn hình. Cần bật Hiệu ứng nâng cao; hạt nền và chữ gõ không bị ảnh hưởng."
+          ds={CON_TRO}
+          giaTri={conTro}
+          onChon={(ma) => {
+            apConTro(ma)
+            setConTro(conTroDaLuu())
+          }}
+        />
+        {phongCach === 'pixel' && (
+          <MucCaiDat
+            tieuDe="Hiệu ứng Pixel"
+            moTa="Rung ô lỗi, lún nút, hiện lớp nổi theo kiểu pixel. Tắt thì giữ màu, viền, bóng và bỏ chuyển động."
+            ds={HIEU_UNG_PIXEL}
+            giaTri={hieuUngPixel}
+            onChon={(ma) => {
+              apHieuUngPixel(ma)
+              setHieuUngPixel(hieuUngPixelDaLuu())
+            }}
+          />
+        )}
       </div>
 
       {vaiTro === 'QUAN_LY' && (
