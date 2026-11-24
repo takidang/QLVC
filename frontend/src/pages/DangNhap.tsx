@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import { dangNhap, LoiApi, type NguoiDung } from '../api/auth'
 import { traCuu } from '../api/traCuu'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { dangHieuUng, dangHieuUngPixel, NEN, phongCachDaLuu } from '../nen'
 import NenHat from '../NenHat'
 import { LogoTK, TenThuongHieu } from '../LogoTK'
@@ -98,6 +98,15 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
       dong ? 520 : 0,
     )
   }
+  // Từ trang tra cứu bấm "Tra đơn khác" (Pixel): in luôn phiếu được yêu cầu, chỉ một lần khi mở trang
+  const yeuCauIn = (useLocation().state as { inPhieu?: 'nv' | 'khach' } | null)?.inPhieu
+  const daInSan = useRef(false)
+  useEffect(() => {
+    if (daInSan.current || !pixel || !yeuCauIn) return
+    daInSan.current = true
+    inPhieu(yeuCauIn)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   // Xé tờ đang hiện (nghiêng, rơi, mờ dần ~350 ms) rồi in tờ kia
   const doiPhieu = (loai: 'nv' | 'khach') => {
     if (xe || phieu === loai) return

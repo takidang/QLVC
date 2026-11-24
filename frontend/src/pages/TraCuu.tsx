@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 'react'
-import { Link, useLocation, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { LoiApi } from '../api/goi'
 import { traCuu, type KetQuaTraCuu } from '../api/traCuu'
 import { XeTaiHanhTrinhPixel } from '../HieuUngPixel'
-import { dangHieuUngPixel, NEN } from '../nen'
+import { dangHieuUngPixel, NEN, phongCachDaLuu } from '../nen'
 import { useHienKhiCuon } from '../useHienKhiCuon'
 import { LogoTK, TenThuongHieu } from '../LogoTK'
 
@@ -81,7 +81,13 @@ export default function TraCuu() {
 
   // Mốc mới nhất trên cùng; mốc đầu là trạng thái hiện tại
   const moc = kq ? [...kq.moc].reverse() : []
+  const veMayIn = useNavigate()
   const traKhac = () => {
+    // Pixel: quay về máy in ở trang đăng nhập và in luôn phiếu tra cứu mới
+    if (phongCachDaLuu() === 'pixel') {
+      veMayIn('/dang-nhap', { state: { inPhieu: 'khach' } })
+      return
+    }
     setKq(null)
     setSo('')
     requestAnimationFrame(() => oMa.current?.select())
