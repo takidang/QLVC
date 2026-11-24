@@ -67,7 +67,10 @@ export default function TraCuu() {
   }
 
   // Vào từ phiếu tra cứu ở trang đăng nhập (?ma=&so=): tra một lần ngay khi mở
+  const daTuTra = useRef(false) // StrictMode chạy effect 2 lần: chỉ tra 1 lần (API tra cứu có giới hạn tần suất)
   useEffect(() => {
+    if (daTuTra.current) return
+    daTuTra.current = true
     if (ma.trim() && /^\d{4}$/.test(so)) void gui()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
