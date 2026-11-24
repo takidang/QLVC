@@ -2319,27 +2319,27 @@
       1;
   }
 
-  /* Thẻ nội dung: viền trên luân phiên màu */
+  /* Thẻ nội dung: màu thanh tiêu đề luân phiên (thanh vẽ ở khối "khung cửa sổ game" cuối file) */
   :root[data-phong-cach='pixel'] .kinh {
-    border-top-width: 6px;
+    --barra: var(--n-coral);
   }
   :root[data-phong-cach='pixel'] .kinh:nth-of-type(6n + 1) {
-    border-top-color: var(--n-coral);
+    --barra: var(--n-coral);
   }
   :root[data-phong-cach='pixel'] .kinh:nth-of-type(6n + 2) {
-    border-top-color: var(--n-ochre);
+    --barra: var(--n-ochre);
   }
   :root[data-phong-cach='pixel'] .kinh:nth-of-type(6n + 3) {
-    border-top-color: var(--n-sage);
+    --barra: var(--n-sage);
   }
   :root[data-phong-cach='pixel'] .kinh:nth-of-type(6n + 4) {
-    border-top-color: var(--n-cobalt);
+    --barra: var(--n-cobalt);
   }
   :root[data-phong-cach='pixel'] .kinh:nth-of-type(6n + 5) {
-    border-top-color: var(--n-plum);
+    --barra: var(--n-plum);
   }
   :root[data-phong-cach='pixel'] .kinh:nth-of-type(6n) {
-    border-top-color: var(--n-sky);
+    --barra: var(--n-sky);
   }
 
   /* Đầu bảng: nền hồng nhạt, chữ xanh rêu */
@@ -3273,5 +3273,203 @@
   /* Bỏ hạt rơi và dòng chữ giới thiệu trên ảnh */
   :root[data-phong-cach='pixel'] .dn-hinh :is(.nen-hat, p) {
     display: none;
+  }
+}
+
+/* Giao diện kiểu game (chỉ Pixel): menu, HUD thanh trên, khung cửa sổ cho thẻ, nút 3D, thanh cuộn */
+@media screen {
+  /* Biểu tượng menu: bản pixel chỉ hiện khi bật Pixel, bản nét mảnh ẩn đi */
+  .ic-pixel {
+    display: none;
+  }
+  :root[data-phong-cach='pixel'] .canh nav a svg.ic {
+    display: none;
+  }
+  :root[data-phong-cach='pixel'] .canh nav a svg.ic-pixel {
+    display: block;
+    flex: none;
+    width: 16px;
+    height: 16px;
+  }
+
+  /* Menu: mũi tên ▶ bậc thang bên trái; mục chọn nhấp nháy, rê chuột/focus hiện tĩnh, mục khác giữ chỗ */
+  @keyframes px-mui-ten {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+  :root[data-phong-cach='pixel'] .canh nav a {
+    position: relative;
+    padding-left: 24px;
+  }
+  :root[data-phong-cach='pixel'] .canh nav a::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 8px;
+    width: 8px;
+    height: 10px;
+    margin-top: -5px;
+    background: currentColor;
+    clip-path: polygon(
+      0 0,
+      30% 0,
+      30% 20%,
+      60% 20%,
+      60% 40%,
+      100% 40%,
+      100% 60%,
+      60% 60%,
+      60% 80%,
+      30% 80%,
+      30% 100%,
+      0 100%
+    );
+    opacity: 0;
+  }
+  :root[data-phong-cach='pixel'] .canh nav a:is(:hover, :focus-visible)::before {
+    color: var(--n-butter);
+    opacity: 1;
+  }
+  :root[data-phong-cach='pixel'] .canh nav a.active::before {
+    color: var(--n-charcoal);
+    opacity: 1;
+    animation: px-mui-ten 1s steps(1, end) infinite;
+  }
+
+  /* Thanh trên thành HUD: khung than 2 px bóng cứng, vai trò là huy hiệu "class", avatar vuông */
+  :root[data-phong-cach='pixel'] .dau .ben-phai .ten {
+    justify-items: end;
+    padding: 3px 8px 4px;
+    color: var(--n-charcoal);
+    background: var(--n-cream);
+    border: 2px solid var(--n-charcoal);
+    box-shadow: var(--bong-nho);
+  }
+  :root[data-phong-cach='pixel'] .dau .ben-phai .ten b {
+    color: var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .dau .ben-phai .vai-tro {
+    padding: 0 6px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 15px;
+    text-transform: uppercase;
+    color: var(--n-charcoal);
+    background: var(--n-butter);
+    border: 2px solid var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .dau :is(.tron, .chuong summary) {
+    border: 2px solid var(--n-charcoal);
+    border-radius: 0;
+    box-shadow: var(--bong-nho);
+  }
+
+  /* Thẻ .kinh thành cửa sổ game: thanh tiêu đề 14 px (viền trên trong suốt, thanh vẽ bằng nền),
+     3 ô vuông kiểu nút cửa sổ ở góc phải; nền tính từ mép viền nên không đè nội dung */
+  :root[data-phong-cach='pixel'] .kinh {
+    border-top: 14px solid transparent;
+    background-origin: border-box;
+    background-repeat: no-repeat;
+    background-image:
+      linear-gradient(
+        90deg,
+        var(--n-cream) 0 6px,
+        transparent 6px 9px,
+        var(--n-cream) 9px 15px,
+        transparent 15px 18px,
+        var(--n-cream) 18px 24px
+      ),
+      linear-gradient(
+        90deg,
+        var(--n-charcoal) 0 6px,
+        transparent 6px 9px,
+        var(--n-charcoal) 9px 15px,
+        transparent 15px 18px,
+        var(--n-charcoal) 18px 24px
+      ),
+      linear-gradient(var(--n-charcoal), var(--n-charcoal)),
+      linear-gradient(var(--n-charcoal), var(--n-charcoal)),
+      linear-gradient(var(--barra), var(--barra));
+    background-size:
+      24px 6px,
+      25px 7px,
+      100% 2px,
+      100% 2px,
+      100% 14px;
+    background-position:
+      right 8px top 4px,
+      right 8px top 4px,
+      0 0,
+      0 12px,
+      0 0;
+  }
+
+  /* Nút nổi khối 3D 8-bit: cạnh sáng trên-trái, cạnh tối dưới-phải, bóng cứng; bấm thì lún */
+  :root[data-phong-cach='pixel']
+    :is(.nut-to, .nut-vien, .vien-thuoc button[aria-pressed='true']):not(:disabled),
+  :root[data-phong-cach='pixel'] button.phu:enabled {
+    box-shadow:
+      inset 2px 2px 0 color-mix(in srgb, var(--n-cream) 75%, transparent),
+      inset -2px -2px 0 color-mix(in srgb, var(--n-charcoal) 30%, transparent),
+      2px 2px 0 var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel']
+    :is(.nut-to, .nut-vien, .vien-thuoc button[aria-pressed='true']):not(:disabled):active,
+  :root[data-phong-cach='pixel'] button.phu:enabled:active {
+    transform: translate(2px, 2px);
+    box-shadow:
+      inset 2px 2px 0 color-mix(in srgb, var(--n-charcoal) 30%, transparent),
+      inset -2px -2px 0 color-mix(in srgb, var(--n-cream) 75%, transparent);
+  }
+
+  /* Thanh cuộn pixel: rãnh kem, tay cầm than vuông có cạnh sáng (Firefox: chỉ đổi màu) */
+  :root[data-phong-cach='pixel'] ::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+  }
+  :root[data-phong-cach='pixel'] ::-webkit-scrollbar-track {
+    background: var(--n-cream);
+    border: 2px solid var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] ::-webkit-scrollbar-thumb {
+    background: var(--n-charcoal);
+    border: 2px solid var(--n-cream);
+    box-shadow: inset 2px 2px 0 color-mix(in srgb, var(--n-cream) 45%, transparent);
+  }
+  :root[data-phong-cach='pixel'] ::-webkit-scrollbar-thumb:hover {
+    background: var(--n-teal);
+  }
+  :root[data-phong-cach='pixel'] ::-webkit-scrollbar-corner {
+    background: var(--n-cream);
+  }
+  @supports not selector(::-webkit-scrollbar) {
+    :root[data-phong-cach='pixel'] {
+      scrollbar-color: var(--n-charcoal) var(--n-cream);
+    }
+  }
+
+  /* Tắt chuyển động: mũi tên menu đứng yên, nút bấm không dịch */
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
+    .canh
+    nav
+    a.active::before {
+    animation: none;
+  }
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
+    :is(.nut-to, .nut-vien, .vien-thuoc button[aria-pressed='true'], button.phu):active {
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :root[data-phong-cach='pixel'] .canh nav a.active::before {
+      animation: none;
+    }
+    :root[data-phong-cach='pixel']
+      :is(.nut-to, .nut-vien, .vien-thuoc button[aria-pressed='true'], button.phu):active {
+      transform: none;
+    }
   }
 }
