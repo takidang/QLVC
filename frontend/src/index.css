@@ -2246,6 +2246,20 @@ input[type='file']::file-selector-button {
   font-size: 13px;
   color: var(--phu);
 }
+.tc-trai > header a.tc-nv {
+  padding: 8px 14px;
+  color: var(--muc);
+  text-decoration: none;
+  border: 1px solid var(--vien-dam);
+  border-radius: var(--bo);
+  transition:
+    background 0.15s ease-out,
+    border-color 0.15s ease-out;
+}
+.tc-trai > header a.tc-nv:hover {
+  background: var(--noi);
+  border-color: var(--o-liu);
+}
 .tc-khung {
   margin-bottom: 16px;
   padding: 22px 20px;

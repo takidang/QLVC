@@ -1,4 +1,4 @@
-import { useRef, useState, type CSSProperties, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { LoiApi } from '../api/goi'
 import { traCuu, type KetQuaTraCuu } from '../api/traCuu'
@@ -30,7 +30,10 @@ const luc = (iso: string) =>
 export default function TraCuu() {
   const [thamSo] = useSearchParams()
   const [ma, setMa] = useState(thamSo.get('ma') ?? '')
-  const [so, setSo] = useState('')
+  const [so, setSo] = useState(() => {
+    const v = thamSo.get('so') ?? ''
+    return /^\d{4}$/.test(v) ? v : ''
+  })
   const [kq, setKq] = useState<KetQuaTraCuu | null>(null)
   const [loi, setLoi] = useState('')
   const [dangGui, setDangGui] = useState(false)
@@ -38,8 +41,8 @@ export default function TraCuu() {
   const oKq = useRef<HTMLHeadingElement>(null)
   useHienKhiCuon(kq?.ma_don)
 
-  async function gui(e: FormEvent) {
-    e.preventDefault()
+  async function gui(e?: FormEvent) {
+    e?.preventDefault()
     if (!ma.trim() || !/^\d{4}$/.test(so))
       return setLoi('Nhập mã đơn và đúng 4 chữ số cuối số điện thoại')
     setLoi('')
@@ -63,6 +66,12 @@ export default function TraCuu() {
     }
   }
 
+  // Vào từ phiếu tra cứu ở trang đăng nhập (?ma=&so=): tra một lần ngay khi mở
+  useEffect(() => {
+    if (ma.trim() && /^\d{4}$/.test(so)) void gui()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   // Mốc mới nhất trên cùng; mốc đầu là trạng thái hiện tại
   const moc = kq ? [...kq.moc].reverse() : []
   const traKhac = () => {
@@ -79,7 +88,9 @@ export default function TraCuu() {
             <LogoTK co={22} />
             <TenThuongHieu />
           </span>
-          <Link to="/dang-nhap">Nhân viên đăng nhập</Link>
+          <Link to="/dang-nhap" className="tc-nv">
+            Nhân viên đăng nhập
+          </Link>
         </header>
 
         {kq ? (

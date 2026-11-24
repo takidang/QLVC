@@ -1,12 +1,49 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import { dangNhap, LoiApi, type NguoiDung } from '../api/auth'
-import { Link } from 'react-router-dom'
-import { dangHieuUng, dangHieuUngPixel, NEN } from '../nen'
+import { Link, useNavigate } from 'react-router-dom'
+import { dangHieuUng, dangHieuUngPixel, NEN, phongCachDaLuu } from '../nen'
 import NenHat from '../NenHat'
 import { LogoTK, TenThuongHieu } from '../LogoTK'
 
 const CAU_GIOI_THIEU =
   'Lập chuyến, theo dõi từng điểm dừng, giao hàng bằng quét mã và quyết toán theo chuyến.'
+
+// QR trang trí trên phiếu (không quét được): '#' là ô đen
+const LUOI_QR = [
+  '#######.#.#######',
+  '#.....#..#.#.....#',
+  '#.###.#.##.#.###.#',
+  '#.###.#..#.#.###.#',
+  '#.###.#.#..#.###.#',
+  '#.....#.##.#.....#',
+  '#######.#.#.#####.',
+  '.........##.......',
+  '#.##.#.###..#.##.#',
+  '.#..##...#.#..#.#.',
+  '###.#.##..#.##..##',
+  '........#.#.#.#...',
+  '#######.##..#.#.#.',
+  '#.....#..#.#..##.#',
+  '#.###.#.#.##.#..#.',
+  '#.###.#...#.#.#.#.',
+  '#######.#.##.#.#..',
+] as const
+const O_QR = LUOI_QR.flatMap((hang, y) =>
+  [...hang].flatMap((c, x) => (c === '#' ? [{ x, y }] : [])),
+)
+
+function QrTrangTri() {
+  return (
+    <svg className="dn-qr" viewBox="0 0 18 17" aria-hidden="true">
+      {O_QR.map((o) => (
+        <rect key={`${o.x}-${o.y}`} x={o.x} y={o.y} width="1" height="1" />
+      ))}
+    </svg>
+  )
+}
+
+const maPhieu = (tien: string) =>
+  `#${tien}-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`
 
 export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }) {
   const [ten, setTen] = useState('')
@@ -14,12 +51,53 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
   const [loi, setLoi] = useState('')
   const [dangGui, setDangGui] = useState(false)
   const oMatKhau = useRef<HTMLInputElement>(null)
-  // Pixel (khi bật Hiệu ứng Pixel): ban đầu chỉ có logo, bấm logo thì cửa sổ đăng nhập mở ra
-  const [mo, setMo] = useState(() => !dangHieuUngPixel())
+  // Pixel: trang đăng nhập là "máy in phiếu". phieu = tờ đang in (null = chưa in, chờ bấm logo)
+  const [pixel] = useState(() => phongCachDaLuu() === 'pixel')
+  const navigate = useNavigate()
+  const [phieu, setPhieu] = useState<'nv' | 'khach' | null>(() =>
+    pixel && !dangHieuUngPixel() ? 'nv' : null,
+  )
+  const [lan, setLan] = useState(0) // đổi khi in tờ mới để chạy lại hiệu ứng in
+  const [xe, setXe] = useState(false)
+  const [dangIn, setDangIn] = useState(false)
+  const [thongBao, setThongBao] = useState('')
+  const [maDon, setMaDon] = useState('')
+  const [soCuoi, setSoCuoi] = useState('')
+  const [loiKhach, setLoiKhach] = useState('')
+  const [ma] = useState(() => ({ nv: maPhieu('NV'), khach: maPhieu('TC') }))
+  const [luc] = useState(() =>
+    new Date().toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' }),
+  )
   const oTen = useRef<HTMLInputElement>(null)
-  const moCuaSo = () => {
-    setMo(true)
-    window.setTimeout(() => oTen.current?.focus(), 380)
+  const oMaDon = useRef<HTMLInputElement>(null)
+  // In tờ mới; có hiệu ứng thì đèn nháy ~500 ms, phiếu trượt ra, xong mới báo và đưa con trỏ vào ô đầu
+  const inPhieu = (loai: 'nv' | 'khach') => {
+    const dong = dangHieuUngPixel()
+    setXe(false)
+    setPhieu(loai)
+    setLan((n) => n + 1)
+    setDangIn(dong)
+    window.setTimeout(
+      () => {
+        setDangIn(false)
+        setThongBao(loai === 'nv' ? 'Đã in phiếu đăng nhập' : 'Đã in phiếu tra cứu')
+        ;(loai === 'nv' ? oTen : oMaDon).current?.focus()
+      },
+      dong ? 520 : 0,
+    )
+  }
+  // Xé tờ đang hiện (nghiêng, rơi, mờ dần ~350 ms) rồi in tờ kia
+  const doiPhieu = (loai: 'nv' | 'khach') => {
+    if (xe || phieu === loai) return
+    if (phieu === null || !dangHieuUngPixel()) return inPhieu(loai)
+    setXe(true)
+    window.setTimeout(() => inPhieu(loai), 350)
+  }
+  function guiKhach(e: FormEvent) {
+    e.preventDefault()
+    if (!maDon.trim() || !/^\d{4}$/.test(soCuoi))
+      return setLoiKhach('Nhập mã đơn và đúng 4 chữ số cuối số điện thoại')
+    navigate(`/tra-cuu?ma=${encodeURIComponent(maDon.trim())}&so=${soCuoi}`)
   }
   const [soKyTu, setSoKyTu] = useState(() => (dangHieuUng() ? 0 : CAU_GIOI_THIEU.length))
   const [tro, setTro] = useState<'an' | 'go' | 'nhay'>(() => (dangHieuUng() ? 'go' : 'an'))
@@ -87,31 +165,176 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
     }
   }
 
+  const hinh = (
+    <section className="dn-hinh" style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}>
+      <NenHat />
+      <p aria-label={CAU_GIOI_THIEU}>
+        <span aria-hidden="true">
+          {CAU_GIOI_THIEU.slice(0, soKyTu)}
+          {tro !== 'an' && <i className={tro === 'nhay' ? 'dn-con-tro nhay' : 'dn-con-tro'} />}
+        </span>
+      </p>
+    </section>
+  )
+
+  if (pixel) {
+    return (
+      <main className="dang-nhap">
+        <div className="dn-khung">
+          <div className="dn-px-trai">
+            <div className="dn-may">
+              <div className="dn-may-than">
+                <span className="dn-may-nhan">
+                  <i className={dangIn ? 'dn-den chay' : 'dn-den'} aria-hidden="true" />
+                  MÁY IN PHIẾU · TAKI
+                </span>
+                {phieu === null ? (
+                  <button
+                    type="button"
+                    className="dn-thuong-hieu dn-bam-logo"
+                    onClick={() => inPhieu('nv')}
+                  >
+                    <LogoTK co={44} />
+                    <TenThuongHieu />
+                    <span className="dn-goi-y">▶ Bấm vào logo để in phiếu đăng nhập</span>
+                  </button>
+                ) : (
+                  <div className="dn-may-logo">
+                    <LogoTK co={44} />
+                    <TenThuongHieu />
+                  </div>
+                )}
+                <div className="dn-khe" aria-hidden="true" />
+              </div>
+              <div className="dn-giay-vung">
+                {phieu && (
+                  <div key={lan} className={xe ? 'dn-giay xe' : 'dn-giay'}>
+                    {phieu === 'nv' ? (
+                      <form className="dn-phieu" onSubmit={gui} noValidate>
+                        <QrTrangTri />
+                        <h1>PHIẾU ĐĂNG NHẬP NHÂN VIÊN</h1>
+                        <p className="dn-phieu-ma">
+                          {ma.nv} · {luc}
+                        </p>
+                        <hr />
+                        <label>
+                          Tên đăng nhập
+                          <span className="dn-o">
+                            <input
+                              ref={oTen}
+                              value={ten}
+                              onChange={(e) => setTen(e.target.value)}
+                              autoComplete="username"
+                              required
+                            />
+                          </span>
+                        </label>
+                        <label>
+                          Mật khẩu
+                          <span className="dn-o">
+                            <input
+                              ref={oMatKhau}
+                              type="password"
+                              value={matKhau}
+                              onChange={(e) => setMatKhau(e.target.value)}
+                              autoComplete="current-password"
+                              required
+                            />
+                          </span>
+                        </label>
+                        {loi && (
+                          <p role="alert" className="loi">
+                            {loi}
+                          </p>
+                        )}
+                        <button disabled={dangGui}>
+                          {dangGui ? 'Đang đăng nhập…' : 'Đăng nhập'}
+                        </button>
+                        <button type="button" className="dn-xe" onClick={() => doiPhieu('khach')}>
+                          Khách hàng? Xé phiếu
+                        </button>
+                      </form>
+                    ) : (
+                      <form className="dn-phieu" onSubmit={guiKhach} noValidate>
+                        <QrTrangTri />
+                        <h1>PHIẾU TRA CỨU ĐƠN HÀNG</h1>
+                        <p className="dn-phieu-ma">
+                          {ma.khach} · {luc}
+                        </p>
+                        <hr />
+                        <label>
+                          Mã đơn
+                          <span className="dn-o">
+                            <input
+                              ref={oMaDon}
+                              value={maDon}
+                              onChange={(e) => setMaDon(e.target.value)}
+                              autoCapitalize="characters"
+                              autoComplete="off"
+                              spellCheck={false}
+                              maxLength={20}
+                              required
+                            />
+                          </span>
+                        </label>
+                        <label>
+                          4 số cuối điện thoại
+                          <span className="dn-o">
+                            <input
+                              value={soCuoi}
+                              onChange={(e) =>
+                                setSoCuoi(e.target.value.replace(/\D/g, '').slice(0, 4))
+                              }
+                              inputMode="numeric"
+                              autoComplete="off"
+                              placeholder="vd 6789"
+                              maxLength={4}
+                              required
+                            />
+                          </span>
+                        </label>
+                        {loiKhach && (
+                          <p role="alert" className="loi">
+                            {loiKhach}
+                          </p>
+                        )}
+                        <button>Tra cứu</button>
+                        <button type="button" className="dn-xe" onClick={() => doiPhieu('nv')}>
+                          Nhân viên? Xé phiếu
+                        </button>
+                      </form>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+            <button
+              type="button"
+              className="dn-px-doi"
+              onClick={() => doiPhieu(phieu === 'khach' ? 'nv' : 'khach')}
+            >
+              {phieu === 'khach' ? 'Nhân viên? In phiếu đăng nhập' : 'Khách hàng? In phiếu tra cứu'}
+            </button>
+            <p className="dn-chi-doc" role="status" aria-live="polite">
+              {thongBao}
+            </p>
+          </div>
+          {hinh}
+        </div>
+      </main>
+    )
+  }
+
   return (
     <main className="dang-nhap">
       <div className="dn-khung">
         <form onSubmit={gui} noValidate>
-          <div className={mo ? 'dn-giua' : 'dn-giua dong'}>
-            {/* Logo và tên thương hiệu ở đầu khối form (Pixel: thanh tiêu đề cửa sổ; bản thường / Pixel do CSS chọn) */}
-            {mo ? (
-              <div className="dn-thuong-hieu">
-                <LogoTK co={44} />
-                <TenThuongHieu />
-              </div>
-            ) : (
-              <button
-                type="button"
-                className="dn-thuong-hieu dn-bam-logo"
-                aria-expanded={false}
-                aria-controls="dn-than"
-                onClick={moCuaSo}
-              >
-                <LogoTK co={44} />
-                <TenThuongHieu />
-                <span className="dn-goi-y">▶ Bấm vào logo để đăng nhập</span>
-              </button>
-            )}
-            <div id="dn-than" className="dn-than" hidden={!mo}>
+          <div className="dn-giua">
+            <div className="dn-thuong-hieu">
+              <LogoTK co={44} />
+              <TenThuongHieu />
+            </div>
+            <div className="dn-than">
               <h1>Đăng nhập</h1>
               <label>
                 Tên đăng nhập
@@ -173,15 +396,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
           </div>
         </form>
 
-        <section className="dn-hinh" style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}>
-          <NenHat />
-          <p aria-label={CAU_GIOI_THIEU}>
-            <span aria-hidden="true">
-              {CAU_GIOI_THIEU.slice(0, soKyTu)}
-              {tro !== 'an' && <i className={tro === 'nhay' ? 'dn-con-tro nhay' : 'dn-con-tro'} />}
-            </span>
-          </p>
-        </section>
+        {hinh}
       </div>
     </main>
   )
