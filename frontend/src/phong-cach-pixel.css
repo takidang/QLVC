@@ -2378,3 +2378,39 @@
     outline-color: var(--n-coral);
   }
 }
+
+/* Thêm màu cho thẻ và nút phụ (chỉ Pixel): nền sáng chữ đen, nền đậm chữ trắng */
+@media screen {
+  /* Biển số, thẻ loại: nền vàng bơ như biển số xe kinh doanh vận tải */
+  :root[data-phong-cach='pixel'] :is(.bien, .bien-so) {
+    color: var(--n-charcoal);
+    background: var(--n-butter);
+    border: 2px solid var(--n-charcoal);
+    border-radius: var(--bo);
+    box-shadow: 2px 2px 0 var(--n-charcoal);
+  }
+
+  /* Nút phụ: xanh trời nhạt chữ đen */
+  :root[data-phong-cach='pixel'] button.phu:enabled {
+    color: var(--n-charcoal);
+    background: color-mix(in srgb, var(--n-sky) 70%, #fff); /* xanh trời nhạt: chữ đen ≥ 4.5:1 */
+    border: 2px solid var(--n-charcoal);
+    box-shadow: 2px 2px 0 var(--n-charcoal);
+  }
+  /* Cột thao tác: nút thứ hai trở đi (Ngừng, Khóa, Xóa…) tím mận chữ trắng */
+  :root[data-phong-cach='pixel'] td.hanh-dong button.phu:enabled ~ button.phu:enabled {
+    color: #fff;
+    background: var(--n-plum);
+  }
+  :root[data-phong-cach='pixel'] button.phu:enabled:hover {
+    filter: brightness(1.08);
+  }
+  :root[data-phong-cach='pixel'] button.phu:enabled:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
+    button.phu:enabled:active {
+    transform: none;
+  }
+}
