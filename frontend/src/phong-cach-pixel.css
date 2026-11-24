@@ -183,6 +183,401 @@
     box-shadow: none;
   }
 
+  /* Hiệu ứng Pixel: 1. Tia laser quét dọc & 4 góc ngắm 8-bit trên khung camera QR */
+  @keyframes px-laser-quet {
+    from {
+      transform: translateY(4%);
+    }
+    to {
+      transform: translateY(92%);
+    }
+  }
+  :root[data-phong-cach='pixel'] .px-camera-vung {
+    position: relative;
+    overflow: hidden;
+    border: 2px solid var(--vien-dam);
+    border-radius: var(--bo);
+    box-shadow: var(--bong-nho);
+  }
+  :root[data-phong-cach='pixel'] .px-camera-vung video {
+    display: block;
+    border-radius: 0;
+  }
+  :root[data-phong-cach='pixel'] .px-laser {
+    position: absolute;
+    inset: 10px;
+    z-index: 2;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  :root[data-phong-cach='pixel'] .px-laser-goc {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: var(--nhan-sang);
+    border-style: solid;
+    border-width: 0;
+  }
+  :root[data-phong-cach='pixel'] .px-laser-goc.tl {
+    top: 0;
+    left: 0;
+    border-top-width: 3px;
+    border-left-width: 3px;
+  }
+  :root[data-phong-cach='pixel'] .px-laser-goc.tr {
+    top: 0;
+    right: 0;
+    border-top-width: 3px;
+    border-right-width: 3px;
+  }
+  :root[data-phong-cach='pixel'] .px-laser-goc.bl {
+    bottom: 0;
+    left: 0;
+    border-bottom-width: 3px;
+    border-left-width: 3px;
+  }
+  :root[data-phong-cach='pixel'] .px-laser-goc.br {
+    right: 0;
+    bottom: 0;
+    border-right-width: 3px;
+    border-bottom-width: 3px;
+  }
+  :root[data-phong-cach='pixel'] .px-laser-thanh {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    animation: px-laser-quet 1.5s steps(12, end) infinite alternate;
+  }
+  :root[data-phong-cach='pixel'] .px-laser-thanh::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 4px;
+    left: 4px;
+    height: 3px;
+    background: var(--do);
+    box-shadow:
+      0 0 0 1px var(--nhan-sang),
+      0 4px 0 color-mix(in srgb, var(--do) 35%, transparent);
+  }
+
+  /* Hiệu ứng Pixel: 2. Con dấu "ĐÃ GIAO" đóng xuống xoay nhẹ, nảy rồi tự mờ sau ~1,2 s */
+  @keyframes px-dong-dau {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -28px) rotate(-14deg) scale(1.45);
+    }
+    12% {
+      opacity: 1;
+      transform: translate(-50%, 3px) rotate(-6deg) scale(0.92);
+    }
+    20% {
+      opacity: 1;
+      transform: translate(-50%, 0) rotate(-8deg) scale(1.04);
+    }
+    28% {
+      opacity: 1;
+      transform: translate(-50%, 0) rotate(-7deg) scale(1);
+    }
+    82% {
+      opacity: 1;
+      transform: translate(-50%, 0) rotate(-7deg) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -6px) rotate(-7deg) scale(0.96);
+    }
+  }
+  :root[data-phong-cach='pixel'] .px-con-dau {
+    position: fixed;
+    top: 20vh;
+    left: 50%;
+    z-index: 42;
+    pointer-events: none;
+    animation: px-dong-dau 1300ms steps(3, end) forwards;
+  }
+  :root[data-phong-cach='pixel'] .px-con-dau-khung {
+    display: inline-block;
+    padding: 4px;
+    background: color-mix(in srgb, var(--noi) 94%, transparent);
+    border: 3px solid var(--xong);
+    border-radius: var(--bo);
+    box-shadow: var(--bong);
+  }
+  :root[data-phong-cach='pixel'] .px-con-dau-chu {
+    display: block;
+    padding: 6px 18px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    white-space: nowrap;
+    color: var(--xong-chu);
+    border: 2px dashed var(--xong);
+  }
+
+  /* Hiệu ứng Pixel: 3. Thả khối hàng vào thùng xe & khung rung ngắn khi máy chủ báo quá tải */
+  @keyframes px-khoi-roi {
+    0% {
+      opacity: 0;
+      transform: translateY(-48px);
+    }
+    55% {
+      opacity: 1;
+      transform: translateY(3px);
+    }
+    80% {
+      opacity: 1;
+      transform: translateY(-2px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes px-bui-bat {
+    0% {
+      opacity: 0;
+      transform: translateY(2px);
+    }
+    45% {
+      opacity: 1;
+      transform: translateY(-4px);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+  :root[data-phong-cach='pixel'] .xh-khoi.px-khoi-roi {
+    animation: px-khoi-roi 280ms steps(4, end) 1 both;
+  }
+  :root[data-phong-cach='pixel'] .xh-khoi.px-khoi-roi .xh-o {
+    shape-rendering: crispEdges;
+    stroke: var(--muc);
+    stroke-width: 2;
+  }
+  :root[data-phong-cach='pixel'] .px-bui-roi {
+    pointer-events: none;
+    animation: px-bui-bat 320ms steps(3, end) 1 forwards;
+  }
+  :root[data-phong-cach='pixel'] .px-bui-o {
+    fill: var(--nhan-sang);
+    stroke: var(--muc);
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+  }
+  :root[data-phong-cach='pixel'] .px-bui-o.nhat {
+    fill: var(--chay);
+  }
+  :root[data-phong-cach='pixel'] .xh-xe.px-xh-rung {
+    animation: pixel-rung-loi 280ms steps(1, end) 1;
+  }
+  :root[data-phong-cach='pixel'] .xh-xe.px-xh-rung .xh-thung {
+    stroke: var(--do);
+    stroke-width: 2.5;
+  }
+  :root[data-phong-cach='pixel'] .xh-xe.px-xh-rung .xh-ray {
+    outline: 2px solid var(--do);
+    outline-offset: 1px;
+  }
+
+  /* Hiệu ứng Pixel: 4. Xe tải pixel chạy trên dải mốc hành trình ở trang Tra cứu */
+  @keyframes px-xe-chay {
+    from {
+      transform: translateX(0%);
+    }
+    to {
+      transform: translateX(var(--px-xe-dich, 0%));
+    }
+  }
+  @keyframes px-xe-nhun {
+    0%,
+    100% {
+      transform: translate(-50%, 0);
+    }
+    50% {
+      transform: translate(-50%, -1px);
+    }
+  }
+  @keyframes px-duong-chay {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(var(--px-ty-le, 0));
+    }
+  }
+  :root[data-phong-cach='pixel'] .px-hanh-trinh {
+    margin: 0 0 18px;
+    padding: 12px 12px 10px;
+    background: var(--mat-2);
+    border: 2px solid var(--vien-dam);
+    border-radius: var(--bo);
+    box-shadow: var(--bong-nho);
+    pointer-events: none;
+  }
+  :root[data-phong-cach='pixel'] .px-duong-xe {
+    position: relative;
+    height: 22px;
+    margin: 0 18px 4px;
+  }
+  :root[data-phong-cach='pixel'] .px-xe-chay-bo {
+    position: absolute;
+    inset: 0;
+    transform: translateX(var(--px-xe-dich, 0%));
+    animation: px-xe-chay 420ms steps(8, end) 1 both;
+  }
+  :root[data-phong-cach='pixel'] .px-xe-tai {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: block;
+    transform: translateX(-50%);
+    animation: px-xe-nhun 140ms steps(2, end) 3;
+  }
+  :root[data-phong-cach='pixel'] .px-xe-thung {
+    fill: var(--chay);
+  }
+  :root[data-phong-cach='pixel'] .px-hanh-trinh.xong .px-xe-thung {
+    fill: var(--xong);
+  }
+  :root[data-phong-cach='pixel'] .px-hanh-trinh.canh-bao .px-xe-thung {
+    fill: var(--cam);
+  }
+  :root[data-phong-cach='pixel'] .px-hanh-trinh.huy .px-xe-thung {
+    fill: var(--xam);
+  }
+  :root[data-phong-cach='pixel'] .px-xe-soc {
+    fill: var(--nhan-sang);
+  }
+  :root[data-phong-cach='pixel'] .px-xe-dau {
+    fill: var(--o-liu);
+  }
+  :root[data-phong-cach='pixel'] .px-xe-kinh {
+    fill: var(--noi);
+  }
+  :root[data-phong-cach='pixel'] .px-xe-gam,
+  :root[data-phong-cach='pixel'] .px-xe-banh {
+    fill: var(--muc);
+  }
+  :root[data-phong-cach='pixel'] .px-xe-mam {
+    fill: var(--mat);
+  }
+  :root[data-phong-cach='pixel'] .px-xe-khoi {
+    fill: var(--phu);
+  }
+  :root[data-phong-cach='pixel'] .px-duong-ray {
+    position: relative;
+    height: 12px;
+    margin: 0 18px;
+  }
+  :root[data-phong-cach='pixel'] .px-duong-ray::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    right: 0;
+    left: 0;
+    height: 4px;
+    background: color-mix(in srgb, var(--muc) 20%, transparent);
+  }
+  :root[data-phong-cach='pixel'] .px-duong-tien {
+    position: absolute;
+    top: 4px;
+    right: 0;
+    left: 0;
+    height: 4px;
+    background: var(--chay);
+    transform-origin: left center;
+    transform: scaleX(var(--px-ty-le, 0));
+    animation: px-duong-chay 420ms steps(8, end) 1 both;
+  }
+  :root[data-phong-cach='pixel'] .px-hanh-trinh.xong .px-duong-tien {
+    background: var(--xong);
+  }
+  :root[data-phong-cach='pixel'] .px-hanh-trinh.canh-bao .px-duong-tien {
+    background: var(--cam);
+  }
+  :root[data-phong-cach='pixel'] .px-hanh-trinh.huy .px-duong-tien {
+    background: var(--xam);
+  }
+  :root[data-phong-cach='pixel'] .px-moc-ds {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 12px;
+  }
+  :root[data-phong-cach='pixel'] .px-moc-diem {
+    width: 10px;
+    height: 10px;
+    background: var(--mat);
+    border: 2px solid var(--vien-dam);
+  }
+  :root[data-phong-cach='pixel'] .px-moc-diem.xong {
+    background: var(--muc);
+    border-color: var(--muc);
+  }
+  :root[data-phong-cach='pixel'] .px-moc-diem.toi {
+    background: var(--nhan-sang);
+    border-color: var(--muc);
+  }
+  :root[data-phong-cach='pixel'] .px-moc-nhan {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 4px;
+    margin-top: 6px;
+    font-size: 11px;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--phu);
+  }
+  :root[data-phong-cach='pixel'] .px-moc-nhan span:first-child {
+    text-align: left;
+  }
+  :root[data-phong-cach='pixel'] .px-moc-nhan span:last-child {
+    text-align: right;
+  }
+  :root[data-phong-cach='pixel'] .px-moc-nhan span.toi {
+    font-weight: 600;
+    color: var(--muc);
+  }
+
+  /* Hiệu ứng Pixel: 5. Chuyển trang khung hình 8-bit (dải ô vuông steps(), ≤ 250 ms) */
+  @keyframes px-che-man {
+    0% {
+      opacity: 0.92;
+      transform: scaleY(1);
+    }
+    35% {
+      opacity: 0.85;
+      transform: scaleY(0.75);
+    }
+    100% {
+      opacity: 0;
+      transform: scaleY(0);
+    }
+  }
+  :root[data-phong-cach='pixel'] .px-chuyen-trang {
+    position: fixed;
+    inset: 0;
+    z-index: 48;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    pointer-events: none;
+  }
+  :root[data-phong-cach='pixel'] .px-chuyen-o {
+    background: repeating-conic-gradient(var(--muc) 0 25%, var(--o-liu) 0 50%) 0 0 / 16px 16px;
+    border-bottom: 3px solid var(--nhan-sang);
+    transform-origin: top center;
+    animation: px-che-man 180ms steps(4, end) calc(var(--px-i, 0) * 8ms) both;
+  }
+  :root[data-phong-cach='pixel']::view-transition-old(root),
+  :root[data-phong-cach='pixel']::view-transition-new(root) {
+    animation-duration: 200ms;
+    animation-timing-function: steps(4, end);
+  }
+
   /* Tắt mọi animation/transition mới khi bật tùy chọn Giảm chuyển động trong Cài đặt */
   :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
     :is(
@@ -193,8 +588,27 @@
       .hop-thoai,
       .menu-tk-hop,
       .chuong-hop,
-      .tim-hop
+      .tim-hop,
+      .px-laser-thanh,
+      .px-con-dau,
+      .xh-khoi.px-khoi-roi,
+      .px-bui-roi,
+      .xh-xe.px-xh-rung,
+      .px-xe-chay-bo,
+      .px-xe-tai,
+      .px-duong-tien,
+      .px-chuyen-o
     ) {
+    animation: none;
+  }
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
+    :is(.px-laser, .px-con-dau, .px-bui-roi, .px-chuyen-trang) {
+    display: none;
+  }
+  :root[data-phong-cach='pixel'][data-giam-chuyen-dong='bat']::view-transition-old(root),
+  :root[data-phong-cach='pixel'][data-giam-chuyen-dong='bat']::view-transition-new(root),
+  :root[data-phong-cach='pixel'][data-hieu-ung-pixel='tat']::view-transition-old(root),
+  :root[data-phong-cach='pixel'][data-hieu-ung-pixel='tat']::view-transition-new(root) {
     animation: none;
   }
   :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
@@ -218,8 +632,24 @@
         .hop-thoai,
         .menu-tk-hop,
         .chuong-hop,
-        .tim-hop
+        .tim-hop,
+        .px-laser-thanh,
+        .px-con-dau,
+        .xh-khoi.px-khoi-roi,
+        .px-bui-roi,
+        .xh-xe.px-xh-rung,
+        .px-xe-chay-bo,
+        .px-xe-tai,
+        .px-duong-tien,
+        .px-chuyen-o
       ) {
+      animation: none;
+    }
+    :root[data-phong-cach='pixel'] :is(.px-laser, .px-con-dau, .px-bui-roi, .px-chuyen-trang) {
+      display: none;
+    }
+    :root[data-phong-cach='pixel']::view-transition-old(root),
+    :root[data-phong-cach='pixel']::view-transition-new(root) {
       animation: none;
     }
     :root[data-phong-cach='pixel'] :is([data-sonner-toast], .vien-thuoc button) {

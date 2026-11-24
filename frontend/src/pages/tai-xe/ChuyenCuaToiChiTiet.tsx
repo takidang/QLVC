@@ -13,7 +13,8 @@ import {
   type ChuyenCuaToiChiTiet as ChiTiet,
   type KetQuaQuet,
 } from '../../api/toi'
-import { giamChuyenDong } from '../../nen'
+import { ConDauDaGiaoPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel, giamChuyenDong } from '../../nen'
 import { nenAnh } from '../../nenAnh'
 import { ChiPhi } from './ChiPhi'
 import { SuCoChuyen } from './SuCo'
@@ -43,15 +44,25 @@ export default function ChuyenCuaToiChiTiet() {
   const [c, setC] = useState<ChiTiet | null>(null)
   const [loi, setLoi] = useState('')
   const [quet, setQuet] = useState<KetQuaQuet | null>(null)
+  // Hiệu ứng Pixel: cờ hiện con dấu "ĐÃ GIAO" sau khi giao thành công (tự tắt sau ~1,4 s)
+  const [dauGiao, setDauGiao] = useState(0)
   const tb = quet && c ? thongBaoQuet(quet, c) : null
 
   // Quét xong: giữ câu báo, tải lại lịch trình để trạng thái điểm đổi ngay
   const xongQuet = (kq: KetQuaQuet) => {
     setQuet(kq)
+    // Hiệu ứng Pixel: kích hoạt con dấu "ĐÃ GIAO" khi máy chủ vừa ghi nhận giao thành công
+    if (kq.loai === 'GIAO' && !kq.lap_lai && dangHieuUngPixel()) setDauGiao((n) => n + 1)
     chuyenCuaToiChiTiet(Number(id))
       .then(setC)
       .catch(() => setLoi('Đã ghi nhận nhưng không tải lại được lịch trình, kéo xuống để tải lại'))
   }
+
+  useEffect(() => {
+    if (dauGiao === 0) return
+    const t = window.setTimeout(() => setDauGiao(0), 1400)
+    return () => window.clearTimeout(t)
+  }, [dauGiao])
 
   useEffect(() => {
     chuyenCuaToiChiTiet(Number(id))
@@ -165,6 +176,8 @@ export default function ChuyenCuaToiChiTiet() {
             )}
           </section>
 
+          {/* Hiệu ứng Pixel: con dấu "ĐÃ GIAO" đóng xuống sau khi giao thành công */}
+          {dauGiao > 0 && dangHieuUngPixel() && <ConDauDaGiaoPixel key={dauGiao} />}
           {tb && (
             <div role="status">
               <p className="thanh-cong">{tb.xong}</p>

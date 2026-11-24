@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { ChuyenChiTiet } from '../../api/chuyen'
 import { TEN_TRANG_THAI_DON, type Don } from '../../api/don'
+import { BuiThaHangPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel } from '../../nen'
 
 const so = (n: number) => n.toLocaleString('vi-VN', { maximumFractionDigits: 1 })
 const ngayGio = (iso: string) =>
@@ -38,9 +40,58 @@ export default function XepHang({
 }) {
   const [thu, setThu] = useState<Don | null>(null) // đơn đang rê chuột (xem trước)
   const [chon, setChon] = useState<number | null>(null) // khối đơn đang chọn để gỡ
+  // Hiệu ứng Pixel: cờ khối hàng vừa ghép rơi xuống thùng và rung khung khi máy chủ báo quá tải
+  const [vuaRoi, setVuaRoi] = useState<number[]>([])
+  const [rungQuaTai, setRungQuaTai] = useState(false)
 
   // Đơn còn trên xe (đơn đã giao / thất bại vẫn hiện khi chuyến đã chạy, để thấy chuyến đã chở gì)
   const ds = c.don.filter((d) => d.trang_thai !== 'HUY')
+  const maDs = ds.map((d) => d.id).join(',')
+  const chuyenTruoc = useRef(c.id)
+  const donTruoc = useRef<Set<number>>(new Set(ds.map((d) => d.id)))
+  const choGhep = useRef<number | null>(null)
+  const dangGuiTruoc = useRef(dangGui)
+
+  useEffect(() => {
+    const hienTai = maDs ? maDs.split(',').map(Number) : []
+    if (chuyenTruoc.current !== c.id) {
+      chuyenTruoc.current = c.id
+      donTruoc.current = new Set(hienTai)
+      choGhep.current = null
+      setVuaRoi([])
+      setRungQuaTai(false)
+      return
+    }
+    const moi = hienTai.filter((id) => !donTruoc.current.has(id))
+    donTruoc.current = new Set(hienTai)
+    if (moi.length > 0 && dangHieuUngPixel()) setVuaRoi(moi)
+  }, [c.id, maDs])
+
+  useEffect(() => {
+    if (vuaRoi.length === 0) return
+    const t = window.setTimeout(() => setVuaRoi([]), 380)
+    return () => window.clearTimeout(t)
+  }, [vuaRoi])
+
+  useEffect(() => {
+    const vuaXong = dangGuiTruoc.current && !dangGui
+    dangGuiTruoc.current = dangGui
+    if (!vuaXong || choGhep.current === null) return
+    const idGhep = choGhep.current
+    choGhep.current = null
+    const daCo = maDs ? maDs.split(',').map(Number).includes(idGhep) : false
+    if (daCo || !dangHieuUngPixel()) return
+    const tbLoi = document.querySelector('[role="alert"].canh-bao')?.textContent ?? ''
+    if (/BR-0[12]|quá tải|vượt|tải trọng|thể tích|sức chứa/i.test(tbLoi)) {
+      setRungQuaTai(true)
+    }
+  }, [dangGui, maDs])
+
+  useEffect(() => {
+    if (!rungQuaTai) return
+    const t = window.setTimeout(() => setRungQuaTai(false), 320)
+    return () => window.clearTimeout(t)
+  }, [rungQuaTai])
   const m3Max = Number(c.the_tich.toi_da_m3) || 1
   const kgMax = c.tai_trong.toi_da_kg || 1
   const m3 = Number(c.the_tich.da_dung_m3)
@@ -62,7 +113,7 @@ export default function XepHang({
 
   return (
     <section className="kinh xh xh-hai-cot">
-      <div className="xh-xe">
+      <div className={rungQuaTai && dangHieuUngPixel() ? 'xh-xe px-xh-rung' : 'xh-xe'}>
         <h2>
           Xếp hàng lên xe <span className="bien">{c.bien_so}</span>
         </h2>
@@ -92,46 +143,61 @@ export default function XepHang({
               className="xh-vach"
             />
           ))}
-          {khoi.map(({ d, x: kx, w }, i) => (
-            <g
-              key={d.id}
-              className={chon === d.id ? 'xh-khoi chon' : 'xh-khoi'}
-              tabIndex={dangLap ? 0 : -1}
-              role={dangLap ? 'button' : undefined}
-              aria-label={`${d.ma_don}: ${so(Number(d.m3))} m³, ${so(Number(d.kg))} kg${dangLap ? ', bấm để chọn gỡ' : ''}`}
-              onClick={() => dangLap && setChon(chon === d.id ? null : d.id)}
-              onKeyDown={(e) => {
-                if (dangLap && (e.key === 'Enter' || e.key === ' ')) {
-                  e.preventDefault()
-                  setChon(chon === d.id ? null : d.id)
-                }
-              }}
-            >
-              <rect
-                x={kx + 1}
-                y={Y0}
-                width={Math.max(w - 2, 2)}
-                height={Y1 - Y0}
-                rx={4}
-                className={`xh-o o${i % 3}`}
-              />
-              {w > 54 && (
-                <>
-                  <text x={kx + w / 2} y={(Y0 + Y1) / 2 - 4} textAnchor="middle" className="xh-chu">
-                    {d.ma_don.replace('DH-', '')}
-                  </text>
-                  <text
-                    x={kx + w / 2}
-                    y={(Y0 + Y1) / 2 + 14}
-                    textAnchor="middle"
-                    className="xh-chu nho"
-                  >
-                    {so(Number(d.m3))} m³
-                  </text>
-                </>
-              )}
-            </g>
-          ))}
+          {khoi.map(({ d, x: kx, w }, i) => {
+            const dangRoi = vuaRoi.includes(d.id) && dangHieuUngPixel()
+            return (
+              <g
+                key={d.id}
+                className={`${chon === d.id ? 'xh-khoi chon' : 'xh-khoi'}${dangRoi ? ' px-khoi-roi' : ''}`}
+                tabIndex={dangLap ? 0 : -1}
+                role={dangLap ? 'button' : undefined}
+                aria-label={`${d.ma_don}: ${so(Number(d.m3))} m³, ${so(Number(d.kg))} kg${dangLap ? ', bấm để chọn gỡ' : ''}`}
+                onClick={() => dangLap && setChon(chon === d.id ? null : d.id)}
+                onKeyDown={(e) => {
+                  if (dangLap && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault()
+                    setChon(chon === d.id ? null : d.id)
+                  }
+                }}
+              >
+                <rect
+                  x={kx + 1}
+                  y={Y0}
+                  width={Math.max(w - 2, 2)}
+                  height={Y1 - Y0}
+                  rx={4}
+                  className={`xh-o o${i % 3}`}
+                />
+                {w > 54 && (
+                  <>
+                    <text
+                      x={kx + w / 2}
+                      y={(Y0 + Y1) / 2 - 4}
+                      textAnchor="middle"
+                      className="xh-chu"
+                    >
+                      {d.ma_don.replace('DH-', '')}
+                    </text>
+                    <text
+                      x={kx + w / 2}
+                      y={(Y0 + Y1) / 2 + 14}
+                      textAnchor="middle"
+                      className="xh-chu nho"
+                    >
+                      {so(Number(d.m3))} m³
+                    </text>
+                  </>
+                )}
+              </g>
+            )
+          })}
+          {/* Hiệu ứng Pixel: hạt bụi ô vuông khi khối hàng vừa rơi xuống sàn thùng xe */}
+          {dangHieuUngPixel() &&
+            khoi
+              .filter(({ d }) => vuaRoi.includes(d.id))
+              .map(({ d, x: kx, w }) => (
+                <BuiThaHangPixel key={`bui-${d.id}`} x={kx} w={w} y={Y1} />
+              ))}
           {/* Xem trước đơn đang rê chuột: khối nét đứt, cam nếu vượt sức chứa */}
           {thu && wThu > 0 && (
             <rect
@@ -243,7 +309,14 @@ export default function XepHang({
                     {ngayGio(d.han_giao)}
                   </small>
                 </div>
-                <button disabled={dangGui} onClick={() => onGhep(d.id)}>
+                <button
+                  disabled={dangGui}
+                  onClick={() => {
+                    // Hiệu ứng Pixel: ghi nhận đơn vừa bấm ghép để bắt phản hồi từ máy chủ
+                    choGhep.current = d.id
+                    onGhep(d.id)
+                  }}
+                >
                   Ghép vào xe
                 </button>
               </li>

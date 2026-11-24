@@ -15,6 +15,7 @@ import { KhungThongBao } from './thongBao'
 import BatLoiTrang from './BatLoiTrang'
 import ChuongThongBao from './ChuongThongBao'
 import DanConTro from './DanConTro'
+import { ChuyenTrangPixel } from './HieuUngPixel'
 import MenuTaiKhoan from './MenuTaiKhoan'
 import TimChung from './TimChung'
 import { useHienKhiCuon } from './useHienKhiCuon'
@@ -252,6 +253,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <KhungThongBao />
+      {/* Hiệu ứng Pixel: chuyển trang khung hình 8-bit khi đổi trang */}
+      <ChuyenTrangPixel />
       <BatLoiTrang>
         <Suspense fallback={<p className="ghi-chu">Đang tải…</p>}>
           <Routes>

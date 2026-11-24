@@ -140,6 +140,9 @@ export function apHieuUngPixel(ma: string) {
     delete document.documentElement.dataset.hieuUngPixel
   }
 }
+// Hiệu ứng Pixel: chỉ chạy khi bật phong cách Pixel, bật công tắc và không giảm chuyển động
+export const dangHieuUngPixel = () =>
+  phongCachDaLuu() === 'pixel' && hieuUngPixelDaLuu() !== 'tat' && !giamChuyenDong()
 
 // Người dùng bấm đổi chế độ: làm mờ chéo ngắn (View Transitions, CSS ::view-transition-*) thay vì đổi
 // màu cả màn trong một nhát. Lần áp lúc tải trang và khi máy đổi chế độ vẫn gọi apCheDo thẳng.
