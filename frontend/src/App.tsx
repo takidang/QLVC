@@ -11,6 +11,7 @@ import {
 } from 'react-router-dom'
 import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
 import { DangTaiPixel, ManTaiChuyenTrang } from './HieuUngPixel'
+import { LogoTK, TenThuongHieu } from './LogoTK'
 import { phongCachDaLuu } from './nen'
 import { Ic, type TenIc } from './nhan'
 import { KhungThongBao } from './thongBao'
@@ -131,14 +132,12 @@ const menu = (nd: NguoiDung) =>
 const NHOM = ['', 'Vận hành', 'Danh mục', 'Tài chính', 'Quản trị']
 
 const Hieu = ({ den }: { den: string }) => (
-  <Link to={den} className="hieu" aria-label="Quản lý vận tải">
+  <Link to={den} className="hieu" aria-label="TAKI Logistics">
     <i aria-hidden="true">
-      <Ic ten="chuyen" />
+      <LogoTK co={24} />
     </i>
     <span aria-hidden="true">
-      Quản lý vận <span className="hieu-duoi">t</span>
-      <span className="hieu-duoi">ả</span>
-      <span className="hieu-duoi">i</span>
+      <TenThuongHieu />
     </span>
   </Link>
 )

@@ -18,6 +18,11 @@ const X0 = 30
 const X1 = 446
 const Y0 = 34
 const Y1 = 150
+// Độ sâu container Pixel (nhìn chéo nhẹ): lệch sang phải SAU_X, lên trên SAU_Y
+const SAU_X = 24
+const SAU_Y = 16
+// Gân tôn dọc của container (Pixel), cách nhau 12 px
+const GAN_CONTAINER = Array.from({ length: Math.floor((X1 - X0) / 12) }, (_, i) => X0 + 4 + i * 12)
 
 // "Xếp hàng lên xe": hình xe tải minh họa, thùng lấp theo THỂ TÍCH các đơn đã ghép (mỗi khối một đơn,
 // rộng theo phần trăm m³, không phải vị trí thật trong thùng) + hai thanh tải trọng / thể tích.
@@ -132,6 +137,64 @@ export default function XepHang({
             rx={8}
             className="xh-thung"
           />
+          {/* Pixel: trang trí thùng kiểu container (vách tôn gân, ray, góc khóa, cửa sau); ẩn ở giao diện thường */}
+          <g className="xh-container" aria-hidden="true" shapeRendering="crispEdges">
+            {/* Khối 3D nhẹ: mặt nóc và mặt hông phải (mặt trước phẳng để thấy hàng bên trong) */}
+            <polygon
+              points={`${X0 - 10},${Y0 - 12} ${X1 + 10},${Y0 - 12} ${X1 + 10 + SAU_X},${Y0 - 12 - SAU_Y} ${X0 - 10 + SAU_X},${Y0 - 12 - SAU_Y}`}
+              className="xh-noc"
+            />
+            {GAN_CONTAINER.filter((_, i) => i % 2 === 0).map((x) => (
+              <line
+                key={`noc-${x}`}
+                x1={x}
+                y1={Y0 - 12}
+                x2={x + SAU_X}
+                y2={Y0 - 12 - SAU_Y}
+                className="xh-gan-noc"
+              />
+            ))}
+            <polygon
+              points={`${X1 + 10},${Y0 - 12} ${X1 + 10 + SAU_X},${Y0 - 12 - SAU_Y} ${X1 + 10 + SAU_X},${Y1 + 12 - SAU_Y} ${X1 + 10},${Y1 + 12}`}
+              className="xh-hong"
+            />
+            {[6, 12, 18].map((t) => (
+              <line
+                key={`hong-${t}`}
+                x1={X1 + 10 + t}
+                y1={Y0 - 12 - (t * SAU_Y) / SAU_X + 4}
+                x2={X1 + 10 + t}
+                y2={Y1 + 12 - (t * SAU_Y) / SAU_X - 4}
+                className={t === 12 ? 'xh-chot-hong' : 'xh-gan-hong'}
+              />
+            ))}
+            {[
+              [X0 - 10 + SAU_X, Y0 - 12 - SAU_Y],
+              [X1 + 10 + SAU_X - 8, Y0 - 12 - SAU_Y],
+              [X1 + 10 + SAU_X - 8, Y1 + 12 - SAU_Y - 8],
+            ].map(([x, y]) => (
+              <rect key={`gs-${x}-${y}`} x={x} y={y} width={8} height={8} className="xh-goc" />
+            ))}
+            {GAN_CONTAINER.map((x) => (
+              <rect key={x} x={x} y={Y0 - 4} width={4} height={Y1 - Y0 + 8} className="xh-gan" />
+            ))}
+            <rect x={X0 - 10} y={Y0 - 12} width={X1 - X0 + 20} height={7} className="xh-ray" />
+            <rect x={X0 - 10} y={Y1 + 5} width={X1 - X0 + 20} height={7} className="xh-ray" />
+            {[
+              [X0 - 10, Y0 - 12],
+              [X1, Y0 - 12],
+              [X0 - 10, Y1 + 2],
+              [X1, Y1 + 2],
+            ].map(([x, y]) => (
+              <g key={`${x}-${y}`}>
+                <rect x={x} y={y} width={10} height={10} className="xh-goc" />
+                <rect x={x + 3} y={y + 3} width={4} height={4} className="xh-goc-lo" />
+              </g>
+            ))}
+            {[X1 + 2, X1 + 6].map((x) => (
+              <rect key={x} x={x} y={Y0} width={2} height={Y1 - Y0} className="xh-chot" />
+            ))}
+          </g>
           {/* Vạch chia 25 % cho dễ ước lượng */}
           {[0.25, 0.5, 0.75].map((t) => (
             <line

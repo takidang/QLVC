@@ -5,6 +5,7 @@ import { traCuu, type KetQuaTraCuu } from '../api/traCuu'
 import { XeTaiHanhTrinhPixel } from '../HieuUngPixel'
 import { dangHieuUngPixel, NEN } from '../nen'
 import { useHienKhiCuon } from '../useHienKhiCuon'
+import { LogoTK, TenThuongHieu } from '../LogoTK'
 
 // Tên trạng thái đơn viết cho khách (không dùng từ nội bộ như "ghép", "thất bại")
 const TEN_CHO_KHACH: Record<string, string> = {
@@ -74,7 +75,10 @@ export default function TraCuu() {
     <main className="tra-cuu">
       <div className="tc-trai">
         <header>
-          <span className="thuong-hieu">Quản lý vận tải</span>
+          <span className="thuong-hieu">
+            <LogoTK co={22} />
+            <TenThuongHieu />
+          </span>
           <Link to="/dang-nhap">Nhân viên đăng nhập</Link>
         </header>
 
