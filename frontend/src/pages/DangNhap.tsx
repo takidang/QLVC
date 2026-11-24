@@ -119,7 +119,8 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
         dongDau(true, 'FOUND', 'ĐÃ TÌM THẤY')
         await cho(750)
       }
-      navigate(`/tra-cuu?ma=${encodeURIComponent(ma)}&so=${soCuoi}`, { state: { kq } })
+      // 4 số cuối SĐT chỉ đi qua state, không đặt lên URL (api.md 3.4: không để SĐT trong URL/lịch sử)
+      navigate(`/tra-cuu?ma=${encodeURIComponent(ma)}`, { state: { kq, so: soCuoi } })
     } catch (err) {
       const khongThay = err instanceof LoiApi && err.status === 404
       setThongBao(khongThay ? 'Không tìm thấy đơn' : 'Từ chối')
