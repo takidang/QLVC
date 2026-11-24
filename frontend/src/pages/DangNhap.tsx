@@ -245,7 +245,6 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
               <div className="dn-may-than">
                 <span className="dn-may-nhan">
                   <i className={dangIn ? 'dn-den chay' : 'dn-den'} aria-hidden="true" />
-                  MÁY IN PHIẾU · TAKI
                 </span>
                 {phieu === null ? (
                   <button
