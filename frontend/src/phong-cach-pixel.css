@@ -2966,7 +2966,8 @@
     background: var(--n-charcoal);
     border: 3px solid var(--n-charcoal);
     border-radius: var(--bo-the);
-    box-shadow: 6px 6px 0 color-mix(in srgb, var(--n-charcoal) 40%, transparent);
+    /* Bóng chỉ đổ sang phải: đổ xuống dưới sẽ đè lên tờ phiếu đang ra khỏi khe */
+    box-shadow: 6px 0 0 color-mix(in srgb, var(--n-charcoal) 40%, transparent);
   }
   :root[data-phong-cach='pixel'] .dn-may-nhan {
     justify-self: stretch;
@@ -3255,5 +3256,12 @@
     :root[data-phong-cach='pixel'] :is(.dn-dau, .dn-dau.ok, .dn-phieu.rung) {
       animation: none;
     }
+  }
+}
+
+/* Ảnh nền đăng nhập bản pixel art (PixelLab, từ ảnh Unsplash gốc): giữ nét ô vuông khi phóng to */
+@media screen {
+  :root[data-phong-cach='pixel'] .dn-hinh {
+    image-rendering: pixelated;
   }
 }

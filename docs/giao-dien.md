@@ -254,3 +254,4 @@ Giữ nguyên toàn bộ bố cục, biến màu và thành phần của giao di
 - Công tắc **Con trỏ đi theo** (Bật/Tắt, `qlvc-con-tro`): tắt thì `DanConTro` không chạy; hạt nền và chữ gõ vẫn theo "Hiệu ứng nâng cao".
 - Công tắc **Hiệu ứng Pixel** (chỉ hiện khi chọn Pixel; `qlvc-hieu-ung-pixel`, `data-hieu-ung-pixel="tat"`): tắt thì bỏ rung/lún/hiện lớp nổi, giữ màu, viền, bóng.
 - Hiệu ứng chuyển động cho phong cách này: đề xuất ở nhánh thử `tai/agy-ui-moments`, làm sau.
+- Ảnh nền đăng nhập ở Pixel: `frontend/public/anh/*-pixel.png`, chuyển từ hai ảnh Unsplash ở bảng trên sang pixel art bằng PixelLab (`image_to_pixelart`, giữ bố cục, 320×380 và 384×256), hiển thị `image-rendering: pixelated`. Giấy phép Unsplash cho phép chỉnh sửa; ghi công giữ như ảnh gốc.

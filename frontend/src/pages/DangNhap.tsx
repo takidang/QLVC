@@ -218,7 +218,14 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
   }
 
   const hinh = (
-    <section className="dn-hinh" style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}>
+    <section
+      className="dn-hinh"
+      style={
+        {
+          '--anh': `url(${phongCachDaLuu() === 'pixel' ? NEN.anh.replace('.webp', '-pixel.png') : NEN.anh})`,
+        } as CSSProperties
+      }
+    >
       <NenHat />
       <p aria-label={CAU_GIOI_THIEU}>
         <span aria-hidden="true">
