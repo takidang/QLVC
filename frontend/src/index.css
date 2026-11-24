@@ -325,13 +325,13 @@ body {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-/* Logo và tên thương hiệu ở góc trên trái cột form đăng nhập */
+/* Logo và tên thương hiệu ở đầu khối form đăng nhập, thẳng mép trái với ô nhập */
 .dn-thuong-hieu {
   display: flex;
   align-items: center;
   gap: 12px;
-  align-self: flex-start;
-  margin-bottom: 0;
+  justify-self: start;
+  margin-bottom: 18px;
   padding: 8px 18px 8px 8px;
   font-size: 1.25rem;
   font-weight: 700;

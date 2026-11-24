@@ -2806,14 +2806,31 @@
 
 /* Đăng nhập ở Pixel: dòng phụ thẳng hàng (bỏ hiệu ứng chữ cuối nổi lệch), link Tra cứu thành nút nổi bật */
 @media screen {
-  /* Biển hiệu thương hiệu: nền xanh cobalt, viền than, bóng cứng; TAKI trắng, LOGISTICS vàng bơ */
+  /* Cửa sổ đăng nhập kiểu game retro: khung viền than, bóng cứng; logo là thanh tiêu đề cobalt */
+  :root[data-phong-cach='pixel'] .dn-giua {
+    padding: 0 0 22px;
+    background: var(--mat);
+    border: 3px solid var(--n-charcoal);
+    border-radius: var(--bo-the);
+    box-shadow: 6px 6px 0 var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .dn-giua > :not(.dn-thuong-hieu) {
+    margin-inline: 22px;
+  }
+  :root[data-phong-cach='pixel'] .dn-o input,
+  :root[data-phong-cach='pixel'] .dn-giua > button {
+    border-radius: var(--bo);
+  }
   :root[data-phong-cach='pixel'] .dn-thuong-hieu {
-    padding: 10px 22px 10px 10px;
+    justify-self: stretch;
+    margin-bottom: 6px;
+    padding: 8px 14px 8px 8px;
     color: #fff;
     background: var(--n-cobalt);
-    border: 3px solid var(--n-charcoal);
-    border-radius: var(--bo);
-    box-shadow: 5px 5px 0 var(--n-charcoal);
+    border: 0;
+    border-bottom: 3px solid var(--n-charcoal);
+    border-radius: 0;
+    box-shadow: none;
   }
   :root[data-phong-cach='pixel'] .dn-thuong-hieu .ten-pixel small {
     color: var(--n-butter);

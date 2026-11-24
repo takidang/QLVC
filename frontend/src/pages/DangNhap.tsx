@@ -84,12 +84,12 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
     <main className="dang-nhap">
       <div className="dn-khung">
         <form onSubmit={gui} noValidate>
-          {/* Logo và tên thương hiệu ở góc trên trái cột form (bản thường / Pixel do CSS chọn theo phong cách) */}
-          <div className="dn-thuong-hieu">
-            <LogoTK co={44} />
-            <TenThuongHieu />
-          </div>
           <div className="dn-giua">
+            {/* Logo và tên thương hiệu ở đầu khối form (Pixel: thanh tiêu đề cửa sổ) (bản thường / Pixel do CSS chọn theo phong cách) */}
+            <div className="dn-thuong-hieu">
+              <LogoTK co={44} />
+              <TenThuongHieu />
+            </div>
             <h1>Đăng nhập</h1>
             <label>
               Tên đăng nhập
