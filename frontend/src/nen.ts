@@ -124,7 +124,9 @@ export const conTroDaLuu = (): 'bat' | 'tat' =>
 export function apConTro(ma: string) {
   localStorage.setItem(KHOA_CON_TRO, ma === 'tat' ? 'tat' : 'bat')
 }
-export const dangConTro = () => conTroDaLuu() === 'bat' && dangHieuUng()
+// Phong cách Pixel đã có hiệu ứng riêng nên không chạy đàn con trỏ (tránh trùng hiệu ứng)
+export const dangConTro = () =>
+  conTroDaLuu() === 'bat' && dangHieuUng() && phongCachDaLuu() !== 'pixel'
 
 // Hiệu ứng Pixel (chỉ có nghĩa khi Phong cách = Pixel): 'tat' thì giữ màu/viền/bóng, bỏ chuyển động riêng của Pixel
 export const HIEU_UNG_PIXEL = HIEU_UNG

@@ -114,7 +114,11 @@ export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
         />
         <MucCaiDat
           tieuDe="Con trỏ đi theo"
-          moTa="Đàn con trỏ chạy theo thao tác trên màn hình. Cần bật Hiệu ứng nâng cao; hạt nền và chữ gõ không bị ảnh hưởng."
+          moTa={
+            phongCach === 'pixel'
+              ? 'Đang dùng phong cách Pixel: con trỏ luôn tắt vì Pixel đã có hiệu ứng riêng.'
+              : 'Đàn con trỏ chạy theo thao tác trên màn hình. Cần bật Hiệu ứng nâng cao; hạt nền và chữ gõ không bị ảnh hưởng.'
+          }
           ds={CON_TRO}
           giaTri={conTro}
           onChon={(ma) => {
