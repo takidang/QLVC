@@ -325,12 +325,12 @@ body {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-/* Lối tra cứu cho khách ở đầu form đăng nhập */
+/* Lối tra cứu cho khách ngay dưới nút Đăng nhập */
 .dn-tra-cuu {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 28px;
+  margin-top: 22px;
   padding: 12px 14px;
   color: var(--muc);
   text-decoration: none;
