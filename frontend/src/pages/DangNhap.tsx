@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import { dangNhap, LoiApi, type NguoiDung } from '../api/auth'
 import { Link } from 'react-router-dom'
-import { dangHieuUng, NEN } from '../nen'
+import { dangHieuUng, dangHieuUngPixel, NEN } from '../nen'
 import NenHat from '../NenHat'
 import { LogoTK, TenThuongHieu } from '../LogoTK'
 
@@ -14,6 +14,13 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
   const [loi, setLoi] = useState('')
   const [dangGui, setDangGui] = useState(false)
   const oMatKhau = useRef<HTMLInputElement>(null)
+  // Pixel (khi bật Hiệu ứng Pixel): ban đầu chỉ có logo, bấm logo thì cửa sổ đăng nhập mở ra
+  const [mo, setMo] = useState(() => !dangHieuUngPixel())
+  const oTen = useRef<HTMLInputElement>(null)
+  const moCuaSo = () => {
+    setMo(true)
+    window.setTimeout(() => oTen.current?.focus(), 380)
+  }
   const [soKyTu, setSoKyTu] = useState(() => (dangHieuUng() ? 0 : CAU_GIOI_THIEU.length))
   const [tro, setTro] = useState<'an' | 'go' | 'nhay'>(() => (dangHieuUng() ? 'go' : 'an'))
 
@@ -84,56 +91,73 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
     <main className="dang-nhap">
       <div className="dn-khung">
         <form onSubmit={gui} noValidate>
-          <div className="dn-giua">
-            {/* Logo và tên thương hiệu ở đầu khối form (Pixel: thanh tiêu đề cửa sổ) (bản thường / Pixel do CSS chọn theo phong cách) */}
-            <div className="dn-thuong-hieu">
-              <LogoTK co={44} />
-              <TenThuongHieu />
-            </div>
-            <h1>Đăng nhập</h1>
-            <label>
-              Tên đăng nhập
-              <span className="dn-o">
-                <input
-                  value={ten}
-                  onChange={(e) => setTen(e.target.value)}
-                  autoComplete="username"
-                  required
-                />
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="12" cy="8" r="4" />
-                  <path d="M4 20.5c0-3.6 3.6-5.5 8-5.5s8 1.9 8 5.5" />
-                </svg>
-              </span>
-            </label>
-            <label>
-              Mật khẩu
-              <span className="dn-o">
-                <input
-                  ref={oMatKhau}
-                  type="password"
-                  value={matKhau}
-                  onChange={(e) => setMatKhau(e.target.value)}
-                  autoComplete="current-password"
-                  required
-                />
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <rect x="5" y="10.5" width="14" height="9.5" rx="2" />
-                  <path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" />
-                </svg>
-              </span>
-            </label>
-            {loi && (
-              <p role="alert" className="loi">
-                {loi}
-              </p>
+          <div className={mo ? 'dn-giua' : 'dn-giua dong'}>
+            {/* Logo và tên thương hiệu ở đầu khối form (Pixel: thanh tiêu đề cửa sổ; bản thường / Pixel do CSS chọn) */}
+            {mo ? (
+              <div className="dn-thuong-hieu">
+                <LogoTK co={44} />
+                <TenThuongHieu />
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="dn-thuong-hieu dn-bam-logo"
+                aria-expanded={false}
+                aria-controls="dn-than"
+                onClick={moCuaSo}
+              >
+                <LogoTK co={44} />
+                <TenThuongHieu />
+                <span className="dn-goi-y">▶ Bấm vào logo để đăng nhập</span>
+              </button>
             )}
-            <button disabled={dangGui}>
-              {dangGui ? 'Đang đăng nhập…' : 'Đăng nhập'}
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg>
-            </button>
+            <div id="dn-than" className="dn-than" hidden={!mo}>
+              <h1>Đăng nhập</h1>
+              <label>
+                Tên đăng nhập
+                <span className="dn-o">
+                  <input
+                    ref={oTen}
+                    value={ten}
+                    onChange={(e) => setTen(e.target.value)}
+                    autoComplete="username"
+                    required
+                  />
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="8" r="4" />
+                    <path d="M4 20.5c0-3.6 3.6-5.5 8-5.5s8 1.9 8 5.5" />
+                  </svg>
+                </span>
+              </label>
+              <label>
+                Mật khẩu
+                <span className="dn-o">
+                  <input
+                    ref={oMatKhau}
+                    type="password"
+                    value={matKhau}
+                    onChange={(e) => setMatKhau(e.target.value)}
+                    autoComplete="current-password"
+                    required
+                  />
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <rect x="5" y="10.5" width="14" height="9.5" rx="2" />
+                    <path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5" />
+                  </svg>
+                </span>
+              </label>
+              {loi && (
+                <p role="alert" className="loi">
+                  {loi}
+                </p>
+              )}
+              <button disabled={dangGui}>
+                {dangGui ? 'Đang đăng nhập…' : 'Đăng nhập'}
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </button>
+            </div>
             {/* Lối vào cho khách: đặt ngay dưới nút Đăng nhập cho khách dễ thấy, không cần đăng nhập */}
             <Link to="/tra-cuu" className="dn-tra-cuu">
               <svg viewBox="0 0 24 24" aria-hidden="true">

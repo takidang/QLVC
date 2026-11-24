@@ -2817,8 +2817,85 @@
   :root[data-phong-cach='pixel'] .dn-giua > :not(.dn-thuong-hieu) {
     margin-inline: 22px;
   }
+  /* Chưa mở: chỉ logo lớn + dòng "bấm vào logo" nhấp nháy kiểu PRESS START; thẻ Tra cứu vẫn hiện */
+  :root[data-phong-cach='pixel'] .dn-giua.dong {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    justify-items: center;
+  }
+  :root[data-phong-cach='pixel'] .dn-giua.dong > :not(.dn-thuong-hieu) {
+    margin-inline: 0;
+    justify-self: stretch;
+  }
+  :root[data-phong-cach='pixel'] .dn-thuong-hieu.dn-bam-logo {
+    flex-direction: column;
+    gap: 10px;
+    justify-self: center;
+    margin-bottom: 30px;
+    padding: 18px 26px 14px;
+    font-size: 1.6rem;
+    background: var(--n-cobalt);
+    border: 3px solid var(--n-charcoal);
+    border-radius: var(--bo-the);
+    box-shadow: 6px 6px 0 var(--n-charcoal);
+    transition:
+      transform 90ms steps(2, end),
+      box-shadow 90ms steps(2, end);
+  }
+  :root[data-phong-cach='pixel'] .dn-thuong-hieu.dn-bam-logo .logo-pixel {
+    width: 110px;
+    height: auto;
+    stroke: none;
+  }
+  :root[data-phong-cach='pixel'] .dn-thuong-hieu.dn-bam-logo:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .dn-thuong-hieu.dn-bam-logo:active {
+    transform: translate(4px, 4px);
+    box-shadow: none;
+  }
+  @keyframes px-nhap-nhay {
+    50% {
+      opacity: 0;
+    }
+  }
+  :root[data-phong-cach='pixel'] .dn-goi-y {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--n-butter);
+    animation: px-nhap-nhay 1.1s steps(1, end) infinite;
+  }
+  /* Mở: thân cửa sổ trượt xuống theo bậc */
+  @keyframes px-mo-cua-so {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  :root[data-phong-cach='pixel'] .dn-than:not([hidden]) {
+    animation: px-mo-cua-so 360ms steps(6, end) backwards;
+  }
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
+    :is(.dn-goi-y, .dn-than, .dn-bam-logo) {
+    animation: none;
+    transition: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :root[data-phong-cach='pixel'] :is(.dn-goi-y, .dn-than, .dn-bam-logo) {
+      animation: none;
+      transition: none;
+    }
+  }
   :root[data-phong-cach='pixel'] .dn-o input,
-  :root[data-phong-cach='pixel'] .dn-giua > button {
+  :root[data-phong-cach='pixel'] .dn-than > button {
     border-radius: var(--bo);
   }
   :root[data-phong-cach='pixel'] .dn-thuong-hieu {

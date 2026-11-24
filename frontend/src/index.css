@@ -332,14 +332,31 @@ body {
   gap: 12px;
   justify-self: start;
   margin-bottom: 18px;
-  padding: 8px 18px 8px 8px;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--muc);
-  background: var(--mat);
-  border: 1px solid var(--vien-dam);
-  border-radius: 16px;
-  box-shadow: var(--bong);
+}
+/* Thân form (tiêu đề, ô nhập, nút) xếp như .dn-giua; ẩn khi Pixel chưa bấm logo */
+.dn-than {
+  display: grid;
+  gap: 16px;
+}
+.dn-than[hidden] {
+  display: none;
+}
+/* Nút logo (chỉ xuất hiện ở Pixel trước khi mở): bỏ kiểu nút mặc định */
+.dn-bam-logo {
+  font: inherit;
+  cursor: pointer;
+}
+/* Kiểu .dang-nhap button svg (viền màu chữ, 22 px) không áp cho logo */
+.dang-nhap .dn-bam-logo svg {
+  width: auto;
+  height: auto;
+  stroke: none;
+}
+.dn-goi-y {
+  display: none;
 }
 .dn-thuong-hieu .logo-thuong {
   padding: 4px;
