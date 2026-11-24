@@ -2,6 +2,8 @@ import { useEffect, useRef, useState, type FormEvent, type PointerEvent } from '
 import { LoiApi } from '../../api/goi'
 import { layGps, quetMa, type KetQuaQuet } from '../../api/toi'
 import ChonTep from '../../ChonTep'
+import { DaiDieuKienGiaoPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel } from '../../nen'
 import { nenAnh } from '../../nenAnh'
 import { Camera, LOI_MANG, SO_ANH_TOI_DA } from './QuetLay'
 
@@ -68,6 +70,15 @@ export function GiaoHang({ maDon, onXong }: { maDon: string; onXong: (kq: KetQua
   return (
     <form className="form-km giao-hang" onSubmit={gui}>
       <strong>Giao {maDon}</strong>
+      {/* Hiệu ứng Pixel: dải 4 điều kiện giao hàng sáng dần theo trạng thái đã có trên màn */}
+      {dangHieuUngPixel() && (
+        <DaiDieuKienGiaoPixel
+          daQuet={khop}
+          coAnh={anh.length > 0}
+          coTen={ten.trim().length > 0}
+          daKy={oKy !== null}
+        />
+      )}
       {khop ? (
         <p className="thanh-cong">Đã xác nhận đúng kiện {maDon}</p>
       ) : moCamera ? (
@@ -106,6 +117,7 @@ export function GiaoHang({ maDon, onXong }: { maDon: string; onXong: (kq: KetQua
         accept="image/jpeg,image/png"
         capture="environment"
         multiple
+        dangNen={dangGui && anh.length > 0}
         onChange={(e) => setAnh([...(e.target.files ?? [])])}
       />
       <label>
@@ -135,6 +147,15 @@ export function GiaoHang({ maDon, onXong }: { maDon: string; onXong: (kq: KetQua
 function KyTen({ onKy }: { onKy: (oKy: HTMLCanvasElement | null) => void }) {
   const oKy = useRef<HTMLCanvasElement>(null)
   const dangVe = useRef(false)
+  // Hiệu ứng Pixel: cờ khung đã ký và tia quét xóa ngắn trên ô ký (chỉ phần nhìn)
+  const [daKy, setDaKy] = useState(false)
+  const [dangXoa, setDangXoa] = useState(false)
+
+  useEffect(() => {
+    if (!dangXoa) return
+    const t = window.setTimeout(() => setDangXoa(false), 260)
+    return () => window.clearTimeout(t)
+  }, [dangXoa])
 
   useEffect(() => {
     const cv = oKy.current!
@@ -157,32 +178,45 @@ function KyTen({ onKy }: { onKy: (oKy: HTMLCanvasElement | null) => void }) {
   function xoa() {
     const cv = oKy.current!
     cv.getContext('2d')!.fillRect(0, 0, cv.clientWidth, cv.clientHeight)
+    setDaKy(false)
+    if (dangHieuUngPixel()) setDangXoa(true)
     onKy(null)
   }
 
+  const huPixel = dangHieuUngPixel()
   return (
-    <div className="o-ky">
+    <div className={`o-ky${huPixel && daKy ? ' px-ky-xong' : ''}`}>
       <span>Người nhận ký tên</span>
-      <canvas
-        ref={oKy}
-        aria-label="Ô ký tên người nhận"
-        onPointerDown={(e) => {
-          e.currentTarget.setPointerCapture(e.pointerId)
-          dangVe.current = true
-          const g = e.currentTarget.getContext('2d')!
-          g.beginPath()
-          g.moveTo(...diem(e))
-        }}
-        onPointerMove={(e) => {
-          if (!dangVe.current) return
-          const g = e.currentTarget.getContext('2d')!
-          g.lineTo(...diem(e))
-          g.stroke()
-          onKy(e.currentTarget)
-        }}
-        onPointerUp={() => (dangVe.current = false)}
-        onPointerCancel={() => (dangVe.current = false)}
-      />
+      {/* Hiệu ứng Pixel: thẻ bọc .px-ky-khung (display: contents ngoài Pixel) cho nhãn Đã ký & tia quét xóa */}
+      <div className="px-ky-khung">
+        <canvas
+          ref={oKy}
+          aria-label="Ô ký tên người nhận"
+          onPointerDown={(e) => {
+            e.currentTarget.setPointerCapture(e.pointerId)
+            dangVe.current = true
+            const g = e.currentTarget.getContext('2d')!
+            g.beginPath()
+            g.moveTo(...diem(e))
+          }}
+          onPointerMove={(e) => {
+            if (!dangVe.current) return
+            const g = e.currentTarget.getContext('2d')!
+            g.lineTo(...diem(e))
+            g.stroke()
+            setDaKy(true)
+            onKy(e.currentTarget)
+          }}
+          onPointerUp={() => (dangVe.current = false)}
+          onPointerCancel={() => (dangVe.current = false)}
+        />
+        {huPixel && daKy && (
+          <span className="px-ky-nhan" aria-hidden="true">
+            Đã ký ✓
+          </span>
+        )}
+        {huPixel && dangXoa && <span className="px-ky-quet" aria-hidden="true" />}
+      </div>
       <button type="button" className="phu" onClick={xoa}>
         Xóa chữ ký
       </button>

@@ -14,7 +14,7 @@ import {
 } from '../../api/quyetToan'
 import { TEN_HINH_THUC, type HinhThuc } from '../../api/tamUng'
 import { ngayGio } from '../../api/toi'
-import { DongHoDinhMucPixel } from '../../HieuUngPixel'
+import { BienLaiNhietPixel, DongHoDinhMucPixel } from '../../HieuUngPixel'
 import { dangHieuUngPixel } from '../../nen'
 import { ThongBao } from '../../thongBao'
 
@@ -43,7 +43,21 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
   const [thongBao, setThongBao] = useState('')
   const [loi, setLoi] = useState('')
   const [dangGui, setDangGui] = useState(false)
+  // Hiệu ứng Pixel: tờ biên lai nhiệt trượt ra từ khe sau khi khóa sổ quyết toán thành công (≤ 1,5 s)
+  const [bienLai, setBienLai] = useState<{
+    lan: number
+    maChuyen: string
+    doanhThu: number
+    tongChi: number
+    lai: number
+  } | null>(null)
   const chuyenDangXem = useRef(0)
+
+  useEffect(() => {
+    if (!bienLai) return
+    const t = window.setTimeout(() => setBienLai(null), 1450)
+    return () => window.clearTimeout(t)
+  }, [bienLai])
 
   const taiDs = useCallback(() => {
     // shortcut: 100 chuyến mỗi lần, đủ cho nhà xe khoảng 10 xe
@@ -111,6 +125,16 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
         Duyệt từng khoản chi tài xế khai, ghi cách xử lý chênh lệch tạm ứng rồi quyết toán. Quyết
         toán xong, mọi số tiền của chuyến chỉ còn xem (BR-29).
       </p>
+      {/* Hiệu ứng Pixel: in biên lai nhiệt trượt ra từ khe sau khi khóa sổ quyết toán thành công */}
+      {bienLai && dangHieuUngPixel() && (
+        <BienLaiNhietPixel
+          key={bienLai.lan}
+          maChuyen={bienLai.maChuyen}
+          doanhThu={bienLai.doanhThu}
+          tongChi={bienLai.tongChi}
+          lai={bienLai.lai}
+        />
+      )}
       <div className="qt-luoi">
         {/* Danh sách chuyến bên trái (thay ô chọn): bấm để mở bảng quyết toán bên phải */}
         <aside className="kinh qt-ds">
@@ -437,7 +461,23 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
                     lam(
                       () => quyetToan(bang.chuyen_id, vao),
                       `Đã quyết toán ${bang.ma_chuyen}`,
-                    ).then((xong) => xong && taiDs())
+                    ).then((xong) => {
+                      if (!xong) return
+                      // Hiệu ứng Pixel: kích hoạt in biên lai nhiệt sau khi API quyết toán thành công
+                      if (dangHieuUngPixel()) {
+                        setBienLai((cu) => ({
+                          lan: (cu?.lan ?? 0) + 1,
+                          maChuyen: bang.ma_chuyen,
+                          doanhThu: bang.doanh_thu,
+                          tongChi: bang.tong_chi,
+                          lai:
+                            vao.luong_tay !== undefined
+                              ? bang.doanh_thu - bang.tong_chi - vao.luong_tay
+                              : bang.lai,
+                        }))
+                      }
+                      taiDs()
+                    })
                   }
                 />
               )}

@@ -428,3 +428,215 @@ export function KhungTaiBangPixel({ soHang = 4, soCot = 5 }: { soHang?: number; 
     </div>
   )
 }
+
+// Hiệu ứng Pixel: nội dung nút gửi giữ bề ngang cố định và đổi chữ theo bậc "Đang gửi…" → "Xong ✓"
+export function NoiDungNutGuiPixel({
+  nhan,
+  dangGui,
+  vuaXong,
+}: {
+  nhan: string
+  dangGui: boolean
+  vuaXong: boolean
+}) {
+  const chuHien = dangGui ? 'Đang gửi…' : vuaXong ? 'Xong ✓' : nhan
+  return (
+    <span className="px-ng-khung">
+      <span className="px-ng-giu" data-giu={nhan} aria-hidden="true" />
+      <span className="px-ng-giu px-ng-giu-gui" data-giu="Đang gửi…" aria-hidden="true" />
+      <span className="px-ng-giu" data-giu="Xong ✓" aria-hidden="true" />
+      <span key={dangGui ? 'gui' : vuaXong ? 'xong' : 'cho'} className="px-ng-chu">
+        {dangGui && <span className="px-ng-xoay" aria-hidden="true" />}
+        {chuHien}
+      </span>
+    </span>
+  )
+}
+
+const VACH_TAM_UNG = [0, 25, 50, 75, 100] as const
+
+// Hiệu ứng Pixel: thước vạch định mức tạm ứng và rung ngắn khi máy chủ báo vượt trần (BR-53)
+export function ThuocTamUngPixel({
+  dinhMuc,
+  daCap,
+  rung = 0,
+}: {
+  dinhMuc: number
+  daCap: number
+  rung?: number
+}) {
+  if (!dangHieuUngPixel()) return null
+  const tyLe = dinhMuc > 0 ? Math.max(0, Math.min(1, daCap / dinhMuc)) : 0
+  const phanTram = Math.round(tyLe * 100)
+  const cao = tyLe > 0.95
+  const dangRung = rung > 0
+
+  return (
+    <div
+      key={dangRung ? `rung-${rung}` : 'tinh'}
+      className={`px-thuoc-tu${cao ? ' cao' : ''}${dangRung ? ' vuot-tran' : ''}`}
+      aria-hidden="true"
+    >
+      <div className="px-tu-dau">
+        <span className="px-tu-nhan">Thước định mức tạm ứng</span>
+        <span className="px-tu-pt">
+          {dangRung
+            ? 'Chạm trần BR-53'
+            : `${phanTram}% / trần ${dinhMuc.toLocaleString('vi-VN')} đ`}
+        </span>
+      </div>
+      <div className="px-tu-ray">
+        <span className="px-tu-muc" style={{ width: `${phanTram}%` }} />
+        <span className="px-tu-tran" />
+      </div>
+      <div className="px-tu-vach">
+        {VACH_TAM_UNG.map((m) => (
+          <span key={m} className={m === 100 ? 'tran' : undefined}>
+            {m}%
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// Hiệu ứng Pixel: dải 4 điều kiện giao hàng sáng dần theo trạng thái đã có trên màn
+export function DaiDieuKienGiaoPixel({
+  daQuet,
+  coAnh,
+  coTen,
+  daKy,
+}: {
+  daQuet: boolean
+  coAnh: boolean
+  coTen: boolean
+  daKy: boolean
+}) {
+  if (!dangHieuUngPixel()) return null
+  const muc = [
+    { ma: 'qr', ten: 'Quét mã', dat: daQuet },
+    { ma: 'anh', ten: 'Ảnh', dat: coAnh },
+    { ma: 'ten', ten: 'Tên', dat: coTen },
+    { ma: 'ky', ten: 'Chữ ký', dat: daKy },
+  ] as const
+  const soDat = muc.filter((m) => m.dat).length
+
+  return (
+    <div className={`px-dk-giao${soDat === 4 ? ' du' : ''}`} aria-hidden="true">
+      <div className="px-dk-dau">
+        <span className="px-dk-tieu-de">Điều kiện giao</span>
+        <span className="px-dk-dem">{soDat}/4</span>
+      </div>
+      <div className="px-dk-thanh">
+        {muc.map((m) => (
+          <span key={m.ma} className={m.dat ? 'px-dk-nac dat' : 'px-dk-nac'} />
+        ))}
+      </div>
+      <div className="px-dk-ds">
+        {muc.map((m) => (
+          <span key={m.ma} className={m.dat ? 'px-dk-muc dat' : 'px-dk-muc'}>
+            <span className="px-dk-o">{m.dat ? '✓' : ''}</span>
+            <span>{m.ten}</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+const NAC_NEN_ANH = [0, 1, 2, 3, 4, 5] as const
+
+// Hiệu ứng Pixel: ô tệp "nhai" ảnh theo bậc và thanh nấc nén ảnh (chỉ trang trí, tự gỡ ≤ 1,2 s)
+export function PhanHoiChonTepPixel({
+  soTep,
+  dangNen = false,
+}: {
+  soTep: number
+  dangNen?: boolean
+}) {
+  if (!dangHieuUngPixel()) return null
+  const nhan = dangNen ? 'Đang nén ảnh…' : soTep > 1 ? `Đã nhận ${soTep} ảnh ✓` : 'Đã nhận ảnh ✓'
+  return (
+    <span className={`px-tep-ph${dangNen ? ' nen' : ''}`} aria-hidden="true">
+      <svg
+        className="px-tep-svg"
+        viewBox="0 0 28 24"
+        width={28}
+        height={24}
+        shapeRendering="crispEdges"
+      >
+        {/* Thẻ ảnh nhỏ rơi vào khe máy nhai theo bậc */}
+        <g className="px-tep-anh">
+          <rect x={8} y={2} width={12} height={10} className="px-tep-giay" />
+          <rect x={10} y={4} width={3} height={3} className="px-tep-nang" />
+          <rect x={10} y={8} width={8} height={2} className="px-tep-nui" />
+        </g>
+        {/* Khe nuốt tệp kiểu 8-bit */}
+        <rect x={3} y={12} width={22} height={10} className="px-tep-hop" />
+        <rect x={6} y={13} width={16} height={3} className="px-tep-khe" />
+        <rect x={7} y={18} width={4} height={2} className="px-tep-den" />
+      </svg>
+      <span className="px-tep-nen-khoi">
+        <span className="px-tep-nen-chu">{nhan}</span>
+        <span className="px-tep-nen-thanh">
+          {NAC_NEN_ANH.map((i) => (
+            <span key={i} className="px-tep-nen-o" style={{ '--px-i': i } as CSSProperties} />
+          ))}
+        </span>
+      </span>
+    </span>
+  )
+}
+
+// Hiệu ứng Pixel: biên lai nhiệt trượt ra từ khe sau khi khóa sổ quyết toán thành công (≤ 1,5 s)
+export function BienLaiNhietPixel({
+  maChuyen,
+  doanhThu,
+  tongChi,
+  lai,
+}: {
+  maChuyen: string
+  doanhThu: number
+  tongChi: number
+  lai: number
+}) {
+  if (!dangHieuUngPixel()) return null
+  const dong = (so: number) => `${so.toLocaleString('vi-VN')} đ`
+  const hang = [
+    { k: 'CHUYẾN', v: maChuyen },
+    { k: 'DOANH THU', v: dong(doanhThu) },
+    { k: 'CHI PHÍ', v: dong(tongChi) },
+    { k: 'LÃI CHUYẾN', v: dong(lai) },
+    { k: 'KHÓA SỔ', v: 'ĐÃ QUYẾT TOÁN ✓' },
+  ] as const
+
+  return (
+    <div className="px-bien-lai" aria-hidden="true">
+      <div className="px-bl-may">
+        <div className="px-bl-dau">
+          <span className="px-bl-tieu-de">BIÊN LAI QUYẾT TOÁN</span>
+          <span className="px-bl-den" />
+        </div>
+        <div className="px-bl-khe" />
+        <div className="px-bl-ong">
+          <div className="px-bl-giay">
+            {hang.map((r) => (
+              <div key={r.k} className="px-bl-hang">
+                <span>{r.k}</span>
+                <strong>{r.v}</strong>
+              </div>
+            ))}
+            <svg
+              className="px-bl-rang"
+              viewBox="0 0 216 8"
+              preserveAspectRatio="none"
+              shapeRendering="crispEdges"
+            >
+              <path d="M0 0 H216 V2 L207 8 L198 2 L189 8 L180 2 L171 8 L162 2 L153 8 L144 2 L135 8 L126 2 L117 8 L108 2 L99 8 L90 2 L81 8 L72 2 L63 8 L54 2 L45 8 L36 2 L27 8 L18 2 L9 8 L0 2 Z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}

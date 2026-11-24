@@ -12,6 +12,8 @@ import {
   type TamUngChuyen,
 } from '../../api/tamUng'
 import { ngayGio, TEN_TRANG_THAI } from '../../api/toi'
+import { ThuocTamUngPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel } from '../../nen'
 import { Ic, Nhan } from '../../nhan'
 import { DauDanhMuc } from '../danh-muc'
 import { ThongBao } from '../../thongBao'
@@ -34,7 +36,15 @@ export default function TamUng() {
   const [thongBao, setThongBao] = useState('')
   const [loi, setLoi] = useState('')
   const [dangGui, setDangGui] = useState(false) // khóa nút tiền khi đang gửi: bấm hai lần không cấp hai khoản
+  // Hiệu ứng Pixel: cờ rung ngắn thước tạm ứng khi máy chủ báo lỗi vượt trần BR-53
+  const [rungTran, setRungTran] = useState(0)
   const chuyenDangXem = useRef(0) // bỏ kết quả về muộn của chuyến đã chọn trước đó
+
+  useEffect(() => {
+    if (rungTran === 0) return
+    const t = window.setTimeout(() => setRungTran(0), 500)
+    return () => window.clearTimeout(t)
+  }, [rungTran])
 
   useEffect(() => {
     // shortcut: 100 chuyến mỗi trạng thái, đủ cho nhà xe khoảng 10 xe
@@ -64,6 +74,7 @@ export default function TamUng() {
     setDangSua(null)
     setThongBao('')
     setLoi('')
+    setRungTran(0)
     if (id) tai(Number(id))
     else chuyenDangXem.current = 0
   }
@@ -79,7 +90,15 @@ export default function TamUng() {
       setDangSua(null)
       tai(Number(chuyenId))
     } catch (err) {
-      setLoi(thongBaoLoi(err, truong))
+      const msg = thongBaoLoi(err, truong)
+      setLoi(msg)
+      // Hiệu ứng Pixel: rung ngắn thước định mức khi máy chủ báo vượt trần (BR-53), không tự kiểm ở frontend
+      const vuotTran =
+        (err instanceof LoiApi && err.ma === 'BR-53') ||
+        /BR-53|vượt.*định mức|định mức.*tạm ứng|vượt trần/i.test(
+          `${msg} ${err instanceof LoiApi ? err.message : ''}`,
+        )
+      if (vuotTran && dangHieuUngPixel()) setRungTran((n) => n + 1)
     } finally {
       setDangGui(false)
     }
@@ -154,6 +173,10 @@ export default function TamUng() {
                 {Math.round(daDung * 100)}%
               </div>
             </div>
+            {/* Hiệu ứng Pixel: thước vạch định mức tạm ứng & rung khi máy chủ báo vượt trần BR-53 */}
+            {dangHieuUngPixel() && (
+              <ThuocTamUngPixel dinhMuc={tu.dinh_muc} daCap={tu.tong_hieu_luc} rung={rungTran} />
+            )}
             {capDuoc ? (
               <form className="o-nhap" onSubmit={cap}>
                 <label>
