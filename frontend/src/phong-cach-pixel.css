@@ -83,3 +83,148 @@
     text-shadow: 2px 2px 0 color-mix(in srgb, var(--muc) 14%, transparent);
   }
 }
+
+@media screen {
+  /* #02 Toast sonner: viền 2 px, góc theo --bo, bóng cứng --bong, nền --noi; khung ngoài không che thao tác */
+  :root[data-phong-cach='pixel'] [data-sonner-toaster] {
+    pointer-events: none;
+  }
+  :root[data-phong-cach='pixel'] [data-sonner-toast] {
+    /* Bắt buộc dùng !important để thắng inline style do toastOptions.style của sonner gắn lên phần tử */
+    background: var(--noi) !important;
+    border: 2px solid var(--vien-dam) !important;
+    border-radius: var(--bo) !important;
+    box-shadow: var(--bong) !important;
+    pointer-events: auto;
+    transition-duration: 180ms;
+    transition-timing-function: steps(4, end);
+  }
+
+  /* #04 Ô nhập lỗi: viền màu --do và rung ngang ngắn 1 lần khi xuất hiện */
+  @keyframes pixel-rung-loi {
+    0% {
+      transform: translateX(-4px);
+    }
+    20% {
+      transform: translateX(4px);
+    }
+    40% {
+      transform: translateX(-3px);
+    }
+    60% {
+      transform: translateX(3px);
+    }
+    80% {
+      transform: translateX(-2px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  :root[data-phong-cach='pixel'] :is(input, select, textarea)[aria-invalid='true'] {
+    border-color: var(--do);
+    animation: pixel-rung-loi 260ms steps(1, end) 1;
+  }
+
+  /* #05 Chuông thông báo: huy hiệu số tin mới bật scale một lần khi xuất hiện */
+  @keyframes pixel-bat-huy-hieu {
+    0% {
+      transform: scale(0.5);
+    }
+    40% {
+      transform: scale(1.22);
+    }
+    75% {
+      transform: scale(0.94);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  :root[data-phong-cach='pixel'] .chuong summary em {
+    transform-origin: center;
+    animation: pixel-bat-huy-hieu 220ms steps(1, end) 1;
+  }
+
+  /* #06 Lớp nổi (hộp thoại, menu tài khoản, hộp chuông, hộp tìm): mở ra theo bậc ngắn */
+  @keyframes pixel-mo-lop-noi {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  :root[data-phong-cach='pixel'] :is(.hop-thoai, .menu-tk-hop, .chuong-hop, .tim-hop) {
+    border: 2px solid var(--vien-dam);
+    border-radius: var(--bo-the);
+    animation: pixel-mo-lop-noi 140ms steps(3, end);
+  }
+  :root[data-phong-cach='pixel'] .hop-thoai {
+    animation-duration: 160ms;
+  }
+
+  /* #01 Bổ sung nút lún kiểu pixel cho button thường trong nhóm chọn .vien-thuoc */
+  :root[data-phong-cach='pixel'] .vien-thuoc button {
+    border: 2px solid transparent;
+    border-radius: var(--bo);
+    transition:
+      transform 90ms steps(2, end),
+      box-shadow 90ms steps(2, end);
+  }
+  :root[data-phong-cach='pixel'] .vien-thuoc button[aria-pressed='true'] {
+    border-color: var(--vien-dam);
+    box-shadow: var(--bong-nho);
+  }
+  :root[data-phong-cach='pixel'] .vien-thuoc button:enabled:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
+
+  /* Tắt mọi animation/transition mới khi bật tùy chọn Giảm chuyển động trong Cài đặt */
+  :root[data-phong-cach='pixel'][data-giam-chuyen-dong='bat']
+    :is(
+      input[aria-invalid='true'],
+      select[aria-invalid='true'],
+      textarea[aria-invalid='true'],
+      .chuong summary em,
+      .hop-thoai,
+      .menu-tk-hop,
+      .chuong-hop,
+      .tim-hop
+    ) {
+    animation: none;
+  }
+  :root[data-phong-cach='pixel'][data-giam-chuyen-dong='bat']
+    :is([data-sonner-toast], .vien-thuoc button) {
+    transition: none;
+  }
+  :root[data-phong-cach='pixel'][data-giam-chuyen-dong='bat'] .vien-thuoc button:enabled:active {
+    transform: none;
+  }
+
+  /* Tắt mọi animation/transition mới khi hệ điều hành bật prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    :root[data-phong-cach='pixel']
+      :is(
+        input[aria-invalid='true'],
+        select[aria-invalid='true'],
+        textarea[aria-invalid='true'],
+        .chuong summary em,
+        .hop-thoai,
+        .menu-tk-hop,
+        .chuong-hop,
+        .tim-hop
+      ) {
+      animation: none;
+    }
+    :root[data-phong-cach='pixel'] :is([data-sonner-toast], .vien-thuoc button) {
+      transition: none;
+    }
+    :root[data-phong-cach='pixel'] .vien-thuoc button:enabled:active {
+      transform: none;
+    }
+  }
+}
