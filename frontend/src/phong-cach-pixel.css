@@ -2777,3 +2777,29 @@
     fill: var(--n-charcoal);
   }
 }
+
+/* Container 3D nhẹ ở Pixel: mặt nóc sáng, mặt hông tối, cạnh viền than */
+@media screen {
+  :root[data-phong-cach='pixel'] .xh-noc {
+    fill: color-mix(in srgb, var(--n-sky) 55%, var(--n-cream));
+    stroke: var(--n-charcoal);
+    stroke-width: 2;
+  }
+  :root[data-phong-cach='pixel'] .xh-hong {
+    fill: var(--n-cobalt);
+    stroke: var(--n-charcoal);
+    stroke-width: 2;
+  }
+  :root[data-phong-cach='pixel'] .xh-gan-noc {
+    stroke: color-mix(in srgb, var(--n-cobalt) 45%, transparent);
+    stroke-width: 2;
+  }
+  :root[data-phong-cach='pixel'] .xh-gan-hong {
+    stroke: color-mix(in srgb, var(--n-charcoal) 45%, transparent);
+    stroke-width: 2;
+  }
+  :root[data-phong-cach='pixel'] .xh-chot-hong {
+    stroke: var(--n-cream);
+    stroke-width: 2;
+  }
+}

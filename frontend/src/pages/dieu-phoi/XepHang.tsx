@@ -18,6 +18,9 @@ const X0 = 30
 const X1 = 446
 const Y0 = 34
 const Y1 = 150
+// Độ sâu container Pixel (nhìn chéo nhẹ): lệch sang phải SAU_X, lên trên SAU_Y
+const SAU_X = 24
+const SAU_Y = 16
 // Gân tôn dọc của container (Pixel), cách nhau 12 px
 const GAN_CONTAINER = Array.from({ length: Math.floor((X1 - X0) / 12) }, (_, i) => X0 + 4 + i * 12)
 
@@ -135,7 +138,43 @@ export default function XepHang({
             className="xh-thung"
           />
           {/* Pixel: trang trí thùng kiểu container (vách tôn gân, ray, góc khóa, cửa sau); ẩn ở giao diện thường */}
-          <g className="xh-container" aria-hidden="true">
+          <g className="xh-container" aria-hidden="true" shapeRendering="crispEdges">
+            {/* Khối 3D nhẹ: mặt nóc và mặt hông phải (mặt trước phẳng để thấy hàng bên trong) */}
+            <polygon
+              points={`${X0 - 10},${Y0 - 12} ${X1 + 10},${Y0 - 12} ${X1 + 10 + SAU_X},${Y0 - 12 - SAU_Y} ${X0 - 10 + SAU_X},${Y0 - 12 - SAU_Y}`}
+              className="xh-noc"
+            />
+            {GAN_CONTAINER.filter((_, i) => i % 2 === 0).map((x) => (
+              <line
+                key={`noc-${x}`}
+                x1={x}
+                y1={Y0 - 12}
+                x2={x + SAU_X}
+                y2={Y0 - 12 - SAU_Y}
+                className="xh-gan-noc"
+              />
+            ))}
+            <polygon
+              points={`${X1 + 10},${Y0 - 12} ${X1 + 10 + SAU_X},${Y0 - 12 - SAU_Y} ${X1 + 10 + SAU_X},${Y1 + 12 - SAU_Y} ${X1 + 10},${Y1 + 12}`}
+              className="xh-hong"
+            />
+            {[6, 12, 18].map((t) => (
+              <line
+                key={`hong-${t}`}
+                x1={X1 + 10 + t}
+                y1={Y0 - 12 - (t * SAU_Y) / SAU_X + 4}
+                x2={X1 + 10 + t}
+                y2={Y1 + 12 - (t * SAU_Y) / SAU_X - 4}
+                className={t === 12 ? 'xh-chot-hong' : 'xh-gan-hong'}
+              />
+            ))}
+            {[
+              [X0 - 10 + SAU_X, Y0 - 12 - SAU_Y],
+              [X1 + 10 + SAU_X - 8, Y0 - 12 - SAU_Y],
+              [X1 + 10 + SAU_X - 8, Y1 + 12 - SAU_Y - 8],
+            ].map(([x, y]) => (
+              <rect key={`gs-${x}-${y}`} x={x} y={y} width={8} height={8} className="xh-goc" />
+            ))}
             {GAN_CONTAINER.map((x) => (
               <rect key={x} x={x} y={Y0 - 4} width={4} height={Y1 - Y0 + 8} className="xh-gan" />
             ))}
