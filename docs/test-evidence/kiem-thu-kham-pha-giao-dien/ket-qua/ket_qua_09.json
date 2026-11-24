@@ -1,0 +1,70 @@
+{
+  "muc": 9,
+  "ten_muc": "Đổi phong cách Pixel ↔ Hiện tại & Trợ năng (reduced motion, zoom, Tab focus, WCAG)",
+  "tong": 6,
+  "dat": 3,
+  "loi": 3,
+  "thoi_gian_giay": 26.8,
+  "ca": [
+    {
+      "ma": "TN01_DOI_PHONG_CACH",
+      "ten": "Đổi phong cách Pixel ↔ Hiện tại giữa chừng trong /cai-dat",
+      "dat": false,
+      "ly_do": "Vỡ bố cục khi đổi sang Hiện tại: cuonNgang=False, chong=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 78}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 28}] | Vỡ bố cục khi đổi lại Pixel: cuonNgang=False, chong=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}] | Vỡ bố cục khi đổi sang Hiện tại: cuonNgang=False, chong=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 78}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 28}] | Vỡ bố cục khi đổi lại Pixel: cuonNgang=False, chong=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m09_TN01_DOI_PHONG_CACH.png",
+      "tai_hien": "Mở /cai-dat -> bấm Hiện tại -> Pixel lặp 2 vòng -> chuyển sang /dieu-phoi/chuyen",
+      "mong_doi": "Đổi ngay lập tức, không nháy lỗi/vỡ bố cục, không pageerror"
+    },
+    {
+      "ma": "TN02_REDUCED_MOTION",
+      "ten": "Bật prefers-reduced-motion: reduce -> kiểm tra hiệu ứng có thật sự tắt",
+      "dat": true,
+      "ly_do": "prefers-reduced-motion: reduce tắt sạch animation đang chạy trên Chuyến & Đơn",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "emulate_media(reduced_motion='reduce') -> mở /dieu-phoi/chuyen và /dieu-phoi/don -> đo document.getAnimations()",
+      "mong_doi": "Không còn CSS animation/transition dài > 10ms hay vô hạn đang chạy"
+    },
+    {
+      "ma": "TN03_DATA_TAT_HIEU_UNG",
+      "ten": "Thuộc tính data-giam-chuyen-dong='bat' & data-hieu-ung-pixel='tat': hiệu ứng có tắt thật không",
+      "dat": true,
+      "ly_do": "data-giam-chuyen-dong='bat' & data-hieu-ung-pixel='tat' tắt sạch hiệu ứng",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Đặt data-giam-chuyen-dong='bat' & data-hieu-ung-pixel='tat' -> chuyển sang /dieu-phoi/don -> đo getAnimations()",
+      "mong_doi": "Tất cả hiệu ứng chuyển động / hiệu ứng pixel tắt hoàn toàn"
+    },
+    {
+      "ma": "TN04_FONT200_ZOOM150",
+      "ten": "Phóng chữ 200% và zoom 150% trên 3 trang (Chuyến, Đơn, Cài đặt)",
+      "dat": false,
+      "ly_do": "[font-size 200%][/dieu-phoi/chuyen] cuonNgang=False(sw=1440/vw=1440), tran=0, chong=3 | [font-size 200%][/dieu-phoi/don] cuonNgang=False(sw=1440/vw=1440), tran=0, chong=4 | [font-size 200%][/cai-dat] cuonNgang=False(sw=1440/vw=1440), tran=0, chong=3 | [zoom 150%][/dieu-phoi/chuyen] cuonNgang=False(sw=1440/vw=1440), tran=0, chong=3",
+      "muc": "Vừa",
+      "anh": "anh/m09_TN04_FONT200_ZOOM150.png",
+      "tai_hien": "Áp font-size: 200% rồi zoom: 1.5 ở 1440×900 trên /chuyen, /don, /cai-dat",
+      "mong_doi": "Không cuộn ngang vỡ khung, không tràn viewport, không chồng phần tử"
+    },
+    {
+      "ma": "TN05_TAB_FOCUS_RING",
+      "ten": "Tab qua toàn trang /dieu-phoi/don: kiểm viền focus ở mọi nút/liên kết",
+      "dat": false,
+      "ly_do": "1/29 phần tử không có viền focus (outline/box-shadow) khi Tab: ['input||Tìm chung']",
+      "muc": "Vừa",
+      "anh": "anh/m09_TN05_TAB_FOCUS_RING.png",
+      "tai_hien": "Mở /dieu-phoi/don -> nhấn Tab 35 lần -> đo outline & box-shadow của activeElement",
+      "mong_doi": "Mọi nút/liên kết đều hiện viền focus rõ ràng khi điều hướng bàn phím"
+    },
+    {
+      "ma": "TN06_TUONG_PHAN_WCAG",
+      "ten": "Đo tương phản màu WCAG trên nút & tem (.nhan, .bien, button)",
+      "dat": true,
+      "ly_do": "Tất cả 93 nút/tem trên 3 trang đều đạt ngưỡng tương phản WCAG",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở /dieu-phoi/chuyen, /dieu-phoi/don, /cai-dat -> tính contrast ratio chữ/nền từng nút & tem",
+      "mong_doi": "Mọi nút và tem đạt tỷ lệ tương phản ≥ 4.5:1 (chữ thường) hoặc ≥ 3.0:1 (chữ lớn)"
+    }
+  ]
+}

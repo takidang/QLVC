@@ -1,0 +1,13 @@
+
+============================================================================
+MỤC 09: Đổi phong cách Pixel ↔ Hiện tại & Trợ năng (reduced motion, zoom, Tab focus, WCAG)
+============================================================================
+[LỖI (Vừa)] TN01_DOI_PHONG_CACH - Đổi phong cách Pixel ↔ Hiện tại giữa chừng trong /cai-dat: Vỡ bố cục khi đổi sang Hiện tại: cuonNgang=False, chong=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 78}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 28}] | Vỡ bố cục khi đổi lại Pixel: cuonNgang=False, chong=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', ' | ảnh: anh/m09_TN01_DOI_PHONG_CACH.png
+[ĐẠT] TN02_REDUCED_MOTION - Bật prefers-reduced-motion: reduce -> kiểm tra hiệu ứng có thật sự tắt: prefers-reduced-motion: reduce tắt sạch animation đang chạy trên Chuyến & Đơn
+[ĐẠT] TN03_DATA_TAT_HIEU_UNG - Thuộc tính data-giam-chuyen-dong='bat' & data-hieu-ung-pixel='tat': hiệu ứng có tắt thật không: data-giam-chuyen-dong='bat' & data-hieu-ung-pixel='tat' tắt sạch hiệu ứng
+[LỖI (Vừa)] TN04_FONT200_ZOOM150 - Phóng chữ 200% và zoom 150% trên 3 trang (Chuyến, Đơn, Cài đặt): [font-size 200%][/dieu-phoi/chuyen] cuonNgang=False(sw=1440/vw=1440), tran=0, chong=3 | [font-size 200%][/dieu-phoi/don] cuonNgang=False(sw=1440/vw=1440), tran=0, chong=4 | [font-size 200%][/cai-dat] cuonNgang=False(sw=1440/vw=1440), tran=0, chong=3 | [zoom 15 | ảnh: anh/m09_TN04_FONT200_ZOOM150.png
+[LỖI (Vừa)] TN05_TAB_FOCUS_RING - Tab qua toàn trang /dieu-phoi/don: kiểm viền focus ở mọi nút/liên kết: 1/29 phần tử không có viền focus (outline/box-shadow) khi Tab: ['input||Tìm chung'] | ảnh: anh/m09_TN05_TAB_FOCUS_RING.png
+[ĐẠT] TN06_TUONG_PHAN_WCAG - Đo tương phản màu WCAG trên nút & tem (.nhan, .bien, button): Tất cả 93 nút/tem trên 3 trang đều đạt ngưỡng tương phản WCAG
+
+==> TỔNG KẾT MỤC 09 (Đổi phong cách Pixel ↔ Hiện tại & Trợ năng (reduced motion, zoom, Tab focus, WCAG)): 6 ca | ĐẠT: 3 | LỖI: 3 | 26.8s
+    Đã lưu JSON: C:\Users\Lenovo\Desktop\DoAnChuyenNganh\QLVC-agy-pha\kiem-thu-kham-pha\ket_qua_09.json

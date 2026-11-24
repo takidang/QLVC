@@ -1,0 +1,840 @@
+{
+  "muc": 1,
+  "ten_muc": "Quét mọi trang × 4 vai trò × 2 cỡ (1440×900 & 390×844)",
+  "tong": 83,
+  "dat": 17,
+  "loi": 66,
+  "thoi_gian_giay": 136.7,
+  "ca": [
+    {
+      "ma": "PUB_DN_1440x900",
+      "ten": "[khach][1440x900] /dang-nhap",
+      "dat": true,
+      "ly_do": "OK (vw=1440, sw=1440, text=80 ký tự, phongCach=pixel)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập khach ở 1440x900 -> mở /dang-nhap",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "PUB_DN_FORM_1440x900",
+      "ten": "[khach][1440x900] /dang-nhap sau khi bấm .dn-bam-logo",
+      "dat": true,
+      "ly_do": "Khung đăng nhập Pixel hiển thị gọn",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở /dang-nhap ở 1440x900 -> bấm .dn-bam-logo",
+      "mong_doi": "Form đăng nhập mở gọn, không tràn khung hay chồng phần tử"
+    },
+    {
+      "ma": "PUB_TC_1440x900",
+      "ten": "[khach][1440x900] /tra-cuu",
+      "dat": true,
+      "ly_do": "OK (vw=1440, sw=1440, text=167 ký tự, phongCach=pixel)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập khach ở 1440x900 -> mở /tra-cuu",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "PUB_DN_390x844",
+      "ten": "[khach][390x844] /dang-nhap",
+      "dat": false,
+      "ly_do": "Cuộn ngang sw=401>vw=390 | Tràn khung=[{'tag': 'section', 'cls': 'dn-hinh', 'txt': '', 'right': 401, 'vw': 390}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_PUB_DN_390x844.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập khach ở 390x844 -> mở /dang-nhap",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "PUB_DN_FORM_390x844",
+      "ten": "[khach][390x844] /dang-nhap sau khi bấm .dn-bam-logo",
+      "dat": true,
+      "ly_do": "Khung đăng nhập Pixel hiển thị gọn",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở /dang-nhap ở 390x844 -> bấm .dn-bam-logo",
+      "mong_doi": "Form đăng nhập mở gọn, không tràn khung hay chồng phần tử"
+    },
+    {
+      "ma": "PUB_TC_390x844",
+      "ten": "[khach][390x844] /tra-cuu",
+      "dat": true,
+      "ly_do": "OK (vw=390, sw=390, text=167 ký tự, phongCach=pixel)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập khach ở 390x844 -> mở /tra-cuu",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "LOGIN_PIXEL_UI",
+      "ten": "Đăng nhập dieuphoi qua giao diện Pixel (.dn-bam-logo -> điền -> Đăng nhập)",
+      "dat": true,
+      "ly_do": "url=http://127.0.0.1:5173/dieu-phoi/chuyen, phongCach={'ls': 'pixel', 'attr': 'pixel'}, pageerror=[]",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở /dang-nhap -> bấm .dn-bam-logo -> điền dieuphoi/demo12345 -> Đăng nhập",
+      "mong_doi": "Đăng nhập thành công vào /dieu-phoi/chuyen với phong cách Pixel"
+    },
+    {
+      "ma": "QU_1440_01_quan-ly_tong-quan",
+      "ten": "[quanly][1440x900] /quan-ly/tong-quan",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_01_quan-ly_tong-quan.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /quan-ly/tong-quan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_02_quan-ly_nguoi-dung",
+      "ten": "[quanly][1440x900] /quan-ly/nguoi-dung",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_02_quan-ly_nguoi-dung.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /quan-ly/nguoi-dung",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_03_quan-ly_bang-gia",
+      "ten": "[quanly][1440x900] /quan-ly/bang-gia",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_03_quan-ly_bang-gia.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /quan-ly/bang-gia",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_04_quan-ly_cau-hinh",
+      "ten": "[quanly][1440x900] /quan-ly/cau-hinh",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_04_quan-ly_cau-hinh.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /quan-ly/cau-hinh",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_05_quan-ly_cong-no",
+      "ten": "[quanly][1440x900] /quan-ly/cong-no",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_05_quan-ly_cong-no.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /quan-ly/cong-no",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_06_quan-ly_quyet-toan",
+      "ten": "[quanly][1440x900] /quan-ly/quyet-toan",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_06_quan-ly_quyet-toan.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /quan-ly/quyet-toan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_07_dieu-phoi_chuyen",
+      "ten": "[quanly][1440x900] /dieu-phoi/chuyen",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_07_dieu-phoi_chuyen.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /dieu-phoi/chuyen",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_08_dieu-phoi_don",
+      "ten": "[quanly][1440x900] /dieu-phoi/don",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_08_dieu-phoi_don.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /dieu-phoi/don",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_09_dieu-phoi_xe",
+      "ten": "[quanly][1440x900] /dieu-phoi/xe",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_09_dieu-phoi_xe.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /dieu-phoi/xe",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_10_dieu-phoi_tai-xe",
+      "ten": "[quanly][1440x900] /dieu-phoi/tai-xe",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_10_dieu-phoi_tai-xe.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /dieu-phoi/tai-xe",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_11_dieu-phoi_khach-ha",
+      "ten": "[quanly][1440x900] /dieu-phoi/khach-hang",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_11_dieu-phoi_khach-ha.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /dieu-phoi/khach-hang",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_12_dieu-phoi_nut",
+      "ten": "[quanly][1440x900] /dieu-phoi/nut",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_12_dieu-phoi_nut.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /dieu-phoi/nut",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_13_dieu-phoi_tuyen",
+      "ten": "[quanly][1440x900] /dieu-phoi/tuyen",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_13_dieu-phoi_tuyen.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /dieu-phoi/tuyen",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_14_tai-khoan",
+      "ten": "[quanly][1440x900] /tai-khoan",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_14_tai-khoan.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /tai-khoan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_15_cai-dat",
+      "ten": "[quanly][1440x900] /cai-dat",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_15_cai-dat.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /cai-dat",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_1440_16_dieu-phoi_chuyen_2",
+      "ten": "[quanly][1440x900] /dieu-phoi/chuyen/21",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_1440_16_dieu-phoi_chuyen_2.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 1440x900 -> mở /dieu-phoi/chuyen/21",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_01_quan-ly_tong-quan",
+      "ten": "[quanly][390x844] /quan-ly/tong-quan",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_01_quan-ly_tong-quan.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /quan-ly/tong-quan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_02_quan-ly_nguoi-dung",
+      "ten": "[quanly][390x844] /quan-ly/nguoi-dung",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_02_quan-ly_nguoi-dung.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /quan-ly/nguoi-dung",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_03_quan-ly_bang-gia",
+      "ten": "[quanly][390x844] /quan-ly/bang-gia",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_03_quan-ly_bang-gia.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /quan-ly/bang-gia",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_04_quan-ly_cau-hinh",
+      "ten": "[quanly][390x844] /quan-ly/cau-hinh",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_04_quan-ly_cau-hinh.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /quan-ly/cau-hinh",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_05_quan-ly_cong-no",
+      "ten": "[quanly][390x844] /quan-ly/cong-no",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_05_quan-ly_cong-no.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /quan-ly/cong-no",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_06_quan-ly_quyet-toan",
+      "ten": "[quanly][390x844] /quan-ly/quyet-toan",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_06_quan-ly_quyet-toan.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /quan-ly/quyet-toan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_07_dieu-phoi_chuyen",
+      "ten": "[quanly][390x844] /dieu-phoi/chuyen",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_07_dieu-phoi_chuyen.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /dieu-phoi/chuyen",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_08_dieu-phoi_don",
+      "ten": "[quanly][390x844] /dieu-phoi/don",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_08_dieu-phoi_don.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /dieu-phoi/don",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_09_dieu-phoi_xe",
+      "ten": "[quanly][390x844] /dieu-phoi/xe",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_09_dieu-phoi_xe.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /dieu-phoi/xe",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_10_dieu-phoi_tai-xe",
+      "ten": "[quanly][390x844] /dieu-phoi/tai-xe",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_10_dieu-phoi_tai-xe.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /dieu-phoi/tai-xe",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_11_dieu-phoi_khach-ha",
+      "ten": "[quanly][390x844] /dieu-phoi/khach-hang",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_11_dieu-phoi_khach-ha.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /dieu-phoi/khach-hang",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_12_dieu-phoi_nut",
+      "ten": "[quanly][390x844] /dieu-phoi/nut",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_12_dieu-phoi_nut.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /dieu-phoi/nut",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_13_dieu-phoi_tuyen",
+      "ten": "[quanly][390x844] /dieu-phoi/tuyen",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_13_dieu-phoi_tuyen.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /dieu-phoi/tuyen",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_14_tai-khoan",
+      "ten": "[quanly][390x844] /tai-khoan",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_14_tai-khoan.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /tai-khoan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_15_cai-dat",
+      "ten": "[quanly][390x844] /cai-dat",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_15_cai-dat.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /cai-dat",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "QU_390_16_dieu-phoi_chuyen_2",
+      "ten": "[quanly][390x844] /dieu-phoi/chuyen/21",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Đơn hàng)', 'b': 'a(A)', 'tyLe': 40}, {'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 30}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_QU_390_16_dieu-phoi_chuyen_2.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập quanly ở 390x844 -> mở /dieu-phoi/chuyen/21",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_1440_01_dieu-phoi_chuyen",
+      "ten": "[dieuphoi][1440x900] /dieu-phoi/chuyen",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_1440_01_dieu-phoi_chuyen.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 1440x900 -> mở /dieu-phoi/chuyen",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_1440_02_dieu-phoi_don",
+      "ten": "[dieuphoi][1440x900] /dieu-phoi/don",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_1440_02_dieu-phoi_don.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 1440x900 -> mở /dieu-phoi/don",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_1440_03_dieu-phoi_xe",
+      "ten": "[dieuphoi][1440x900] /dieu-phoi/xe",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_1440_03_dieu-phoi_xe.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 1440x900 -> mở /dieu-phoi/xe",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_1440_04_dieu-phoi_tai-xe",
+      "ten": "[dieuphoi][1440x900] /dieu-phoi/tai-xe",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_1440_04_dieu-phoi_tai-xe.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 1440x900 -> mở /dieu-phoi/tai-xe",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_1440_05_dieu-phoi_khach-ha",
+      "ten": "[dieuphoi][1440x900] /dieu-phoi/khach-hang",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_1440_05_dieu-phoi_khach-ha.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 1440x900 -> mở /dieu-phoi/khach-hang",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_1440_06_dieu-phoi_nut",
+      "ten": "[dieuphoi][1440x900] /dieu-phoi/nut",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_1440_06_dieu-phoi_nut.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 1440x900 -> mở /dieu-phoi/nut",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_1440_07_dieu-phoi_tuyen",
+      "ten": "[dieuphoi][1440x900] /dieu-phoi/tuyen",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_1440_07_dieu-phoi_tuyen.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 1440x900 -> mở /dieu-phoi/tuyen",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_1440_08_tai-khoan",
+      "ten": "[dieuphoi][1440x900] /tai-khoan",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_1440_08_tai-khoan.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 1440x900 -> mở /tai-khoan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_1440_09_cai-dat",
+      "ten": "[dieuphoi][1440x900] /cai-dat",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_1440_09_cai-dat.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 1440x900 -> mở /cai-dat",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_1440_10_dieu-phoi_chuyen_2",
+      "ten": "[dieuphoi][1440x900] /dieu-phoi/chuyen/21",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_1440_10_dieu-phoi_chuyen_2.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 1440x900 -> mở /dieu-phoi/chuyen/21",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_1440_11_dieu-phoi_don_52_p",
+      "ten": "[dieuphoi][1440x900] /dieu-phoi/don/52/phieu",
+      "dat": false,
+      "ly_do": "Chồng phần tử=[{'a': 'a(A)', 'b': 'a(A)', 'tyLe': 82}, {'a': 'a(A)', 'b': 'a(A)', 'tyLe': 57}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_1440_11_dieu-phoi_don_52_p.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 1440x900 -> mở /dieu-phoi/don/52/phieu",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_390_01_dieu-phoi_chuyen",
+      "ten": "[dieuphoi][390x844] /dieu-phoi/chuyen",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 28}, {'a': 'h2(DANH MỤC)', 'b': 'a(A)', 'tyLe': 36}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_390_01_dieu-phoi_chuyen.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 390x844 -> mở /dieu-phoi/chuyen",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_390_02_dieu-phoi_don",
+      "ten": "[dieuphoi][390x844] /dieu-phoi/don",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 28}, {'a': 'h2(DANH MỤC)', 'b': 'a(A)', 'tyLe': 36}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_390_02_dieu-phoi_don.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 390x844 -> mở /dieu-phoi/don",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_390_03_dieu-phoi_xe",
+      "ten": "[dieuphoi][390x844] /dieu-phoi/xe",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 28}, {'a': 'h2(DANH MỤC)', 'b': 'a(A)', 'tyLe': 36}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_390_03_dieu-phoi_xe.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 390x844 -> mở /dieu-phoi/xe",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_390_04_dieu-phoi_tai-xe",
+      "ten": "[dieuphoi][390x844] /dieu-phoi/tai-xe",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 28}, {'a': 'h2(DANH MỤC)', 'b': 'a(A)', 'tyLe': 36}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_390_04_dieu-phoi_tai-xe.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 390x844 -> mở /dieu-phoi/tai-xe",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_390_05_dieu-phoi_khach-ha",
+      "ten": "[dieuphoi][390x844] /dieu-phoi/khach-hang",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 28}, {'a': 'h2(DANH MỤC)', 'b': 'a(A)', 'tyLe': 36}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_390_05_dieu-phoi_khach-ha.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 390x844 -> mở /dieu-phoi/khach-hang",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_390_06_dieu-phoi_nut",
+      "ten": "[dieuphoi][390x844] /dieu-phoi/nut",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 28}, {'a': 'h2(DANH MỤC)', 'b': 'a(A)', 'tyLe': 36}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_390_06_dieu-phoi_nut.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 390x844 -> mở /dieu-phoi/nut",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_390_07_dieu-phoi_tuyen",
+      "ten": "[dieuphoi][390x844] /dieu-phoi/tuyen",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 28}, {'a': 'h2(DANH MỤC)', 'b': 'a(A)', 'tyLe': 36}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_390_07_dieu-phoi_tuyen.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 390x844 -> mở /dieu-phoi/tuyen",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_390_08_tai-khoan",
+      "ten": "[dieuphoi][390x844] /tai-khoan",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 28}, {'a': 'h2(DANH MỤC)', 'b': 'a(A)', 'tyLe': 36}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_390_08_tai-khoan.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 390x844 -> mở /tai-khoan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_390_09_cai-dat",
+      "ten": "[dieuphoi][390x844] /cai-dat",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 28}, {'a': 'h2(DANH MỤC)', 'b': 'a(A)', 'tyLe': 36}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_390_09_cai-dat.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 390x844 -> mở /cai-dat",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_390_10_dieu-phoi_chuyen_2",
+      "ten": "[dieuphoi][390x844] /dieu-phoi/chuyen/21",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 28}, {'a': 'h2(DANH MỤC)', 'b': 'a(A)', 'tyLe': 36}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_390_10_dieu-phoi_chuyen_2.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 390x844 -> mở /dieu-phoi/chuyen/21",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "DI_390_11_dieu-phoi_don_52_p",
+      "ten": "[dieuphoi][390x844] /dieu-phoi/don/52/phieu",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}] | Chồng phần tử=[{'a': 'a(Khách hàng)', 'b': 'a(A)', 'tyLe': 28}, {'a': 'h2(DANH MỤC)', 'b': 'a(A)', 'tyLe': 36}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_DI_390_11_dieu-phoi_don_52_p.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập dieuphoi ở 390x844 -> mở /dieu-phoi/don/52/phieu",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "KE_1440_01_ke-toan_tong-quan",
+      "ten": "[ketoan][1440x900] /ke-toan/tong-quan",
+      "dat": true,
+      "ly_do": "OK (vw=1440, sw=1440, text=2568 ký tự, phongCach=pixel)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập ketoan ở 1440x900 -> mở /ke-toan/tong-quan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "KE_1440_02_ke-toan_tam-ung",
+      "ten": "[ketoan][1440x900] /ke-toan/tam-ung",
+      "dat": true,
+      "ly_do": "OK (vw=1440, sw=1440, text=457 ký tự, phongCach=pixel)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập ketoan ở 1440x900 -> mở /ke-toan/tam-ung",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "KE_1440_03_ke-toan_quyet-toan",
+      "ten": "[ketoan][1440x900] /ke-toan/quyet-toan",
+      "dat": true,
+      "ly_do": "OK (vw=1440, sw=1440, text=280 ký tự, phongCach=pixel)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập ketoan ở 1440x900 -> mở /ke-toan/quyet-toan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "KE_1440_04_ke-toan_cong-no",
+      "ten": "[ketoan][1440x900] /ke-toan/cong-no",
+      "dat": true,
+      "ly_do": "OK (vw=1440, sw=1440, text=653 ký tự, phongCach=pixel)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập ketoan ở 1440x900 -> mở /ke-toan/cong-no",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "KE_1440_05_ke-toan_chi-phi-xe",
+      "ten": "[ketoan][1440x900] /ke-toan/chi-phi-xe",
+      "dat": true,
+      "ly_do": "OK (vw=1440, sw=1440, text=283 ký tự, phongCach=pixel)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập ketoan ở 1440x900 -> mở /ke-toan/chi-phi-xe",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "KE_1440_06_tai-khoan",
+      "ten": "[ketoan][1440x900] /tai-khoan",
+      "dat": true,
+      "ly_do": "OK (vw=1440, sw=1440, text=669 ký tự, phongCach=pixel)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập ketoan ở 1440x900 -> mở /tai-khoan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "KE_1440_07_cai-dat",
+      "ten": "[ketoan][1440x900] /cai-dat",
+      "dat": true,
+      "ly_do": "OK (vw=1440, sw=1440, text=1315 ký tự, phongCach=pixel)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập ketoan ở 1440x900 -> mở /cai-dat",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "KE_390_01_ke-toan_tong-quan",
+      "ten": "[ketoan][390x844] /ke-toan/tong-quan",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_KE_390_01_ke-toan_tong-quan.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập ketoan ở 390x844 -> mở /ke-toan/tong-quan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "KE_390_02_ke-toan_tam-ung",
+      "ten": "[ketoan][390x844] /ke-toan/tam-ung",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_KE_390_02_ke-toan_tam-ung.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập ketoan ở 390x844 -> mở /ke-toan/tam-ung",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "KE_390_03_ke-toan_quyet-toan",
+      "ten": "[ketoan][390x844] /ke-toan/quyet-toan",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_KE_390_03_ke-toan_quyet-toan.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập ketoan ở 390x844 -> mở /ke-toan/quyet-toan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "KE_390_04_ke-toan_cong-no",
+      "ten": "[ketoan][390x844] /ke-toan/cong-no",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_KE_390_04_ke-toan_cong-no.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập ketoan ở 390x844 -> mở /ke-toan/cong-no",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "KE_390_05_ke-toan_chi-phi-xe",
+      "ten": "[ketoan][390x844] /ke-toan/chi-phi-xe",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_KE_390_05_ke-toan_chi-phi-xe.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập ketoan ở 390x844 -> mở /ke-toan/chi-phi-xe",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "KE_390_06_tai-khoan",
+      "ten": "[ketoan][390x844] /tai-khoan",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_KE_390_06_tai-khoan.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập ketoan ở 390x844 -> mở /tai-khoan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "KE_390_07_cai-dat",
+      "ten": "[ketoan][390x844] /cai-dat",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_KE_390_07_cai-dat.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập ketoan ở 390x844 -> mở /cai-dat",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "TA_1440_01_tai-xe_chuyen",
+      "ten": "[taixe][1440x900] /tai-xe/chuyen",
+      "dat": true,
+      "ly_do": "OK (vw=1440, sw=1440, text=147 ký tự, phongCach=pixel)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập taixe ở 1440x900 -> mở /tai-xe/chuyen",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "TA_1440_02_tai-khoan",
+      "ten": "[taixe][1440x900] /tai-khoan",
+      "dat": true,
+      "ly_do": "OK (vw=1440, sw=1440, text=797 ký tự, phongCach=pixel)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập taixe ở 1440x900 -> mở /tai-khoan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "TA_1440_03_cai-dat",
+      "ten": "[taixe][1440x900] /cai-dat",
+      "dat": true,
+      "ly_do": "OK (vw=1440, sw=1440, text=1332 ký tự, phongCach=pixel)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập taixe ở 1440x900 -> mở /cai-dat",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "TA_1440_04_tai-xe_chuyen_17",
+      "ten": "[taixe][1440x900] /tai-xe/chuyen/17",
+      "dat": true,
+      "ly_do": "OK (vw=1440, sw=1440, text=1437 ký tự, phongCach=pixel)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập taixe ở 1440x900 -> mở /tai-xe/chuyen/17",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "TA_390_01_tai-xe_chuyen",
+      "ten": "[taixe][390x844] /tai-xe/chuyen",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_TA_390_01_tai-xe_chuyen.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập taixe ở 390x844 -> mở /tai-xe/chuyen",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "TA_390_02_tai-khoan",
+      "ten": "[taixe][390x844] /tai-khoan",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 425, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 425, 'vw': 390}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_TA_390_02_tai-khoan.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập taixe ở 390x844 -> mở /tai-khoan",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "TA_390_03_cai-dat",
+      "ten": "[taixe][390x844] /cai-dat",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_TA_390_03_cai-dat.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập taixe ở 390x844 -> mở /cai-dat",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    },
+    {
+      "ma": "TA_390_04_tai-xe_chuyen_17",
+      "ten": "[taixe][390x844] /tai-xe/chuyen/17",
+      "dat": false,
+      "ly_do": "Tràn khung=[{'tag': 'nav', 'cls': 'menu-tk-ds', 'txt': '', 'right': 428, 'vw': 390}, {'tag': 'a', 'cls': '', 'txt': '', 'right': 428, 'vw': 390}]",
+      "muc": "Vừa",
+      "anh": "anh/m01_TA_390_04_tai-xe_chuyen_17.png",
+      "tai_hien": "Bật Pixel sáng -> đăng nhập taixe ở 390x844 -> mở /tai-xe/chuyen/17",
+      "mong_doi": "Không màn trắng, không pageerror/console.error/5xx, không cuộn ngang, không tràn/cắt/chồng phần tử"
+    }
+  ]
+}

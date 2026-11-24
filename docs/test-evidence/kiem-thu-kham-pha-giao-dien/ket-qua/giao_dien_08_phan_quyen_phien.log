@@ -1,0 +1,13 @@
+
+============================================================================
+MỤC 08: Phân quyền giao diện, hết phiên (xóa cookie) & Đăng xuất rồi Back
+============================================================================
+[ĐẠT] PQ01_TAIXE_URL_KHAC - Tài xế mở thẳng 10 URL của Quản lý / Điều phối / Kế toán: Cả 10 URL vai trò khác đều chuyển hướng về /tai-xe/...
+[ĐẠT] PQ02_DIEUPHOI_URL_KHAC - Điều phối mở thẳng 9 URL của Quản lý / Kế toán / Tài xế: Cả 9 URL trái quyền đều redirect về /dieu-phoi/...
+[ĐẠT] PQ03_KETOAN_URL_KHAC - Kế toán mở thẳng 7 URL của Quản lý / Điều phối / Tài xế: Cả 7 URL trái quyền đều redirect về /ke-toan/...
+[LỖI (Nghiêm trọng)] PQ04_QUANLY_CHIXEM - Quản lý bị chặn /ke-toan/* & /tai-xe/*, và chỉ xem ở /quan-ly/cong-no, /quyet-toan: Quản lý thấy nút 'Quyết toán' ở /quan-ly/quyet-toan (phải chỉ xem) | ảnh: anh/m08_PQ04_QUANLY_CHIXEM.png
+[LỖI (Vừa)] PQ05_HET_PHIEN_COOKIE - Hết phiên (xóa cookie) rồi bấm menu tiếp và F5: phải tự về /dang-nhap gọn: Hết cookie nhưng bấm menu tiếp KHÔNG tự đưa về /dang-nhap (vẫn kẹt ở /dieu-phoi/don, chỉ báo lỗi/trống) | ảnh: anh/m08_PQ05_HET_PHIEN_COOKIE.png
+[LỖI (Nghiêm trọng)] PQ06_DANG_XUAT_BACK - Đăng xuất rồi bấm nút Back trình duyệt: không lộ trang nội bộ cũ: Đăng xuất xong bấm Back bị lộ trang cũ: ['Back #2: url=about:blank, tables=0'], pageerror=[] | ảnh: anh/m08_PQ06_DANG_XUAT_BACK.png
+
+==> TỔNG KẾT MỤC 08 (Phân quyền giao diện, hết phiên (xóa cookie) & Đăng xuất rồi Back): 6 ca | ĐẠT: 3 | LỖI: 3 | 67.4s
+    Đã lưu JSON: C:\Users\Lenovo\Desktop\DoAnChuyenNganh\QLVC-agy-pha\kiem-thu-kham-pha\ket_qua_08.json

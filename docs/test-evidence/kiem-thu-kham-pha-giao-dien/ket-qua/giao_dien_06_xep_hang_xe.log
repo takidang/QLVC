@@ -1,0 +1,16 @@
+
+============================================================================
+MỤC 06: Xếp hàng lên xe (SVG khoang hàng, gợi ý, tem VỪA/QUÁ, hover, quá tải, resize)
+============================================================================
+[ĐẠT] XH01_TRONG_GOI_Y - Thùng trống: kiểm dòng gợi ý còn trống & tem VỪA XE khớp sức chứa 10 m³ / 1000 kg: Thùng trống, SVG 454px, gợi ý & tem khớp số thật (10 m³ / 1000 kg)
+[ĐẠT] XH02_HOVER_NET_DUT - Rê chuột đơn chờ ghép hiện khối nét đứt xem trước trong khoang xe: Rê chuột hiện khối xem trước nét đứt (w=83px, dash=6px, 4px, qua=False)
+[LỖI (Vừa)] XH03_NHO_10PT - Ghép mức NHO_10PT (DH-LYXVD9): kiểm hình khoang hàng, dòng gợi ý & tem VỪA/QUÁ: Khối hàng bị tràn/cắt ngoài thùng xe: [{'label': 'DH-LYXVD9: 1 m³, 100 kg, bấm để chọn gỡ', 'w': 18, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': False}] | ảnh: anh/m06_XH03_NHO_10PT.png
+[LỖI (Vừa)] XH03_VUA_40PT - Ghép mức VUA_40PT (DH-JXZH8V): kiểm hình khoang hàng, dòng gợi ý & tem VỪA/QUÁ: Khối hàng bị tràn/cắt ngoài thùng xe: [{'label': 'DH-LYXVD9: 1 m³, 100 kg, bấm để chọn gỡ', 'w': 18, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': False}, {'label': 'DH-JXZH8V: 3 m³, 300 kg, bấm để chọn gỡ', 'w':  | ảnh: anh/m06_XH03_VUA_40PT.png
+[LỖI (Vừa)] XH03_LON_95PT - Ghép mức LON_95PT (DH-QK7FWD): kiểm hình khoang hàng, dòng gợi ý & tem VỪA/QUÁ: Khối hàng bị tràn/cắt ngoài thùng xe: [{'label': 'DH-LYXVD9: 1 m³, 100 kg, bấm để chọn gỡ', 'w': 18, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': False}, {'label': 'DH-JXZH8V: 3 m³, 300 kg, bấm để chọn gỡ', 'w':  | ảnh: anh/m06_XH03_LON_95PT.png
+[ĐẠT] XH04_CHAN_VUOT_TAI - Rê chuột & ghép đơn vượt m³ và vượt kg (tại 95% khoang): phải cảnh báo và bị chặn: Đơn quá m³ và quá kg đều hiện cảnh báo khi hover và bị chặn khi ghép
+[LỖI (Vừa)] XH05_DAY_KHOANG_100 - Ghép đến đầy khoang 100% (1000 kg / 10 m³): kiểm hình khối không cắt dở/tràn thùng: Đầy khoang 100% có khối tràn/cắt ngoài thùng: [{'label': 'DH-LYXVD9: 1 m³, 100 kg, bấm để chọn gỡ', 'w': 18, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': False}, {'label': 'DH-JXZH8V: 3 m³, 300 kg, bấm để chọn gỡ | ảnh: anh/m06_XH05_DAY_KHOANG_100.png
+[LỖI (Vừa)] XH06_RESIZE_GIUA_CHUNG - Đổi cỡ cửa sổ giữa chừng (1100, 768, 390, 1440px) khi khoang đang đầy 100%: 1100x800: khối tràn thùng [{'label': 'DH-LYXVD9: 1 m³, 100 kg, bấm để chọn gỡ', 'w': 17, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': False}] | 768x900: khối tràn thùng [{'label': 'DH-LYXVD9: 1 m³, 100 kg, bấm để | ảnh: anh/m06_XH06_RESIZE_GIUA_CHUNG.png
+[ĐẠT] XH07_BAM_KHOI_GO - Bấm vào khối hàng trong SVG để chọn và bấm 'Gỡ khỏi xe': Bấm khối -> Gỡ khỏi xe thành công (4 -> 3 khối)
+
+==> TỔNG KẾT MỤC 06 (Xếp hàng lên xe (SVG khoang hàng, gợi ý, tem VỪA/QUÁ, hover, quá tải, resize)): 9 ca | ĐẠT: 4 | LỖI: 5 | 13.5s
+    Đã lưu JSON: C:\Users\Lenovo\Desktop\DoAnChuyenNganh\QLVC-agy-pha\kiem-thu-kham-pha\ket_qua_06.json

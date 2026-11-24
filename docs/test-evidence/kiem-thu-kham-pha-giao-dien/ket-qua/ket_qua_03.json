@@ -1,0 +1,100 @@
+{
+  "muc": 3,
+  "ten_muc": "Bấm lặp, nhấp nháy & hiệu ứng đóng dấu (ĐÃ LƯU / ĐÃ HỦY)",
+  "tong": 9,
+  "dat": 7,
+  "loi": 2,
+  "thoi_gian_giay": 36.4,
+  "ca": [
+    {
+      "ma": "BL01_HUY_FORM_KHONG_DAU",
+      "ten": "Bấm Hủy đóng form Tạo đơn & Lập chuyến KHÔNG được hiện dấu ĐÃ HỦY / ĐÃ LƯU",
+      "dat": true,
+      "ly_do": "Bấm Hủy đóng form Tạo đơn & Lập chuyến không hiện đóng dấu giả",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở form Tạo đơn -> bấm Hủy; mở form Lập chuyến -> bấm Hủy",
+      "mong_doi": "Không hiện hiệu ứng đóng dấu ĐÃ HỦY hay ĐÃ LƯU khi chỉ đóng form"
+    },
+    {
+      "ma": "BL02_LUU_LOI_KHONG_DAU",
+      "ten": "Lưu đơn thất bại (hạn giao 2020) KHÔNG được hiện đóng dấu ĐÃ LƯU",
+      "dat": true,
+      "ly_do": "Lưu đơn lỗi không hiện hiệu ứng đóng dấu",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Tạo đơn -> điền hạn giao 2020-01-01 -> bấm Lưu đơn",
+      "mong_doi": "Hiện lỗi BR-31, tuyệt đối không đóng dấu ĐÃ LƯU"
+    },
+    {
+      "ma": "BL03_LUU_DON_LAP",
+      "ten": "Bấm nhanh 4 lần nút Lưu đơn: chống trùng, khóa nút, đóng dấu ĐÃ LƯU tối đa 1 lần",
+      "dat": false,
+      "ly_do": "Nút Lưu đơn không bị khóa (disabled) trong lúc gửi | Đóng dấu hiện nhiều lần (3): [{'t': 1795548505313, 'text': 'ĐÃ LƯU 25/11 · 02:28', 'cls': 'px-dd-lop', 'color': 'rgb(39, 42, 50)', 'bg': 'rgba(0, 0, 0, 0)', 'borderColor': 'rgb(39, 42, 50)'}, {'t': 1795548505314, 'text': 'ĐÃ LƯU 25/11 · 02:28', 'cls': 'px-dd-dau luu', 'color': 'rgb(33, 82, 90)', 'bg': 'color(srgb 0.912627 0.894118 0.85851)', 'borderColor': 'rgb(33, 82, 90)'}, {'t': 1795548505314, 'text': 'ĐÃ LƯU', 'cls': '', 'color': 'rgb(33, 82, 90)', 'bg': 'rgba(0, 0, 0, 0)', 'borderColor': 'rgb(33, 82, 90)'}]",
+      "muc": "Vừa",
+      "anh": "anh/m03_BL03_LUU_DON_LAP.png",
+      "tai_hien": "Tạo đơn PHA- -> điền đủ -> bấm nhanh 4 lần nút Lưu đơn (POST trễ 350ms)",
+      "mong_doi": "Chỉ 1 POST /api/don, tạo đúng 1 đơn, nút bị disabled lúc gửi, đóng dấu hiện ≤ 1 lần"
+    },
+    {
+      "ma": "BL04_GHEP_DON_LAP",
+      "ten": "Bấm nhanh 4 lần nút Ghép vào xe trên chi tiết chuyến",
+      "dat": true,
+      "ly_do": "POST /ghep=1, khóa nút=True, dấu=[]",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở /dieu-phoi/chuyen/22 -> bấm nhanh 4 lần nút Ghép vào xe",
+      "mong_doi": "Chỉ 1 POST /ghep, nút bị khóa khi đang gửi, không lặp đóng dấu"
+    },
+    {
+      "ma": "BL05_GO_DON_LAP",
+      "ten": "Bấm nhanh 4 lần nút Gỡ khỏi xe",
+      "dat": true,
+      "ly_do": "POST /go=1, khóa nút=False, dấu=[]",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở /dieu-phoi/chuyen/22 -> chọn khối -> bấm nhanh 4 lần Gỡ khỏi xe",
+      "mong_doi": "Chỉ 1 POST /go, không lỗi JS, không đóng dấu lặp"
+    },
+    {
+      "ma": "BL06_CHOT_CHUYEN_LAP",
+      "ten": "Bấm nhanh 4 lần nút Chốt chuyến",
+      "dat": true,
+      "ly_do": "DA_CHOT OK, POST /chot=2, khóa nút=True, dấu=[]",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở /dieu-phoi/chuyen/22 -> bấm nhanh 4 lần Chốt chuyến",
+      "mong_doi": "Chuyến sang DA_CHOT, không gửi POST lặp chồng chéo, đóng dấu ≤ 1 lần"
+    },
+    {
+      "ma": "BL07_HUY_CHUYEN_LAP",
+      "ten": "Bấm nhanh 4 lần Xác nhận hủy chuyến & kiểm dấu ĐÃ HỦY",
+      "dat": true,
+      "ly_do": "POST /huy=1, khóa nút=True, dấu=[]",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở /dieu-phoi/chuyen/23 -> Hủy chuyến -> điền lý do -> bấm nhanh 4 lần Xác nhận hủy",
+      "mong_doi": "Chưa xác nhận không hiện dấu; xác nhận gửi đúng 1 POST /huy; dấu ĐÃ HỦY không lặp/không nhầm ĐÃ LƯU"
+    },
+    {
+      "ma": "BL08_DANG_NHAP_LAP",
+      "ten": "Bấm nhanh 5 lần nút Đăng nhập (tài khoản pha_47dc04)",
+      "dat": true,
+      "ly_do": "POST đăng nhập=1, khóa nút=True",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở /dang-nhap -> điền pha_47dc04 -> bấm nhanh 5 lần Đăng nhập",
+      "mong_doi": "Chỉ gửi 1 POST /api/auth/dang-nhap, nút bị khóa khi gửi"
+    },
+    {
+      "ma": "BL09_DOI_MAT_KHAU_LAP",
+      "ten": "Bấm nhanh 5 lần nút Đổi mật khẩu (tài khoản pha_47dc04)",
+      "dat": false,
+      "ly_do": "Gửi 0 POST đổi mật khẩu (phải là 1) | Nút Đổi mật khẩu không bị disabled lúc gửi",
+      "muc": "Vừa",
+      "anh": "anh/m03_BL09_DOI_MAT_KHAU_LAP.png",
+      "tai_hien": "Mở /tai-khoan (pha_47dc04) -> điền MK mới hợp lệ -> bấm nhanh 5 lần Đổi mật khẩu",
+      "mong_doi": "Chỉ 1 POST đổi mật khẩu, nút bị khóa lúc gửi, không lặp đóng dấu"
+    }
+  ]
+}
