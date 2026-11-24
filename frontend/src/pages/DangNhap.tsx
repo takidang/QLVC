@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 'react'
 import { dangNhap, LoiApi, type NguoiDung } from '../api/auth'
+import { traCuu } from '../api/traCuu'
 import { Link, useNavigate } from 'react-router-dom'
 import { dangHieuUng, dangHieuUngPixel, NEN, phongCachDaLuu } from '../nen'
 import NenHat from '../NenHat'
@@ -42,6 +43,9 @@ function QrTrangTri() {
   )
 }
 
+type Dau = { id: number; ok: boolean; chu: string; phu: string }
+const cho = (ms: number) => new Promise<void>((xong) => window.setTimeout(xong, ms))
+
 const maPhieu = (tien: string) =>
   `#${tien}-${String(Math.floor(Math.random() * 10000)).padStart(4, '0')}`
 
@@ -68,6 +72,14 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
   const [luc] = useState(() =>
     new Date().toLocaleString('vi-VN', { dateStyle: 'short', timeStyle: 'short' }),
   )
+  // Con dấu đóng lên phiếu (chỉ khi có Hiệu ứng Pixel): xanh = được, đỏ = bị từ chối
+  const [dau, setDau] = useState<Dau | null>(null)
+  const dongDau = (ok: boolean, chu: string, phu: string) => {
+    if (!dangHieuUngPixel()) return
+    const moi = { id: Date.now(), ok, chu, phu }
+    setDau(moi)
+    if (!ok) window.setTimeout(() => setDau((d) => (d === moi ? null : d)), 1500)
+  }
   const oTen = useRef<HTMLInputElement>(null)
   const oMaDon = useRef<HTMLInputElement>(null)
   // In tờ mới; có hiệu ứng thì đèn nháy ~500 ms, phiếu trượt ra, xong mới báo và đưa con trỏ vào ô đầu
@@ -93,12 +105,42 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
     setXe(true)
     window.setTimeout(() => inPhieu(loai), 350)
   }
-  function guiKhach(e: FormEvent) {
+  async function guiKhach(e: FormEvent) {
     e.preventDefault()
     if (!maDon.trim() || !/^\d{4}$/.test(soCuoi))
       return setLoiKhach('Nhập mã đơn và đúng 4 chữ số cuối số điện thoại')
-    navigate(`/tra-cuu?ma=${encodeURIComponent(maDon.trim())}&so=${soCuoi}`)
+    setLoiKhach('')
+    setDangGui(true)
+    const ma = maDon.trim()
+    try {
+      const kq = await traCuu(ma, soCuoi)
+      setThongBao('Đã tìm thấy đơn')
+      if (dangHieuUngPixel()) {
+        dongDau(true, 'FOUND', 'ĐÃ TÌM THẤY')
+        await cho(750)
+      }
+      navigate(`/tra-cuu?ma=${encodeURIComponent(ma)}&so=${soCuoi}`, { state: { kq } })
+    } catch (err) {
+      const khongThay = err instanceof LoiApi && err.status === 404
+      setThongBao(khongThay ? 'Không tìm thấy đơn' : 'Từ chối')
+      dongDau(
+        false,
+        khongThay ? 'NOT FOUND' : 'DENIED',
+        khongThay ? 'SAI MÃ / KHÔNG CÓ ĐƠN' : 'TỪ CHỐI',
+      )
+      setLoiKhach(
+        khongThay
+          ? 'Không tìm thấy đơn. Kiểm tra lại mã đơn trên phiếu gửi hàng và 4 số cuối số điện thoại người gửi hoặc người nhận.'
+          : err instanceof LoiApi && err.status !== 400
+            ? err.message
+            : 'Nhập mã đơn và đúng 4 chữ số cuối số điện thoại',
+      )
+      oMaDon.current?.focus()
+    } finally {
+      setDangGui(false)
+    }
   }
+
   const [soKyTu, setSoKyTu] = useState(() => (dangHieuUng() ? 0 : CAU_GIOI_THIEU.length))
   const [tro, setTro] = useState<'an' | 'go' | 'nhay'>(() => (dangHieuUng() ? 'go' : 'an'))
 
@@ -150,8 +192,18 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
     setLoi('')
     setDangGui(true)
     try {
-      onXong(await dangNhap(ten.trim(), matKhau))
+      const nd = await dangNhap(ten.trim(), matKhau)
+      setThongBao('Đăng nhập thành công, đã duyệt')
+      if (pixel && dangHieuUngPixel()) {
+        dongDau(true, 'APPROVED', 'ĐÃ DUYỆT')
+        await cho(750) // dấu dập ~250 ms + dừng ~500 ms rồi mới vào
+      }
+      onXong(nd)
     } catch (err) {
+      if (pixel) {
+        setThongBao('Từ chối')
+        dongDau(false, 'DENIED', 'TỪ CHỐI')
+      }
       // Máy chủ đã trả câu tiếng Việt (sai thông tin, bị khóa, khóa tạm); 400 là thiếu trường
       setLoi(
         err instanceof LoiApi && err.status !== 400
@@ -209,8 +261,22 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
               <div className="dn-giay-vung">
                 {phieu && (
                   <div key={lan} className={xe ? 'dn-giay xe' : 'dn-giay'}>
+                    {dau && (
+                      <div
+                        key={dau.id}
+                        className={dau.ok ? 'dn-dau ok' : 'dn-dau'}
+                        aria-hidden="true"
+                      >
+                        <b>{dau.chu}</b>
+                        <small>{dau.phu}</small>
+                      </div>
+                    )}
                     {phieu === 'nv' ? (
-                      <form className="dn-phieu" onSubmit={gui} noValidate>
+                      <form
+                        className={dau && !dau.ok ? 'dn-phieu rung' : 'dn-phieu'}
+                        onSubmit={gui}
+                        noValidate
+                      >
                         <QrTrangTri />
                         <h1>PHIẾU ĐĂNG NHẬP NHÂN VIÊN</h1>
                         <p className="dn-phieu-ma">
@@ -223,7 +289,10 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
                             <input
                               ref={oTen}
                               value={ten}
-                              onChange={(e) => setTen(e.target.value)}
+                              onChange={(e) => {
+                                setTen(e.target.value)
+                                setDau(null)
+                              }}
                               autoComplete="username"
                               required
                             />
@@ -236,7 +305,10 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
                               ref={oMatKhau}
                               type="password"
                               value={matKhau}
-                              onChange={(e) => setMatKhau(e.target.value)}
+                              onChange={(e) => {
+                                setMatKhau(e.target.value)
+                                setDau(null)
+                              }}
                               autoComplete="current-password"
                               required
                             />
@@ -255,7 +327,11 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
                         </button>
                       </form>
                     ) : (
-                      <form className="dn-phieu" onSubmit={guiKhach} noValidate>
+                      <form
+                        className={dau && !dau.ok ? 'dn-phieu rung' : 'dn-phieu'}
+                        onSubmit={guiKhach}
+                        noValidate
+                      >
                         <QrTrangTri />
                         <h1>PHIẾU TRA CỨU ĐƠN HÀNG</h1>
                         <p className="dn-phieu-ma">
@@ -268,7 +344,10 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
                             <input
                               ref={oMaDon}
                               value={maDon}
-                              onChange={(e) => setMaDon(e.target.value)}
+                              onChange={(e) => {
+                                setMaDon(e.target.value)
+                                setDau(null)
+                              }}
                               autoCapitalize="characters"
                               autoComplete="off"
                               spellCheck={false}
@@ -282,9 +361,10 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
                           <span className="dn-o">
                             <input
                               value={soCuoi}
-                              onChange={(e) =>
+                              onChange={(e) => {
                                 setSoCuoi(e.target.value.replace(/\D/g, '').slice(0, 4))
-                              }
+                                setDau(null)
+                              }}
                               inputMode="numeric"
                               autoComplete="off"
                               placeholder="vd 6789"
@@ -298,7 +378,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
                             {loiKhach}
                           </p>
                         )}
-                        <button>Tra cứu</button>
+                        <button disabled={dangGui}>{dangGui ? 'Đang tra cứu…' : 'Tra cứu'}</button>
                         <button type="button" className="dn-xe" onClick={() => doiPhieu('nv')}>
                           Nhân viên? Xé phiếu
                         </button>

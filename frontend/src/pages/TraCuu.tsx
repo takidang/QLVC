@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { LoiApi } from '../api/goi'
 import { traCuu, type KetQuaTraCuu } from '../api/traCuu'
 import { XeTaiHanhTrinhPixel } from '../HieuUngPixel'
@@ -34,7 +34,11 @@ export default function TraCuu() {
     const v = thamSo.get('so') ?? ''
     return /^\d{4}$/.test(v) ? v : ''
   })
-  const [kq, setKq] = useState<KetQuaTraCuu | null>(null)
+  // Từ phiếu tra cứu ở trang đăng nhập đã có sẵn kết quả (state.kq): dùng luôn, khỏi gọi API lần nữa
+  const kqSan = (useLocation().state as { kq?: KetQuaTraCuu } | null)?.kq
+  const coSan =
+    !!kqSan && kqSan.ma_don.toUpperCase() === (thamSo.get('ma') ?? '').trim().toUpperCase()
+  const [kq, setKq] = useState<KetQuaTraCuu | null>(coSan ? kqSan : null)
   const [loi, setLoi] = useState('')
   const [dangGui, setDangGui] = useState(false)
   const oMa = useRef<HTMLInputElement>(null)
@@ -71,7 +75,7 @@ export default function TraCuu() {
   useEffect(() => {
     if (daTuTra.current) return
     daTuTra.current = true
-    if (ma.trim() && /^\d{4}$/.test(so)) void gui()
+    if (!coSan && ma.trim() && /^\d{4}$/.test(so)) void gui()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
