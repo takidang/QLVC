@@ -1,0 +1,16 @@
+
+============================================================================
+MỤC 03: Bấm lặp, nhấp nháy & hiệu ứng đóng dấu (ĐÃ LƯU / ĐÃ HỦY)
+============================================================================
+[ĐẠT] BL01_HUY_FORM_KHONG_DAU - Bấm Hủy đóng form Tạo đơn & Lập chuyến KHÔNG được hiện dấu ĐÃ HỦY / ĐÃ LƯU: Bấm Hủy đóng form Tạo đơn & Lập chuyến không hiện đóng dấu giả
+[ĐẠT] BL02_LUU_LOI_KHONG_DAU - Lưu đơn thất bại (hạn giao 2020) KHÔNG được hiện đóng dấu ĐÃ LƯU: Lưu đơn lỗi không hiện hiệu ứng đóng dấu
+[LỖI (Vừa)] BL03_LUU_DON_LAP - Bấm nhanh 4 lần nút Lưu đơn: chống trùng, khóa nút, đóng dấu ĐÃ LƯU tối đa 1 lần: Nút Lưu đơn không bị khóa (disabled) trong lúc gửi | Đóng dấu hiện nhiều lần (3): [{'t': 1795548505313, 'text': 'ĐÃ LƯU 25/11 · 02:28', 'cls': 'px-dd-lop', 'color': 'rgb(39, 42, 50)', 'bg': 'rgba(0, 0, 0, 0)', 'borderColor': 'rgb(39, 42, 50)'}, {'t': 179554850 | ảnh: anh/m03_BL03_LUU_DON_LAP.png
+[ĐẠT] BL04_GHEP_DON_LAP - Bấm nhanh 4 lần nút Ghép vào xe trên chi tiết chuyến: POST /ghep=1, khóa nút=True, dấu=[]
+[ĐẠT] BL05_GO_DON_LAP - Bấm nhanh 4 lần nút Gỡ khỏi xe: POST /go=1, khóa nút=False, dấu=[]
+[ĐẠT] BL06_CHOT_CHUYEN_LAP - Bấm nhanh 4 lần nút Chốt chuyến: DA_CHOT OK, POST /chot=2, khóa nút=True, dấu=[]
+[ĐẠT] BL07_HUY_CHUYEN_LAP - Bấm nhanh 4 lần Xác nhận hủy chuyến & kiểm dấu ĐÃ HỦY: POST /huy=1, khóa nút=True, dấu=[]
+[ĐẠT] BL08_DANG_NHAP_LAP - Bấm nhanh 5 lần nút Đăng nhập (tài khoản pha_47dc04): POST đăng nhập=1, khóa nút=True
+[LỖI (Vừa)] BL09_DOI_MAT_KHAU_LAP - Bấm nhanh 5 lần nút Đổi mật khẩu (tài khoản pha_47dc04): Gửi 0 POST đổi mật khẩu (phải là 1) | Nút Đổi mật khẩu không bị disabled lúc gửi | ảnh: anh/m03_BL09_DOI_MAT_KHAU_LAP.png
+
+==> TỔNG KẾT MỤC 03 (Bấm lặp, nhấp nháy & hiệu ứng đóng dấu (ĐÃ LƯU / ĐÃ HỦY)): 9 ca | ĐẠT: 7 | LỖI: 2 | 36.4s
+    Đã lưu JSON: C:\Users\Lenovo\Desktop\DoAnChuyenNganh\QLVC-agy-pha\kiem-thu-kham-pha\ket_qua_03.json

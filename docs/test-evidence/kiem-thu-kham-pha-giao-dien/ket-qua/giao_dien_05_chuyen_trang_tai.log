@@ -1,0 +1,12 @@
+
+============================================================================
+MỤC 05: Chuyển trang, tải chậm/lỗi, hiệu ứng px-hien-mo & khung xương .px-tai
+============================================================================
+[LỖI (Vừa)] CT01_DOI_MENU_20_LAN - Đổi trang liên tục thật nhanh qua menu trái 20 lần: Kẹt filter blur (nhòe chữ mãi): [{'tag': 'section', 'cls': 'noi-dung', 'opacity': 1, 'filter': 'blur(0px)', 'anim': 'px-hien-mo'}] | ảnh: anh/m05_CT01_DOI_MENU_20_LAN.png
+[LỖI (Vừa)] CT02_BACK_FORWARD - Back 5 lần rồi Forward 5 lần liên tiếp: Kẹt mờ/nhòe sau Back/Forward: [{'tag': 'section', 'cls': 'noi-dung', 'opacity': 1, 'filter': 'blur(0px)', 'anim': 'px-hien-mo'}] | ảnh: anh/m05_CT02_BACK_FORWARD.png
+[LỖI (Vừa)] CT03_F5_GIUA_CHUNG - F5 (reload) giữa chừng khi API đang tải chậm: Kẹt hiệu ứng/skeleton sau F5: {'kids': [{'tag': 'section', 'cls': 'noi-dung', 'opacity': 1, 'filter': 'blur(0px)', 'anim': 'px-hien-mo'}], 'ketMo': False, 'ketNhoe': True, 'pxTai': 0, 'textLen': 2810, 'animEvents': []} | ảnh: anh/m05_CT03_F5_GIUA_CHUNG.png
+[LỖI (Vừa)] CT04_MANG_CHAM_2S - Mạng chậm (trễ 2.2s /api/**): kiểm px-hien-mo không kẹt mờ/nhòe/nháy 2 lần & .px-tai tắt: Kẹt filter blur sau tải chậm: [{'tag': 'section', 'cls': 'noi-dung', 'opacity': 1, 'filter': 'blur(0px)', 'anim': 'px-hien-mo'}] | ảnh: anh/m05_CT04_MANG_CHAM_2S.png
+[LỖI (Nghiêm trọng)] CT05_MANG_LOI_30 - Mạng lỗi (abort 30% request /api/**) trên 4 trang: không màn trắng, không kẹt .px-tai: /dieu-phoi/chuyen: màn trắng khi abort 30% | /dieu-phoi/don: màn trắng khi abort 30% | /dieu-phoi/xe: màn trắng khi abort 30% | /dieu-phoi/khach-hang: màn trắng khi abort 30% | ảnh: anh/m05_CT05_MANG_LOI_30.png
+
+==> TỔNG KẾT MỤC 05 (Chuyển trang, tải chậm/lỗi, hiệu ứng px-hien-mo & khung xương .px-tai): 5 ca | ĐẠT: 0 | LỖI: 5 | 35.9s
+    Đã lưu JSON: C:\Users\Lenovo\Desktop\DoAnChuyenNganh\QLVC-agy-pha\kiem-thu-kham-pha\ket_qua_05.json

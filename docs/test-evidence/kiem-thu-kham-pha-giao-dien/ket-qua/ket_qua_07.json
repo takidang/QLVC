@@ -1,0 +1,70 @@
+{
+  "muc": 7,
+  "ten_muc": "Chuông thông báo, menu tài khoản, ô tìm kiếm & popover 'ĐƠN THẤT BẠI'",
+  "tong": 6,
+  "dat": 4,
+  "loi": 2,
+  "thoi_gian_giay": 42.0,
+  "ca": [
+    {
+      "ma": "TB01_CHUONG_LOGIC",
+      "ten": "Chuông thông báo: số 'mới' khớp API, cuộn danh sách, bấm mục điều hướng đúng trang",
+      "dat": true,
+      "ly_do": "Số mới khớp API (9/9), hộp gọn, bấm mục đi đúng (/dieu-phoi/chuyen/17 -> /dieu-phoi/chuyen/17)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Xóa qlvc-da-doc-* -> tải lại -> kiểm số mới -> mở chuông -> bấm mục đầu tiên",
+      "mong_doi": "Số mới khớp /api/thong-bao, hộp không tràn, bấm mục đi đúng trang và reset số mới"
+    },
+    {
+      "ma": "TB02_NOI_1100",
+      "ten": "Chuông, Menu tài khoản & Ô tìm kiếm ở 1100x800: không tràn màn hay che menu",
+      "dat": true,
+      "ly_do": "Chuông, Menu tài khoản & Tìm chung gọn trong 1100x800",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Viewport 1100x800 -> lần lượt mở Chuông, Menu tài khoản, Tìm chung",
+      "mong_doi": "Các hộp nổi nằm gọn trong khung nhìn, không che menu, đóng được bằng Escape/bấm ngoài"
+    },
+    {
+      "ma": "TB02_NOI_390",
+      "ten": "Chuông, Menu tài khoản & Ô tìm kiếm ở 390x844: không tràn màn hay che menu",
+      "dat": true,
+      "ly_do": "Chuông, Menu tài khoản & Tìm chung gọn trong 390x844",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Viewport 390x844 -> lần lượt mở Chuông, Menu tài khoản, Tìm chung",
+      "mong_doi": "Các hộp nổi nằm gọn trong khung nhìn, không che menu, đóng được bằng Escape/bấm ngoài"
+    },
+    {
+      "ma": "TB03_TIM_CHUNG_CLICK",
+      "ten": "Ô tìm kiếm trên cùng: gõ từ khóa, hiện danh sách nhóm và bấm điều hướng đúng",
+      "dat": true,
+      "ly_do": "Tìm chung mở hộp, bấm kết quả điều hướng đúng (/dieu-phoi/chuyen/23)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Gõ 'CH-' hoặc 'DH-' vào ô Tìm chung -> bấm kết quả đầu tiên",
+      "mong_doi": "Hiện hộp kết quả .tim-hop và bấm điều hướng tới đúng trang chi tiết"
+    },
+    {
+      "ma": "TB04_POPOVER_1100",
+      "ten": "Popover cảnh báo 'ĐƠN THẤT BẠI' ở 1100x800: tràn màn, che menu & rê chuột không tắt giữa chừng",
+      "dat": false,
+      "ly_do": "Ngoại lệ khi chạy ca: TimeoutError: Locator.click: Timeout 12000ms exceeded.\nCall log:\n  - waiting for locator(\"button:has-text(\\\"ĐƠN THẤT BẠI\\\"), button:has-text(\\\"Đơn thất bại\\\"), [class*=\\\"that-bai\\\"], [class*=\\\"canh-bao\\\"] button\").first\n    - locator resolved to <button type=\"button\" class=\"px-cb-nut\" aria-expanded=\"true\" aria-describedby=\"_r_0_\">…</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"px-cb-pop-dau\">…</div> from <div id=\"_r_0_\" class=\"px-note px-note-pop px-cb-pop mo\">…</div> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div class=\"px-cb-pop-dau\">…</div> from <div id=\"_r_0_\" class=\"px-note px-note-pop px-cb-pop mo\">…</div> subtree intercepts pointer events\n  2 × retrying click action\n      - waiting 100ms\n      - waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <input value=\"\" type=\"search\" aria-label=\"Tìm chung\" placeholder=\"Tìm mã chuyến, mã đơn, biển số…\"/> from <header class=\"dau\">…</header> subtree intercepts pointer events\n  5 × retrying click action\n      - waiting 500ms\n      - waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"px-cb-pop-dau\">…</div> from <div id=\"_r_0_\" class=\"px-note px-note-pop px-cb-pop mo\">…</div> subtree intercepts pointer events\n    - retrying click action\n      - waiting 500ms\n      - waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"px-cb-pop-dau\">…</div> from <div id=\"_r_0_\" class=\"px-note px-note-pop px-cb-pop mo\">…</div> subtree intercepts pointer events\n    - retrying click action\n      - waiting 500ms\n      - waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <input value=\"\" type=\"search\" aria-label=\"Tìm chung\" placeholder=\"Tìm mã chuyến, mã đơn, biển số…\"/> from <header class=\"dau\">…</header> subtree intercepts pointer events\n    - retrying click action\n      - waiting 500ms\n      - waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <input value=\"\" type=\"search\" aria-label=\"Tìm chung\" placeholder=\"Tìm mã chuyến, mã đơn, biển số…\"/> from <header class=\"dau\">…</header> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div class=\"px-cb-pop-dau\">…</div> from <div id=\"_r_0_\" class=\"px-note px-note-pop px-cb-pop mo\">…</div> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n (    - waiting 500ms)",
+      "muc": "Vừa",
+      "anh": "anh/m07_TB04_POPOVER_1100_exc.png",
+      "tai_hien": "Viewport 1100x800 -> mở /dieu-phoi/don hoặc /chuyen -> rê chuột/bấm nút ĐƠN THẤT BẠI -> rê chuột giữa nút và popover",
+      "mong_doi": "Popover nằm gọn trong màn hình, không che menu, rê chuột đi lại không bị tắt giữa chừng"
+    },
+    {
+      "ma": "TB04_POPOVER_390",
+      "ten": "Popover cảnh báo 'ĐƠN THẤT BẠI' ở 390x844: tràn màn, che menu & rê chuột không tắt giữa chừng",
+      "dat": false,
+      "ly_do": "Ngoại lệ khi chạy ca: TimeoutError: Locator.click: Timeout 12000ms exceeded.\nCall log:\n  - waiting for locator(\"button:has-text(\\\"ĐƠN THẤT BẠI\\\"), button:has-text(\\\"Đơn thất bại\\\"), [class*=\\\"that-bai\\\"], [class*=\\\"canh-bao\\\"] button\").first\n    - locator resolved to <button type=\"button\" class=\"px-cb-nut\" aria-expanded=\"true\" aria-describedby=\"_r_0_\">…</button>\n  - attempting click action\n    2 × waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"kinh dm-chu-y\">…</div> from <div id=\"_r_0_\" class=\"px-note px-note-pop px-cb-pop mo\">…</div> subtree intercepts pointer events\n    - retrying click action\n    - waiting 20ms\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div class=\"kinh dm-chu-y\">…</div> from <div id=\"_r_0_\" class=\"px-note px-note-pop px-cb-pop mo\">…</div> subtree intercepts pointer events\n  2 × retrying click action\n      - waiting 100ms\n      - waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <small>LOGISTICS</small> from <header class=\"dau\">…</header> subtree intercepts pointer events\n  5 × retrying click action\n      - waiting 500ms\n      - waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"kinh dm-chu-y\">…</div> from <div id=\"_r_0_\" class=\"px-note px-note-pop px-cb-pop mo\">…</div> subtree intercepts pointer events\n    - retrying click action\n      - waiting 500ms\n      - waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <div class=\"kinh dm-chu-y\">…</div> from <div id=\"_r_0_\" class=\"px-note px-note-pop px-cb-pop mo\">…</div> subtree intercepts pointer events\n    - retrying click action\n      - waiting 500ms\n      - waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <small>LOGISTICS</small> from <header class=\"dau\">…</header> subtree intercepts pointer events\n    - retrying click action\n      - waiting 500ms\n      - waiting for element to be visible, enabled and stable\n      - element is visible, enabled and stable\n      - scrolling into view if needed\n      - done scrolling\n      - <small>LOGISTICS</small> from <header class=\"dau\">…</header> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n    - waiting for element to be visible, enabled and stable\n    - element is visible, enabled and stable\n    - scrolling into view if needed\n    - done scrolling\n    - <div class=\"kinh dm-chu-y\">…</div> from <div id=\"_r_0_\" class=\"px-note px-note-pop px-cb-pop mo\">…</div> subtree intercepts pointer events\n  - retrying click action\n    - waiting 500ms\n (    - waiting 500ms)",
+      "muc": "Vừa",
+      "anh": "anh/m07_TB04_POPOVER_390_exc.png",
+      "tai_hien": "Viewport 390x844 -> mở /dieu-phoi/don hoặc /chuyen -> rê chuột/bấm nút ĐƠN THẤT BẠI -> rê chuột giữa nút và popover",
+      "mong_doi": "Popover nằm gọn trong màn hình, không che menu, rê chuột đi lại không bị tắt giữa chừng"
+    }
+  ]
+}

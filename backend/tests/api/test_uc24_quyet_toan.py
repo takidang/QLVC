@@ -528,3 +528,41 @@ def test_uc24_ac9_tam_ung_da_thu_hoi_khong_tinh(client, db, qt):
     duyet_het(client, qt)
     j = client.get(f"/api/chuyen/{qt['id']}/quyet-toan").json()
     assert (j["tong_tam_ung_hieu_luc"], j["chenh_lech_tam_ung"]) == (1000000, -50000)
+
+
+# Kiểm thử khám phá 23/11: tài xế xóa khoản trong lúc Kế toán đang đợi khóa để duyệt → 404, không 500
+def test_uc24_duyet_khoan_vua_bi_xoa(client, db, qt):
+    import threading
+
+    from fastapi.testclient import TestClient
+    from sqlalchemy import delete
+    from sqlalchemy.orm import Session
+
+    from app.db import get_engine
+    from app.main import app
+
+    cp = qt["k"]["cau"]
+    s = Session(get_engine())
+    s.get(Chuyen, qt["id"], with_for_update=True)  # như lần xóa của tài xế đang giữ dòng chuyến
+    ket_qua: list = []
+
+    def gui():
+        with TestClient(app, base_url="https://testserver") as c:
+            assert (
+                c.post("/api/auth/dang-nhap", json={"ten_dang_nhap": "ke_toan", "mat_khau": "matkhau123"}).status_code
+                == 200
+            )
+            ket_qua.append(duyet(c, cp, 230000))
+
+    try:
+        t = threading.Thread(target=gui)
+        t.start()
+        t.join(1.5)
+        assert t.is_alive()
+        s.execute(delete(Tep).where(Tep.chi_phi_id == cp))
+        s.execute(delete(ChiPhi).where(ChiPhi.id == cp))
+        s.commit()
+    finally:
+        s.close()
+    t.join()
+    assert ma(ket_qua[0]) == (404, "KHONG_TIM_THAY")

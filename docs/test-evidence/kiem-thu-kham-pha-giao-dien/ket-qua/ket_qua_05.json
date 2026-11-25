@@ -1,0 +1,60 @@
+{
+  "muc": 5,
+  "ten_muc": "Chuyển trang, tải chậm/lỗi, hiệu ứng px-hien-mo & khung xương .px-tai",
+  "tong": 5,
+  "dat": 0,
+  "loi": 5,
+  "thoi_gian_giay": 35.9,
+  "ca": [
+    {
+      "ma": "CT01_DOI_MENU_20_LAN",
+      "ten": "Đổi trang liên tục thật nhanh qua menu trái 20 lần",
+      "dat": false,
+      "ly_do": "Kẹt filter blur (nhòe chữ mãi): [{'tag': 'section', 'cls': 'noi-dung', 'opacity': 1, 'filter': 'blur(0px)', 'anim': 'px-hien-mo'}]",
+      "muc": "Vừa",
+      "anh": "anh/m05_CT01_DOI_MENU_20_LAN.png",
+      "tai_hien": "Bấm liên tục 20 lần qua các mục menu trái (cách nhau 80ms)",
+      "mong_doi": "Không màn trắng, không pageerror/5xx, không kẹt mờ/nhòe hay .px-tai"
+    },
+    {
+      "ma": "CT02_BACK_FORWARD",
+      "ten": "Back 5 lần rồi Forward 5 lần liên tiếp",
+      "dat": false,
+      "ly_do": "Kẹt mờ/nhòe sau Back/Forward: [{'tag': 'section', 'cls': 'noi-dung', 'opacity': 1, 'filter': 'blur(0px)', 'anim': 'px-hien-mo'}]",
+      "muc": "Vừa",
+      "anh": "anh/m05_CT02_BACK_FORWARD.png",
+      "tai_hien": "Mở 6 trang liên tiếp -> bấm Back 5 lần -> bấm Forward 5 lần",
+      "mong_doi": "Hiển thị đúng trang cuối, không màn trắng, không kẹt px-hien-mo / .px-tai"
+    },
+    {
+      "ma": "CT03_F5_GIUA_CHUNG",
+      "ten": "F5 (reload) giữa chừng khi API đang tải chậm",
+      "dat": false,
+      "ly_do": "Kẹt hiệu ứng/skeleton sau F5: {'kids': [{'tag': 'section', 'cls': 'noi-dung', 'opacity': 1, 'filter': 'blur(0px)', 'anim': 'px-hien-mo'}], 'ketMo': False, 'ketNhoe': True, 'pxTai': 0, 'textLen': 2810, 'animEvents': []}",
+      "muc": "Vừa",
+      "anh": "anh/m05_CT03_F5_GIUA_CHUNG.png",
+      "tai_hien": "Làm trễ /api/** 1.5s -> mở /dieu-phoi/don -> sau 300ms bấm F5",
+      "mong_doi": "Trang tải lại sạch, không màn trắng, không kẹt mờ/nhòe hay .px-tai"
+    },
+    {
+      "ma": "CT04_MANG_CHAM_2S",
+      "ten": "Mạng chậm (trễ 2.2s /api/**): kiểm px-hien-mo không kẹt mờ/nhòe/nháy 2 lần & .px-tai tắt",
+      "dat": false,
+      "ly_do": "Kẹt filter blur sau tải chậm: [{'tag': 'section', 'cls': 'noi-dung', 'opacity': 1, 'filter': 'blur(0px)', 'anim': 'px-hien-mo'}]",
+      "muc": "Vừa",
+      "anh": "anh/m05_CT04_MANG_CHAM_2S.png",
+      "tai_hien": "Chặn /api/** trễ 2.2s -> bấm menu sang /dieu-phoi/don -> theo dõi animationstart & .px-tai",
+      "mong_doi": "Không kẹt độ mờ/blur, px-hien-mo không nháy 2 lần, .px-tai tự tắt khi dữ liệu về"
+    },
+    {
+      "ma": "CT05_MANG_LOI_30",
+      "ten": "Mạng lỗi (abort 30% request /api/**) trên 4 trang: không màn trắng, không kẹt .px-tai",
+      "dat": false,
+      "ly_do": "/dieu-phoi/chuyen: màn trắng khi abort 30% | /dieu-phoi/don: màn trắng khi abort 30% | /dieu-phoi/xe: màn trắng khi abort 30% | /dieu-phoi/khach-hang: màn trắng khi abort 30%",
+      "muc": "Nghiêm trọng",
+      "anh": "anh/m05_CT05_MANG_LOI_30.png",
+      "tai_hien": "Abort 1/3 số request /api/** -> lần lượt mở 4 trang Chuyến, Đơn, Xe, Khách hàng",
+      "mong_doi": "Hiện báo lỗi thân thiện hoặc nội dung còn lại, không màn trắng/pageerror, .px-tai không kẹt mãi"
+    }
+  ]
+}

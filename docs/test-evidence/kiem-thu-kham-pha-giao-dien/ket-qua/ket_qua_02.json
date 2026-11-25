@@ -1,0 +1,130 @@
+{
+  "muc": 2,
+  "ten_muc": "Form nhập bừa qua giao diện Pixel (12+ form, XSS/SQLi/biên/ngày)",
+  "tong": 12,
+  "dat": 7,
+  "loi": 5,
+  "thoi_gian_giay": 51.2,
+  "ca": [
+    {
+      "ma": "F01_TIM_CHUNG",
+      "ten": "Ô tìm kiếm trên cùng: rỗng, 1 ký tự, 2000 ký tự, emoji, XSS, SQLi",
+      "dat": true,
+      "ly_do": "Đã thử 7 payload ở Tìm chung: không 5xx/XSS/crash",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Gõ lần lượt rỗng, XSS, SQLi, emoji, chuỗi dài vào ô Tìm chung trên thanh đầu",
+      "mong_doi": "Không 500, không màn trắng, không thực thi XSS"
+    },
+    {
+      "ma": "F02_TAO_DON",
+      "ten": "Form Tạo đơn: số âm, 0, thập phân ở số kiện, 10^19, ngày 30/02/0/1900/3000, XSS/SQLi/10k",
+      "dat": false,
+      "ly_do": "Đơn không tăng (52->52) | Chữ lỗi bị tràn/cắt: [{'txt': '', 'cat': True, 'sw': 10474, 'cw': 375}]",
+      "muc": "Vừa",
+      "anh": "anh/m02_F02_TAO_DON.png",
+      "tai_hien": "Mở /dieu-phoi/don -> Tạo đơn -> nhập số âm/0/1.5/10^19/ngày xấu/XSS -> bấm Lưu đơn",
+      "mong_doi": "Chặn bằng thông báo lỗi tiếng Việt, không 500, không XSS, không lưu đơn rác"
+    },
+    {
+      "ma": "F03_LAP_CHUYEN",
+      "ten": "Form Lập chuyến: giờ khởi hành rỗng, 30/02, năm 0, 1900, 3000",
+      "dat": true,
+      "ly_do": "Chặn an toàn, không XSS/5xx (lỗi UI=[], html5=2)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở /dieu-phoi/chuyen -> Lập chuyến -> chọn tuyến -> nhập các ngày biên",
+      "mong_doi": "Không 500, không crash khi hỏi xe/tài xế khả dụng, chặn ngày bất hợp lệ"
+    },
+    {
+      "ma": "F04_THEM_XE",
+      "ten": "Form Thêm xe: biển số XSS, tải âm/1e15/10^19, km thập phân, ngày 1900/3000",
+      "dat": true,
+      "ly_do": "Số xe không đổi (7) | Chặn an toàn, không XSS/5xx (lỗi UI=['Giá trị quá nhỏ', 'Giá trị quá nhỏ'], html5=3)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở /dieu-phoi/xe -> Thêm xe -> nhập dữ liệu biên/XSS -> Lưu",
+      "mong_doi": "Báo lỗi tiếng Việt ngay ô nhập, không 500, không XSS, không lưu xe rác"
+    },
+    {
+      "ma": "F05_THEM_TAI_XE",
+      "ten": "Form Thêm tài xế: XSS/emoji, SQLi username, mật khẩu < 8, SĐT chữ, ngày 1900",
+      "dat": true,
+      "ly_do": "Số tài xế không đổi (6) | Chặn an toàn, không XSS/5xx (lỗi UI=['Bắt buộc nhập', 'Số GPLX gồm 6–20 chữ cái hoặc chữ số'], html5=2)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở /dieu-phoi/tai-xe -> Thêm tài xế -> nhập XSS/SQLi/SĐT sai -> Lưu",
+      "mong_doi": "Hiện lỗi tiếng Việt ngay ô nhập, không 500, không XSS, không lưu dữ liệu rác"
+    },
+    {
+      "ma": "F06_THEM_KHACH",
+      "ten": "Form Thêm khách hàng: 10.000 ký tự, SĐT SQLi, MST/địa chỉ XSS",
+      "dat": false,
+      "ly_do": "Chữ lỗi bị tràn/cắt: [{'txt': '', 'cat': True, 'sw': 104596, 'cw': 508}, {'txt': '', 'cat': True, 'sw': 312, 'cw': 245}]",
+      "muc": "Vừa",
+      "anh": "anh/m02_F06_THEM_KHACH.png",
+      "tai_hien": "Mở /dieu-phoi/khach-hang -> Thêm khách hàng -> nhập 10k ký tự + SQLi + XSS -> Lưu",
+      "mong_doi": "Báo lỗi tiếng Việt ngay ô nhập, không tràn lỗi, không 500, không XSS"
+    },
+    {
+      "ma": "F07_THEM_NUT",
+      "ten": "Form Thêm nút: tên 10.000 ký tự, tỉnh XSS, tọa độ vượt chuẩn (±999999)",
+      "dat": false,
+      "ly_do": "Chữ lỗi bị tràn/cắt: [{'txt': '', 'cat': True, 'sw': 104596, 'cw': 245}]",
+      "muc": "Vừa",
+      "anh": "anh/m02_F07_THEM_NUT.png",
+      "tai_hien": "Mở /dieu-phoi/nut -> Thêm nút -> nhập 10k + XSS + vĩ độ 999999 -> Lưu",
+      "mong_doi": "Báo lỗi tiếng Việt, không 500, không XSS, không lưu dữ liệu rác"
+    },
+    {
+      "ma": "F08_THEM_TUYEN",
+      "ten": "Form Thêm tuyến: định mức âm/10^19/thập phân, phút 9999, tên XSS",
+      "dat": true,
+      "ly_do": "Chặn an toàn, không XSS/5xx (lỗi UI=['Giá trị quá nhỏ\\nGiá trị không hợp lệ\\nGiá trị quá nhỏ'], html5=3)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở /dieu-phoi/tuyen -> Thêm tuyến -> nhập định mức âm/10^19/thập phân + XSS -> Lưu",
+      "mong_doi": "Báo lỗi tiếng Việt, không 500, không XSS, không lưu tuyến rác"
+    },
+    {
+      "ma": "F09_BANG_GIA",
+      "ten": "Form Bảng giá: đơn giá âm, cước tối thiểu 10^19, tỉnh XSS/SQLi, ngày 1900",
+      "dat": true,
+      "ly_do": "Chặn an toàn, không XSS/5xx (lỗi UI=['Giá trị quá nhỏ'], html5=1)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Đăng nhập quanly -> /quan-ly/bang-gia -> Thêm mức giá -> nhập biên/XSS -> Lưu",
+      "mong_doi": "Báo lỗi tiếng Việt ngay ô nhập, không 500, không XSS"
+    },
+    {
+      "ma": "F10_TAM_UNG",
+      "ten": "Form Tạm ứng: rỗng, số âm, 0, thập phân 100.5, 1e15, 10^19",
+      "dat": false,
+      "ly_do": "Chữ lỗi bị tràn/cắt: [{'txt': 'LỖI\\n\\nGiá trị quá lớn', 'cat': True, 'sw': 36, 'cw': 1}]",
+      "muc": "Vừa",
+      "anh": "anh/m02_F10_TAM_UNG.png",
+      "tai_hien": "Đăng nhập ketoan -> /ke-toan/tam-ung -> chọn chuyến -> nhập các số tiền bất hợp lệ -> Cấp tạm ứng",
+      "mong_doi": "Hiện lỗi tiếng Việt, không 500, không cấp tạm ứng rác"
+    },
+    {
+      "ma": "F11_CHI_PHI_SU_CO",
+      "ten": "Form Chi phí & Sự cố (tài xế): số âm, 10^19, XSS, ghi chú rỗng",
+      "dat": false,
+      "ly_do": "Chữ lỗi bị tràn/cắt: [{'txt': 'LỖI\\n\\nGiá trị quá lớn; Giá trị quá nhỏ', 'cat': True, 'sw': 36, 'cw': 1}, {'txt': 'LỖI\\n\\nGhi rõ sự cố trước khi báo', 'cat': True, 'sw': 36, 'cw': 1}]",
+      "muc": "Vừa",
+      "anh": "anh/m02_F11_CHI_PHI_SU_CO.png",
+      "tai_hien": "Đăng nhập taixe -> mở chuyến DANG_CHAY -> nhập số âm/10^19/XSS vào Chi phí & rỗng vào Sự cố",
+      "mong_doi": "Hiện thông báo lỗi tiếng Việt, không 500, không XSS"
+    },
+    {
+      "ma": "F12_DOI_MAT_KHAU",
+      "ten": "Form Đổi mật khẩu (tài khoản pha_4b6717): ngắn < 8, không khớp, > 200 ký tự, trùng cũ",
+      "dat": true,
+      "ly_do": "Các lỗi đã hiện=['Mật khẩu mới cần ít nhất 8 ký tự', 'Hai lần nhập mật khẩu mới chưa khớp', 'Hai lần nhập mật khẩu mới chưa khớp'] | Chặn an toàn, không XSS/5xx (lỗi UI=['Mật khẩu mới phải khác mật khẩu hiện tại'], html5=0)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Đăng nhập pha_4b6717 -> /tai-khoan -> thử các mật khẩu không hợp lệ",
+      "mong_doi": "Hiện lỗi tiếng Việt rõ ràng ngay trong form, không 500, không XSS"
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "muc": 6,
+  "ten_muc": "Xếp hàng lên xe (SVG khoang hàng, gợi ý, tem VỪA/QUÁ, hover, quá tải, resize)",
+  "tong": 9,
+  "dat": 4,
+  "loi": 5,
+  "thoi_gian_giay": 13.5,
+  "ca": [
+    {
+      "ma": "XH01_TRONG_GOI_Y",
+      "ten": "Thùng trống: kiểm dòng gợi ý còn trống & tem VỪA XE khớp sức chứa 10 m³ / 1000 kg",
+      "dat": true,
+      "ly_do": "Thùng trống, SVG 454px, gợi ý & tem khớp số thật (10 m³ / 1000 kg)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Mở /dieu-phoi/chuyen/24 (xe 1000kg/10m³ chưa ghép đơn)",
+      "mong_doi": "SVG hiển thị gọn, dòng gợi ý và tem VỪA XE khớp 10 m³ / 1000 kg"
+    },
+    {
+      "ma": "XH02_HOVER_NET_DUT",
+      "ten": "Rê chuột đơn chờ ghép hiện khối nét đứt xem trước trong khoang xe",
+      "dat": true,
+      "ly_do": "Rê chuột hiện khối xem trước nét đứt (w=83px, dash=6px, 4px, qua=False)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Rê chuột vào thẻ đơn DH-JXZH8V trong danh sách đơn chờ ghép",
+      "mong_doi": "Khoang xe hiện khối xem trước nét đứt (.xh-thu) đúng kích cỡ"
+    },
+    {
+      "ma": "XH03_NHO_10PT",
+      "ten": "Ghép mức NHO_10PT (DH-LYXVD9): kiểm hình khoang hàng, dòng gợi ý & tem VỪA/QUÁ",
+      "dat": false,
+      "ly_do": "Khối hàng bị tràn/cắt ngoài thùng xe: [{'label': 'DH-LYXVD9: 1 m³, 100 kg, bấm để chọn gỡ', 'w': 18, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': False}]",
+      "muc": "Vừa",
+      "anh": "anh/m06_XH03_NHO_10PT.png",
+      "tai_hien": "Bấm 'Ghép vào xe' đơn DH-LYXVD9 trên chuyến 24",
+      "mong_doi": "Khối hàng vẽ gọn trong thùng xe không tràn/cắt; dòng gợi ý & tem VỪA XE / QUÁ m³/kg khớp số thật"
+    },
+    {
+      "ma": "XH03_VUA_40PT",
+      "ten": "Ghép mức VUA_40PT (DH-JXZH8V): kiểm hình khoang hàng, dòng gợi ý & tem VỪA/QUÁ",
+      "dat": false,
+      "ly_do": "Khối hàng bị tràn/cắt ngoài thùng xe: [{'label': 'DH-LYXVD9: 1 m³, 100 kg, bấm để chọn gỡ', 'w': 18, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': False}, {'label': 'DH-JXZH8V: 3 m³, 300 kg, bấm để chọn gỡ', 'w': 36, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': True}]",
+      "muc": "Vừa",
+      "anh": "anh/m06_XH03_VUA_40PT.png",
+      "tai_hien": "Bấm 'Ghép vào xe' đơn DH-JXZH8V trên chuyến 24",
+      "mong_doi": "Khối hàng vẽ gọn trong thùng xe không tràn/cắt; dòng gợi ý & tem VỪA XE / QUÁ m³/kg khớp số thật"
+    },
+    {
+      "ma": "XH03_LON_95PT",
+      "ten": "Ghép mức LON_95PT (DH-QK7FWD): kiểm hình khoang hàng, dòng gợi ý & tem VỪA/QUÁ",
+      "dat": false,
+      "ly_do": "Khối hàng bị tràn/cắt ngoài thùng xe: [{'label': 'DH-LYXVD9: 1 m³, 100 kg, bấm để chọn gỡ', 'w': 18, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': False}, {'label': 'DH-JXZH8V: 3 m³, 300 kg, bấm để chọn gỡ', 'w': 36, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': True}, {'label': 'DH-QK7FWD: 5,5 m³, 500 kg, bấm để chọn g', 'w': 48, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': True}]",
+      "muc": "Vừa",
+      "anh": "anh/m06_XH03_LON_95PT.png",
+      "tai_hien": "Bấm 'Ghép vào xe' đơn DH-QK7FWD trên chuyến 24",
+      "mong_doi": "Khối hàng vẽ gọn trong thùng xe không tràn/cắt; dòng gợi ý & tem VỪA XE / QUÁ m³/kg khớp số thật"
+    },
+    {
+      "ma": "XH04_CHAN_VUOT_TAI",
+      "ten": "Rê chuột & ghép đơn vượt m³ và vượt kg (tại 95% khoang): phải cảnh báo và bị chặn",
+      "dat": true,
+      "ly_do": "Đơn quá m³ và quá kg đều hiện cảnh báo khi hover và bị chặn khi ghép",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Khi xe đã 900kg/9.5m³, hover & bấm Ghép đơn DH-LK7RVY (+2m³) và DH-5VHC8P (+250kg)",
+      "mong_doi": "Hiện cảnh báo vượt tải, máy chủ chặn (BR-01/BR-02), không cho ghép lọt"
+    },
+    {
+      "ma": "XH05_DAY_KHOANG_100",
+      "ten": "Ghép đến đầy khoang 100% (1000 kg / 10 m³): kiểm hình khối không cắt dở/tràn thùng",
+      "dat": false,
+      "ly_do": "Đầy khoang 100% có khối tràn/cắt ngoài thùng: [{'label': 'DH-LYXVD9: 1 m³, 100 kg, bấm để chọn gỡ', 'w': 18, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': False}, {'label': 'DH-JXZH8V: 3 m³, 300 kg, bấm để chọn gỡ', 'w': 36, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': True}, {'label': 'DH-QK7FWD: 5,5 m³, 500 kg, bấm để chọn g', 'w': 48, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': True}, {'label': 'DH-PQKRPJ: 0,5 m³, 100 kg, bấm để chọn g', 'w': 12, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': False}]",
+      "muc": "Vừa",
+      "anh": "anh/m06_XH05_DAY_KHOANG_100.png",
+      "tai_hien": "Ghép thêm DH-PQKRPJ để đạt đúng 1000 kg / 10.0 m³",
+      "mong_doi": "Cả 4 khối hàng nằm gọn trong khung thùng xe, không tràn mép phải hay cắt chữ"
+    },
+    {
+      "ma": "XH06_RESIZE_GIUA_CHUNG",
+      "ten": "Đổi cỡ cửa sổ giữa chừng (1100, 768, 390, 1440px) khi khoang đang đầy 100%",
+      "dat": false,
+      "ly_do": "1100x800: khối tràn thùng [{'label': 'DH-LYXVD9: 1 m³, 100 kg, bấm để chọn gỡ', 'w': 17, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': False}] | 768x900: khối tràn thùng [{'label': 'DH-LYXVD9: 1 m³, 100 kg, bấm để chọn gỡ', 'w': 28, 'h': 5, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': False}] | 390x844: khối tràn thùng [{'label': 'DH-LYXVD9: 1 m³, 100 kg, bấm để chọn gỡ', 'w': 13, 'h': 2, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': False}] | 1440x900: khối tràn thùng [{'label': 'DH-LYXVD9: 1 m³, 100 kg, bấm để chọn gỡ', 'w': 18, 'h': 3, 'tranPhai': True, 'tranTrai': False, 'tranTren': False, 'tranDuoi': True, 'chuTran': False}]",
+      "muc": "Vừa",
+      "anh": "anh/m06_XH06_RESIZE_GIUA_CHUNG.png",
+      "tai_hien": "Trên màn chi tiết chuyến đầy 100% -> đổi viewport lần lượt 1100, 768, 390, 1440px",
+      "mong_doi": "SVG khoang hàng co giãn vừa màn hình, khối không tràn thùng, không lỗi JS"
+    },
+    {
+      "ma": "XH07_BAM_KHOI_GO",
+      "ten": "Bấm vào khối hàng trong SVG để chọn và bấm 'Gỡ khỏi xe'",
+      "dat": true,
+      "ly_do": "Bấm khối -> Gỡ khỏi xe thành công (4 -> 3 khối)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Bấm khối hàng cuối trong SVG -> bấm nút 'Gỡ khỏi xe'",
+      "mong_doi": "Đơn được gỡ khỏi chuyến, số khối trong SVG giảm đi 1"
+    }
+  ]
+}

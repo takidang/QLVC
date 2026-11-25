@@ -12,7 +12,7 @@ from app.phan_trang import DanhSach, PhanTrang, phan_trang
 
 router = APIRouter(prefix="/api/xe", tags=["xe"])
 Db = Annotated[Session, Depends(get_db)]
-Thang = Annotated[str, Path(pattern=r"^\d{4}-(0[1-9]|1[0-2])$")]  # YYYY-MM
+Thang = Annotated[str, Path(pattern=r"^20\d{2}-(0[1-9]|1[0-2])$")]  # YYYY-MM, năm 2000–2099
 
 # Điều phối (Quản lý kế thừa) thêm, sửa; Kế toán chỉ xem để chọn xe nhập chi phí cố định
 XEM = Depends(can_vai_tro("DIEU_PHOI", "KE_TOAN"))

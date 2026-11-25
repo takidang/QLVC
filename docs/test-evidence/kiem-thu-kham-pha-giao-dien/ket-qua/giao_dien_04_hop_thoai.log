@@ -1,0 +1,22 @@
+
+============================================================================
+MỤC 04: Hộp thoại (Escape, bấm ngoài, focus trap, mở-đóng nhanh, cuộn nền, 390px, chồng hộp)
+============================================================================
+[LỖI (Vừa)] HT01_ESCAPE - Nhấn phím Escape đóng hộp thoại (Tạo đơn, Lập chuyến, Thêm xe): Nhấn Escape KHÔNG đóng được hộp thoại: ['Tạo đơn (/dieu-phoi/don)', 'Lập chuyến (/dieu-phoi/chuyen)', 'Thêm xe (/dieu-phoi/xe)'] | ảnh: anh/m04_HT01_ESCAPE.png
+[LỖI (Vừa)] HT02_NGOAI_HUY_X - Đóng hộp thoại bằng bấm ngoài, nút Hủy, và kiểm nút ×: Bấm ra ngoài (.nen-mo) không đóng hộp thoại | ảnh: anh/m04_HT02_NGOAI_HUY_X.png
+[LỖI (Vừa)] HT03_FOCUS_TRAP - Focus trap trong hộp thoại: nhấn Tab 20 lần không thoát ra nền: KHÔNG CÓ FOCUS TRAP: nhấn Tab thoát khỏi hộp thoại ra nền: ['Tab #6 -> body.(TAKI\nLOGISTICS\nVẬN HÀNH\nC)', 'Tab #7 -> a.hieu(TAKI\nLOGISTICS)', 'Tab #8 -> a.(Chuyến)'] | ảnh: anh/m04_HT03_FOCUS_TRAP.png
+[ĐẠT] HT04_MO_DONG_10_LAN - Mở–đóng hộp thoại Tạo đơn 10 lần liên tiếp rất nhanh: Mở–đóng 10 lần liên tiếp sạch sẽ, không kẹt .nen-mo, không lỗi JS
+[LỖI (Nhẹ)] HT05_CUON_NEN - Kiểm khóa cuộn nền (background scroll) khi hộp thoại đang mở: Nền phía sau vẫn cuộn được khi hộp thoại mở (window.scrollY=800px, body.overflow=visible) | ảnh: anh/m04_HT05_CUON_NEN.png
+[LỖI (Vừa)] HT06_CHONG_HOP - Hai lớp nổi chồng nhau: mở Chuông thông báo rồi mở hộp thoại Tạo đơn: Ngoại lệ khi chạy ca: TimeoutError: Locator.click: Timeout 12000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text(\"Tạo đơn\")").first
+    - locator resolved to <button>…</button>
+  - attempting click action
+    2 × waiting for element to be visi | ảnh: anh/m04_HT06_CHONG_HOP_exc.png
+[ĐẠT] HT07_MOBILE_1_TẠO ĐƠ - Hộp thoại 'Tạo đơn' ở 390×844: nút 'Lưu đơn' không bị cắt: Nút 'Lưu đơn' chạm được trong viewport 390×844 ({'top': 800, 'bottom': 844, 'left': 258, 'right': 350})
+[ĐẠT] HT07_MOBILE_2_LẬP CH - Hộp thoại 'Lập chuyến' ở 390×844: nút 'Lập chuyến' không bị cắt: Nút 'Lập chuyến' chạm được trong viewport 390×844 ({'top': 800, 'bottom': 844, 'left': 233, 'right': 350})
+[ĐẠT] HT07_MOBILE_3_THÊM X - Hộp thoại 'Thêm xe' ở 390×844: nút 'Lưu' không bị cắt: Nút 'Lưu' chạm được trong viewport 390×844 ({'top': 800, 'bottom': 844, 'left': 289, 'right': 350})
+[LỖI (Vừa)] HT07_MOBILE_4_THÊM T - Hộp thoại 'Thêm tuyến' ở 390×844: nút 'Lưu' không bị cắt: Hộp thoại 'Thêm tuyến' ở 390px bị cắt/tràn: {'ok': False, 'r': {'top': 702, 'bottom': 746, 'left': 289, 'right': 350}, 'hr': {'width': 342, 'height': 776}, 'vw': 390, 'vh': 844, 'biCatDuoi': False, 'biCatPhai': False, 'hopTranNgang': True} | ảnh: anh/m04_HT07_MOBILE_4_TH_M_T.png
+
+==> TỔNG KẾT MỤC 04 (Hộp thoại (Escape, bấm ngoài, focus trap, mở-đóng nhanh, cuộn nền, 390px, chồng hộp)): 10 ca | ĐẠT: 4 | LỖI: 6 | 44.0s
+    Đã lưu JSON: C:\Users\Lenovo\Desktop\DoAnChuyenNganh\QLVC-agy-pha\kiem-thu-kham-pha\ket_qua_04.json

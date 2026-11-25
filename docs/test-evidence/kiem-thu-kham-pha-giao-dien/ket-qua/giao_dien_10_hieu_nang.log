@@ -1,0 +1,21 @@
+
+============================================================================
+MỤC 10: Đo hiệu năng cảm nhận trên 5 trang nặng nhất (chỉ đo, không phán)
+============================================================================
+[ĐẠT] HN01_CHI_TIET_CHUYEN - Đo hiệu năng: Chi tiết chuyến (/dieu-phoi/chuyen/23): DOM=1511, anim=2(run=1), FPS idle=60.3 / scroll=60.1, longTasks=0(max=0.0ms)
+[ĐẠT] HN02_DANH_SACH_DON - Đo hiệu năng: Danh sách đơn (/dieu-phoi/don): DOM=1365, anim=2(run=1), FPS idle=60.3 / scroll=60.1, longTasks=0(max=0.0ms)
+[ĐẠT] HN05_TAI_KHOAN - Đo hiệu năng: Tài khoản (/tai-khoan): DOM=800, anim=1(run=0), FPS idle=60.6 / scroll=60.1, longTasks=0(max=0.0ms)
+[ĐẠT] HN03_TONG_QUAN - Đo hiệu năng: Tổng quan quản lý (/quan-ly/tong-quan): DOM=1166, anim=2(run=1), FPS idle=60.1 / scroll=60.1, longTasks=0(max=0.0ms)
+[ĐẠT] HN04_QUYET_TOAN - Đo hiệu năng: Quyết toán (/ke-toan/quyet-toan): DOM=623, anim=2(run=1), FPS idle=60.2 / scroll=60.1, longTasks=0(max=0.0ms)
+
+### Bảng số liệu hiệu năng cảm nhận (Pixel sáng, 1440×900)
+| Trang | Route | DOM nodes | Animations (chạy) | FPS đứng yên (3s) | FPS cuộn (3s) | Long task >50ms (max ms) | Tên animation |
+|---|---|---:|---:|---:|---:|---:|---|
+| Chi tiết chuyến | `/dieu-phoi/chuyen/23` | 1511 | 2 (1) | 60.3 (max 16.8ms) | 60.1 (max 16.8ms) | 0 (max 0.0ms) | px-mui-ten, px-hien-mo |
+| Danh sách đơn | `/dieu-phoi/don` | 1365 | 2 (1) | 60.3 (max 16.8ms) | 60.1 (max 16.8ms) | 0 (max 0.0ms) | px-mui-ten, px-hien-mo |
+| Tài khoản | `/tai-khoan` | 800 | 1 (0) | 60.6 (max 16.8ms) | 60.1 (max 16.8ms) | 0 (max 0.0ms) | px-hien-mo |
+| Tổng quan quản lý | `/quan-ly/tong-quan` | 1166 | 2 (1) | 60.1 (max 16.8ms) | 60.1 (max 16.8ms) | 0 (max 0.0ms) | px-mui-ten, px-hien-mo |
+| Quyết toán | `/ke-toan/quyet-toan` | 623 | 2 (1) | 60.2 (max 16.8ms) | 60.1 (max 16.8ms) | 0 (max 0.0ms) | px-mui-ten, px-hien-mo |
+
+==> TỔNG KẾT MỤC 10 (Đo hiệu năng cảm nhận trên 5 trang nặng nhất (chỉ đo, không phán)): 5 ca | ĐẠT: 5 | LỖI: 0 | 45.8s
+    Đã lưu JSON: C:\Users\Lenovo\Desktop\DoAnChuyenNganh\QLVC-agy-pha\kiem-thu-kham-pha\ket_qua_10.json
