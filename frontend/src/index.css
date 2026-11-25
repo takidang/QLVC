@@ -5605,3 +5605,16 @@ body:has(.nen-mo) {
   font-variant-numeric: slashed-zero;
   white-space: nowrap;
 }
+
+/* Thông tin cần đọc đúng từng chữ số (SĐT, mã số thuế…) trong bảng và hồ sơ: to, đậm, màu mực */
+table .ma,
+dd.ma {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muc);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+td.ma {
+  white-space: nowrap;
+}

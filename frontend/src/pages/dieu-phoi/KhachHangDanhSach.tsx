@@ -4,6 +4,7 @@ import { DangTaiPixel } from '../../HieuUngPixel'
 import { phongCachDaLuu } from '../../nen'
 import { DauDanhMuc, LocTrangThai, NhanHoatDong, OTim } from '../danh-muc'
 import { danhSachKhachHang, suaKhachHang, themKhachHang, type KhachHang } from '../../api/khachHang'
+import { NutChep } from '../../NutChep'
 
 const SO_DONG = 20
 type Form = { ten: string; sdt: string; dia_chi: string; ma_so_thue: string }
@@ -101,7 +102,10 @@ export default function KhachHangDanhSach() {
             {duLieu.map((kh) => (
               <tr key={kh.id} className={kh.trang_thai === 'NGUNG' ? 'mo' : undefined}>
                 <td className="tuyen">{kh.ten}</td>
-                <td className="ma">{kh.sdt}</td>
+                <td className="ma">
+                  {kh.sdt}
+                  <NutChep chu={kh.sdt} />
+                </td>
                 <td>{kh.dia_chi || <span className="ghi-chu">—</span>}</td>
                 <td className="ma">{kh.ma_so_thue || '—'}</td>
                 <td>

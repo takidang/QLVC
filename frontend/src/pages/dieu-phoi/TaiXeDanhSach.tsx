@@ -5,6 +5,7 @@ import { DangTaiPixel } from '../../HieuUngPixel'
 import { phongCachDaLuu } from '../../nen'
 import { DauDanhMuc, HanGiayTo, LocTrangThai, NhanHoatDong, OTim } from '../danh-muc'
 import { useXacNhan } from '../../xacNhanKho'
+import { NutChep } from '../../NutChep'
 
 const SO_DONG = 20
 const HANG: HangGplx[] = ['B', 'C1', 'C']
@@ -136,7 +137,10 @@ export default function TaiXeDanhSach() {
                 <td>
                   <HanGiayTo han={tx.han_gplx} />
                 </td>
-                <td className="ma">{tx.sdt}</td>
+                <td className="ma">
+                  {tx.sdt}
+                  <NutChep chu={tx.sdt} />
+                </td>
                 <td>
                   <NhanHoatDong trangThai={tx.trang_thai} />
                 </td>

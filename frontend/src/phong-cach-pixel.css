@@ -8980,3 +8980,8 @@
   }
 }
 /* ===== ĐỢT 3 PIXEL: hết ===== */
+
+/* SĐT, mã số thuế trong bảng: màu than thay màu xanh nhạt (dòng đã ngừng vẫn xám) */
+:root[data-phong-cach='pixel'] main.trang table tbody tr:not(.mo) .ma {
+  color: var(--n-charcoal);
+}
