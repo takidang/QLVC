@@ -265,7 +265,7 @@ export default function XepHang({
             return (
               <g
                 key={d.id}
-                className={`${chon === d.id ? 'xh-khoi chon' : 'xh-khoi'}${dangRoi ? ' px-khoi-roi' : ''}`}
+                className={`${chon === d.id ? 'xh-khoi chon' : 'xh-khoi'}${dangRoi ? ' px-khoi-roi' : ''} don-mau${i % 5}`}
                 tabIndex={dangLap ? 0 : -1}
                 role={dangLap ? 'button' : undefined}
                 aria-label={`${d.ma_don}: ${so(Number(d.m3))} m³, ${so(Number(d.kg))} kg${dangLap ? ', bấm để chọn gỡ' : ''}`}
@@ -297,6 +297,17 @@ export default function XepHang({
                   rx={laPixel ? 0 : 4}
                   className={`xh-o o${i % 3}`}
                 />
+                {/* Pixel: khung màu riêng từng đơn để thấy ranh giới giữa các đơn */}
+                {laPixel && (
+                  <rect
+                    x={kx + 3}
+                    y={y0 + 2}
+                    width={Math.max(bw - 4, 2)}
+                    height={y1 - y0 - 4}
+                    className="xh-khung-don"
+                    aria-hidden="true"
+                  />
+                )}
                 {w > 54 && (
                   <>
                     {laPixel && (

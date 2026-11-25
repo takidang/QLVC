@@ -8985,3 +8985,35 @@
 :root[data-phong-cach='pixel'] main.trang table tbody tr:not(.mo) .ma {
   color: var(--n-charcoal);
 }
+
+/* Xếp hàng: mỗi đơn một màu (khung + dải trên nhãn), xoay vòng 5 màu để hai đơn cạnh nhau luôn khác màu */
+:root[data-phong-cach='pixel'] .xh-khoi.don-mau0 {
+  --mau-don: var(--n-coral);
+}
+:root[data-phong-cach='pixel'] .xh-khoi.don-mau1 {
+  --mau-don: var(--n-ochre);
+}
+:root[data-phong-cach='pixel'] .xh-khoi.don-mau2 {
+  --mau-don: var(--n-plum);
+}
+:root[data-phong-cach='pixel'] .xh-khoi.don-mau3 {
+  --mau-don: var(--n-sage);
+}
+:root[data-phong-cach='pixel'] .xh-khoi.don-mau4 {
+  --mau-don: var(--n-cobalt);
+}
+:root[data-phong-cach='pixel'] .xh-khung-don {
+  fill: color-mix(in srgb, var(--mau-don) 16%, transparent);
+  stroke: var(--mau-don);
+  stroke-width: 4;
+  shape-rendering: crispEdges;
+  pointer-events: none;
+}
+:root[data-phong-cach='pixel'] .xh-khoi:not(.chon) .xh-nhan-dai {
+  fill: var(--mau-don);
+  height: 7px;
+}
+:root[data-phong-cach='pixel'] .xh-khoi:not(.chon) .xh-nhan-nen {
+  stroke: var(--mau-don);
+  stroke-width: 3;
+}
