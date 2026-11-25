@@ -325,6 +325,94 @@ body {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+/* Logo và tên thương hiệu ở đầu khối form đăng nhập, thẳng mép trái với ô nhập */
+.dn-thuong-hieu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-self: start;
+  margin-bottom: 18px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--muc);
+}
+/* Thân form (tiêu đề, ô nhập, nút) xếp như .dn-giua; ẩn khi Pixel chưa bấm logo */
+.dn-than {
+  display: grid;
+  gap: 16px;
+}
+.dn-than[hidden] {
+  display: none;
+}
+/* Nút logo (chỉ xuất hiện ở Pixel trước khi mở): bỏ kiểu nút mặc định */
+.dn-bam-logo {
+  font: inherit;
+  cursor: pointer;
+}
+/* Kiểu .dang-nhap button svg (viền màu chữ, 22 px) không áp cho logo */
+.dang-nhap .dn-bam-logo svg {
+  width: auto;
+  height: auto;
+  stroke: none;
+}
+.dn-goi-y {
+  display: none;
+}
+.dn-thuong-hieu .logo-thuong {
+  padding: 4px;
+  background: #fff;
+  border: 1px solid var(--vien-dam);
+  border-radius: 12px;
+  box-shadow: var(--bong-nho);
+}
+/* Lối tra cứu cho khách ngay dưới nút Đăng nhập */
+.dn-tra-cuu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+  padding: 12px 14px;
+  color: var(--muc);
+  text-decoration: none;
+  background: var(--mat);
+  border: 1px solid var(--vien-dam);
+  border-left: 4px solid var(--o-liu);
+  border-radius: var(--bo);
+  transition:
+    border-color 0.15s ease-out,
+    background 0.15s ease-out;
+}
+.dn-tra-cuu:hover {
+  background: var(--noi);
+  border-color: var(--o-liu);
+}
+.dn-tra-cuu svg {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: var(--o-liu);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+.dn-tra-cuu span {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+}
+.dn-tra-cuu small {
+  font-size: 0.8rem;
+  color: var(--phu);
+}
+.dn-tra-cuu i {
+  font-style: normal;
+  font-size: 1.2rem;
+  color: var(--o-liu);
+  transition: transform 0.15s ease-out;
+}
+.dn-tra-cuu:hover i {
+  transform: translateX(3px);
+}
 .dn-chan {
   width: 100%;
   max-width: 400px;
@@ -339,7 +427,10 @@ body {
     padding: 10px;
   }
   .dn-khung {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(
+      0,
+      1fr
+    ); /* 1fr trơn bị nội dung đẩy rộng hơn màn (Pixel: tràn 11 px ở 390 px) */
     grid-template-rows: auto 1fr;
   }
   .dn-hinh {
@@ -2157,6 +2248,20 @@ input[type='file']::file-selector-button {
   padding: 10px 0;
   font-size: 13px;
   color: var(--phu);
+}
+.tc-trai > header a.tc-nv {
+  padding: 8px 14px;
+  color: var(--muc);
+  text-decoration: none;
+  border: 1px solid var(--vien-dam);
+  border-radius: var(--bo);
+  transition:
+    background 0.15s ease-out,
+    border-color 0.15s ease-out;
+}
+.tc-trai > header a.tc-nv:hover {
+  background: var(--noi);
+  border-color: var(--o-liu);
 }
 .tc-khung {
   margin-bottom: 16px;
@@ -5466,4 +5571,50 @@ button:enabled:active,
   :is(.xh-ray i, .day span i, .kx-thanh i, .ct-thanh i, .tq-xe-truc i, .hieu-duoi) {
   transition: none !important;
   transform: none !important;
+}
+
+/* Gợi ý ghép: dòng sức chứa còn trống trên danh sách đơn chờ ghép */
+.xh-goi-y {
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--phu);
+}
+.xh-goi-y strong {
+  color: var(--muc);
+}
+.xh-cho li .nhan {
+  margin-top: 4px;
+}
+/* Chừa sẵn chỗ thanh cuộn để trang không nhích 15 px khi hộp thoại khóa cuộn */
+html {
+  scrollbar-gutter: stable;
+}
+/* Hộp thoại đang mở: khóa cuộn trang nền */
+body:has(.nen-mo) {
+  overflow: hidden;
+}
+
+/* Bảng Tài xế: số GPLX to, thoáng, số 0 gạch chéo để phân biệt các mã gần giống nhau; hạng nằm dưới */
+.so-gplx {
+  display: block;
+  margin-bottom: 4px;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  font-variant-numeric: slashed-zero;
+  white-space: nowrap;
+}
+
+/* Thông tin cần đọc đúng từng chữ số (SĐT, mã số thuế…) trong bảng và hồ sơ: to, đậm, màu mực */
+table .ma,
+dd.ma {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--muc);
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums slashed-zero;
+}
+td.ma {
+  white-space: nowrap;
 }

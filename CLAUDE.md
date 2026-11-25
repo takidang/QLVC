@@ -9,6 +9,7 @@ Danh sách, lúc nào dùng cái nào: `docs/SKILLS.md`.
 - Mỗi use case làm theo skill `story-flow`: story trong `docs/stories/`, tiêu chí chấp nhận, test, bằng chứng. Mọi quy tắc nghiệp vụ đều phải có test, không theo mức "một test nhỏ" của ponytail.
 - Giữ kiến trúc phân lớp đã chốt trong `docs/`; ponytail chỉ rút gọn bên trong từng lớp.
 - Code chạm tới phân quyền, upload, tiền, quét mã: theo `docs/security-rules.md`.
+- Trước mỗi mốc đưa lên `main`: chạy skill `kiem-thu-kham-pha` trên CSDL thử (`docs/nhanh-git.md` mục 2).
 - Không đọc, in hay commit `.env`. Cần biến mới thì thêm tên vào `.env.example`.
 - Không cài package mới khi chưa hỏi.
 

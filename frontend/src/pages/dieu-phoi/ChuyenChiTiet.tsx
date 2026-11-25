@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link, useLocation, useNavigate, useOutletContext, useParams } from 'react-router-dom'
 import type { NguoiDung } from '../../api/auth'
 import {
@@ -29,7 +29,11 @@ import {
 import { ChonKhaDung, type KhaDung } from './ChuyenDanhSach'
 import { TEN_TRANG_THAI_DON, type Don } from '../../api/don'
 import { kemMaBr, LoiApi } from '../../api/goi'
+import { BangDinhNiemPhongPixel, DangTaiPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
 import { Nhan } from '../../nhan'
+import { NoteCanhBao } from '../../NoteCanhBao'
+import { useXacNhan } from '../../xacNhanKho'
 import { CanhBaoTheoDoi, DongThoiGian, KhoiSuCo, KhoiTien } from './TheoDoiChuyen'
 import XepHang from './XepHang'
 import KhoiXe from './KhoiXe'
@@ -126,6 +130,32 @@ export default function ChuyenChiTiet() {
   const [viPham, setViPham] = useState<ViPhamGhep[]>([])
   const [dangGui, setDangGui] = useState(false)
   const [lanTai, setLanTai] = useState(0)
+  // Hiệu ứng Pixel: cờ hiện băng dính niêm phong kéo ngang thẻ chuyến sau khi chốt thành công (≤ 1,4 s)
+  const [niemPhong, setNiemPhong] = useState(0)
+  const hoi = useXacNhan()
+  // Đổi chuyến không tháo trang: nhớ chuyến đang xem để không hỏi về chuyến đã rời đi
+  const idDangXem = useRef(id)
+  useEffect(() => {
+    idDangXem.current = id
+  }, [id])
+
+  // Sang chuyến khác (bấm cột trái) thì trang không dựng lại: giữ danh sách bên trái, chỉ bỏ trạng thái của chuyến cũ
+  const [idTruoc, setIdTruoc] = useState(id)
+  if (idTruoc !== id) {
+    setIdTruoc(id)
+    setPhuHop([])
+    setChonGhep([])
+    setChonGo([])
+    setLoi('')
+    setLyDoHuy(null)
+    setViPham([])
+  }
+
+  useEffect(() => {
+    if (niemPhong === 0) return
+    const t = window.setTimeout(() => setNiemPhong(0), 1400)
+    return () => window.clearTimeout(t)
+  }, [niemPhong])
   const dieuHuong = useNavigate()
   const { pathname } = useLocation()
   const nd = useOutletContext<NguoiDung | undefined>()
@@ -133,7 +163,7 @@ export default function ChuyenChiTiet() {
   const [xe, setXe] = useState<Xe | null>(null)
   const [taiXe, setTaiXe] = useState<TaiXe | null>(null)
   const [km, setKm] = useState<number | null>(null)
-  const [duDoan, setDuDoan] = useState<{ id: number; duLieu: DuDoanTre } | null>(null)
+  const [duDoan, setDuDoan] = useState<{ id: number; duLieu: DuDoanTre | null } | null>(null)
 
   useEffect(() => {
     let bo = false
@@ -199,11 +229,13 @@ export default function ChuyenChiTiet() {
       .then(
         (r) =>
           !bo &&
-          setDuDoan(
-            r.co_du_doan && r.xac_suat != null && r.muc ? { id: chuyenId, duLieu: r } : null,
-          ),
+          // duLieu null = đã hỏi xong, không có gợi ý (khác với đang chờ: id chưa khớp)
+          setDuDoan({
+            id: chuyenId,
+            duLieu: r.co_du_doan && r.xac_suat != null && r.muc ? r : null,
+          }),
       )
-      .catch(() => !bo && setDuDoan(null))
+      .catch(() => !bo && setDuDoan({ id: chuyenId, duLieu: null }))
     return () => {
       bo = true
     }
@@ -217,8 +249,8 @@ export default function ChuyenChiTiet() {
         return await chotChuyen(id, xn)
       } catch (e) {
         const co = e instanceof LoiApi && e.status === 422 && XAC_NHAN[e.ma]
-        if (!co || !window.confirm(`${e instanceof Error ? e.message : ''}. Vẫn chốt chuyến?`))
-          throw e
+        const cau = `${e instanceof Error ? e.message : ''}. Vẫn chốt chuyến?`
+        if (!co || idDangXem.current !== id || !(await hoi(cau, 'Vẫn chốt'))) throw e
         xn[co] = true
       }
     }
@@ -239,6 +271,8 @@ export default function ChuyenChiTiet() {
       }
       const moi = await goi[viec]()
       setC(moi)
+      // Hiệu ứng Pixel: băng dính niêm phong kéo ngang thẻ chuyến sau khi API chốt chuyến thành công
+      if (viec === 'chot' && dangHieuUngPixel()) setNiemPhong((n) => n + 1)
       setLyDoHuy(null)
       setChonGhep([])
       setChonGo([])
@@ -266,11 +300,16 @@ export default function ChuyenChiTiet() {
   if (!c)
     return (
       <section className="noi-dung">
-        <Link to="..">← Danh sách chuyến</Link>
+        <Link to=".." className="ct-ve">
+          <span className="mui-ten-thuong">← </span>Danh sách chuyến
+        </Link>
         {loi ? (
           <p role="alert" className="loi">
             {loi}
           </p>
+        ) : phongCachDaLuu() === 'pixel' ? (
+          /* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… */
+          <DangTaiPixel kieu="trang" />
         ) : (
           <p className="ghi-chu">Đang tải…</p>
         )}
@@ -293,7 +332,7 @@ export default function ChuyenChiTiet() {
   return (
     <section className="noi-dung chi-tiet ct2">
       <Link to=".." className="ct-ve">
-        ← Danh sách chuyến
+        <span className="mui-ten-thuong">← </span>Danh sách chuyến
       </Link>
       <div className="ct2-luoi">
         <aside className="kinh ct2-ds" aria-label="Chuyến cùng ngày">
@@ -352,6 +391,8 @@ export default function ChuyenChiTiet() {
           {/* Đầu chi tiết gọn một dòng: tên, mã, nhãn, số chính; hành động bên phải */}
           {/* Khối đầu có viền như ảnh mẫu 01: tên, mã, nhãn, số liệu, nút; cảnh báo và form hủy nằm trong khối */}
           <section className="kinh ct2-dau-khung">
+            {/* Hiệu ứng Pixel: băng dính niêm phong kéo ngang thẻ chuyến sau khi chốt thành công */}
+            {niemPhong > 0 && dangHieuUngPixel() && <BangDinhNiemPhongPixel key={niemPhong} />}
             <div className="ct-dau ct2-dau">
               <div>
                 <h1>{c.ten_tuyen}</h1>
@@ -405,9 +446,12 @@ export default function ChuyenChiTiet() {
                 )}
               </div>
             </div>
-            {duocXemDuDoan && !biHuy && duDoan?.id === c.id && (
-              <KhoiDuDoanTre key={c.id} d={duDoan.duLieu} />
-            )}
+            {duocXemDuDoan &&
+              !biHuy &&
+              (duDoan?.id === c.id
+                ? duDoan.duLieu && <KhoiDuDoanTre key={c.id} d={duDoan.duLieu} />
+                : /* Pixel: giữ chỗ lúc chờ để nút phía dưới không nhảy ~200 px */
+                  phongCachDaLuu() === 'pixel' && <ChoDuDoanTre />)}
             {lyDoHuy !== null && (
               <form
                 className="thanh-cong-cu canh-bao"
@@ -439,31 +483,36 @@ export default function ChuyenChiTiet() {
             )}
             <CanhBaoTheoDoi c={c} onDoi={setC} />
             {loi && (
-              <div role="alert" className="canh-bao">
-                <strong className="loi">{loi}</strong>
-                {viPham.length > 0 && (
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Đơn</th>
-                        <th>Quy tắc</th>
-                        <th>Nội dung</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {viPham.map((v, i) => (
-                        <tr key={i}>
-                          <td className="bien-so">
-                            {v.don_id ? (maDon.get(v.don_id) ?? v.don_id) : 'Cả chuyến'}
-                          </td>
-                          <td>{v.ma}</td>
-                          <td>{kemMaBr(v.thong_diep, v.ma)}</td>
+              <NoteCanhBao
+                tieuDe={viPham.length > 0 ? 'Vi phạm quy tắc' : 'Cảnh báo chuyến'}
+                soMuc={viPham.length > 0 ? viPham.length : undefined}
+              >
+                <div role="alert" className="canh-bao">
+                  <strong className="loi">{loi}</strong>
+                  {viPham.length > 0 && (
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Đơn</th>
+                          <th>Quy tắc</th>
+                          <th>Nội dung</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                )}
-              </div>
+                      </thead>
+                      <tbody>
+                        {viPham.map((v, i) => (
+                          <tr key={i}>
+                            <td className="ma-don">
+                              {v.don_id ? (maDon.get(v.don_id) ?? v.don_id) : 'Cả chuyến'}
+                            </td>
+                            <td>{v.ma}</td>
+                            <td>{kemMaBr(v.thong_diep, v.ma)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+              </NoteCanhBao>
             )}
             {dangLap && (
               <DoiXeTaiXe
@@ -479,7 +528,16 @@ export default function ChuyenChiTiet() {
           {/* Hàng 1: bản đồ lớn và lịch trình dọc */}
           <div className="ct2-hang ct2-hang-ban-do">
             <div className="ct2-ban-do">
-              <Suspense fallback={<p className="ghi-chu">Đang tải bản đồ…</p>}>
+              {/* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải bản đồ… */}
+              <Suspense
+                fallback={
+                  phongCachDaLuu() === 'pixel' ? (
+                    <DangTaiPixel kieu="trang" nhan="Đang tải bản đồ…" />
+                  ) : (
+                    <p className="ghi-chu">Đang tải bản đồ…</p>
+                  )
+                }
+              >
                 <BanDoChuyen
                   lichTrinh={c.lich_trinh}
                   viTri={c.trang_thai === 'DANG_CHAY' ? viTri : null}
@@ -583,6 +641,41 @@ export default function ChuyenChiTiet() {
 }
 
 // UC-30: khối gợi ý nguy cơ trễ gần phần thời gian dự kiến; chỉ gợi ý, không đổi ETA hay chặn thao tác
+// Chiều cao khối dự đoán lần hiện gần nhất, để khung chờ của chuyến sau cao đúng bằng
+let caoDuDoan = 0
+
+// Khung chờ cùng cấu trúc với KhoiDuDoanTre (4 yếu tố, 2 dòng ghi chú) nên lần đầu cũng gần đúng chiều cao
+function ChoDuDoanTre() {
+  return (
+    <div className="ct-du-doan" role="status" style={{ minHeight: caoDuDoan || undefined }}>
+      <div className="ct-du-doan-dau">
+        <span className="ct-du-doan-tieu-de">Dự đoán trễ (AI)</span>
+        <Nhan loai="LAP">Đang tính…</Nhan>
+        <button type="button" className="phu ct-du-doan-nut" disabled>
+          Cách tính
+        </button>
+      </div>
+      <div className="ct-du-doan-thang" aria-hidden="true">
+        {MUC_TRE_DS.map((m) => (
+          <div key={m.ma} className="ct-du-doan-bac">
+            <span className="ct-du-doan-o" />
+            <span className="ct-du-doan-ten">{m.ten}</span>
+          </div>
+        ))}
+      </div>
+      <ul className="ct-du-doan-yt" aria-hidden="true">
+        {[1, 2, 3, 4].map((i) => (
+          <li key={i}>…</li>
+        ))}
+      </ul>
+      <small className="ct-du-doan-ghi-chu">
+        Gợi ý từ mô hình thử nghiệm, không thay đổi ETA
+        <br />…
+      </small>
+    </div>
+  )
+}
+
 function KhoiDuDoanTre({ d }: { d: DuDoanTre }) {
   const [moGiaiThich, setMoGiaiThich] = useState(false)
   if (!d.co_du_doan || d.xac_suat == null || !d.muc) return null
@@ -590,7 +683,13 @@ function KhoiDuDoanTre({ d }: { d: DuDoanTre }) {
   const yeuTo = d.yeu_to ?? []
   const nguon = tomTatNguon(d.nguon)
   return (
-    <div className="ct-du-doan" title={nguon || undefined}>
+    <div
+      className="ct-du-doan"
+      title={nguon || undefined}
+      ref={(el) => {
+        if (el && !moGiaiThich) caoDuDoan = el.offsetHeight
+      }}
+    >
       <div className="ct-du-doan-dau">
         <span className="ct-du-doan-tieu-de">Dự đoán trễ (AI)</span>
         <Nhan loai={`NGUY_CO_${d.muc}`}>Nguy cơ trễ: {TEN_MUC_TRE[d.muc]}</Nhan>
@@ -718,7 +817,7 @@ function BangDon({
                   />
                 </td>
               )}
-              <td className="bien-so">{d.ma_don}</td>
+              <td className="ma-don">{d.ma_don}</td>
               <td>{d.ten_khach}</td>
               <td>
                 {d.tinh_lay} → {d.tinh_giao}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type FormEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import {
   chiPhiChuyen,
   ghiChiPhi,
@@ -13,9 +13,14 @@ import {
 } from '../../api/chiPhi'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
 import ChonTep from '../../ChonTep'
+import { NoiDungNutGuiPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
+import { NoteLoi } from '../../NoteLoi'
 import { nenAnh } from '../../nenAnh'
+import { Nhan } from '../../nhan'
 import { LOI_MANG, SO_ANH_TOI_DA } from './QuetLay'
 import { ThongBao } from '../../thongBao'
+import { useXacNhan } from '../../xacNhanKho'
 
 const dong = (so: number) => `${so.toLocaleString('vi-VN')} đ`
 const thongBaoLoi = (err: unknown) => {
@@ -30,6 +35,8 @@ export function ChiPhi({ chuyenId, ghiDuoc }: { chuyenId: number; ghiDuoc: boole
   const [dangSua, setDangSua] = useState<number | null>(null)
   const [thongBao, setThongBao] = useState('')
   const [loi, setLoi] = useState('')
+  const hoi = useXacNhan()
+  const daXoa = useRef(new Set<number>()) // bấm hai lần không gửi hai yêu cầu xóa
 
   const tai = useCallback(() => {
     chiPhiChuyen(chuyenId)
@@ -53,10 +60,13 @@ export function ChiPhi({ chuyenId, ghiDuoc }: { chuyenId: number; ghiDuoc: boole
     }
   }
 
-  function xoa(k: KhoanChi) {
-    if (!window.confirm(`Xóa khoản ${TEN_LOAI_CHI[k.loai].toLowerCase()} ${dong(k.so_tien_khai)}?`))
-      return
-    void lam(() => xoaChiPhi(k.id), 'Đã xóa khoản chi')
+  async function xoa(k: KhoanChi) {
+    if (daXoa.current.has(k.id)) return
+    const cau = `Xóa khoản ${TEN_LOAI_CHI[k.loai].toLowerCase()} ${dong(k.so_tien_khai)}?`
+    if (!(await hoi(cau, 'Xóa'))) return
+    daXoa.current.add(k.id)
+    // Xóa hỏng thì cho bấm lại
+    if (!(await lam(() => xoaChiPhi(k.id), 'Đã xóa khoản chi'))) daXoa.current.delete(k.id)
   }
 
   return (
@@ -69,11 +79,14 @@ export function ChiPhi({ chuyenId, ghiDuoc }: { chuyenId: number; ghiDuoc: boole
         </p>
       )}
       <ThongBao chu={thongBao} />
-      {loi && (
-        <p role="alert" className="loi">
-          {loi}
-        </p>
-      )}
+      {loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          <NoteLoi noiDung={loi} kieu="nho" />
+        ) : (
+          <p role="alert" className="loi">
+            {loi}
+          </p>
+        ))}
       {cp && cp.khoan.length === 0 && <p className="ghi-chu">Chưa ghi khoản chi nào</p>}
       <ul className="ds-chi">
         {cp?.khoan.map((k) =>
@@ -93,7 +106,9 @@ export function ChiPhi({ chuyenId, ghiDuoc }: { chuyenId: number; ghiDuoc: boole
                   {TEN_LOAI_CHI[k.loai]} · <strong>{dong(k.so_tien_khai)}</strong>
                   {k.so_lit !== null && ` · ${Number(k.so_lit).toLocaleString('vi-VN')} lít`}
                 </span>
-                <span className="nhan xam">{TEN_TRANG_THAI_CHI[k.trang_thai] ?? k.trang_thai}</span>
+                <Nhan loai={`CHI_${k.trang_thai}`}>
+                  {TEN_TRANG_THAI_CHI[k.trang_thai] ?? k.trang_thai}
+                </Nhan>
               </div>
               <div className="ghi-chu">
                 {k.ghi_chu} · {k.so_anh} ảnh
@@ -103,7 +118,7 @@ export function ChiPhi({ chuyenId, ghiDuoc }: { chuyenId: number; ghiDuoc: boole
                   <button type="button" className="phu" onClick={() => setDangSua(k.id)}>
                     Sửa
                   </button>
-                  <button type="button" className="phu" onClick={() => xoa(k)}>
+                  <button type="button" className="phu" onClick={() => void xoa(k)}>
                     Xóa
                   </button>
                 </div>
@@ -149,11 +164,20 @@ function FormChi({
   const [anh, setAnh] = useState<File[]>([])
   const [dangGui, setDangGui] = useState(false)
   const [loi, setLoi] = useState('')
+  // Hiệu ứng Pixel: cờ hiện "Xong ✓" ngắn trên nút gửi sau khi API thành công (≤ 1,2 s)
+  const [vuaXong, setVuaXong] = useState(false)
+
+  useEffect(() => {
+    if (!vuaXong) return
+    const t = window.setTimeout(() => setVuaXong(false), 1100)
+    return () => window.clearTimeout(t)
+  }, [vuaXong])
 
   async function gui(e: FormEvent) {
     e.preventDefault()
     if (coAnh && anh.length > SO_ANH_TOI_DA) return setLoi(`Tối đa ${SO_ANH_TOI_DA} ảnh`)
     setLoi('')
+    setVuaXong(false)
     setDangGui(true)
     const xong = await onGui(
       {
@@ -171,8 +195,12 @@ function FormChi({
       setGhiChu('')
       setAnh([])
       ;(e.target as HTMLFormElement).reset()
+      // Hiệu ứng Pixel: đổi nhãn nút sang "Xong ✓" sau khi ghi chi phí thành công
+      if (dangHieuUngPixel()) setVuaXong(true)
     }
   }
+
+  const huPixel = dangHieuUngPixel()
 
   return (
     <form className="form-km" onSubmit={gui}>
@@ -222,21 +250,40 @@ function FormChi({
           accept="image/jpeg,image/png"
           capture="environment"
           multiple
+          dangNen={dangGui && anh.length > 0}
           onChange={(e) => setAnh([...(e.target.files ?? [])])}
         />
       )}
-      {loi && (
-        <p role="alert" className="loi">
-          {loi}
-        </p>
-      )}
+      {loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          <NoteLoi noiDung={loi} kieu="nho" />
+        ) : (
+          <p role="alert" className="loi">
+            {loi}
+          </p>
+        ))}
       <div className="hanh-dong">
         {onThoi && (
           <button type="button" className="phu" disabled={dangGui} onClick={onThoi}>
             Thôi
           </button>
         )}
-        <button disabled={dangGui}>{dangGui ? 'Đang gửi…' : nut}</button>
+        {/* Hiệu ứng Pixel: nút gửi giữ bề ngang và đổi chữ theo bậc "Đang gửi…" → "Xong ✓" */}
+        <button
+          disabled={dangGui}
+          aria-busy={dangGui || undefined}
+          className={
+            huPixel ? `px-nut-gui${dangGui ? ' dang-gui' : vuaXong ? ' vua-xong' : ''}` : undefined
+          }
+        >
+          {huPixel ? (
+            <NoiDungNutGuiPixel nhan={nut} dangGui={dangGui} vuaXong={vuaXong} />
+          ) : dangGui ? (
+            'Đang gửi…'
+          ) : (
+            nut
+          )}
+        </button>
       </div>
     </form>
   )

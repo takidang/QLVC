@@ -12,7 +12,8 @@ import {
 import { duDoanTreNgay, type DuDoanChuyenNgay } from '../api/chuyen'
 import { LoiApi } from '../api/goi'
 import { tongQuanNgay, type TongQuanNgay } from '../api/tongQuan'
-import { dangGiamChuyenDong } from '../nen'
+import { DangTaiPixel } from '../HieuUngPixel'
+import { dangGiamChuyenDong, dangHieuUngPixel, phongCachDaLuu } from '../nen'
 import { Nhan } from '../nhan'
 import NumberFlow from '@number-flow/react'
 
@@ -284,7 +285,13 @@ function BangLaiLo({ den: denMacDinh }: { den: string }) {
         </ul>
       )}
       {!kq ? (
-        !loi && <p className="ghi-chu">Đang tải…</p>
+        !loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          /* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… */
+          <DangTaiPixel kieu="trang" />
+        ) : (
+          <p className="ghi-chu">Đang tải…</p>
+        ))
       ) : (
         <div className="tq-cuon">
           <table>
@@ -374,6 +381,9 @@ function GiuCho({ loai }: { loai: 'cot' | 'xe' | 'bang' }) {
   )
 }
 
+// Hiệu ứng Pixel: nhịp cuộn theo bậc steps() cho số tiền KPI kiểu 8-bit trên @number-flow/react
+const NHIP_KPI_PIXEL: EffectTiming = { duration: 340, easing: 'steps(5, end)' }
+
 function SoLieu({
   nhan,
   so,
@@ -385,14 +395,27 @@ function SoLieu({
   phu?: string
   lai?: boolean
 }) {
+  // Hộp số 8-bit đi theo phong cách Pixel; chỉ nhịp cuộn bậc mới theo công tắc Hiệu ứng Pixel
+  const laPixel = phongCachDaLuu() === 'pixel'
+  const batPixel = dangHieuUngPixel()
+  const lopSo =
+    `${lai && so !== undefined && so < 0 ? 'tq-am' : ''}${laPixel ? ' px-kpi-so' : ''}`.trim()
   return (
     <div>
       <small>{nhan}</small>
-      <b className={lai && so !== undefined && so < 0 ? 'tq-am' : undefined}>
+      <b className={lopSo || undefined}>
         {so === undefined ? (
           '–'
         ) : (
-          <NumberFlow value={so} locales="vi-VN" suffix=" đ" animated={!dangGiamChuyenDong()} />
+          <NumberFlow
+            className={laPixel ? 'px-kpi-nf' : undefined}
+            value={so}
+            locales="vi-VN"
+            suffix=" đ"
+            animated={!dangGiamChuyenDong()}
+            transformTiming={batPixel ? NHIP_KPI_PIXEL : undefined}
+            spinTiming={batPixel ? NHIP_KPI_PIXEL : undefined}
+          />
         )}
       </b>
       {lai && so !== undefined && so < 0 && <em>Lỗ trong tháng</em>}
@@ -473,7 +496,7 @@ function CotLai({ ds, chon }: { ds: (DongLaiLo & { thang: string })[]; chon: str
                   y={y0}
                   width={cot}
                   height={Math.max(h, 2)}
-                  rx={4}
+                  rx={phongCachDaLuu() === 'pixel' ? 0 : 4}
                   className={`${d.lai < 0 ? 'bd-am' : 'bd-duong'}${d.thang === chon ? ' chon' : ''}`}
                 />
               )}
@@ -657,6 +680,8 @@ function HomNay() {
     month: '2-digit',
   })
   const cho = '\u00a0' // giữ chiều cao dòng phụ lúc đang tải
+  // Phong cách Pixel: cả 5 thẻ KPI dùng hộp số monospace .px-kpi-so cho đồng bộ
+  const kpiPixel = phongCachDaLuu() === 'pixel' ? 'px-kpi-so' : undefined
   return (
     <section className="tq-hom-nay" aria-busy={!tq}>
       <div className="tq-hn-dau">
@@ -679,7 +704,7 @@ function HomNay() {
       <div className="kinh tq-so">
         <div>
           <small>Chuyến</small>
-          <b>{tq ? tq.chuyen.tong : '–'}</b>
+          <b className={kpiPixel}>{tq ? tq.chuyen.tong : '–'}</b>
           <em>
             {tq ? (
               <>
@@ -693,7 +718,7 @@ function HomNay() {
         </div>
         <div>
           <small>Đơn</small>
-          <b>{tq ? tq.don.tong : '–'}</b>
+          <b className={kpiPixel}>{tq ? tq.don.tong : '–'}</b>
           <em>
             {tq
               ? `${tq.don.da_giao} đã giao · ${tq.don.that_bai} thất bại · ${tq.don.con_lai} còn lại`
@@ -702,7 +727,9 @@ function HomNay() {
         </div>
         <div>
           <small>Điểm dừng đúng giờ</small>
-          <b>{!dg || dg.ty_le === null ? '–' : `${Math.round(dg.ty_le * 100)}%`}</b>
+          <b className={kpiPixel}>
+            {!dg || dg.ty_le === null ? '–' : `${Math.round(dg.ty_le * 100)}%`}
+          </b>
           <em>
             {dg ? (
               <>
@@ -716,7 +743,7 @@ function HomNay() {
         </div>
         <div>
           <small>Hàng đã chở</small>
-          <b>
+          <b className={kpiPixel}>
             {tq
               ? `${tq.don.kg_da_cho.toLocaleString('vi-VN', { maximumFractionDigits: 0 })} kg`
               : '–'}
@@ -724,7 +751,10 @@ function HomNay() {
         </div>
         <div>
           <small>Doanh thu dự kiến</small>
-          <b>{tq ? `${tq.doanh_thu_du_kien.toLocaleString('vi-VN')} đ` : '–'}</b>
+          {/* Hiệu ứng Pixel: số tiền KPI kiểu 8-bit khi bật Hiệu ứng Pixel */}
+          <b className={kpiPixel}>
+            {tq ? `${tq.doanh_thu_du_kien.toLocaleString('vi-VN')} đ` : '–'}
+          </b>
           <em>cước các đơn của chuyến trong ngày, chưa trừ đơn thất bại</em>
         </div>
       </div>

@@ -1,6 +1,43 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { ChuyenChiTiet } from '../../api/chuyen'
 import { TEN_TRANG_THAI_DON, type Don } from '../../api/don'
+import { BuiThaHangPixel } from '../../HieuUngPixel'
+import { Nhan } from '../../nhan'
+import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
+import {
+  BANH_XE_Y,
+  CONTAINER_X,
+  CONTAINER_Y,
+  DAU_XE_X,
+  DAU_XE_Y,
+  GAM_XE_X,
+  GAM_XE_Y,
+  NGUONG_VUA,
+  PX0,
+  PX1,
+  PY0,
+  PY1,
+  SPRITE_BANH_XE,
+  SPRITE_CONTAINER,
+  SPRITE_DAU_XE,
+  SPRITE_GAM_XE,
+  TI_LE_PIXEL,
+  VI_TRI_BANH_X,
+  xepHangTheoCo,
+  type SpriteDaGop,
+} from '../../spritesXepHang'
+import { goiYGhep } from './goiYGhep'
+
+// Tem đơn ở Pixel: cùng hình với màn Đơn hàng (DonDanhSach.tsx)
+const NHAN_DON_PIXEL: Record<string, string> = {
+  CHO_GHEP: 'LAP',
+  DA_GHEP: 'DA_CHOT',
+  DA_LAY: 'DANG_CHAY',
+  DA_GIAO: 'HOAN_THANH',
+  THAT_BAI: 'THAT_BAI',
+  TRA_HANG: 'HUY',
+  HUY: 'HUY',
+}
 
 const so = (n: number) => n.toLocaleString('vi-VN', { maximumFractionDigits: 1 })
 const ngayGio = (iso: string) =>
@@ -11,11 +48,40 @@ const ngayGio = (iso: string) =>
     month: '2-digit',
   })
 
-// Khung thùng xe trong hình (đơn vị SVG); các khối đơn nằm trong đoạn [X0, X1]
+// Khung thùng xe ở giao diện thường (đơn vị SVG); các khối đơn nằm trong đoạn [X0, X1] × [Y0, Y1]
+// (Phong cách Pixel dùng vùng lòng thùng riêng [PX0, PX1] × [PY0, PY1] từ spritesXepHang.ts)
 const X0 = 30
 const X1 = 446
 const Y0 = 34
 const Y1 = 150
+
+// Dựng một sprite pixel art từ danh sách đoạn <rect> đã gộp theo lưới nguyên
+function PixelSprite({
+  sprite,
+  x,
+  y,
+  tiLe = TI_LE_PIXEL,
+  className,
+}: {
+  sprite: SpriteDaGop
+  x: number
+  y: number
+  tiLe?: number
+  className?: string
+}) {
+  return (
+    <g
+      className={className}
+      transform={`translate(${x} ${y}) scale(${tiLe})`}
+      shapeRendering="crispEdges"
+      aria-hidden="true"
+    >
+      {sprite.doan.map((o, i) => (
+        <rect key={i} x={o.x} y={o.y} width={o.w} height={o.h} fill={o.fill} />
+      ))}
+    </g>
+  )
+}
 
 // "Xếp hàng lên xe": hình xe tải minh họa, thùng lấp theo THỂ TÍCH các đơn đã ghép (mỗi khối một đơn,
 // rộng theo phần trăm m³, không phải vị trí thật trong thùng) + hai thanh tải trọng / thể tích.
@@ -38,9 +104,58 @@ export default function XepHang({
 }) {
   const [thu, setThu] = useState<Don | null>(null) // đơn đang rê chuột (xem trước)
   const [chon, setChon] = useState<number | null>(null) // khối đơn đang chọn để gỡ
+  // Hiệu ứng Pixel: cờ khối hàng vừa ghép rơi xuống thùng và rung khung khi máy chủ báo quá tải
+  const [vuaRoi, setVuaRoi] = useState<number[]>([])
+  const [rungQuaTai, setRungQuaTai] = useState(false)
 
   // Đơn còn trên xe (đơn đã giao / thất bại vẫn hiện khi chuyến đã chạy, để thấy chuyến đã chở gì)
   const ds = c.don.filter((d) => d.trang_thai !== 'HUY')
+  const maDs = ds.map((d) => d.id).join(',')
+  const chuyenTruoc = useRef(c.id)
+  const donTruoc = useRef<Set<number>>(new Set(ds.map((d) => d.id)))
+  const choGhep = useRef<number | null>(null)
+  const dangGuiTruoc = useRef(dangGui)
+
+  useEffect(() => {
+    const hienTai = maDs ? maDs.split(',').map(Number) : []
+    if (chuyenTruoc.current !== c.id) {
+      chuyenTruoc.current = c.id
+      donTruoc.current = new Set(hienTai)
+      choGhep.current = null
+      setVuaRoi([])
+      setRungQuaTai(false)
+      return
+    }
+    const moi = hienTai.filter((id) => !donTruoc.current.has(id))
+    donTruoc.current = new Set(hienTai)
+    if (moi.length > 0 && dangHieuUngPixel()) setVuaRoi(moi)
+  }, [c.id, maDs])
+
+  useEffect(() => {
+    if (vuaRoi.length === 0) return
+    const t = window.setTimeout(() => setVuaRoi([]), 380)
+    return () => window.clearTimeout(t)
+  }, [vuaRoi])
+
+  useEffect(() => {
+    const vuaXong = dangGuiTruoc.current && !dangGui
+    dangGuiTruoc.current = dangGui
+    if (!vuaXong || choGhep.current === null) return
+    const idGhep = choGhep.current
+    choGhep.current = null
+    const daCo = maDs ? maDs.split(',').map(Number).includes(idGhep) : false
+    if (daCo || !dangHieuUngPixel()) return
+    const tbLoi = document.querySelector('[role="alert"].canh-bao')?.textContent ?? ''
+    if (/BR-0[12]|quá tải|vượt|tải trọng|thể tích|sức chứa/i.test(tbLoi)) {
+      setRungQuaTai(true)
+    }
+  }, [dangGui, maDs])
+
+  useEffect(() => {
+    if (!rungQuaTai) return
+    const t = window.setTimeout(() => setRungQuaTai(false), 320)
+    return () => window.clearTimeout(t)
+  }, [rungQuaTai])
   const m3Max = Number(c.the_tich.toi_da_m3) || 1
   const kgMax = c.tai_trong.toi_da_kg || 1
   const m3 = Number(c.the_tich.da_dung_m3)
@@ -49,20 +164,30 @@ export default function XepHang({
   const kgThu = thu ? Number(thu.kg) : 0
   const quaTai = m3 + m3Thu > m3Max || kg + kgThu > kgMax
 
+  const laPixel = phongCachDaLuu() === 'pixel'
+  const x0 = laPixel ? PX0 : X0
+  const x1 = laPixel ? PX1 : X1
+  const y0 = laPixel ? PY0 : Y0
+  const y1 = laPixel ? PY1 : Y1
+
   // Vị trí từng khối theo thể tích cộng dồn; x là mép phải sau khối cuối
-  const rongKhoi = (d: Don) => (Number(d.m3) / m3Max) * (X1 - X0)
+  const rongKhoi = (d: Don) => (Number(d.m3) / m3Max) * (x1 - x0)
   const khoi = ds.map((d, i) => ({
     d,
-    x: X0 + ds.slice(0, i).reduce((t, e) => t + rongKhoi(e), 0),
+    x: x0 + ds.slice(0, i).reduce((t, e) => t + rongKhoi(e), 0),
     w: rongKhoi(d),
   }))
-  const x = X0 + ds.reduce((t, e) => t + rongKhoi(e), 0)
-  const wThu = (m3Thu / m3Max) * (X1 - X0)
+  const x = x0 + ds.reduce((t, e) => t + rongKhoi(e), 0)
+  const wThu = (m3Thu / m3Max) * (x1 - x0)
   const dangChon = ds.find((d) => d.id === chon)
+  const conM3 = Math.max(m3Max - m3, 0)
+  const conKg = Math.max(kgMax - kg, 0)
+  const goiY = goiYGhep(phuHop, conM3, conKg)
+  const soVua = goiY.filter((g) => g.vua).length
 
   return (
     <section className="kinh xh xh-hai-cot">
-      <div className="xh-xe">
+      <div className={rungQuaTai && dangHieuUngPixel() ? 'xh-xe px-xh-rung' : 'xh-xe'}>
         <h2>
           Xếp hàng lên xe <span className="bien">{c.bien_so}</span>
         </h2>
@@ -72,93 +197,198 @@ export default function XepHang({
           role="img"
           aria-label={`Xe ${c.bien_so} đã dùng ${so(m3)} / ${so(m3Max)} m³ và ${so(kg)} / ${so(kgMax)} kg, ${ds.length} đơn`}
         >
-          {/* Thùng xe */}
-          <rect
-            x={X0 - 10}
-            y={Y0 - 12}
-            width={X1 - X0 + 20}
-            height={Y1 - Y0 + 24}
-            rx={8}
-            className="xh-thung"
-          />
+          {laPixel && khoi.length > 0 && (
+            <defs>
+              {khoi.map(({ d, x: kx, w }) => (
+                <clipPath key={`cat-${d.id}`} id={`xh-cat-${c.id}-${d.id}`}>
+                  <rect x={kx + 1} y={y0} width={Math.max(w - 2, 2)} height={y1 - y0} />
+                </clipPath>
+              ))}
+            </defs>
+          )}
+          {/* Thùng xe: giao diện thường giữ nguyên; Pixel thay bằng gầm + container pixel art */}
+          {laPixel ? (
+            <g className="xh-container xh-px-xe" aria-hidden="true">
+              <PixelSprite sprite={SPRITE_GAM_XE} x={GAM_XE_X} y={GAM_XE_Y} />
+              <PixelSprite sprite={SPRITE_CONTAINER} x={CONTAINER_X} y={CONTAINER_Y} />
+              <rect
+                x={CONTAINER_X}
+                y={CONTAINER_Y}
+                width={SPRITE_CONTAINER.rong * TI_LE_PIXEL}
+                height={SPRITE_CONTAINER.cao * TI_LE_PIXEL}
+                className="xh-px-vien-loi"
+              />
+            </g>
+          ) : (
+            <rect
+              x={X0 - 10}
+              y={Y0 - 12}
+              width={X1 - X0 + 20}
+              height={Y1 - Y0 + 24}
+              rx={8}
+              className="xh-thung"
+            />
+          )}
           {/* Vạch chia 25 % cho dễ ước lượng */}
           {[0.25, 0.5, 0.75].map((t) => (
             <line
               key={t}
-              x1={X0 + t * (X1 - X0)}
-              x2={X0 + t * (X1 - X0)}
-              y1={Y0}
-              y2={Y1}
+              x1={x0 + t * (x1 - x0)}
+              x2={x0 + t * (x1 - x0)}
+              y1={y0}
+              y2={y1}
               className="xh-vach"
             />
           ))}
-          {khoi.map(({ d, x: kx, w }, i) => (
-            <g
-              key={d.id}
-              className={chon === d.id ? 'xh-khoi chon' : 'xh-khoi'}
-              tabIndex={dangLap ? 0 : -1}
-              role={dangLap ? 'button' : undefined}
-              aria-label={`${d.ma_don}: ${so(Number(d.m3))} m³, ${so(Number(d.kg))} kg${dangLap ? ', bấm để chọn gỡ' : ''}`}
-              onClick={() => dangLap && setChon(chon === d.id ? null : d.id)}
-              onKeyDown={(e) => {
-                if (dangLap && (e.key === 'Enter' || e.key === ' ')) {
-                  e.preventDefault()
-                  setChon(chon === d.id ? null : d.id)
-                }
-              }}
-            >
-              <rect
-                x={kx + 1}
-                y={Y0}
-                width={Math.max(w - 2, 2)}
-                height={Y1 - Y0}
-                rx={4}
-                className={`xh-o o${i % 3}`}
-              />
-              {w > 54 && (
-                <>
-                  <text x={kx + w / 2} y={(Y0 + Y1) / 2 - 4} textAnchor="middle" className="xh-chu">
-                    {d.ma_don.replace('DH-', '')}
-                  </text>
-                  <text
-                    x={kx + w / 2}
-                    y={(Y0 + Y1) / 2 + 14}
-                    textAnchor="middle"
-                    className="xh-chu nho"
-                  >
-                    {so(Number(d.m3))} m³
-                  </text>
-                </>
-              )}
-            </g>
-          ))}
+          {khoi.map(({ d, x: kx, w }, i) => {
+            const dangRoi = vuaRoi.includes(d.id) && dangHieuUngPixel()
+            const bw = Math.max(w - 2, 2)
+            const maNgan = d.ma_don.replace('DH-', '')
+            const chuM3 = `${so(Number(d.m3))} m³`
+            const fKhoi = x1 > x0 ? w / (x1 - x0) : 0
+            const rongOKhoi = Math.floor(bw / TI_LE_PIXEL)
+            const caoOKhoang = Math.floor((y1 - y0) / TI_LE_PIXEL)
+            const dsKien = laPixel
+              ? xepHangTheoCo(Math.abs(d.id) % 4, rongOKhoi, caoOKhoang, fKhoi)
+              : []
+            const caoHangO = dsKien.reduce((m, k) => Math.max(m, k.y + k.sprite.cao), 0)
+            const khoangTrongTren = y1 - caoHangO * TI_LE_PIXEL - y0
+            const cxNhan = kx + w / 2
+            const datNhanTren = laPixel && fKhoi < NGUONG_VUA && khoangTrongTren >= 40
+            const cyNhan = datNhanTren
+              ? Math.max(y0 + 20, Math.round(y0 + (khoangTrongTren - 2) / 2))
+              : (y0 + y1) / 2 + 2
+            const rongNhan = Math.min(
+              Math.max(bw - 4, 46),
+              Math.max(52, Math.max(maNgan.length, chuM3.length) * 7.2 + 12),
+            )
+            return (
+              <g
+                key={d.id}
+                className={`${chon === d.id ? 'xh-khoi chon' : 'xh-khoi'}${dangRoi ? ' px-khoi-roi' : ''}`}
+                tabIndex={dangLap ? 0 : -1}
+                role={dangLap ? 'button' : undefined}
+                aria-label={`${d.ma_don}: ${so(Number(d.m3))} m³, ${so(Number(d.kg))} kg${dangLap ? ', bấm để chọn gỡ' : ''}`}
+                onClick={() => dangLap && setChon(chon === d.id ? null : d.id)}
+                onKeyDown={(e) => {
+                  if (dangLap && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault()
+                    setChon(chon === d.id ? null : d.id)
+                  }
+                }}
+              >
+                {laPixel && (
+                  <g clipPath={`url(#xh-cat-${c.id}-${d.id})`} aria-hidden="true">
+                    {dsKien.map((k, j) => (
+                      <PixelSprite
+                        key={j}
+                        sprite={k.sprite}
+                        x={kx + 1 + k.x * TI_LE_PIXEL}
+                        y={y1 - (k.y + k.sprite.cao) * TI_LE_PIXEL}
+                      />
+                    ))}
+                  </g>
+                )}
+                <rect
+                  x={kx + 1}
+                  y={y0}
+                  width={bw}
+                  height={y1 - y0}
+                  rx={laPixel ? 0 : 4}
+                  className={`xh-o o${i % 3}`}
+                />
+                {w > 54 && (
+                  <>
+                    {laPixel && (
+                      <g className="xh-nhan-px" shapeRendering="crispEdges" aria-hidden="true">
+                        <rect
+                          x={cxNhan - rongNhan / 2 + 2}
+                          y={cyNhan - 19 + 2}
+                          width={rongNhan}
+                          height={38}
+                          className="xh-nhan-bong"
+                        />
+                        <rect
+                          x={cxNhan - rongNhan / 2}
+                          y={cyNhan - 19}
+                          width={rongNhan}
+                          height={38}
+                          className="xh-nhan-nen"
+                        />
+                        <rect
+                          x={cxNhan - rongNhan / 2 + 2}
+                          y={cyNhan - 17}
+                          width={Math.max(rongNhan - 4, 2)}
+                          height={3}
+                          className="xh-nhan-dai"
+                        />
+                      </g>
+                    )}
+                    <text
+                      x={kx + w / 2}
+                      y={laPixel ? cyNhan - 1 : (y0 + y1) / 2 - 4}
+                      textAnchor="middle"
+                      className="xh-chu"
+                    >
+                      {maNgan}
+                    </text>
+                    <text
+                      x={kx + w / 2}
+                      y={laPixel ? cyNhan + 13 : (y0 + y1) / 2 + 14}
+                      textAnchor="middle"
+                      className="xh-chu nho"
+                    >
+                      {chuM3}
+                    </text>
+                  </>
+                )}
+              </g>
+            )
+          })}
+          {/* Hiệu ứng Pixel: hạt bụi ô vuông khi khối hàng vừa rơi xuống sàn thùng xe */}
+          {dangHieuUngPixel() &&
+            khoi
+              .filter(({ d }) => vuaRoi.includes(d.id))
+              .map(({ d, x: kx, w }) => (
+                <BuiThaHangPixel key={`bui-${d.id}`} x={kx} w={w} y={y1} />
+              ))}
           {/* Xem trước đơn đang rê chuột: khối nét đứt, cam nếu vượt sức chứa */}
           {thu && wThu > 0 && (
             <rect
               x={x + 1}
-              y={Y0}
-              width={Math.max(Math.min(wThu, X1 + 40 - x) - 2, 2)}
-              height={Y1 - Y0}
-              rx={4}
+              y={y0}
+              width={Math.max(Math.min(wThu, x1 + 40 - x) - 2, 2)}
+              height={y1 - y0}
+              rx={laPixel ? 0 : 4}
               className={quaTai ? 'xh-thu qua' : 'xh-thu'}
             />
           )}
           {ds.length === 0 && !thu && (
-            <text x={(X0 + X1) / 2} y={(Y0 + Y1) / 2 + 5} textAnchor="middle" className="xh-trong">
+            <text x={(x0 + x1) / 2} y={(y0 + y1) / 2 + 5} textAnchor="middle" className="xh-trong">
               Thùng trống – chưa ghép đơn
             </text>
           )}
-          {/* Đầu xe */}
-          <path d="M466 70 h60 q14 0 22 12 l26 40 q6 10 6 22 v26 h-114 z" className="xh-dau" />
-          <path d="M488 84 h34 q8 0 13 8 l18 28 h-65 z" className="xh-kinh" />
-          {/* Gầm và bánh */}
-          <line x1={14} x2={584} y1={174} y2={174} className="xh-gam" />
-          {[96, 156, 522].map((cx) => (
-            <g key={cx}>
-              <circle cx={cx} cy={184} r={20} className="xh-banh" />
-              <circle cx={cx} cy={184} r={7} className="xh-mam" />
+          {/* Đầu xe, gầm và 3 bánh: Pixel vẽ hoàn chỉnh theo cùng lưới & bảng màu */}
+          {laPixel ? (
+            <g className="xh-px-dau-banh" aria-hidden="true">
+              <PixelSprite sprite={SPRITE_DAU_XE} x={DAU_XE_X} y={DAU_XE_Y} />
+              {VI_TRI_BANH_X.map((bx) => (
+                <PixelSprite key={bx} sprite={SPRITE_BANH_XE} x={bx} y={BANH_XE_Y} />
+              ))}
             </g>
-          ))}
+          ) : (
+            <>
+              <path d="M466 70 h60 q14 0 22 12 l26 40 q6 10 6 22 v26 h-114 z" className="xh-dau" />
+              <path d="M488 84 h34 q8 0 13 8 l18 28 h-65 z" className="xh-kinh" />
+              <line x1={14} x2={584} y1={174} y2={174} className="xh-gam" />
+              {[96, 156, 522].map((cx) => (
+                <g key={cx}>
+                  <circle cx={cx} cy={184} r={20} className="xh-banh" />
+                  <circle cx={cx} cy={184} r={7} className="xh-mam" />
+                </g>
+              ))}
+            </>
+          )}
         </svg>
 
         <div className="xh-thanh">
@@ -212,7 +442,13 @@ export default function XepHang({
                     {so(Number(d.kg))} kg · {so(Number(d.m3))} m³ · {d.so_kien} kiện
                   </small>
                 </div>
-                <span className="nhan">{TEN_TRANG_THAI_DON[d.trang_thai] ?? d.trang_thai}</span>
+                {laPixel ? (
+                  <Nhan loai={NHAN_DON_PIXEL[d.trang_thai] ?? 'LAP'}>
+                    {TEN_TRANG_THAI_DON[d.trang_thai] ?? d.trang_thai}
+                  </Nhan>
+                ) : (
+                  <span className="nhan">{TEN_TRANG_THAI_DON[d.trang_thai] ?? d.trang_thai}</span>
+                )}
               </li>
             ))}
             {ds.length === 0 && <li className="ghi-chu">Chuyến chạy rỗng</li>}
@@ -224,8 +460,14 @@ export default function XepHang({
           <h2>
             Đơn chờ ghép phù hợp tuyến <em>{phuHop.length}</em>
           </h2>
+          <p className="xh-goi-y">
+            Xe còn trống <strong>{so(conM3)} m³</strong> · <strong>{so(conKg)} kg</strong>
+            {phuHop.length > 0 && (
+              <> — {soVua > 0 ? `${soVua} đơn ghép vừa` : 'không đơn nào ghép vừa'}</>
+            )}
+          </p>
           <ul>
-            {phuHop.map((d) => (
+            {goiY.map(({ d, quaM3, quaKg, vua }) => (
               <li
                 key={d.id}
                 onMouseEnter={() => setThu(d)}
@@ -242,8 +484,22 @@ export default function XepHang({
                     {so(Number(d.kg))} kg · {so(Number(d.m3))} m³ · {d.so_kien} kiện · hạn{' '}
                     {ngayGio(d.han_giao)}
                   </small>
+                  {vua ? (
+                    <Nhan loai="HOAN_THANH">Vừa xe</Nhan>
+                  ) : (
+                    <Nhan loai="QUA_SUC_CHUA" title="Ghép vào sẽ vượt sức chứa còn lại của xe">
+                      Quá {quaM3 && quaKg ? 'm³ và kg' : quaM3 ? 'm³' : 'kg'}
+                    </Nhan>
+                  )}
                 </div>
-                <button disabled={dangGui} onClick={() => onGhep(d.id)}>
+                <button
+                  disabled={dangGui}
+                  onClick={() => {
+                    // Hiệu ứng Pixel: ghi nhận đơn vừa bấm ghép để bắt phản hồi từ máy chủ
+                    choGhep.current = d.id
+                    onGhep(d.id)
+                  }}
+                >
                   Ghép vào xe
                 </button>
               </li>

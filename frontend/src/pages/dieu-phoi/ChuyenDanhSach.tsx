@@ -20,7 +20,8 @@ import { TEN_LOAI_SU_CO, type LoaiSuCo } from '../../api/suCo'
 import { danhSachTuyen, type Tuyen } from '../../api/tuyen'
 import { Ic, Nhan } from '../../nhan'
 import LichGio from './LichGio'
-import { dangGiamChuyenDong, NEN } from '../../nen'
+import { dangGiamChuyenDong, NEN, phongCachDaLuu } from '../../nen'
+import { DangTaiPixel } from '../../HieuUngPixel'
 import { ThongBao } from '../../thongBao'
 import NumberFlow from '@number-flow/react'
 
@@ -181,9 +182,15 @@ export default function ChuyenDanhSach() {
       )
       .catch(() => setGanNhat(''))
   }, [])
+  const [coViec, setCoViec] = useState(false)
   useEffect(() => {
-    viecHomNay().then(setViec)
+    viecHomNay().then((v) => {
+      setViec(v)
+      setCoViec(true)
+    })
   }, [])
+  // Đã đủ dữ liệu cho khối đầu một lần chưa (đổi ngày sau đó không ẩn lại trang)
+  const [daDu, setDaDu] = useState(false)
 
   // UC-30: gọi dự đoán nguy cơ trễ theo ngày khi đang xem một ngày cụ thể; lỗi thì im lặng (KT-08)
   const [nguyCoCao, setNguyCoCao] = useState<{ ngay: string; ids: Set<number> }>({
@@ -259,8 +266,11 @@ export default function ChuyenDanhSach() {
   const soTrang = Math.max(1, Math.ceil((ds?.tong ?? 0) / SO_DONG))
   const soCot = ngay ? 7 : 5
 
+  if (!daDu && ds && coViec) setDaDu(true)
+
   return (
-    <section className="noi-dung">
+    // data-px-cho: Pixel ẩn trang tới khi đủ dữ liệu (tối đa 1,5 s) để lịch xe, Cần chú ý không đẩy bảng
+    <section className="noi-dung" data-px-cho={daDu ? undefined : ''}>
       {/* Hai cột độc lập: trái là tiêu đề, số liệu, lịch xe; phải là Cần chú ý, bản đồ.
           Mỗi cột tự xếp chồng nên không có khoảng trống do cột kia cao hơn */}
       <div className={ngay ? 'dau-luoi' : 'dau-luoi mot-cot'}>
@@ -269,7 +279,12 @@ export default function ChuyenDanhSach() {
               khối nhấn đậm dần sang trái để chữ trắng đọc được */}
           <div
             className="mo-dau mo-dau-anh"
-            style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}
+            style={
+              {
+                '--anh': `url(${NEN.anh})`,
+                '--anh-pixel': `url(${NEN.bannerPixel})`,
+              } as CSSProperties
+            }
           >
             <h1>
               {!ngay
@@ -390,7 +405,15 @@ export default function ChuyenDanhSach() {
                   <Ic ten="phai" />
                 </Link>
               ))}
-              {soViec === 0 && <p>{ds ? 'Không có việc nào cần chú ý.' : 'Đang tải…'}</p>}
+              {soViec === 0 &&
+                (ds ? (
+                  <p>Không có việc nào cần chú ý.</p>
+                ) : phongCachDaLuu() === 'pixel' ? (
+                  /* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… */
+                  <DangTaiPixel kieu="trang" />
+                ) : (
+                  <p>Đang tải…</p>
+                ))}
               {soViec > 0 && caNgay.length > canChuY.length && (
                 <p className="chu-y-het">
                   Hết việc cần chú ý · {caNgay.length - canChuY.length} chuyến khác trong ngày không
@@ -489,11 +512,18 @@ export default function ChuyenDanhSach() {
             {soKhop === 0 && (
               <tr>
                 <td colSpan={soCot} className="trong">
-                  {!ds
-                    ? 'Đang tải…'
-                    : ngay && !trangThai && !loiTai
-                      ? 'Chưa có chuyến nào khởi hành ngày này. Bấm “Mọi ngày” để xem các ngày khác.'
-                      : 'Chưa có chuyến nào phù hợp'}
+                  {!ds ? (
+                    phongCachDaLuu() === 'pixel' ? (
+                      /* Hiệu ứng Pixel: màn tải bảng kiểu Pixel thay chữ Đang tải… */
+                      <DangTaiPixel kieu="bang" soCot={ngay ? 6 : 5} />
+                    ) : (
+                      'Đang tải…'
+                    )
+                  ) : ngay && !trangThai && !loiTai ? (
+                    'Chưa có chuyến nào khởi hành ngày này. Bấm “Mọi ngày” để xem các ngày khác.'
+                  ) : (
+                    'Chưa có chuyến nào phù hợp'
+                  )}
                 </td>
               </tr>
             )}

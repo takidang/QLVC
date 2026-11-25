@@ -18,8 +18,13 @@ import { kemMaBr, LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachKhachHang, type KhachHang } from '../../api/khachHang'
 import { danhSachNut, type Nut } from '../../api/tuyen'
 import { Nhan } from '../../nhan'
+import { DangTaiPixel, HopCartonGapNapPixel, KimCanPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
+import { NoteCanhBao } from '../../NoteCanhBao'
+import { NoteLoi } from '../../NoteLoi'
 import { DauDanhMuc, LocTrangThai, OTim } from '../danh-muc'
 import { ThongBao } from '../../thongBao'
+import { useXacNhan } from '../../xacNhanKho'
 
 const SO_DONG = 20
 const dong = (n: number) => n.toLocaleString('vi-VN')
@@ -65,6 +70,14 @@ export default function DonDanhSach() {
   const [dangHuy, setDangHuy] = useState<Don | null>(null)
   const [thongBao, setThongBao] = useState('')
   const [lanTai, setLanTai] = useState(0)
+  // Hiệu ứng Pixel: cờ hiện hộp carton gấp nắp sau khi tạo đơn thành công (tự tắt ≤ 1,4 s)
+  const [hopDong, setHopDong] = useState(0)
+
+  useEffect(() => {
+    if (hopDong === 0) return
+    const t = window.setTimeout(() => setHopDong(0), 1400)
+    return () => window.clearTimeout(t)
+  }, [hopDong])
 
   useEffect(() => {
     let bo = false // yêu cầu cũ về muộn thì bỏ
@@ -98,6 +111,8 @@ export default function DonDanhSach() {
         }
       />
       <ThongBao chu={thongBao} />
+      {/* Hiệu ứng Pixel: hộp carton gấp nắp đóng gói sau khi tạo đơn thành công */}
+      {hopDong > 0 && dangHieuUngPixel() && <HopCartonGapNapPixel key={hopDong} />}
       <DonThatBaiCanXuLy
         lanTai={lanTai}
         san={ds !== null || !!loiTai}
@@ -203,7 +218,14 @@ export default function DonDanhSach() {
             {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={7} className="trong">
-                  {ds ? 'Chưa có đơn nào phù hợp' : 'Đang tải…'}
+                  {ds ? (
+                    'Chưa có đơn nào phù hợp'
+                  ) : phongCachDaLuu() === 'pixel' ? (
+                    /* Hiệu ứng Pixel: màn tải bảng kiểu Pixel thay chữ Đang tải… */
+                    <DangTaiPixel kieu="bang" soCot={6} />
+                  ) : (
+                    'Đang tải…'
+                  )}
                 </td>
               </tr>
             )}
@@ -230,6 +252,8 @@ export default function DonDanhSach() {
             setVuaTao(d)
             setThongBao('')
             setLanTai((n) => n + 1)
+            // Hiệu ứng Pixel: hộp carton gấp nắp sau khi API tạo đơn trả thành công
+            if (dangHieuUngPixel()) setHopDong((n) => n + 1)
           }}
         />
       )}
@@ -320,7 +344,7 @@ function FormTaoDon({
   const [loiChung, setLoiChung] = useState<string[]>([])
   const [dangGui, setDangGui] = useState(false)
   // Hộp cao hơn màn hình: có lỗi chung (vd. BR-06) thì cuộn tới, không bắt người dùng tự tìm ở đáy
-  const oLoi = useRef<HTMLUListElement>(null)
+  const oLoi = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (loiChung.length) oLoi.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
   }, [loiChung])
@@ -448,12 +472,16 @@ function FormTaoDon({
             </select>
           </label>
           {o('mo_ta', 'Mô tả hàng')}
-          {o('kg', 'Khối lượng thực (kg)', {
-            type: 'number',
-            min: 0.01,
-            step: 0.01,
-            required: true,
-          })}
+          <div className="px-o-kg">
+            {o('kg', 'Khối lượng thực (kg)', {
+              type: 'number',
+              min: 0.01,
+              step: 0.01,
+              required: true,
+            })}
+            {/* Hiệu ứng Pixel: kim cân minh hoạ nhảy theo số kg đang nhập (không kiểm giới hạn) */}
+            {dangHieuUngPixel() && <KimCanPixel kg={f.kg} />}
+          </div>
           {o('m3', 'Thể tích (m³)', { type: 'number', min: 0.01, step: 0.01, required: true })}
           {o('so_kien', 'Số kiện', { type: 'number', min: 1, required: true })}
         </div>
@@ -497,11 +525,17 @@ function FormTaoDon({
         </div>
 
         {loiChung.length > 0 && (
-          <ul role="alert" className="loi" ref={oLoi}>
-            {loiChung.map((x) => (
-              <li key={x}>{x}</li>
-            ))}
-          </ul>
+          <div ref={oLoi}>
+            {phongCachDaLuu() === 'pixel' ? (
+              <NoteLoi noiDung={loiChung.join('\n')} kieu="nho" />
+            ) : (
+              <ul role="alert" className="loi">
+                {loiChung.map((x) => (
+                  <li key={x}>{x}</li>
+                ))}
+              </ul>
+            )}
+          </div>
         )}
         <div className="nut">
           <button type="button" className="phu" onClick={onDong}>
@@ -589,6 +623,7 @@ function DonThatBaiCanXuLy({
   const [loi, setLoi] = useState('')
   const [dangGhep, setDangGhep] = useState<DonThatBai | null>(null)
   const [dangGui, setDangGui] = useState(false)
+  const hoi = useXacNhan()
 
   useEffect(() => {
     let bo = false
@@ -601,7 +636,8 @@ function DonThatBaiCanXuLy({
   }, [lanTai])
 
   async function traHang(d: DonThatBai) {
-    if (!window.confirm(`Trả hàng đơn ${d.ma_don} cho khách? Đơn không còn doanh thu.`)) return
+    const cau = `Trả hàng đơn ${d.ma_don} cho khách? Đơn không còn doanh thu.`
+    if (!(await hoi(cau, 'Trả hàng'))) return
     setLoi('')
     setDangGui(true)
     try {
@@ -617,77 +653,83 @@ function DonThatBaiCanXuLy({
   // chờ bảng chính về rồi hiện cùng lúc, trang không nhảy hai lần
   if (!san || (!ds.length && !loi)) return null
   return (
-    <div className="kinh dm-chu-y">
-      <div className="dm-chu-y-dau">
-        <h2>
-          <Nhan loai="THAT_BAI">Đơn thất bại cần xử lý</Nhan>
-        </h2>
-        <span>{ds.length} đơn</span>
-      </div>
-      {loi && (
-        <p role="alert" className="loi">
-          {loi}
-        </p>
-      )}
-      <table>
-        <thead>
-          <tr>
-            <th>Mã đơn</th>
-            <th>Lấy → giao</th>
-            <th>Lý do gần nhất</th>
-            <th>Hàng</th>
-            <th className="so">Giao thất bại (phía khách)</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {ds.map((d) => {
-            const datNguong = d.so_lan_giao_tb_khach >= d.nguong
-            return (
-              <tr key={d.id}>
-                <td className="ma-don">{d.ma_don}</td>
-                <td className="tuyen">
-                  {d.tinh_lay} → {d.tinh_giao}
-                </td>
-                <td>{d.ly_do_cuoi ?? '–'}</td>
-                <td>
-                  <span className="bien">{d.da_lay ? 'Đã lấy' : 'Chưa lấy'}</span>
-                </td>
-                <td className="so">
-                  {d.so_lan_giao_tb_khach}/{d.nguong}
-                </td>
-                <td className="hanh-dong so">
-                  {d.cho_chuyen_xong ? (
-                    <span className="ghi-chu">Chờ chuyến kết thúc</span>
-                  ) : (
-                    <>
-                      <button
-                        className="phu"
-                        disabled={dangGui || datNguong}
-                        title={
-                          datNguong ? `Đạt ${d.nguong} lần giao thất bại phía khách (BR-37)` : ''
-                        }
-                        onClick={() => setDangGhep(d)}
-                      >
-                        Ghép lại
-                      </button>
-                      {d.da_lay ? (
-                        <button className="phu" disabled={dangGui} onClick={() => traHang(d)}>
-                          Trả hàng
-                        </button>
-                      ) : (
-                        <button className="phu" disabled={dangGui} onClick={() => onHuy(d)}>
-                          Hủy
-                        </button>
-                      )}
-                    </>
-                  )}
-                </td>
+    <>
+      <NoteCanhBao tieuDe="Đơn thất bại" soMuc={ds.length > 0 ? ds.length : undefined}>
+        <div className="kinh dm-chu-y">
+          <div className="dm-chu-y-dau">
+            <h2>
+              <Nhan loai="THAT_BAI">Đơn thất bại cần xử lý</Nhan>
+            </h2>
+            <span>{ds.length} đơn</span>
+          </div>
+          {loi && (
+            <p role="alert" className="loi">
+              {loi}
+            </p>
+          )}
+          <table>
+            <thead>
+              <tr>
+                <th>Mã đơn</th>
+                <th>Lấy → giao</th>
+                <th>Lý do gần nhất</th>
+                <th>Hàng</th>
+                <th className="so">Giao thất bại (phía khách)</th>
+                <th></th>
               </tr>
-            )
-          })}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {ds.map((d) => {
+                const datNguong = d.so_lan_giao_tb_khach >= d.nguong
+                return (
+                  <tr key={d.id}>
+                    <td className="ma-don">{d.ma_don}</td>
+                    <td className="tuyen">
+                      {d.tinh_lay} → {d.tinh_giao}
+                    </td>
+                    <td>{d.ly_do_cuoi ?? '–'}</td>
+                    <td>
+                      <span className="bien">{d.da_lay ? 'Đã lấy' : 'Chưa lấy'}</span>
+                    </td>
+                    <td className="so">
+                      {d.so_lan_giao_tb_khach}/{d.nguong}
+                    </td>
+                    <td className="hanh-dong so">
+                      {d.cho_chuyen_xong ? (
+                        <span className="ghi-chu">Chờ chuyến kết thúc</span>
+                      ) : (
+                        <>
+                          <button
+                            className="phu"
+                            disabled={dangGui || datNguong}
+                            title={
+                              datNguong
+                                ? `Đạt ${d.nguong} lần giao thất bại phía khách (BR-37)`
+                                : ''
+                            }
+                            onClick={() => setDangGhep(d)}
+                          >
+                            Ghép lại
+                          </button>
+                          {d.da_lay ? (
+                            <button className="phu" disabled={dangGui} onClick={() => traHang(d)}>
+                              Trả hàng
+                            </button>
+                          ) : (
+                            <button className="phu" disabled={dangGui} onClick={() => onHuy(d)}>
+                              Hủy
+                            </button>
+                          )}
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      </NoteCanhBao>
       {dangGhep && (
         <FormGhepLai
           d={dangGhep}
@@ -698,7 +740,7 @@ function DonThatBaiCanXuLy({
           }}
         />
       )}
-    </div>
+    </>
   )
 }
 

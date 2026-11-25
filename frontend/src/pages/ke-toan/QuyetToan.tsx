@@ -14,7 +14,12 @@ import {
 } from '../../api/quyetToan'
 import { TEN_HINH_THUC, type HinhThuc } from '../../api/tamUng'
 import { ngayGio } from '../../api/toi'
+import { BienLaiNhietPixel, DongHoDinhMucPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
+import { Nhan } from '../../nhan'
+import { NoteLoi } from '../../NoteLoi'
 import { ThongBao } from '../../thongBao'
+import { useXacNhan } from '../../xacNhanKho'
 
 const dong = (so: number) => `${so.toLocaleString('vi-VN')} đ`
 const lit = (s: string | null) => (s === null ? '–' : `${Number(s).toLocaleString('vi-VN')} lít`)
@@ -41,7 +46,21 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
   const [thongBao, setThongBao] = useState('')
   const [loi, setLoi] = useState('')
   const [dangGui, setDangGui] = useState(false)
+  // Hiệu ứng Pixel: tờ biên lai nhiệt trượt ra từ khe sau khi khóa sổ quyết toán thành công (≤ 1,5 s)
+  const [bienLai, setBienLai] = useState<{
+    lan: number
+    maChuyen: string
+    doanhThu: number
+    tongChi: number
+    lai: number
+  } | null>(null)
   const chuyenDangXem = useRef(0)
+
+  useEffect(() => {
+    if (!bienLai) return
+    const t = window.setTimeout(() => setBienLai(null), 1450)
+    return () => window.clearTimeout(t)
+  }, [bienLai])
 
   const taiDs = useCallback(() => {
     // shortcut: 100 chuyến mỗi lần, đủ cho nhà xe khoảng 10 xe
@@ -109,6 +128,16 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
         Duyệt từng khoản chi tài xế khai, ghi cách xử lý chênh lệch tạm ứng rồi quyết toán. Quyết
         toán xong, mọi số tiền của chuyến chỉ còn xem (BR-29).
       </p>
+      {/* Hiệu ứng Pixel: in biên lai nhiệt trượt ra từ khe sau khi khóa sổ quyết toán thành công */}
+      {bienLai && dangHieuUngPixel() && (
+        <BienLaiNhietPixel
+          key={bienLai.lan}
+          maChuyen={bienLai.maChuyen}
+          doanhThu={bienLai.doanhThu}
+          tongChi={bienLai.tongChi}
+          lai={bienLai.lai}
+        />
+      )}
       <div className="qt-luoi">
         {/* Danh sách chuyến bên trái (thay ô chọn): bấm để mở bảng quyết toán bên phải */}
         <aside className="kinh qt-ds">
@@ -155,11 +184,14 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
 
         <div className="qt-ct" key={bang?.chuyen_id ?? 'trong'}>
           <ThongBao chu={thongBao} />
-          {loi && (
-            <p role="alert" className="loi">
-              {loi}
-            </p>
-          )}
+          {loi &&
+            (phongCachDaLuu() === 'pixel' ? (
+              <NoteLoi noiDung={loi} kieu="nho" />
+            ) : (
+              <p role="alert" className="loi">
+                {loi}
+              </p>
+            ))}
 
           {bang && (
             <>
@@ -223,7 +255,7 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
                       const giao = bang.don_giao.includes(d)
                       return (
                         <tr key={d.id}>
-                          <td className="bien-so">{d.ma_don}</td>
+                          <td className="ma-don">{d.ma_don}</td>
                           <td>{d.ten_khach}</td>
                           <td>{dong(d.cuoc)}</td>
                           <td>
@@ -245,6 +277,10 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
 
               <section className="kinh qt-khoi">
                 <h3>Chi phí so với định mức</h3>
+                {/* Hiệu ứng Pixel: đồng hồ định mức (chi thực tế so với định mức, kim + vạch) */}
+                {dangHieuUngPixel() && (
+                  <DongHoDinhMucPixel thucTe={bang.tong_chi} dinhMuc={bang.dinh_muc} />
+                )}
                 <table>
                   <thead>
                     <tr>
@@ -324,7 +360,11 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
                           <td>{k.ghi_chu}</td>
                           <td>{dong(k.so_tien_khai)}</td>
                           <td>{k.so_tien_duyet === null ? '–' : dong(k.so_tien_duyet)}</td>
-                          <td>{TEN_TRANG_THAI_CHI[k.trang_thai]}</td>
+                          <td>
+                            <Nhan loai={`CHI_${k.trang_thai}`}>
+                              {TEN_TRANG_THAI_CHI[k.trang_thai]}
+                            </Nhan>
+                          </td>
                           <td className="hanh-dong">
                             {k.anh.map((t, i) => (
                               <button key={t} className="phu" onClick={() => void xemAnh(t)}>
@@ -431,7 +471,23 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
                     lam(
                       () => quyetToan(bang.chuyen_id, vao),
                       `Đã quyết toán ${bang.ma_chuyen}`,
-                    ).then((xong) => xong && taiDs())
+                    ).then((xong) => {
+                      if (!xong) return
+                      // Hiệu ứng Pixel: kích hoạt in biên lai nhiệt sau khi API quyết toán thành công
+                      if (dangHieuUngPixel()) {
+                        setBienLai((cu) => ({
+                          lan: (cu?.lan ?? 0) + 1,
+                          maChuyen: bang.ma_chuyen,
+                          doanhThu: bang.doanh_thu,
+                          tongChi: bang.tong_chi,
+                          lai:
+                            vao.luong_tay !== undefined
+                              ? bang.doanh_thu - bang.tong_chi - vao.luong_tay
+                              : bang.lai,
+                        }))
+                      }
+                      taiDs()
+                    })
                   }
                 />
               )}
@@ -536,6 +592,7 @@ function FormQuyetToan({
   const [luong, setLuong] = useState(String(bang.luong_chot))
   const [lyDoLuong, setLyDoLuong] = useState('')
   const chenh = bang.chenh_lech_tam_ung
+  const hoi = useXacNhan()
   const thieu =
     bang.so_cho_duyet > 0
       ? `Còn ${bang.so_cho_duyet} khoản chờ duyệt`
@@ -545,14 +602,15 @@ function FormQuyetToan({
           ? 'Nhập thời điểm xử lý chênh lệch'
           : ''
 
-  function gui() {
+  async function gui() {
     const cau =
       chenh > 0
         ? `Tài xế đã nộp lại ${dong(chenh)}`
         : chenh < 0
           ? `Công ty đã trả thêm ${dong(-chenh)}`
           : 'Không có chênh lệch tạm ứng'
-    if (!window.confirm(`Quyết toán ${bang.ma_chuyen}? ${cau}. Sau đó không sửa được nữa.`)) return
+    const hoiCau = `Quyết toán ${bang.ma_chuyen}? ${cau}. Sau đó không sửa được nữa.`
+    if (!(await hoi(hoiCau, 'Quyết toán'))) return
     void onGui({
       xu_ly_chenh_lech: bang.xu_ly_goi_y,
       ...(chenh !== 0 && { hinh_thuc: hinhThuc, luc_xu_ly: new Date(luc).toISOString() }),
@@ -611,7 +669,7 @@ function FormQuyetToan({
         </>
       )}
       {thieu && <p className="ghi-chu">{thieu}</p>}
-      <button disabled={dangGui || !!thieu} onClick={gui}>
+      <button disabled={dangGui || !!thieu} onClick={() => void gui()}>
         {dangGui ? 'Đang lưu…' : 'Quyết toán'}
       </button>
     </div>

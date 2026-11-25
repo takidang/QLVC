@@ -24,6 +24,20 @@ from app.main import app  # noqa: E402
 from app.models import Base, NguoiDung  # noqa: E402
 
 
+@pytest.fixture(scope="session", autouse=True)
+def _argon2_nhe():
+    """Chỉ cho test: băm Argon2 nhẹ (1 vòng, 8 MiB) để test tạo/đăng nhập người dùng không tốn giây.
+    Mã chạy thật giữ nguyên thông số mặc định; Argon2 vẫn là thuật toán băm đang được kiểm."""
+    from argon2 import PasswordHasher
+
+    from app.auth import bao_mat
+
+    goc = bao_mat._ph
+    bao_mat._ph = PasswordHasher(time_cost=1, memory_cost=8, parallelism=1)
+    yield
+    bao_mat._ph = goc
+
+
 @pytest.fixture(scope="session")
 def _csdl_test():
     may_chu = create_engine(_url.set(database="postgres"), isolation_level="AUTOCOMMIT")

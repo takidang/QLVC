@@ -1,15 +1,23 @@
 ---
 name: kiem-thu-kham-pha
-description: "Dùng khi Tài muốn kiểm tra bảo mật và 'phá thử' một web app trước khi demo, báo cáo hay phát hành: quét phụ thuộc, rà phân quyền từng endpoint, cho agent (agy) đóng vai kẻ phá gọi API và bấm giao diện, rồi tự xác minh từng lỗi, sửa lỗi thật kèm test. Gọi: 'phá thử', 'kiểm thử khám phá', 'quét bảo mật trước demo'."
+description: "Dùng khi người làm đồ án muốn kiểm tra bảo mật và 'phá thử' một web app trước khi demo, báo cáo hay phát hành: quét phụ thuộc, rà phân quyền từng endpoint, cho agent (agy) đóng vai kẻ phá gọi API và bấm giao diện, rồi tự xác minh từng lỗi, sửa lỗi thật kèm test. Gọi: 'phá thử', 'kiểm thử khám phá', 'quét bảo mật trước demo'."
 ---
 
 # Kiểm thử khám phá + rà bảo mật trước demo
 
 Mục tiêu: tìm lỗi mà test theo tiêu chí chấp nhận không bắt được (nhập bừa, gửi song song, gọi chéo quyền, file giả), xác minh bằng chạy thật, sửa lỗi thật có test. Làm được ở mọi dự án web có backend API.
 
+## Quy ước của đồ án này (ghi đè phần chung bên dưới)
+- **Khi nào:** trước mỗi mốc đưa lên `main`, sau khi gộp `dev` vào `test` (`docs/nhanh-git.md` mục 2). Không chạy ở từng PR. Còn dưới 2 ngày tới mốc thì chỉ ghi nhận, để sau mốc mới sửa (trừ lỗi nghiêm trọng, hai người cùng quyết).
+- **Chạy ở đâu:** máy local, một CSDL thử riêng. Không chạy vào CSDL demo hay bản đã triển khai.
+- **Sửa lỗi:** nhánh riêng từ `dev` → PR vào `dev` → gộp `dev` vào `test` lại, như mọi lỗi khác.
+- **Báo cáo:** `docs/test-evidence/kiem-thu-kham-pha-<yyyy-mm-dd>/`. Repo công khai: không đưa `.env`, token, cookie, file dump CSDL, dữ liệu thật vào báo cáo hay script.
+- Máy không có `agy` thì giao bước 2 cho agent Claude (khi người dùng bảo) với cùng phiếu.
+- "Tài" trong phần dưới hiểu là người đang dùng máy.
+
 ## 0. Chuẩn bị (hỏi Tài nếu chưa rõ)
 - Làm trên **nhánh riêng** tách từ nhánh tích hợp (vd `tai/kiem-tra-truoc-bao-cao`). Push lên nhánh đó được, **không mở PR / không gộp** khi sát ngày demo, trừ khi Tài bảo.
-- Chạy app trên **CSDL dev**, không bao giờ CSDL demo/production: agent sẽ tạo nhiều dữ liệu rác.
+- Chạy app trên **CSDL thử riêng**, không bao giờ CSDL demo/production: agent sẽ tạo nhiều dữ liệu rác.
 - Đọc luật dự án: `CLAUDE.md`, quy tắc bảo mật (vd `docs/security-rules.md`), nghiệp vụ (BR).
 
 ## 1. Tự rà tĩnh (làm trước, rẻ, chính xác)
@@ -50,6 +58,6 @@ Bẫy đã gặp: uvicorn mặc định tin `X-Forwarded-For` từ 127.0.0.1, v�
 - Chạy toàn bộ test suite + lint trước khi commit.
 
 ## 5. Kết quả
-- Commit trên nhánh: code sửa + test + báo cáo `docs/test-evidence/kiem-thu-kham-pha/bao-cao.md` (bảng mục | số ca | đạt | lỗi thật | báo nhầm; mỗi lỗi: mức, tái hiện, thấy, mong đợi, đã sửa/để sau) + script của agent.
+- Commit trên nhánh: code sửa + test + báo cáo `docs/test-evidence/kiem-thu-kham-pha-<yyyy-mm-dd>/bao-cao.md` (bảng mục | số ca | đạt | lỗi thật | báo nhầm; mỗi lỗi: mức, tái hiện, thấy, mong đợi, đã sửa/để sau) + script của agent.
 - Báo Tài ngắn: bao nhiêu ca, lỗi thật đã sửa, việc để sau (kèm lý do), nhánh nào, chưa gộp.
 - Gỡ worktree của agent khi xong (`git worktree remove`; trước đó lưu file gitignore cần giữ).

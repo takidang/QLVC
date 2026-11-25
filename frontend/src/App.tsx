@@ -10,11 +10,18 @@ import {
   useLocation,
 } from 'react-router-dom'
 import { dangXuat, toi, type NguoiDung, type VaiTro } from './api/auth'
+import { SU_KIEN_HET_PHIEN } from './api/goi'
+import { DangTaiPixel } from './HieuUngPixel'
+import { LogoTK, TenThuongHieu } from './LogoTK'
+import { phongCachDaLuu } from './nen'
 import { Ic, type TenIc } from './nhan'
+import { toast } from 'sonner'
 import { KhungThongBao } from './thongBao'
 import BatLoiTrang from './BatLoiTrang'
 import ChuongThongBao from './ChuongThongBao'
 import DanConTro from './DanConTro'
+import DongDauPixel from './DongDauPixel'
+import { HopXacNhan } from './HopXacNhan'
 import MenuTaiKhoan from './MenuTaiKhoan'
 import TimChung from './TimChung'
 import { useHienKhiCuon } from './useHienKhiCuon'
@@ -129,14 +136,12 @@ const menu = (nd: NguoiDung) =>
 const NHOM = ['', 'Vận hành', 'Danh mục', 'Tài chính', 'Quản trị']
 
 const Hieu = ({ den }: { den: string }) => (
-  <Link to={den} className="hieu" aria-label="Quản lý vận tải">
+  <Link to={den} className="hieu" aria-label="TAKI Logistics">
     <i aria-hidden="true">
-      <Ic ten="chuyen" />
+      <LogoTK co={24} />
     </i>
     <span aria-hidden="true">
-      Quản lý vận <span className="hieu-duoi">t</span>
-      <span className="hieu-duoi">ả</span>
-      <span className="hieu-duoi">i</span>
+      <TenThuongHieu />
     </span>
   </Link>
 )
@@ -180,7 +185,6 @@ function KhungTrang({
               )
             })}
           </nav>
-          <p className="canh-chan">Đồ án chuyên ngành · Nhóm 8</p>
         </aside>
       )}
       <div className="than">
@@ -190,7 +194,7 @@ function KhungTrang({
           <div className="ben-phai">
             <span className="ten">
               <b>{nd.ho_ten}</b>
-              {TEN_VAI_TRO[nd.vai_tro]}
+              <span className="vai-tro">{TEN_VAI_TRO[nd.vai_tro]}</span>
             </span>
             <ChuongThongBao nguoiDungId={nd.id} vaiTro={nd.vai_tro} />
             <MenuTaiKhoan
@@ -202,13 +206,24 @@ function KhungTrang({
           </div>
         </header>
         <main className="trang">
+          <DongDauPixel />
           {loiThoat && (
             <p role="alert" className="loi trang-loi">
               {loiThoat}
             </p>
           )}
-          <BatLoiTrang key={pathname}>
-            <Suspense fallback={<p className="ghi-chu">Đang tải…</p>}>
+          {/* Đổi giữa các chuyến (/chuyen/:id) không dựng lại cả trang: chỉ phần chi tiết tự tải lại */}
+          <BatLoiTrang key={pathname.replace(/^(.*\/chuyen)\/\d+$/, '$1/:id')}>
+            {/* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… khi tải trang con */}
+            <Suspense
+              fallback={
+                phongCachDaLuu() === 'pixel' ? (
+                  <DangTaiPixel kieu="trang" />
+                ) : (
+                  <p className="ghi-chu">Đang tải…</p>
+                )
+              }
+            >
               <Outlet context={nd} />
             </Suspense>
           </BatLoiTrang>
@@ -230,7 +245,38 @@ export default function App() {
       .catch(() => setNd(null))
   }, [])
 
-  if (nd === undefined) return <p className="dang-tai">Đang tải…</p>
+  // Esc đóng hộp thoại trên cùng: mọi hộp thoại đều đóng khi bấm lớp nền .nen-mo nên bấm hộ lớp đó
+  // Esc khi bộ gõ đang soạn chữ chỉ huỷ việc soạn, không đóng hộp
+  useEffect(() => {
+    const khiNhanPhim = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || e.defaultPrevented || e.isComposing) return
+      const nen = Array.from(document.querySelectorAll<HTMLElement>('.nen-mo')).pop()
+      if (nen) nen.click()
+    }
+    document.addEventListener('keydown', khiNhanPhim)
+    return () => document.removeEventListener('keydown', khiNhanPhim)
+  }, [])
+
+  // API trả 401 giữa phiên (cookie hết hạn hoặc bị xóa): về trang đăng nhập thay vì ở lại trang trống lỗi
+  useEffect(() => {
+    const heiPhien = () => {
+      setNd(null)
+      // id cố định: nhiều yêu cầu cùng trả 401 chỉ hiện một thông báo
+      toast.error('Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại', { id: 'het-phien' })
+    }
+    window.addEventListener(SU_KIEN_HET_PHIEN, heiPhien)
+    return () => window.removeEventListener(SU_KIEN_HET_PHIEN, heiPhien)
+  }, [])
+
+  if (nd === undefined)
+    return phongCachDaLuu() === 'pixel' ? (
+      /* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… khi kiểm phiên */
+      <div className="dang-tai">
+        <DangTaiPixel kieu="trang" />
+      </div>
+    ) : (
+      <p className="dang-tai">Đang tải…</p>
+    )
 
   function capNhatAnh(coAnh: boolean) {
     setNd((cu) => (cu ? { ...cu, co_anh_dai_dien: coAnh } : cu))
@@ -252,8 +298,18 @@ export default function App() {
   return (
     <BrowserRouter>
       <KhungThongBao />
+      <HopXacNhan />
       <BatLoiTrang>
-        <Suspense fallback={<p className="ghi-chu">Đang tải…</p>}>
+        {/* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… khi tải tuyến trang */}
+        <Suspense
+          fallback={
+            phongCachDaLuu() === 'pixel' ? (
+              <DangTaiPixel kieu="trang" />
+            ) : (
+              <p className="ghi-chu">Đang tải…</p>
+            )
+          }
+        >
           <Routes>
             {/* UC-28: trang công khai cho khách, không cần đăng nhập */}
             <Route path="/tra-cuu" element={<TraCuu />} />

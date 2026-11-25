@@ -58,11 +58,14 @@ export default function BanDoChuyen({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {daDi > 1 && (
-        <Polyline positions={vt.slice(0, daDi)} pathOptions={{ color: '#1d4ed8', weight: 4 }} />
+        <Polyline
+          positions={vt.slice(0, daDi)}
+          pathOptions={{ color: '#1d4ed8', weight: 4, className: 'bd-duong-di' }}
+        />
       )}
       <Polyline
         positions={vt.slice(Math.max(daDi - 1, 0))}
-        pathOptions={{ color: '#64748b', weight: 3, dashArray: '6 8' }}
+        pathOptions={{ color: '#64748b', weight: 3, dashArray: '6 8', className: 'bd-duong-chua' }}
       />
       {ds.map((t, i) => (
         <CircleMarker
@@ -74,6 +77,8 @@ export default function BanDoChuyen({
             weight: 3,
             fillColor: xong(t) ? '#1d4ed8' : '#fff',
             fillOpacity: 1,
+            // Pixel: CSS tô lại màu theo bảng Nostalgos (đã xong tô đặc, chưa tới để rỗng)
+            className: xong(t) ? 'bd-tram bd-tram-xong' : 'bd-tram',
           }}
         >
           <Tooltip direction="top" offset={[0, -8]} permanent={i === 0 || i === ds.length - 1}>

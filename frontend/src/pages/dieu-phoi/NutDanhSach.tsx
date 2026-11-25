@@ -1,5 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
+import { DangTaiPixel } from '../../HieuUngPixel'
+import { phongCachDaLuu } from '../../nen'
 import { DauDanhMuc, OTim } from '../danh-muc'
 import { danhSachNut, suaNut, themNut, type Nut } from '../../api/tuyen'
 
@@ -78,7 +80,14 @@ export default function NutDanhSach() {
             {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={5} className="trong">
-                  {ds ? 'Chưa có nút nào' : 'Đang tải…'}
+                  {ds ? (
+                    'Chưa có nút nào'
+                  ) : phongCachDaLuu() === 'pixel' ? (
+                    /* Hiệu ứng Pixel: màn tải bảng kiểu Pixel thay chữ Đang tải… */
+                    <DangTaiPixel kieu="bang" soCot={5} />
+                  ) : (
+                    'Đang tải…'
+                  )}
                 </td>
               </tr>
             )}

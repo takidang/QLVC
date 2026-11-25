@@ -1,6 +1,9 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
+import { DangTaiPixel } from '../../HieuUngPixel'
+import { phongCachDaLuu } from '../../nen'
 import { Nhan } from '../../nhan'
+import { NoteCanhBao } from '../../NoteCanhBao'
 import { DauDanhMuc, NhanHoatDong, OTim } from '../danh-muc'
 import {
   danhSachNut,
@@ -63,14 +66,17 @@ export default function TuyenDanhSach() {
         </p>
       )}
       {canhBao && canhBao.ds.length > 0 && (
-        <div role="status" className="canh-bao">
-          <strong>Tuyến {canhBao.ma} đã lưu, nhưng thiếu điểm nghỉ (BR-20):</strong>
-          <ul>
-            {canhBao.ds.map((c) => (
-              <li key={c}>{c}</li>
-            ))}
-          </ul>
-        </div>
+        /* Pixel: gói thành tờ note ghim; phong cách thường NoteCanhBao trả thẳng khối bên trong */
+        <NoteCanhBao tieuDe="Thiếu điểm nghỉ" soMuc={canhBao.ds.length}>
+          <div role="status" className="canh-bao">
+            <strong>Tuyến {canhBao.ma} đã lưu, nhưng thiếu điểm nghỉ (BR-20):</strong>
+            <ul>
+              {canhBao.ds.map((c) => (
+                <li key={c}>{c}</li>
+              ))}
+            </ul>
+          </div>
+        </NoteCanhBao>
       )}
 
       <div className="kinh bang-khung dm">
@@ -136,7 +142,14 @@ export default function TuyenDanhSach() {
             {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={8} className="trong">
-                  {ds ? 'Chưa có tuyến nào' : 'Đang tải…'}
+                  {ds ? (
+                    'Chưa có tuyến nào'
+                  ) : phongCachDaLuu() === 'pixel' ? (
+                    /* Hiệu ứng Pixel: màn tải bảng kiểu Pixel thay chữ Đang tải… */
+                    <DangTaiPixel kieu="bang" soCot={6} />
+                  ) : (
+                    'Đang tải…'
+                  )}
                 </td>
               </tr>
             )}
@@ -281,7 +294,7 @@ function FormTuyen({
           Nút đầu: 0 phút, 0 km. Phút tính từ điểm đầu, tăng dần. Tổng thời gian không quá giờ lái
           một ngày (BR-66).
         </p>
-        <table>
+        <table className="bang-nut-tuyen">
           <thead>
             <tr>
               <th>#</th>
@@ -344,23 +357,23 @@ function FormTuyen({
                 <td className="hanh-dong">
                   <button
                     type="button"
-                    className="phu"
+                    className="phu thuong"
                     disabled={i === 0}
                     onClick={() => doiCho(i, i - 1)}
                   >
-                    ↑
+                    <span className="px-ky-len">↑</span>
                   </button>
                   <button
                     type="button"
-                    className="phu"
+                    className="phu thuong"
                     disabled={i === dongNut.length - 1}
                     onClick={() => doiCho(i, i + 1)}
                   >
-                    ↓
+                    <span className="px-ky-xuong">↓</span>
                   </button>
                   <button
                     type="button"
-                    className="phu"
+                    className="phu nguy-hiem"
                     disabled={dongNut.length === 1}
                     onClick={() => setDongNut(dongNut.filter((_, j) => j !== i))}
                   >

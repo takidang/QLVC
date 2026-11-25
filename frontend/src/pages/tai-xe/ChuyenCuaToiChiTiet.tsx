@@ -13,12 +13,14 @@ import {
   type ChuyenCuaToiChiTiet as ChiTiet,
   type KetQuaQuet,
 } from '../../api/toi'
-import { giamChuyenDong } from '../../nen'
+import { ConDauDaGiaoPixel, DangTaiPixel, DongHoKmPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel, giamChuyenDong, phongCachDaLuu } from '../../nen'
 import { nenAnh } from '../../nenAnh'
 import { ChiPhi } from './ChiPhi'
 import { SuCoChuyen } from './SuCo'
 import { GiaoHang } from './GiaoHang'
 import { KhongLay, QuetLay } from './QuetLay'
+import { NutChep } from '../../NutChep'
 
 const gio = (iso: string) =>
   new Date(iso).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
@@ -43,15 +45,33 @@ export default function ChuyenCuaToiChiTiet() {
   const [c, setC] = useState<ChiTiet | null>(null)
   const [loi, setLoi] = useState('')
   const [quet, setQuet] = useState<KetQuaQuet | null>(null)
+  // Hiệu ứng Pixel: cờ hiện con dấu "ĐÃ GIAO" sau khi giao thành công (tự tắt sau ~1,4 s)
+  const [dauGiao, setDauGiao] = useState(0)
+  // Hiệu ứng Pixel: đồng hồ km xác nhận cuộn số sau khi ghi km thành công (tự tắt sau ~1,4 s)
+  const [kmVuaGhi, setKmVuaGhi] = useState<{ lan: number; km: number } | null>(null)
   const tb = quet && c ? thongBaoQuet(quet, c) : null
 
   // Quét xong: giữ câu báo, tải lại lịch trình để trạng thái điểm đổi ngay
   const xongQuet = (kq: KetQuaQuet) => {
     setQuet(kq)
+    // Hiệu ứng Pixel: kích hoạt con dấu "ĐÃ GIAO" khi máy chủ vừa ghi nhận giao thành công
+    if (kq.loai === 'GIAO' && !kq.lap_lai && dangHieuUngPixel()) setDauGiao((n) => n + 1)
     chuyenCuaToiChiTiet(Number(id))
       .then(setC)
       .catch(() => setLoi('Đã ghi nhận nhưng không tải lại được lịch trình, kéo xuống để tải lại'))
   }
+
+  useEffect(() => {
+    if (dauGiao === 0) return
+    const t = window.setTimeout(() => setDauGiao(0), 1400)
+    return () => window.clearTimeout(t)
+  }, [dauGiao])
+
+  useEffect(() => {
+    if (!kmVuaGhi) return
+    const t = window.setTimeout(() => setKmVuaGhi(null), 1400)
+    return () => window.clearTimeout(t)
+  }, [kmVuaGhi])
 
   useEffect(() => {
     chuyenCuaToiChiTiet(Number(id))
@@ -88,14 +108,21 @@ export default function ChuyenCuaToiChiTiet() {
   return (
     <section className="noi-dung dien-thoai">
       <Link to=".." relative="path" className="ct-ve">
-        ← Chuyến của tôi
+        <span className="mui-ten-thuong">← </span>Chuyến của tôi
       </Link>
       {loi && (
         <p role="alert" className="loi">
           {loi}
         </p>
       )}
-      {!c && !loi && <p className="ghi-chu">Đang tải…</p>}
+      {!c &&
+        !loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          /* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… */
+          <DangTaiPixel kieu="trang" />
+        ) : (
+          <p className="ghi-chu">Đang tải…</p>
+        ))}
       {c && (
         <>
           {/* Khối chính: đậm khi đang chạy (điểm kế tiếp + tiến độ), nhạt khi chờ chạy / đã xong */}
@@ -165,6 +192,12 @@ export default function ChuyenCuaToiChiTiet() {
             )}
           </section>
 
+          {/* Hiệu ứng Pixel: con dấu "ĐÃ GIAO" đóng xuống sau khi giao thành công */}
+          {dauGiao > 0 && dangHieuUngPixel() && <ConDauDaGiaoPixel key={dauGiao} />}
+          {/* Hiệu ứng Pixel: đồng hồ km cuộn số xác nhận sau khi ghi km thành công */}
+          {kmVuaGhi && dangHieuUngPixel() && (
+            <DongHoKmPixel key={kmVuaGhi.lan} giaTri={kmVuaGhi.km} vuaGhi />
+          )}
           {tb && (
             <div role="status">
               <p className="thanh-cong">{tb.xong}</p>
@@ -177,7 +210,14 @@ export default function ChuyenCuaToiChiTiet() {
           )}
           {c.trang_thai === 'DANG_CHAY' && conLay && <QuetLay onXong={xongQuet} />}
 
-          {c.trang_thai === 'DA_CHOT' && <FormKm key={c.trang_thai} c={c} onXong={setC} />}
+          {c.trang_thai === 'DA_CHOT' && (
+            <FormKm
+              key={c.trang_thai}
+              c={c}
+              onXong={setC}
+              onGhiKm={(soKm) => setKmVuaGhi((cu) => ({ lan: (cu?.lan ?? 0) + 1, km: soKm }))}
+            />
+          )}
 
           <h2>Lịch trình</h2>
           {c.lich_trinh.length === 0 && <p className="trong">Chuyến chạy rỗng – không có đơn</p>}
@@ -216,6 +256,7 @@ export default function ChuyenCuaToiChiTiet() {
                   <div>
                     {p.nguoi_lien_he && `${p.nguoi_lien_he} · `}
                     <a href={`tel:${p.sdt}`}>{p.sdt}</a>
+                    <NutChep chu={p.sdt} />
                   </div>
                   <div className="ghi-chu">
                     {p.viec === 'GIAO'
@@ -255,7 +296,12 @@ export default function ChuyenCuaToiChiTiet() {
                   </p>
                 </div>
               ) : (
-                <FormKm key={c.trang_thai} c={c} onXong={setC} />
+                <FormKm
+                  key={c.trang_thai}
+                  c={c}
+                  onXong={setC}
+                  onGhiKm={(soKm) => setKmVuaGhi((cu) => ({ lan: (cu?.lan ?? 0) + 1, km: soKm }))}
+                />
               ))}
 
             {['DANG_CHAY', 'HOAN_THANH', 'DA_QUYET_TOAN'].includes(c.trang_thai) && (
@@ -280,7 +326,15 @@ const dongLoi = (e: unknown): string[] => {
   return ds.length ? [e.message, ...ds.map((x) => `${x.thong_diep} (${x.ma})`)] : [e.message]
 }
 
-function FormKm({ c, onXong }: { c: ChiTiet; onXong: (c: ChiTiet) => void }) {
+function FormKm({
+  c,
+  onXong,
+  onGhiKm,
+}: {
+  c: ChiTiet
+  onXong: (c: ChiTiet) => void
+  onGhiKm?: (soKm: number) => void
+}) {
   const batDau = c.trang_thai === 'DA_CHOT'
   const [km, setKm] = useState('')
   const [anh, setAnh] = useState<File | null>(null)
@@ -293,7 +347,10 @@ function FormKm({ c, onXong }: { c: ChiTiet; onXong: (c: ChiTiet) => void }) {
     setLoi([])
     setDangGui(true)
     try {
-      onXong(await ghiKm(c.id, batDau ? 'bat-dau' : 'ket-thuc', Number(km), await nenAnh(anh)))
+      const soKm = Number(km)
+      onXong(await ghiKm(c.id, batDau ? 'bat-dau' : 'ket-thuc', soKm, await nenAnh(anh)))
+      // Hiệu ứng Pixel: kích hoạt đồng hồ km xác nhận sau khi API ghi km thành công
+      if (dangHieuUngPixel()) onGhiKm?.(soKm)
     } catch (err) {
       setLoi(err instanceof Error && !(err instanceof LoiApi) ? [err.message] : dongLoi(err))
     } finally {
@@ -315,6 +372,8 @@ function FormKm({ c, onXong }: { c: ChiTiet; onXong: (c: ChiTiet) => void }) {
           onChange={(e) => setKm(e.target.value)}
         />
       </label>
+      {/* Hiệu ứng Pixel: đồng hồ km cuộn số (odometer) theo giá trị đang nhập */}
+      {dangHieuUngPixel() && <DongHoKmPixel giaTri={km} />}
       <ChonTep
         nhan="Ảnh đồng hồ km"
         accept="image/jpeg,image/png"

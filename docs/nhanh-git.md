@@ -32,6 +32,7 @@ git merge origin/dev                        # chỉ gộp dev vào, không sửa
 git push
 ```
 - Thử giao diện các AC loại UI còn `CHƯA KIỂM`, chạy toàn bộ test. Lỗi thì sửa trên nhánh use case → PR vào `dev` → gộp `dev` vào `test` lại.
+- Kiểm thử khám phá trên `test` (skill `kiem-thu-kham-pha`, CSDL thử trên máy local): nên xong ít nhất 2 ngày trước mốc. Lỗi thật sửa kèm test như dòng trên; ghi báo cáo trong `docs/test-evidence/`. Mốc gấp không kịp chạy thì ghi rõ trong PR lên `main`.
 - Đạt thì mở PR `test` → `main`, người kia duyệt, gộp.
 
 ## 3. Sửa lỗi gấp trên `main`
@@ -43,7 +44,18 @@ git merge --ff-only origin/main             # đưa hotfix về đúng main trư
 git push
 gh pr create --base main --head hotfix
 ```
-- Gộp xong vào `main` thì gộp `main` vào `dev` (`git switch dev; git pull; git merge origin/main; git push`) để `dev` không mất bản sửa.
+- Gộp xong vào `main` thì mở PR `main` → `dev` (`gh pr create --base dev --head main`) để `dev` không mất bản sửa; `dev` đã chặn đẩy thẳng.
+
+## Luật bảo vệ nhánh trên GitHub (bật 25/11)
+| Nhánh | GitHub chặn |
+|---|---|
+| `main` | Đẩy thẳng; gộp PR khi chưa có 1 approve hoặc check `secrets` chưa xanh; force push; xóa |
+| `dev` | Đẩy thẳng; gộp PR khi check `secrets` chưa xanh (không bắt approve, để PR tiến độ tự gộp được); force push; xóa |
+| `test`, `hotfix` | Force push; xóa |
+
+- Luật áp cho cả chủ repo. Việc chờ CI `backend` / `frontend` xanh và người kia review trên `dev` vẫn do hai người tự giữ.
+- Không thêm `backend` / `frontend` vào check bắt buộc: PR chỉ sửa tài liệu không chạy CI nên sẽ kẹt mãi.
+- Repo chuyển lại private (gói miễn phí) thì các luật này hết hiệu lực.
 
 ## 4. Lưu ý
 - File dùng chung (`backend/app/models/`, migration, `domain/trang_thai.py`): vẫn ghi "Đang chặn" trong `TIEN-DO.md` và commit **lên `dev` qua PR nhỏ** trước khi sửa.

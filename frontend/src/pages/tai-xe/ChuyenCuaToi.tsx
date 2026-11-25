@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { LoiApi } from '../../api/goi'
+import { DangTaiPixel } from '../../HieuUngPixel'
+import { phongCachDaLuu } from '../../nen'
 import { Ic, Nhan } from '../../nhan'
 import {
   TEN_TRANG_THAI,
@@ -70,7 +72,14 @@ export default function ChuyenCuaToi() {
           {loi}
         </p>
       )}
-      {ds === null && !loi && <p className="ghi-chu">Đang tải…</p>}
+      {ds === null &&
+        !loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          /* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… */
+          <DangTaiPixel kieu="trang" />
+        ) : (
+          <p className="ghi-chu">Đang tải…</p>
+        ))}
       {ds?.du_lieu.length === 0 && (
         <p className="trong">
           {nhom === 'can_lam' ? 'Chưa có chuyến nào được giao' : 'Chưa có chuyến đã xong'}
