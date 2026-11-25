@@ -82,10 +82,22 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
     if (!ok) window.setTimeout(() => setDau((d) => (d === moi ? null : d)), 1500)
   }
   const oTen = useRef<HTMLInputElement>(null)
+  const oThanMay = useRef<HTMLDivElement>(null)
   const oMaDon = useRef<HTMLInputElement>(null)
   // In tờ mới; có hiệu ứng thì đèn nháy ~500 ms, phiếu trượt ra, xong mới báo và đưa con trỏ vào ô đầu
   const inPhieu = (loai: 'nv' | 'khach') => {
     const dong = dangHieuUngPixel()
+    // Lần in đầu thân máy thấp hẳn đi (logo lớn thành nhỏ): co dần thay vì sụt trong một khung hình
+    const than = oThanMay.current
+    if (dong && phieu === null && than) {
+      const cu = than.offsetHeight
+      requestAnimationFrame(() =>
+        than.animate([{ height: `${cu}px` }, { height: `${than.offsetHeight}px` }], {
+          duration: 320,
+          easing: 'steps(20, end)',
+        }),
+      )
+    }
     setXe(false)
     setPhieu(loai)
     setLan((n) => n + 1)
@@ -155,11 +167,14 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
     }
   }
 
-  const [soKyTu, setSoKyTu] = useState(() => (dangHieuUng() ? 0 : CAU_GIOI_THIEU.length))
-  const [tro, setTro] = useState<'an' | 'go' | 'nhay'>(() => (dangHieuUng() ? 'go' : 'an'))
+  const [soKyTu, setSoKyTu] = useState(() => (dangHieuUng() && !pixel ? 0 : CAU_GIOI_THIEU.length))
+  const [tro, setTro] = useState<'an' | 'go' | 'nhay'>(() =>
+    dangHieuUng() && !pixel ? 'go' : 'an',
+  )
 
   useEffect(() => {
-    if (!dangHieuUng()) return
+    // Pixel ẩn câu giới thiệu và hạt nền: không chạy ngầm
+    if (!dangHieuUng() || pixel) return
     let i = 0
     let hNhay: ReturnType<typeof setTimeout> | undefined
 
@@ -197,7 +212,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
       if (hNhay) clearTimeout(hNhay)
       document.removeEventListener('visibilitychange', khiAnTab)
     }
-  }, [])
+  }, [pixel])
 
   async function gui(e: FormEvent) {
     e.preventDefault()
@@ -240,7 +255,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
         } as CSSProperties
       }
     >
-      <NenHat />
+      {!pixel && <NenHat />}
       <p aria-label={CAU_GIOI_THIEU}>
         <span aria-hidden="true">
           {CAU_GIOI_THIEU.slice(0, soKyTu)}
@@ -258,7 +273,7 @@ export default function DangNhap({ onXong }: { onXong: (nd: NguoiDung) => void }
         <div className="dn-khung">
           <div className="dn-px-trai">
             <div className="dn-may">
-              <div className="dn-may-than">
+              <div className="dn-may-than" ref={oThanMay}>
                 <span className="dn-may-nhan">
                   <i className={dangIn ? 'dn-den chay' : 'dn-den'} aria-hidden="true" />
                 </span>

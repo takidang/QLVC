@@ -99,8 +99,12 @@ export default function NenHat() {
       }
     }
 
-    const ve = () => {
+    // Vận tốc tính cho 60 khung/giây; k quy đổi theo thời gian thật để màn 120–240 Hz không chạy nhanh hơn
+    let truoc = 0
+    const ve = (luc60: number) => {
       if (!dangChay) return
+      const k = truoc ? Math.min((luc60 - truoc) / (1000 / 60), 3) : 1
+      truoc = luc60
       if (!dangHieuUng() || document.hidden) {
         dung()
         return
@@ -109,8 +113,8 @@ export default function NenHat() {
       ctx.lineCap = 'round'
 
       for (const p of dsHat) {
-        p.bx += p.vx
-        p.by += p.vy
+        p.bx += p.vx * k
+        p.by += p.vy * k
         if (p.bx < -12) p.bx = w + 12
         else if (p.bx > w + 12) p.bx = -12
         if (p.by < -12) p.by = h + 12
@@ -123,24 +127,24 @@ export default function NenHat() {
         const kc = Math.hypot(dx, dy)
         if (kc < BAN_KINH_CHUOT && kc > 0.01) {
           const luc = ((BAN_KINH_CHUOT - kc) / BAN_KINH_CHUOT) * 1.35
-          p.ovx += (dx / kc) * luc
-          p.ovy += (dy / kc) * luc
+          p.ovx += (dx / kc) * luc * k
+          p.ovy += (dy / kc) * luc * k
         }
 
         // Lực kéo đàn hồi đưa hạt trôi về quỹ đạo gốc sau khi dạt ra
-        p.ovx += -p.ox * 0.042
-        p.ovy += -p.oy * 0.042
-        p.ovx *= 0.88
-        p.ovy *= 0.88
-        p.ox += p.ovx
-        p.oy += p.ovy
+        p.ovx += -p.ox * 0.042 * k
+        p.ovy += -p.oy * 0.042 * k
+        p.ovx *= 0.88 ** k
+        p.ovy *= 0.88 ** k
+        p.ox += p.ovx * k
+        p.oy += p.ovy * k
 
         const tvx = p.vx + p.ovx
         const tvy = p.vy + p.ovy
         if (Math.hypot(p.ovx, p.ovy) > 0.25) {
           p.goc = Math.atan2(tvy, tvx)
         } else {
-          p.goc += p.vGoc
+          p.goc += p.vGoc * k
         }
 
         const x = p.bx + p.ox
@@ -163,6 +167,7 @@ export default function NenHat() {
     const batDau = () => {
       if (dangChay || document.hidden || !dangHieuUng()) return
       dangChay = true
+      truoc = 0
       raf = requestAnimationFrame(ve)
     }
 
