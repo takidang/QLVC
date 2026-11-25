@@ -41,3 +41,11 @@ def test_thang_ngoai_2000_2099(client, dang_nhap_voi, kb, thang):
         f"/api/xe/{kb['x1']}/chi-phi-co-dinh/{thang}",
     ):
         assert ma(client.get(duong_dan)) == (400, "DU_LIEU_KHONG_HOP_LE"), duong_dan
+
+
+def test_ghi_log_khong_kem_sql(client, dang_nhap_voi, caplog):
+    dang_nhap_voi("DIEU_PHOI")
+    client.get(f"/api/xe/{QUA_BIGINT}")
+    dong = [r.getMessage() for r in caplog.records if r.name == "app.main" and r.levelname == "WARNING"]
+    assert len(dong) == 1 and f"GET /api/xe/{QUA_BIGINT}" in dong[0]
+    assert "SELECT" not in dong[0]
