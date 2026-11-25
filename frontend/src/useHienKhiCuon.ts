@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
-import { dangHieuUng } from './nen'
+import { dangHieuUng, phongCachDaLuu } from './nen'
 
 // Khối hiện dần khi cuộn tới (v4): chỉ áp cho khối .kinh (không áp cho dòng bảng tr, thẻ trong danh sách dài).
 // Khối đã thấy trong khung nhìn lúc tải trang / lúc dữ liệu vừa đổ về thì không chạy; mỗi khối chỉ chạy một lần.
 export function useHienKhiCuon(khoa?: string) {
   useEffect(() => {
-    if (!dangHieuUng()) return
+    // Phong cách Pixel: cuộn tới là thấy ngay, không để khối trống rồi mới mờ + trượt vào
+    if (!dangHieuUng() || phongCachDaLuu() === 'pixel') return
 
     const daXuLy = new WeakSet<Element>()
     const dangCho = new Set<HTMLElement>()

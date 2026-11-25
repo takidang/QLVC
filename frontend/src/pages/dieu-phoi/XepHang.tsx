@@ -28,6 +28,17 @@ import {
 } from '../../spritesXepHang'
 import { goiYGhep } from './goiYGhep'
 
+// Tem đơn ở Pixel: cùng hình với màn Đơn hàng (DonDanhSach.tsx)
+const NHAN_DON_PIXEL: Record<string, string> = {
+  CHO_GHEP: 'LAP',
+  DA_GHEP: 'DA_CHOT',
+  DA_LAY: 'DANG_CHAY',
+  DA_GIAO: 'HOAN_THANH',
+  THAT_BAI: 'THAT_BAI',
+  TRA_HANG: 'HUY',
+  HUY: 'HUY',
+}
+
 const so = (n: number) => n.toLocaleString('vi-VN', { maximumFractionDigits: 1 })
 const ngayGio = (iso: string) =>
   new Date(iso).toLocaleString('vi-VN', {
@@ -431,7 +442,13 @@ export default function XepHang({
                     {so(Number(d.kg))} kg · {so(Number(d.m3))} m³ · {d.so_kien} kiện
                   </small>
                 </div>
-                <span className="nhan">{TEN_TRANG_THAI_DON[d.trang_thai] ?? d.trang_thai}</span>
+                {laPixel ? (
+                  <Nhan loai={NHAN_DON_PIXEL[d.trang_thai] ?? 'LAP'}>
+                    {TEN_TRANG_THAI_DON[d.trang_thai] ?? d.trang_thai}
+                  </Nhan>
+                ) : (
+                  <span className="nhan">{TEN_TRANG_THAI_DON[d.trang_thai] ?? d.trang_thai}</span>
+                )}
               </li>
             ))}
             {ds.length === 0 && <li className="ghi-chu">Chuyến chạy rỗng</li>}

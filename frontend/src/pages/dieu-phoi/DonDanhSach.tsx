@@ -24,6 +24,7 @@ import { NoteCanhBao } from '../../NoteCanhBao'
 import { NoteLoi } from '../../NoteLoi'
 import { DauDanhMuc, LocTrangThai, OTim } from '../danh-muc'
 import { ThongBao } from '../../thongBao'
+import { useXacNhan } from '../../xacNhanKho'
 
 const SO_DONG = 20
 const dong = (n: number) => n.toLocaleString('vi-VN')
@@ -622,6 +623,7 @@ function DonThatBaiCanXuLy({
   const [loi, setLoi] = useState('')
   const [dangGhep, setDangGhep] = useState<DonThatBai | null>(null)
   const [dangGui, setDangGui] = useState(false)
+  const hoi = useXacNhan()
 
   useEffect(() => {
     let bo = false
@@ -634,7 +636,8 @@ function DonThatBaiCanXuLy({
   }, [lanTai])
 
   async function traHang(d: DonThatBai) {
-    if (!window.confirm(`Trả hàng đơn ${d.ma_don} cho khách? Đơn không còn doanh thu.`)) return
+    const cau = `Trả hàng đơn ${d.ma_don} cho khách? Đơn không còn doanh thu.`
+    if (!(await hoi(cau, 'Trả hàng'))) return
     setLoi('')
     setDangGui(true)
     try {

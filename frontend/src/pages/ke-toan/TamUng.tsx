@@ -18,6 +18,7 @@ import { NoteLoi } from '../../NoteLoi'
 import { Ic, Nhan } from '../../nhan'
 import { DauDanhMuc } from '../danh-muc'
 import { ThongBao } from '../../thongBao'
+import { useXacNhan } from '../../xacNhanKho'
 
 // Cấp mới khi chuyến đã chốt / đang chạy (BR-53); sửa, thu hồi tới khi quyết toán (UC-23 quyết định 3)
 const CAP_DUOC = ['DA_CHOT', 'DANG_CHAY']
@@ -40,6 +41,7 @@ export default function TamUng() {
   // Hiệu ứng Pixel: cờ rung ngắn thước tạm ứng khi máy chủ báo lỗi vượt trần BR-53
   const [rungTran, setRungTran] = useState(0)
   const chuyenDangXem = useRef(0) // bỏ kết quả về muộn của chuyến đã chọn trước đó
+  const hoi = useXacNhan()
 
   useEffect(() => {
     if (rungTran === 0) return
@@ -113,8 +115,8 @@ export default function TamUng() {
     )
   }
 
-  function thuHoi(k: KhoanTamUng) {
-    if (!window.confirm(`Tài xế ${k.ten_tai_xe} đã nộp lại ${dong(k.so_tien)}?`)) return
+  async function thuHoi(k: KhoanTamUng) {
+    if (!(await hoi(`Tài xế ${k.ten_tai_xe} đã nộp lại ${dong(k.so_tien)}?`, 'Thu hồi'))) return
     void lam(() => thuHoiTamUng(k.id), `Đã thu hồi ${dong(k.so_tien)}`)
   }
 
@@ -282,7 +284,7 @@ export default function TamUng() {
                           >
                             Sửa
                           </button>
-                          <button className="phu" disabled={dangGui} onClick={() => thuHoi(k)}>
+                          <button className="phu" disabled={dangGui} onClick={() => void thuHoi(k)}>
                             Thu hồi
                           </button>
                         </>

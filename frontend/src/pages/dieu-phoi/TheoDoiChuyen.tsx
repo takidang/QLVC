@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { dongSuCo, ketThucSuCo, type ChuyenChiTiet } from '../../api/chuyen'
 import { kemMaBr, LoiApi } from '../../api/goi'
 import { Nhan } from '../../nhan'
+import { useXacNhan } from '../../xacNhanKho'
 import { TEN_LOAI_SU_CO, type LoaiSuCo } from '../../api/suCo'
 
 const dong = (n: number) => `${n.toLocaleString('vi-VN')} đ`
@@ -152,16 +153,13 @@ function KetThucSuCo({ c, onDoi }: { c: ChuyenChiTiet; onDoi: (c: ChuyenChiTiet)
   const [km, setKm] = useState('')
   const [loi, setLoi] = useState('')
   const [dangGui, setDangGui] = useState(false)
+  const hoi = useXacNhan()
 
   async function gui(e: FormEvent) {
     e.preventDefault()
     const con = c.don.filter((d) => d.trang_thai === 'DA_GHEP' || d.trang_thai === 'DA_LAY').length
-    if (
-      !window.confirm(
-        `Kết thúc chuyến ${c.ma_chuyen} do sự cố? ${con} đơn chưa giao sẽ thành Thất bại.`,
-      )
-    )
-      return
+    const cau = `Kết thúc chuyến ${c.ma_chuyen} do sự cố? ${con} đơn chưa giao sẽ thành Thất bại.`
+    if (!(await hoi(cau, 'Kết thúc chuyến'))) return
     setLoi('')
     setDangGui(true)
     try {

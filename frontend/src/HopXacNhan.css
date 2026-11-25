@@ -1,0 +1,20 @@
+/* Hộp xác nhận dùng chung: dùng lại .nen-mo + .hop-thoai, chỉ thu hẹp và đổi tiêu đề phiếu Pixel */
+.hop-thoai.xac-nhan {
+  max-width: 440px;
+}
+.xn-cau {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+/* Hộp thoại nhận focus khi mở (bayFocus.ts) để Tab bắt đầu từ trong hộp: không viền cả khung */
+.hop-thoai:focus {
+  outline: none;
+}
+:root[data-phong-cach='pixel'] .hop-thoai.xac-nhan::before {
+  content: 'XÁC NHẬN';
+}
+:root[data-phong-cach='pixel'] .hop-thoai.xac-nhan .nut::before {
+  content: none;
+}

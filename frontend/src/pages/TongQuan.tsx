@@ -395,10 +395,11 @@ function SoLieu({
   phu?: string
   lai?: boolean
 }) {
-  // Hiệu ứng Pixel: gắn lớp CSS kiểu 8-bit và nhịp cuộn bậc khi bật Hiệu ứng Pixel
+  // Hộp số 8-bit đi theo phong cách Pixel; chỉ nhịp cuộn bậc mới theo công tắc Hiệu ứng Pixel
+  const laPixel = phongCachDaLuu() === 'pixel'
   const batPixel = dangHieuUngPixel()
   const lopSo =
-    `${lai && so !== undefined && so < 0 ? 'tq-am' : ''}${batPixel ? ' px-kpi-so' : ''}`.trim()
+    `${lai && so !== undefined && so < 0 ? 'tq-am' : ''}${laPixel ? ' px-kpi-so' : ''}`.trim()
   return (
     <div>
       <small>{nhan}</small>
@@ -407,7 +408,7 @@ function SoLieu({
           '–'
         ) : (
           <NumberFlow
-            className={batPixel ? 'px-kpi-nf' : undefined}
+            className={laPixel ? 'px-kpi-nf' : undefined}
             value={so}
             locales="vi-VN"
             suffix=" đ"
@@ -495,7 +496,7 @@ function CotLai({ ds, chon }: { ds: (DongLaiLo & { thang: string })[]; chon: str
                   y={y0}
                   width={cot}
                   height={Math.max(h, 2)}
-                  rx={dangHieuUngPixel() ? 0 : 4}
+                  rx={phongCachDaLuu() === 'pixel' ? 0 : 4}
                   className={`${d.lai < 0 ? 'bd-am' : 'bd-duong'}${d.thang === chon ? ' chon' : ''}`}
                 />
               )}
@@ -679,8 +680,8 @@ function HomNay() {
     month: '2-digit',
   })
   const cho = '\u00a0' // giữ chiều cao dòng phụ lúc đang tải
-  // Hiệu ứng Pixel: cả 5 thẻ KPI dùng hộp số monospace .px-kpi-so cho đồng bộ
-  const kpiPixel = dangHieuUngPixel() ? 'px-kpi-so' : undefined
+  // Phong cách Pixel: cả 5 thẻ KPI dùng hộp số monospace .px-kpi-so cho đồng bộ
+  const kpiPixel = phongCachDaLuu() === 'pixel' ? 'px-kpi-so' : undefined
   return (
     <section className="tq-hom-nay" aria-busy={!tq}>
       <div className="tq-hn-dau">

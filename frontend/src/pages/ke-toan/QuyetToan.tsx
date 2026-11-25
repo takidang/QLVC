@@ -16,8 +16,10 @@ import { TEN_HINH_THUC, type HinhThuc } from '../../api/tamUng'
 import { ngayGio } from '../../api/toi'
 import { BienLaiNhietPixel, DongHoDinhMucPixel } from '../../HieuUngPixel'
 import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
+import { Nhan } from '../../nhan'
 import { NoteLoi } from '../../NoteLoi'
 import { ThongBao } from '../../thongBao'
+import { useXacNhan } from '../../xacNhanKho'
 
 const dong = (so: number) => `${so.toLocaleString('vi-VN')} đ`
 const lit = (s: string | null) => (s === null ? '–' : `${Number(s).toLocaleString('vi-VN')} lít`)
@@ -253,7 +255,7 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
                       const giao = bang.don_giao.includes(d)
                       return (
                         <tr key={d.id}>
-                          <td className="bien-so">{d.ma_don}</td>
+                          <td className="ma-don">{d.ma_don}</td>
                           <td>{d.ten_khach}</td>
                           <td>{dong(d.cuoc)}</td>
                           <td>
@@ -358,7 +360,11 @@ export default function QuyetToan({ chiXem = false }: { chiXem?: boolean }) {
                           <td>{k.ghi_chu}</td>
                           <td>{dong(k.so_tien_khai)}</td>
                           <td>{k.so_tien_duyet === null ? '–' : dong(k.so_tien_duyet)}</td>
-                          <td>{TEN_TRANG_THAI_CHI[k.trang_thai]}</td>
+                          <td>
+                            <Nhan loai={`CHI_${k.trang_thai}`}>
+                              {TEN_TRANG_THAI_CHI[k.trang_thai]}
+                            </Nhan>
+                          </td>
                           <td className="hanh-dong">
                             {k.anh.map((t, i) => (
                               <button key={t} className="phu" onClick={() => void xemAnh(t)}>
@@ -586,6 +592,7 @@ function FormQuyetToan({
   const [luong, setLuong] = useState(String(bang.luong_chot))
   const [lyDoLuong, setLyDoLuong] = useState('')
   const chenh = bang.chenh_lech_tam_ung
+  const hoi = useXacNhan()
   const thieu =
     bang.so_cho_duyet > 0
       ? `Còn ${bang.so_cho_duyet} khoản chờ duyệt`
@@ -595,14 +602,15 @@ function FormQuyetToan({
           ? 'Nhập thời điểm xử lý chênh lệch'
           : ''
 
-  function gui() {
+  async function gui() {
     const cau =
       chenh > 0
         ? `Tài xế đã nộp lại ${dong(chenh)}`
         : chenh < 0
           ? `Công ty đã trả thêm ${dong(-chenh)}`
           : 'Không có chênh lệch tạm ứng'
-    if (!window.confirm(`Quyết toán ${bang.ma_chuyen}? ${cau}. Sau đó không sửa được nữa.`)) return
+    const hoiCau = `Quyết toán ${bang.ma_chuyen}? ${cau}. Sau đó không sửa được nữa.`
+    if (!(await hoi(hoiCau, 'Quyết toán'))) return
     void onGui({
       xu_ly_chenh_lech: bang.xu_ly_goi_y,
       ...(chenh !== 0 && { hinh_thuc: hinhThuc, luc_xu_ly: new Date(luc).toISOString() }),
@@ -661,7 +669,7 @@ function FormQuyetToan({
         </>
       )}
       {thieu && <p className="ghi-chu">{thieu}</p>}
-      <button disabled={dangGui || !!thieu} onClick={gui}>
+      <button disabled={dangGui || !!thieu} onClick={() => void gui()}>
         {dangGui ? 'Đang lưu…' : 'Quyết toán'}
       </button>
     </div>
