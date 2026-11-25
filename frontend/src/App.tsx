@@ -18,6 +18,7 @@ import { KhungThongBao } from './thongBao'
 import BatLoiTrang from './BatLoiTrang'
 import ChuongThongBao from './ChuongThongBao'
 import DanConTro from './DanConTro'
+import { IcPixel } from './IcPixel'
 import MenuTaiKhoan from './MenuTaiKhoan'
 import TimChung from './TimChung'
 import { useHienKhiCuon } from './useHienKhiCuon'
@@ -174,6 +175,7 @@ function KhungTrang({
                   {ds.map((m) => (
                     <NavLink key={m.den} to={m.den}>
                       <Ic ten={m.duong_dan as TenIc} />
+                      <IcPixel ten={m.duong_dan as TenIc} />
                       {m.ten}
                     </NavLink>
                   ))}
@@ -190,7 +192,7 @@ function KhungTrang({
           <div className="ben-phai">
             <span className="ten">
               <b>{nd.ho_ten}</b>
-              {TEN_VAI_TRO[nd.vai_tro]}
+              <span className="vai-tro">{TEN_VAI_TRO[nd.vai_tro]}</span>
             </span>
             <ChuongThongBao nguoiDungId={nd.id} vaiTro={nd.vai_tro} />
             <MenuTaiKhoan
