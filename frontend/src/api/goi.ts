@@ -13,6 +13,9 @@ export class LoiApi extends Error {
   }
 }
 
+// App lắng nghe sự kiện này để về /dang-nhap khi API trả 401 giữa phiên
+export const SU_KIEN_HET_PHIEN = 'qlvc-het-phien'
+
 const MAT_KET_NOI = 'Không kết nối được máy chủ. Kiểm tra mạng rồi thử lại.'
 
 export async function goi<T>(url: string, init?: RequestInit): Promise<T> {
@@ -24,6 +27,10 @@ export async function goi<T>(url: string, init?: RequestInit): Promise<T> {
   }
   if (r.status === 204) return undefined as T
   const body = await r.json().catch(() => ({}))
+  // Phiên hết hạn giữa chừng (cookie 8 giờ, NFR-SEC-01): báo cho App đưa về trang đăng nhập.
+  // /api/auth/toi (kiểm phiên lúc mở trang) và đăng nhập sai (mã khác) không tính.
+  if (r.status === 401 && body.ma === 'CHUA_DANG_NHAP' && !url.endsWith('/api/auth/toi'))
+    window.dispatchEvent(new Event(SU_KIEN_HET_PHIEN))
   if (!r.ok)
     throw new LoiApi(
       r.status,

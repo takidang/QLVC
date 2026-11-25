@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from 'react'
+import type { CSSProperties } from 'react'
 import { dangHieuUngPixel, phongCachDaLuu } from './nen'
 
 // Hiệu ứng Pixel: tia laser quét dọc và 4 góc ngắm 8-bit trên khung camera QR
@@ -728,53 +728,5 @@ export function BienLaiNhietPixel({
         </div>
       </div>
     </div>
-  )
-}
-
-// Hiệu ứng Pixel: màn tải khi đổi trang, kiểu YouTube (không lóe): thanh nấc chạy ở mép trên + khung LOADING
-// phủ vùng nội dung tối thiểu 0,5 s; tắt khi đủ thời gian VÀ trong trang không còn chỗ nào đang tải
-// (.px-tai, [aria-busy='true']); tối đa 6 s để không kẹt. Gắn key theo đường dẫn ở App.tsx nên mỗi trang chạy lại.
-const TAI_TOI_THIEU_MS = 500
-const TAI_TOI_DA_MS = 6000
-
-export function ManTaiChuyenTrang() {
-  // 'dang': đang phủ; 'mo': mờ dần 250 ms cho nội dung hiện vào; 'het': gỡ hẳn
-  const [buoc, setBuoc] = useState<'dang' | 'mo' | 'het'>('dang')
-  useEffect(() => {
-    if (phongCachDaLuu() !== 'pixel') return
-    const batDau = Date.now()
-    let go = 0
-    const t = window.setInterval(() => {
-      const troiQua = Date.now() - batDau
-      const main = document.querySelector('main.trang')
-      const conTai = main
-        ? [...main.querySelectorAll(".px-tai, [aria-busy='true']")].some(
-            (e) => !e.closest('.px-phu-tai'),
-          )
-        : false
-      if ((troiQua >= TAI_TOI_THIEU_MS && !conTai) || troiQua >= TAI_TOI_DA_MS) {
-        window.clearInterval(t)
-        setBuoc('mo')
-        go = window.setTimeout(() => setBuoc('het'), 260)
-      }
-    }, 80)
-    return () => {
-      window.clearInterval(t)
-      window.clearTimeout(go)
-    }
-  }, [])
-  if (phongCachDaLuu() !== 'pixel') return null
-  return (
-    <>
-      <div
-        className={buoc === 'dang' ? 'px-thanh-tren' : 'px-thanh-tren xong'}
-        aria-hidden="true"
-      />
-      {buoc !== 'het' && (
-        <div className={buoc === 'mo' ? 'px-phu-tai mo' : 'px-phu-tai'}>
-          <DangTaiPixel kieu="trang" />
-        </div>
-      )}
-    </>
   )
 }

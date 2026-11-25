@@ -32,6 +32,7 @@ import { kemMaBr, LoiApi } from '../../api/goi'
 import { BangDinhNiemPhongPixel, DangTaiPixel } from '../../HieuUngPixel'
 import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
 import { Nhan } from '../../nhan'
+import { NoteCanhBao } from '../../NoteCanhBao'
 import { CanhBaoTheoDoi, DongThoiGian, KhoiSuCo, KhoiTien } from './TheoDoiChuyen'
 import XepHang from './XepHang'
 import KhoiXe from './KhoiXe'
@@ -130,6 +131,18 @@ export default function ChuyenChiTiet() {
   const [lanTai, setLanTai] = useState(0)
   // Hiệu ứng Pixel: cờ hiện băng dính niêm phong kéo ngang thẻ chuyến sau khi chốt thành công (≤ 1,4 s)
   const [niemPhong, setNiemPhong] = useState(0)
+
+  // Sang chuyến khác (bấm cột trái) thì trang không dựng lại: giữ danh sách bên trái, chỉ bỏ trạng thái của chuyến cũ
+  const [idTruoc, setIdTruoc] = useState(id)
+  if (idTruoc !== id) {
+    setIdTruoc(id)
+    setPhuHop([])
+    setChonGhep([])
+    setChonGo([])
+    setLoi('')
+    setLyDoHuy(null)
+    setViPham([])
+  }
 
   useEffect(() => {
     if (niemPhong === 0) return
@@ -456,31 +469,36 @@ export default function ChuyenChiTiet() {
             )}
             <CanhBaoTheoDoi c={c} onDoi={setC} />
             {loi && (
-              <div role="alert" className="canh-bao">
-                <strong className="loi">{loi}</strong>
-                {viPham.length > 0 && (
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Đơn</th>
-                        <th>Quy tắc</th>
-                        <th>Nội dung</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {viPham.map((v, i) => (
-                        <tr key={i}>
-                          <td className="bien-so">
-                            {v.don_id ? (maDon.get(v.don_id) ?? v.don_id) : 'Cả chuyến'}
-                          </td>
-                          <td>{v.ma}</td>
-                          <td>{kemMaBr(v.thong_diep, v.ma)}</td>
+              <NoteCanhBao
+                tieuDe={viPham.length > 0 ? 'Vi phạm quy tắc' : 'Cảnh báo chuyến'}
+                soMuc={viPham.length > 0 ? viPham.length : undefined}
+              >
+                <div role="alert" className="canh-bao">
+                  <strong className="loi">{loi}</strong>
+                  {viPham.length > 0 && (
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Đơn</th>
+                          <th>Quy tắc</th>
+                          <th>Nội dung</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                )}
-              </div>
+                      </thead>
+                      <tbody>
+                        {viPham.map((v, i) => (
+                          <tr key={i}>
+                            <td className="bien-so">
+                              {v.don_id ? (maDon.get(v.don_id) ?? v.don_id) : 'Cả chuyến'}
+                            </td>
+                            <td>{v.ma}</td>
+                            <td>{kemMaBr(v.thong_diep, v.ma)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+              </NoteCanhBao>
             )}
             {dangLap && (
               <DoiXeTaiXe

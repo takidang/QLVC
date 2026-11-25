@@ -20,6 +20,8 @@ import { danhSachNut, type Nut } from '../../api/tuyen'
 import { Nhan } from '../../nhan'
 import { DangTaiPixel, HopCartonGapNapPixel, KimCanPixel } from '../../HieuUngPixel'
 import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
+import { NoteCanhBao } from '../../NoteCanhBao'
+import { NoteLoi } from '../../NoteLoi'
 import { DauDanhMuc, LocTrangThai, OTim } from '../danh-muc'
 import { ThongBao } from '../../thongBao'
 
@@ -341,7 +343,7 @@ function FormTaoDon({
   const [loiChung, setLoiChung] = useState<string[]>([])
   const [dangGui, setDangGui] = useState(false)
   // Hộp cao hơn màn hình: có lỗi chung (vd. BR-06) thì cuộn tới, không bắt người dùng tự tìm ở đáy
-  const oLoi = useRef<HTMLUListElement>(null)
+  const oLoi = useRef<HTMLDivElement>(null)
   useEffect(() => {
     if (loiChung.length) oLoi.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
   }, [loiChung])
@@ -522,11 +524,17 @@ function FormTaoDon({
         </div>
 
         {loiChung.length > 0 && (
-          <ul role="alert" className="loi" ref={oLoi}>
-            {loiChung.map((x) => (
-              <li key={x}>{x}</li>
-            ))}
-          </ul>
+          <div ref={oLoi}>
+            {phongCachDaLuu() === 'pixel' ? (
+              <NoteLoi noiDung={loiChung.join('\n')} kieu="nho" />
+            ) : (
+              <ul role="alert" className="loi">
+                {loiChung.map((x) => (
+                  <li key={x}>{x}</li>
+                ))}
+              </ul>
+            )}
+          </div>
         )}
         <div className="nut">
           <button type="button" className="phu" onClick={onDong}>
@@ -642,77 +650,83 @@ function DonThatBaiCanXuLy({
   // chờ bảng chính về rồi hiện cùng lúc, trang không nhảy hai lần
   if (!san || (!ds.length && !loi)) return null
   return (
-    <div className="kinh dm-chu-y">
-      <div className="dm-chu-y-dau">
-        <h2>
-          <Nhan loai="THAT_BAI">Đơn thất bại cần xử lý</Nhan>
-        </h2>
-        <span>{ds.length} đơn</span>
-      </div>
-      {loi && (
-        <p role="alert" className="loi">
-          {loi}
-        </p>
-      )}
-      <table>
-        <thead>
-          <tr>
-            <th>Mã đơn</th>
-            <th>Lấy → giao</th>
-            <th>Lý do gần nhất</th>
-            <th>Hàng</th>
-            <th className="so">Giao thất bại (phía khách)</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {ds.map((d) => {
-            const datNguong = d.so_lan_giao_tb_khach >= d.nguong
-            return (
-              <tr key={d.id}>
-                <td className="ma-don">{d.ma_don}</td>
-                <td className="tuyen">
-                  {d.tinh_lay} → {d.tinh_giao}
-                </td>
-                <td>{d.ly_do_cuoi ?? '–'}</td>
-                <td>
-                  <span className="bien">{d.da_lay ? 'Đã lấy' : 'Chưa lấy'}</span>
-                </td>
-                <td className="so">
-                  {d.so_lan_giao_tb_khach}/{d.nguong}
-                </td>
-                <td className="hanh-dong so">
-                  {d.cho_chuyen_xong ? (
-                    <span className="ghi-chu">Chờ chuyến kết thúc</span>
-                  ) : (
-                    <>
-                      <button
-                        className="phu"
-                        disabled={dangGui || datNguong}
-                        title={
-                          datNguong ? `Đạt ${d.nguong} lần giao thất bại phía khách (BR-37)` : ''
-                        }
-                        onClick={() => setDangGhep(d)}
-                      >
-                        Ghép lại
-                      </button>
-                      {d.da_lay ? (
-                        <button className="phu" disabled={dangGui} onClick={() => traHang(d)}>
-                          Trả hàng
-                        </button>
-                      ) : (
-                        <button className="phu" disabled={dangGui} onClick={() => onHuy(d)}>
-                          Hủy
-                        </button>
-                      )}
-                    </>
-                  )}
-                </td>
+    <>
+      <NoteCanhBao tieuDe="Đơn thất bại" soMuc={ds.length > 0 ? ds.length : undefined}>
+        <div className="kinh dm-chu-y">
+          <div className="dm-chu-y-dau">
+            <h2>
+              <Nhan loai="THAT_BAI">Đơn thất bại cần xử lý</Nhan>
+            </h2>
+            <span>{ds.length} đơn</span>
+          </div>
+          {loi && (
+            <p role="alert" className="loi">
+              {loi}
+            </p>
+          )}
+          <table>
+            <thead>
+              <tr>
+                <th>Mã đơn</th>
+                <th>Lấy → giao</th>
+                <th>Lý do gần nhất</th>
+                <th>Hàng</th>
+                <th className="so">Giao thất bại (phía khách)</th>
+                <th></th>
               </tr>
-            )
-          })}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {ds.map((d) => {
+                const datNguong = d.so_lan_giao_tb_khach >= d.nguong
+                return (
+                  <tr key={d.id}>
+                    <td className="ma-don">{d.ma_don}</td>
+                    <td className="tuyen">
+                      {d.tinh_lay} → {d.tinh_giao}
+                    </td>
+                    <td>{d.ly_do_cuoi ?? '–'}</td>
+                    <td>
+                      <span className="bien">{d.da_lay ? 'Đã lấy' : 'Chưa lấy'}</span>
+                    </td>
+                    <td className="so">
+                      {d.so_lan_giao_tb_khach}/{d.nguong}
+                    </td>
+                    <td className="hanh-dong so">
+                      {d.cho_chuyen_xong ? (
+                        <span className="ghi-chu">Chờ chuyến kết thúc</span>
+                      ) : (
+                        <>
+                          <button
+                            className="phu"
+                            disabled={dangGui || datNguong}
+                            title={
+                              datNguong
+                                ? `Đạt ${d.nguong} lần giao thất bại phía khách (BR-37)`
+                                : ''
+                            }
+                            onClick={() => setDangGhep(d)}
+                          >
+                            Ghép lại
+                          </button>
+                          {d.da_lay ? (
+                            <button className="phu" disabled={dangGui} onClick={() => traHang(d)}>
+                              Trả hàng
+                            </button>
+                          ) : (
+                            <button className="phu" disabled={dangGui} onClick={() => onHuy(d)}>
+                              Hủy
+                            </button>
+                          )}
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
+      </NoteCanhBao>
       {dangGhep && (
         <FormGhepLai
           d={dangGhep}
@@ -723,7 +737,7 @@ function DonThatBaiCanXuLy({
           }}
         />
       )}
-    </div>
+    </>
   )
 }
 

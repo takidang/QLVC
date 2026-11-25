@@ -13,7 +13,8 @@ import {
 } from '../../api/tamUng'
 import { ngayGio, TEN_TRANG_THAI } from '../../api/toi'
 import { ThuocTamUngPixel } from '../../HieuUngPixel'
-import { dangHieuUngPixel } from '../../nen'
+import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
+import { NoteLoi } from '../../NoteLoi'
 import { Ic, Nhan } from '../../nhan'
 import { DauDanhMuc } from '../danh-muc'
 import { ThongBao } from '../../thongBao'
@@ -221,11 +222,14 @@ export default function TamUng() {
           </p>
         )}
         <ThongBao chu={thongBao} />
-        {loi && (
-          <p role="alert" className="loi">
-            {loi}
-          </p>
-        )}
+        {loi &&
+          (phongCachDaLuu() === 'pixel' ? (
+            <NoteLoi noiDung={loi} kieu="nho" />
+          ) : (
+            <p role="alert" className="loi">
+              {loi}
+            </p>
+          ))}
       </div>
 
       {tu && (

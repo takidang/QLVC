@@ -129,6 +129,7 @@ const HINH: Record<string, ReactNode> = {
     </>
   ),
 }
+
 // Mã trạng thái chuyến hoặc mã cờ → [hình, lớp màu]
 const LOAI: Record<string, [string, string]> = {
   LAP: ['lap', ''],
@@ -148,6 +149,8 @@ const LOAI: Record<string, [string, string]> = {
   NGUY_CO_THAP: ['tre', 'nc-thap'],
   NGUY_CO_TRUNG_BINH: ['tre', 'nc-tb'],
   NGUY_CO_CAO: ['tre', 'nc-cao'],
+  // Gợi ý ghép đơn quá m³/kg còn lại của xe: tam giác cảnh báo nền nhạt, nhẹ hơn cờ khẩn
+  QUA_SUC_CHUA: ['suco', 'nc-tb'],
 }
 
 export function Nhan({
@@ -162,7 +165,7 @@ export function Nhan({
   const [hinh, lop] = LOAI[loai] ?? ['lap', '']
   return (
     <span className={`nhan ${lop}`} title={title}>
-      <svg viewBox="0 0 16 16" aria-hidden="true">
+      <svg className="nhan-ic" viewBox="0 0 16 16" aria-hidden="true">
         {HINH[hinh]}
       </svg>
       {children}

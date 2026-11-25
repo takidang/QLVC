@@ -4,7 +4,8 @@ import { baoSuCo, suCoChuyen, TEN_LOAI_SU_CO, type LoaiSuCo, type SuCo } from '.
 import { ngayGio } from '../../api/toi'
 import ChonTep from '../../ChonTep'
 import { NoiDungNutGuiPixel } from '../../HieuUngPixel'
-import { dangHieuUngPixel } from '../../nen'
+import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
+import { NoteLoi } from '../../NoteLoi'
 import { nenAnh } from '../../nenAnh'
 import { LOI_MANG, SO_ANH_TOI_DA } from './QuetLay'
 import { ThongBao } from '../../thongBao'
@@ -36,11 +37,14 @@ export function SuCoChuyen({ chuyenId, baoDuoc }: { chuyenId: number; baoDuoc: b
     <div className="the">
       <strong>Sự cố</strong>
       <ThongBao chu={thongBao} />
-      {loi && (
-        <p role="alert" className="loi">
-          {loi}
-        </p>
-      )}
+      {loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          <NoteLoi noiDung={loi} kieu="nho" />
+        ) : (
+          <p role="alert" className="loi">
+            {loi}
+          </p>
+        ))}
       {ds && ds.length === 0 && <p className="ghi-chu">Chưa báo sự cố nào</p>}
       <ul className="ds-chi">
         {ds?.map((s) => (
@@ -149,11 +153,14 @@ function FormSuCo({
         dangNen={dangGui && anh.length > 0}
         onChange={(e) => setAnh([...(e.target.files ?? [])])}
       />
-      {loi && (
-        <p role="alert" className="loi">
-          {loi}
-        </p>
-      )}
+      {loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          <NoteLoi noiDung={loi} kieu="nho" />
+        ) : (
+          <p role="alert" className="loi">
+            {loi}
+          </p>
+        ))}
       {/* Hiệu ứng Pixel: nút gửi giữ bề ngang và đổi chữ theo bậc "Đang gửi…" → "Xong ✓" */}
       <button
         disabled={dangGui}
