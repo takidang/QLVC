@@ -182,9 +182,15 @@ export default function ChuyenDanhSach() {
       )
       .catch(() => setGanNhat(''))
   }, [])
+  const [coViec, setCoViec] = useState(false)
   useEffect(() => {
-    viecHomNay().then(setViec)
+    viecHomNay().then((v) => {
+      setViec(v)
+      setCoViec(true)
+    })
   }, [])
+  // Đã đủ dữ liệu cho khối đầu một lần chưa (đổi ngày sau đó không ẩn lại trang)
+  const [daDu, setDaDu] = useState(false)
 
   // UC-30: gọi dự đoán nguy cơ trễ theo ngày khi đang xem một ngày cụ thể; lỗi thì im lặng (KT-08)
   const [nguyCoCao, setNguyCoCao] = useState<{ ngay: string; ids: Set<number> }>({
@@ -260,8 +266,11 @@ export default function ChuyenDanhSach() {
   const soTrang = Math.max(1, Math.ceil((ds?.tong ?? 0) / SO_DONG))
   const soCot = ngay ? 7 : 5
 
+  if (!daDu && ds && coViec) setDaDu(true)
+
   return (
-    <section className="noi-dung">
+    // data-px-cho: Pixel ẩn trang tới khi đủ dữ liệu (tối đa 1,5 s) để lịch xe, Cần chú ý không đẩy bảng
+    <section className="noi-dung" data-px-cho={daDu ? undefined : ''}>
       {/* Hai cột độc lập: trái là tiêu đề, số liệu, lịch xe; phải là Cần chú ý, bản đồ.
           Mỗi cột tự xếp chồng nên không có khoảng trống do cột kia cao hơn */}
       <div className={ngay ? 'dau-luoi' : 'dau-luoi mot-cot'}>

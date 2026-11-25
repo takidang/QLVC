@@ -11,6 +11,7 @@ import { ngayGio } from '../../api/toi'
 import { DongXuRoiKetPixel } from '../../HieuUngPixel'
 import { dangHieuUngPixel } from '../../nen'
 import { ThongBao } from '../../thongBao'
+import { useXacNhan } from '../../xacNhanKho'
 
 const dong = (so: number) => `${so.toLocaleString('vi-VN')} đ`
 // Ngày theo giờ máy người dùng (Việt Nam), không theo UTC: sáng sớm không bị lùi một ngày
@@ -31,6 +32,7 @@ export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
   const [loi, setLoi] = useState('')
   // Hiệu ứng Pixel: cờ hiện đồng xu rơi vào két sau khi ghi thu công nợ thành công (≤ 1,4 s)
   const [xuRoi, setXuRoi] = useState(0)
+  const hoi = useXacNhan()
 
   useEffect(() => {
     if (xuRoi === 0) return
@@ -79,12 +81,8 @@ export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
 
   async function danhDau() {
     if (!khach || !chon.size) return
-    if (
-      !window.confirm(
-        `Đã thu ${dong(tongChon)} của ${khach.ten_khach} (${chon.size} khoản) ngày ${ngayVN(ngay)}?`,
-      )
-    )
-      return
+    const cau = `Đã thu ${dong(tongChon)} của ${khach.ten_khach} (${chon.size} khoản) ngày ${ngayVN(ngay)}?`
+    if (!(await hoi(cau, 'Đã thu'))) return
     setDangGui(true)
     setThongBao('')
     setLoi('')
@@ -199,7 +197,7 @@ export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
                             />
                           </td>
                         )}
-                        <td className="bien-so">{k.ma_don}</td>
+                        <td className="ma-don">{k.ma_don}</td>
                         <td>{k.ngay_giao ? ngayGio(k.ngay_giao) : '–'}</td>
                         <td className="so">{dong(k.so_tien)}</td>
                         {xem === 'DA_THU' && (

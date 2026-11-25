@@ -1,9 +1,11 @@
-import { useEffect, useState, type FormEvent, type InputHTMLAttributes } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type InputHTMLAttributes } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
 import { danhSachTaiXe, suaTaiXe, themTaiXe, type HangGplx, type TaiXe } from '../../api/taiXe'
 import { DangTaiPixel } from '../../HieuUngPixel'
 import { phongCachDaLuu } from '../../nen'
 import { DauDanhMuc, HanGiayTo, LocTrangThai, NhanHoatDong, OTim } from '../danh-muc'
+import { useXacNhan } from '../../xacNhanKho'
+import { NutChep } from '../../NutChep'
 
 const SO_DONG = 20
 const HANG: HangGplx[] = ['B', 'C1', 'C']
@@ -37,6 +39,8 @@ export default function TaiXeDanhSach() {
   const [dangSua, setDangSua] = useState<TaiXe | 'moi' | null>(null)
   const [lanTai, setLanTai] = useState(0) // tăng lên để tải lại sau khi thêm/sửa
   const tai = () => setLanTai((n) => n + 1)
+  const hoi = useXacNhan()
+  const dangDoi = useRef(new Set<number>()) // bấm hai lần không gửi hai yêu cầu
 
   useEffect(() => {
     let bo = false // yêu cầu cũ về muộn (gõ tìm nhanh, mạng chậm) thì bỏ, không ghi đè kết quả mới
@@ -57,16 +61,17 @@ export default function TaiXeDanhSach() {
   async function doiTrangThai(tx: TaiXe) {
     const ngung = tx.trang_thai === 'HOAT_DONG'
     // Ngừng tài xế khóa luôn tài khoản đăng nhập (BR-60, UC-04): hỏi lại cho chắc
-    if (
-      ngung &&
-      !confirm(`Ngừng tài xế ${tx.ho_ten}? Tài khoản "${tx.ten_dang_nhap}" sẽ bị khóa ngay.`)
-    )
-      return
+    if (dangDoi.current.has(tx.id)) return
+    const cau = `Ngừng tài xế ${tx.ho_ten}? Tài khoản "${tx.ten_dang_nhap}" sẽ bị khóa ngay.`
+    if (ngung && !(await hoi(cau, 'Ngừng'))) return
+    dangDoi.current.add(tx.id)
     try {
       await suaTaiXe(tx.id, { trang_thai: ngung ? 'NGUNG' : 'HOAT_DONG' })
       tai()
     } catch (e) {
       setLoiTai(e instanceof LoiApi ? e.message : 'Không đổi được trạng thái')
+    } finally {
+      dangDoi.current.delete(tx.id)
     }
   }
 
@@ -126,13 +131,16 @@ export default function TaiXeDanhSach() {
                   <small>{tx.ten_dang_nhap}</small>
                 </td>
                 <td>
+                  <span className="so-gplx">{tx.so_gplx}</span>
                   <span className="bien">Hạng {tx.hang_gplx}</span>
-                  <small className="ma">{tx.so_gplx}</small>
                 </td>
                 <td>
                   <HanGiayTo han={tx.han_gplx} />
                 </td>
-                <td className="ma">{tx.sdt}</td>
+                <td className="ma">
+                  {tx.sdt}
+                  <NutChep chu={tx.sdt} />
+                </td>
                 <td>
                   <NhanHoatDong trangThai={tx.trang_thai} />
                 </td>

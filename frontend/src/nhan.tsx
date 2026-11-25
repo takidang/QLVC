@@ -145,6 +145,10 @@ const LOAI: Record<string, [string, string]> = {
   THAT_BAI: ['suco', 'suco'],
   CHONG_LICH: ['suco', 'suco'],
   CHUA_QUYET_TOAN: ['tre', ''],
+  // Trạng thái khoản chi tài xế khai (UC-21, UC-24)
+  CHI_CHO_DUYET: ['tre', 'nc-tb'],
+  CHI_DA_DUYET: ['xong', 'xong'],
+  CHI_TU_CHOI: ['huy', 'suco'],
   // UC-30: nhãn gợi ý nguy cơ trễ chuyến (nền nhuộm nhạt, không tô đặc như cờ khẩn)
   NGUY_CO_THAP: ['tre', 'nc-thap'],
   NGUY_CO_TRUNG_BINH: ['tre', 'nc-tb'],
