@@ -107,7 +107,7 @@ export default function ChuyenCuaToiChiTiet() {
   return (
     <section className="noi-dung dien-thoai">
       <Link to=".." relative="path" className="ct-ve">
-        ← Chuyến của tôi
+        <span className="mui-ten-thuong">← </span>Chuyến của tôi
       </Link>
       {loi && (
         <p role="alert" className="loi">

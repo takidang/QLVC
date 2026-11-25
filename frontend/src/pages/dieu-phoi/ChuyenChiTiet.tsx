@@ -321,7 +321,7 @@ export default function ChuyenChiTiet() {
   return (
     <section className="noi-dung chi-tiet ct2">
       <Link to=".." className="ct-ve">
-        ← Danh sách chuyến
+        <span className="mui-ten-thuong">← </span>Danh sách chuyến
       </Link>
       <div className="ct2-luoi">
         <aside className="kinh ct2-ds" aria-label="Chuyến cùng ngày">

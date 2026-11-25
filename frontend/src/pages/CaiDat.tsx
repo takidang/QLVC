@@ -47,7 +47,7 @@ export default function CaiDat({ vaiTro }: { vaiTro: VaiTro }) {
     <section className="noi-dung cd-trang">
       {vaiTro === 'TAI_XE' && (
         <Link to="/tai-xe/chuyen" className="ct-ve">
-          ← Chuyến của tôi
+          <span className="mui-ten-thuong">← </span>Chuyến của tôi
         </Link>
       )}
       <DauDanhMuc tieuDe="Cài đặt" phu="Tùy chọn hiển thị trên trình duyệt này, áp dụng ngay." />

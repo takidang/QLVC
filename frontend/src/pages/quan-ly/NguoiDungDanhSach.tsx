@@ -164,12 +164,12 @@ export default function NguoiDungDanhSach() {
                   <button className="phu" onClick={() => setDangSua(tk)}>
                     Sửa
                   </button>
-                  <button className="phu" onClick={() => setDatMk(tk)}>
+                  <button className="phu thuong" onClick={() => setDatMk(tk)}>
                     Đặt lại mật khẩu
                   </button>
                   {/* Tài xế khóa ở trang Tài xế (UC-04); không tự khóa chính mình */}
                   {tk.vai_tro !== 'TAI_XE' && tk.id !== toiId && (
-                    <button className="phu" onClick={() => doiTrangThai(tk)}>
+                    <button className="phu nguy-hiem" onClick={() => doiTrangThai(tk)}>
                       {tk.trang_thai === 'HOAT_DONG' ? 'Khóa' : 'Mở khóa'}
                     </button>
                   )}

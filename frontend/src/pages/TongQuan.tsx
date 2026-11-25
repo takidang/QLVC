@@ -495,7 +495,7 @@ function CotLai({ ds, chon }: { ds: (DongLaiLo & { thang: string })[]; chon: str
                   y={y0}
                   width={cot}
                   height={Math.max(h, 2)}
-                  rx={4}
+                  rx={dangHieuUngPixel() ? 0 : 4}
                   className={`${d.lai < 0 ? 'bd-am' : 'bd-duong'}${d.thang === chon ? ' chon' : ''}`}
                 />
               )}
@@ -679,6 +679,8 @@ function HomNay() {
     month: '2-digit',
   })
   const cho = '\u00a0' // giữ chiều cao dòng phụ lúc đang tải
+  // Hiệu ứng Pixel: cả 5 thẻ KPI dùng hộp số monospace .px-kpi-so cho đồng bộ
+  const kpiPixel = dangHieuUngPixel() ? 'px-kpi-so' : undefined
   return (
     <section className="tq-hom-nay" aria-busy={!tq}>
       <div className="tq-hn-dau">
@@ -701,7 +703,7 @@ function HomNay() {
       <div className="kinh tq-so">
         <div>
           <small>Chuyến</small>
-          <b>{tq ? tq.chuyen.tong : '–'}</b>
+          <b className={kpiPixel}>{tq ? tq.chuyen.tong : '–'}</b>
           <em>
             {tq ? (
               <>
@@ -715,7 +717,7 @@ function HomNay() {
         </div>
         <div>
           <small>Đơn</small>
-          <b>{tq ? tq.don.tong : '–'}</b>
+          <b className={kpiPixel}>{tq ? tq.don.tong : '–'}</b>
           <em>
             {tq
               ? `${tq.don.da_giao} đã giao · ${tq.don.that_bai} thất bại · ${tq.don.con_lai} còn lại`
@@ -724,7 +726,9 @@ function HomNay() {
         </div>
         <div>
           <small>Điểm dừng đúng giờ</small>
-          <b>{!dg || dg.ty_le === null ? '–' : `${Math.round(dg.ty_le * 100)}%`}</b>
+          <b className={kpiPixel}>
+            {!dg || dg.ty_le === null ? '–' : `${Math.round(dg.ty_le * 100)}%`}
+          </b>
           <em>
             {dg ? (
               <>
@@ -738,7 +742,7 @@ function HomNay() {
         </div>
         <div>
           <small>Hàng đã chở</small>
-          <b>
+          <b className={kpiPixel}>
             {tq
               ? `${tq.don.kg_da_cho.toLocaleString('vi-VN', { maximumFractionDigits: 0 })} kg`
               : '–'}
@@ -747,7 +751,7 @@ function HomNay() {
         <div>
           <small>Doanh thu dự kiến</small>
           {/* Hiệu ứng Pixel: số tiền KPI kiểu 8-bit khi bật Hiệu ứng Pixel */}
-          <b className={dangHieuUngPixel() ? 'px-kpi-so' : undefined}>
+          <b className={kpiPixel}>
             {tq ? `${tq.doanh_thu_du_kien.toLocaleString('vi-VN')} đ` : '–'}
           </b>
           <em>cước các đơn của chuyến trong ngày, chưa trừ đơn thất bại</em>
