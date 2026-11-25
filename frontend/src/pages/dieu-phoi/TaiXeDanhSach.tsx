@@ -130,8 +130,8 @@ export default function TaiXeDanhSach() {
                   <small>{tx.ten_dang_nhap}</small>
                 </td>
                 <td>
+                  <span className="so-gplx">{tx.so_gplx}</span>
                   <span className="bien">Hạng {tx.hang_gplx}</span>
-                  <small className="ma">{tx.so_gplx}</small>
                 </td>
                 <td>
                   <HanGiayTo han={tx.han_gplx} />

@@ -5593,3 +5593,15 @@ html {
 body:has(.nen-mo) {
   overflow: hidden;
 }
+
+/* Bảng Tài xế: số GPLX to, thoáng, số 0 gạch chéo để phân biệt các mã gần giống nhau; hạng nằm dưới */
+.so-gplx {
+  display: block;
+  margin-bottom: 4px;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  font-variant-numeric: slashed-zero;
+  white-space: nowrap;
+}
