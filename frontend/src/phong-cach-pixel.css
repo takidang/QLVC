@@ -2803,3 +2803,475 @@
     stroke-width: 2;
   }
 }
+
+/* Đăng nhập ở Pixel: dòng phụ thẳng hàng (bỏ hiệu ứng chữ cuối nổi lệch), link Tra cứu thành nút nổi bật */
+@media screen {
+  /* Cửa sổ đăng nhập kiểu game retro: khung viền than, bóng cứng; logo là thanh tiêu đề cobalt */
+  :root[data-phong-cach='pixel'] .dn-giua {
+    padding: 0 0 22px;
+    background: var(--mat);
+    border: 3px solid var(--n-charcoal);
+    border-radius: var(--bo-the);
+    box-shadow: 6px 6px 0 var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .dn-giua > :not(.dn-thuong-hieu) {
+    margin-inline: 22px;
+  }
+  /* Chưa mở: chỉ logo lớn + dòng "bấm vào logo" nhấp nháy kiểu PRESS START; thẻ Tra cứu vẫn hiện */
+  :root[data-phong-cach='pixel'] .dn-giua.dong {
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    justify-items: center;
+  }
+  :root[data-phong-cach='pixel'] .dn-giua.dong > :not(.dn-thuong-hieu) {
+    margin-inline: 0;
+    justify-self: stretch;
+  }
+  :root[data-phong-cach='pixel'] .dn-thuong-hieu.dn-bam-logo {
+    flex-direction: column;
+    gap: 10px;
+    justify-self: center;
+    margin-bottom: 30px;
+    padding: 18px 26px 14px;
+    font-size: 1.6rem;
+    background: var(--n-cobalt);
+    border: 3px solid var(--n-charcoal);
+    border-radius: var(--bo-the);
+    box-shadow: 6px 6px 0 var(--n-charcoal);
+    transition:
+      transform 90ms steps(2, end),
+      box-shadow 90ms steps(2, end);
+  }
+  :root[data-phong-cach='pixel'] .dn-thuong-hieu.dn-bam-logo .logo-pixel {
+    width: 110px;
+    height: auto;
+    stroke: none;
+  }
+  :root[data-phong-cach='pixel'] .dn-thuong-hieu.dn-bam-logo:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0 var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .dn-thuong-hieu.dn-bam-logo:active {
+    transform: translate(4px, 4px);
+    box-shadow: none;
+  }
+  @keyframes px-nhap-nhay {
+    50% {
+      opacity: 0;
+    }
+  }
+  :root[data-phong-cach='pixel'] .dn-goi-y {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--n-butter);
+    animation: px-nhap-nhay 1.1s steps(1, end) infinite;
+  }
+  /* Mở: thân cửa sổ trượt xuống theo bậc */
+  @keyframes px-mo-cua-so {
+    from {
+      clip-path: inset(0 0 100% 0);
+    }
+    to {
+      clip-path: inset(0 0 0 0);
+    }
+  }
+  :root[data-phong-cach='pixel'] .dn-than:not([hidden]) {
+    animation: px-mo-cua-so 360ms steps(6, end) backwards;
+  }
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
+    :is(.dn-goi-y, .dn-than, .dn-bam-logo) {
+    animation: none;
+    transition: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :root[data-phong-cach='pixel'] :is(.dn-goi-y, .dn-than, .dn-bam-logo) {
+      animation: none;
+      transition: none;
+    }
+  }
+  :root[data-phong-cach='pixel'] .dn-o input,
+  :root[data-phong-cach='pixel'] .dn-than > button {
+    border-radius: var(--bo);
+  }
+  :root[data-phong-cach='pixel'] .dn-thuong-hieu {
+    justify-self: stretch;
+    margin-bottom: 6px;
+    padding: 8px 14px 8px 8px;
+    color: #fff;
+    background: var(--n-cobalt);
+    border: 0;
+    border-bottom: 3px solid var(--n-charcoal);
+    border-radius: 0;
+    box-shadow: none;
+  }
+  :root[data-phong-cach='pixel'] .dn-thuong-hieu .ten-pixel small {
+    color: var(--n-butter);
+    opacity: 1;
+  }
+  :root[data-phong-cach='pixel'] .dn-thuong-hieu .logo-pixel {
+    width: 56px;
+    height: auto;
+    filter: drop-shadow(3px 3px 0 var(--n-charcoal));
+  }
+  :root[data-phong-cach='pixel'] .dn-tra-cuu {
+    color: var(--n-charcoal);
+    background: var(--n-butter);
+    border: 2px solid var(--n-charcoal);
+    border-radius: var(--bo);
+    box-shadow: 4px 4px 0 var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .dn-tra-cuu:hover {
+    background: var(--n-ochre);
+  }
+  :root[data-phong-cach='pixel'] .dn-tra-cuu:active {
+    transform: translate(3px, 3px);
+    box-shadow: none;
+  }
+  :root[data-phong-cach='pixel'] .dn-tra-cuu :is(svg, i) {
+    stroke: var(--n-charcoal);
+    color: var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .dn-tra-cuu small {
+    color: var(--n-charcoal);
+  }
+}
+
+/* Đăng nhập Pixel: "máy in phiếu" — bấm logo máy in tờ phiếu nhiệt (nhân viên / khách tra cứu) */
+@media screen {
+  :root[data-phong-cach='pixel'] .dn-px-trai {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 5dvh 56px 20px;
+  }
+  :root[data-phong-cach='pixel'] .dn-may {
+    width: 100%;
+    max-width: 380px;
+  }
+  :root[data-phong-cach='pixel'] .dn-may-than {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    padding: 12px 16px 14px; /* thân máy còn một đoạn dưới khe như ban đầu */
+    color: var(--n-cream);
+    background: var(--n-charcoal);
+    border: 3px solid var(--n-charcoal);
+    border-radius: var(--bo-the);
+    /* Bóng chỉ đổ sang phải: đổ xuống dưới sẽ đè lên tờ phiếu đang ra khỏi khe */
+    box-shadow: 6px 0 0 color-mix(in srgb, var(--n-charcoal) 40%, transparent);
+  }
+  :root[data-phong-cach='pixel'] .dn-may-nhan {
+    justify-self: stretch;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+  }
+  :root[data-phong-cach='pixel'] .dn-den {
+    width: 10px;
+    height: 10px;
+    background: var(--n-sage);
+    border: 2px solid var(--n-cream);
+  }
+  @keyframes px-den-chay {
+    50% {
+      background: var(--n-butter);
+    }
+  }
+  :root[data-phong-cach='pixel'] .dn-den.chay {
+    animation: px-den-chay 170ms steps(1, end) 3;
+  }
+  :root[data-phong-cach='pixel'] .dn-may-than .dn-thuong-hieu.dn-bam-logo {
+    margin: 0;
+    padding: 12px 22px 10px;
+    border-color: var(--n-cream);
+    box-shadow: 4px 4px 0 color-mix(in srgb, #000 55%, transparent);
+  }
+  :root[data-phong-cach='pixel'] .dn-may-than .dn-thuong-hieu.dn-bam-logo:hover {
+    box-shadow: 6px 6px 0 color-mix(in srgb, #000 55%, transparent);
+  }
+  :root[data-phong-cach='pixel'] .dn-may-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+  }
+  :root[data-phong-cach='pixel'] .dn-may-logo .logo-pixel {
+    width: 44px;
+    height: auto;
+  }
+  :root[data-phong-cach='pixel'] .dn-khe {
+    justify-self: stretch;
+    height: 10px;
+    margin-inline: 0;
+    background: #000;
+    border-radius: 3px;
+    box-shadow:
+      inset 0 3px 0 #000,
+      0 -1px 0 color-mix(in srgb, var(--n-cream) 35%, transparent);
+  }
+  /* Tờ phiếu chui ra từ GIỮA khe đen: mép trên vùng cắt nằm ở giữa khe (đệm dưới 14 px + nửa khe 5 px),
+     phiếu đè lên đoạn thân máy dưới khe; vùng cắt chừa hai bên và dưới để phiếu rơi khi xé */
+  :root[data-phong-cach='pixel'] .dn-giay-vung {
+    position: relative;
+    z-index: 3;
+    margin: -19px 29px 0;
+    clip-path: inset(0 -60px -420px -60px);
+  }
+  :root[data-phong-cach='pixel'] .dn-giay {
+    transform-origin: 0 0;
+    filter: drop-shadow(2px 0 0 var(--n-charcoal)) drop-shadow(-2px 0 0 var(--n-charcoal))
+      drop-shadow(0 2px 0 var(--n-charcoal)) drop-shadow(4px 4px 0 var(--n-charcoal));
+    animation: px-giay-ra 520ms steps(9, end) both;
+  }
+  @keyframes px-giay-ra {
+    from {
+      transform: translateY(-100%);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @keyframes px-giay-xe {
+    to {
+      transform: translate(46px, 300px) rotate(9deg);
+      opacity: 0;
+    }
+  }
+  :root[data-phong-cach='pixel'] .dn-giay.xe {
+    pointer-events: none;
+    animation: px-giay-xe 350ms steps(5, end) forwards;
+  }
+  /* Giấy nhiệt: kem sáng, mép dưới răng cưa */
+  :root[data-phong-cach='pixel'] .dang-nhap .dn-phieu {
+    display: grid;
+    gap: 10px;
+    padding: 30px 22px 34px;
+    color: var(--n-charcoal);
+    background: color-mix(in srgb, var(--n-cream) 28%, #fff);
+    -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% /
+      14px 100%;
+    mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%;
+  }
+  :root[data-phong-cach='pixel'] .dn-phieu h1 {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-shadow: none;
+    line-height: 1.3;
+    text-align: center;
+  }
+  :root[data-phong-cach='pixel'] .dn-phieu-ma {
+    margin: 0;
+    font-size: 0.72rem;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+  :root[data-phong-cach='pixel'] .dn-phieu hr {
+    margin: 0;
+    border: 0;
+    border-top: 2px dotted var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .dn-qr {
+    justify-self: center;
+    width: 54px;
+    height: auto;
+    fill: var(--n-charcoal);
+    shape-rendering: crispEdges;
+  }
+  :root[data-phong-cach='pixel'] .dn-phieu label {
+    color: var(--n-charcoal);
+    font-weight: 700;
+  }
+  :root[data-phong-cach='pixel'] .dn-phieu .dn-o input {
+    padding: 11px 12px;
+  }
+  :root[data-phong-cach='pixel'] .dn-phieu .dn-xe {
+    padding: 8px 12px;
+    font-size: 0.82rem;
+    color: var(--n-charcoal);
+    background: transparent;
+    border: 2px dashed var(--n-charcoal);
+    box-shadow: none;
+  }
+  :root[data-phong-cach='pixel'] .dn-phieu .dn-xe:hover {
+    background: color-mix(in srgb, var(--n-butter) 45%, transparent);
+  }
+  :root[data-phong-cach='pixel'] .dn-px-doi {
+    width: 100%;
+    max-width: 380px;
+    margin-top: 26px;
+    padding: 12px 18px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--n-charcoal);
+    background: var(--n-butter);
+    border: 2px solid var(--n-charcoal);
+    border-radius: var(--bo);
+    box-shadow: 4px 4px 0 var(--n-charcoal);
+    cursor: pointer;
+  }
+  :root[data-phong-cach='pixel'] .dn-px-doi:hover {
+    background: var(--n-ochre);
+  }
+  :root[data-phong-cach='pixel'] .dn-px-doi:active {
+    transform: translate(3px, 3px);
+    box-shadow: none;
+  }
+  /* Chỉ dành cho trình đọc màn hình */
+  :root[data-phong-cach='pixel'] .dn-chi-doc {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  /* Nút "Nhân viên đăng nhập" ở trang tra cứu */
+  :root[data-phong-cach='pixel'] .tc-trai > header a.tc-nv {
+    font-weight: 700;
+    color: var(--n-charcoal);
+    background: var(--n-butter);
+    border: 2px solid var(--n-charcoal);
+    border-radius: var(--bo);
+    box-shadow: 3px 3px 0 var(--n-charcoal);
+  }
+  :root[data-phong-cach='pixel'] .tc-trai > header a.tc-nv:hover {
+    background: var(--n-ochre);
+  }
+  :root[data-phong-cach='pixel'] .tc-trai > header a.tc-nv:active {
+    transform: translate(3px, 3px);
+    box-shadow: none;
+  }
+
+  /* Tắt chuyển động: phiếu hiện sẵn, không in / xé */
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
+    :is(.dn-giay, .dn-giay.xe, .dn-den.chay) {
+    animation: none;
+  }
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
+    :is(.dn-px-doi, .tc-nv, .dn-bam-logo) {
+    transition: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :root[data-phong-cach='pixel'] :is(.dn-giay, .dn-giay.xe, .dn-den.chay) {
+      animation: none;
+    }
+    :root[data-phong-cach='pixel'] :is(.dn-px-doi, .tc-nv) {
+      transition: none;
+    }
+  }
+}
+
+/* Con dấu đóng lên phiếu (xanh = được, đỏ = từ chối) và phiếu rung khi bị từ chối */
+@media screen {
+  :root[data-phong-cach='pixel'] .dn-giay {
+    position: relative;
+  }
+  :root[data-phong-cach='pixel'] .dn-dau {
+    --mau-dau: color-mix(in srgb, var(--n-coral) 62%, var(--n-charcoal));
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    width: max-content;
+    height: fit-content;
+    margin: auto;
+    padding: 6px 14px;
+    display: grid;
+    justify-items: center;
+    color: var(--mau-dau);
+    background: color-mix(in srgb, var(--n-cream) 40%, #fff 60%);
+    border: 4px double var(--mau-dau);
+    rotate: -8deg;
+    pointer-events: none;
+    animation:
+      px-dau-dap 250ms steps(3, end) both,
+      px-dau-mo 400ms steps(4, end) 1100ms forwards;
+  }
+  :root[data-phong-cach='pixel'] .dn-dau.ok {
+    --mau-dau: var(--n-teal);
+    animation: px-dau-dap 250ms steps(3, end) both;
+  }
+  :root[data-phong-cach='pixel'] .dn-dau b {
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    line-height: 1.1;
+  }
+  :root[data-phong-cach='pixel'] .dn-dau small {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+  }
+  @keyframes px-dau-dap {
+    from {
+      scale: 1.6;
+    }
+    60% {
+      scale: 0.95;
+    }
+    to {
+      scale: 1;
+    }
+  }
+  @keyframes px-dau-mo {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes px-rung {
+    20% {
+      transform: translateX(-7px);
+    }
+    40% {
+      transform: translateX(7px);
+    }
+    60% {
+      transform: translateX(-4px);
+    }
+    80% {
+      transform: translateX(4px);
+    }
+  }
+  :root[data-phong-cach='pixel'] .dn-phieu.rung {
+    animation: px-rung 300ms steps(1, end);
+  }
+  :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
+    :is(.dn-dau, .dn-dau.ok, .dn-phieu.rung) {
+    animation: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :root[data-phong-cach='pixel'] :is(.dn-dau, .dn-dau.ok, .dn-phieu.rung) {
+      animation: none;
+    }
+  }
+}
+
+/* Ảnh nền đăng nhập bản pixel art (PixelLab, từ ảnh Unsplash gốc): giữ nét ô vuông khi phóng to */
+@media screen {
+  :root[data-phong-cach='pixel'] .dn-hinh {
+    image-rendering: pixelated;
+    /* Chỉ ảnh pixel art: bỏ lớp phủ xanh, khung viền than + bóng cứng */
+    background: var(--anh) center / cover no-repeat var(--n-charcoal);
+    border: 3px solid var(--n-charcoal);
+    border-radius: var(--bo-the);
+    box-shadow: 6px 6px 0 var(--n-charcoal);
+  }
+  /* Bỏ hạt rơi và dòng chữ giới thiệu trên ảnh */
+  :root[data-phong-cach='pixel'] .dn-hinh :is(.nen-hat, p) {
+    display: none;
+  }
+}

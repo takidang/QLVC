@@ -1,5 +1,5 @@
 import { useRef, useState, type CSSProperties, type FormEvent } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { LoiApi } from '../api/goi'
 import { traCuu, type KetQuaTraCuu } from '../api/traCuu'
 import { XeTaiHanhTrinhPixel } from '../HieuUngPixel'
@@ -30,16 +30,22 @@ const luc = (iso: string) =>
 export default function TraCuu() {
   const [thamSo] = useSearchParams()
   const [ma, setMa] = useState(thamSo.get('ma') ?? '')
-  const [so, setSo] = useState('')
-  const [kq, setKq] = useState<KetQuaTraCuu | null>(null)
+  // Từ phiếu tra cứu ở trang đăng nhập đã có sẵn kết quả (state.kq, state.so): dùng luôn, khỏi gọi API
+  // lần nữa. 4 số cuối SĐT không bao giờ nằm trên URL (api.md 3.4).
+  const sanTuPhieu = useLocation().state as { kq?: KetQuaTraCuu; so?: string } | null
+  const kqSan = sanTuPhieu?.kq
+  const [so, setSo] = useState(() => sanTuPhieu?.so ?? '')
+  const coSan =
+    !!kqSan && kqSan.ma_don.toUpperCase() === (thamSo.get('ma') ?? '').trim().toUpperCase()
+  const [kq, setKq] = useState<KetQuaTraCuu | null>(coSan ? kqSan : null)
   const [loi, setLoi] = useState('')
   const [dangGui, setDangGui] = useState(false)
   const oMa = useRef<HTMLInputElement>(null)
   const oKq = useRef<HTMLHeadingElement>(null)
   useHienKhiCuon(kq?.ma_don)
 
-  async function gui(e: FormEvent) {
-    e.preventDefault()
+  async function gui(e?: FormEvent) {
+    e?.preventDefault()
     if (!ma.trim() || !/^\d{4}$/.test(so))
       return setLoi('Nhập mã đơn và đúng 4 chữ số cuối số điện thoại')
     setLoi('')
@@ -79,7 +85,9 @@ export default function TraCuu() {
             <LogoTK co={22} />
             <TenThuongHieu />
           </span>
-          <Link to="/dang-nhap">Nhân viên đăng nhập</Link>
+          <Link to="/dang-nhap" className="tc-nv">
+            Nhân viên đăng nhập
+          </Link>
         </header>
 
         {kq ? (
