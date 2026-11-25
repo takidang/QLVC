@@ -1,0 +1,106 @@
+[
+  {
+    "trang": "Chi tiết chuyến",
+    "path": "/dieu-phoi/chuyen/23",
+    "dom_nodes": 1511,
+    "animations_total": 2,
+    "animations_running": 1,
+    "animation_names": [
+      "px-mui-ten",
+      "px-hien-mo"
+    ],
+    "fps_idle": 60.3,
+    "max_frame_idle_ms": 16.8,
+    "fps_scroll": 60.1,
+    "max_frame_scroll_ms": 16.8,
+    "long_tasks_tai": 0,
+    "long_tasks_idle": 0,
+    "long_tasks_scroll": 0,
+    "long_tasks_tong": 0,
+    "long_task_max_ms": 0.0,
+    "long_task_tong_ms": 0
+  },
+  {
+    "trang": "Danh sách đơn",
+    "path": "/dieu-phoi/don",
+    "dom_nodes": 1365,
+    "animations_total": 2,
+    "animations_running": 1,
+    "animation_names": [
+      "px-mui-ten",
+      "px-hien-mo"
+    ],
+    "fps_idle": 60.3,
+    "max_frame_idle_ms": 16.8,
+    "fps_scroll": 60.1,
+    "max_frame_scroll_ms": 16.8,
+    "long_tasks_tai": 0,
+    "long_tasks_idle": 0,
+    "long_tasks_scroll": 0,
+    "long_tasks_tong": 0,
+    "long_task_max_ms": 0.0,
+    "long_task_tong_ms": 0
+  },
+  {
+    "trang": "Tài khoản",
+    "path": "/tai-khoan",
+    "dom_nodes": 800,
+    "animations_total": 1,
+    "animations_running": 0,
+    "animation_names": [
+      "px-hien-mo"
+    ],
+    "fps_idle": 60.6,
+    "max_frame_idle_ms": 16.8,
+    "fps_scroll": 60.1,
+    "max_frame_scroll_ms": 16.8,
+    "long_tasks_tai": 0,
+    "long_tasks_idle": 0,
+    "long_tasks_scroll": 0,
+    "long_tasks_tong": 0,
+    "long_task_max_ms": 0.0,
+    "long_task_tong_ms": 0
+  },
+  {
+    "trang": "Tổng quan quản lý",
+    "path": "/quan-ly/tong-quan",
+    "dom_nodes": 1166,
+    "animations_total": 2,
+    "animations_running": 1,
+    "animation_names": [
+      "px-mui-ten",
+      "px-hien-mo"
+    ],
+    "fps_idle": 60.1,
+    "max_frame_idle_ms": 16.8,
+    "fps_scroll": 60.1,
+    "max_frame_scroll_ms": 16.8,
+    "long_tasks_tai": 0,
+    "long_tasks_idle": 0,
+    "long_tasks_scroll": 0,
+    "long_tasks_tong": 0,
+    "long_task_max_ms": 0.0,
+    "long_task_tong_ms": 0
+  },
+  {
+    "trang": "Quyết toán",
+    "path": "/ke-toan/quyet-toan",
+    "dom_nodes": 623,
+    "animations_total": 2,
+    "animations_running": 1,
+    "animation_names": [
+      "px-mui-ten",
+      "px-hien-mo"
+    ],
+    "fps_idle": 60.2,
+    "max_frame_idle_ms": 16.8,
+    "fps_scroll": 60.1,
+    "max_frame_scroll_ms": 16.8,
+    "long_tasks_tai": 0,
+    "long_tasks_idle": 0,
+    "long_tasks_scroll": 0,
+    "long_tasks_tong": 0,
+    "long_task_max_ms": 0.0,
+    "long_task_tong_ms": 0
+  }
+]

@@ -165,7 +165,7 @@ Mọi lỗi trả cùng một dạng:
 
 | HTTP | Khi nào |
 |---|---|
-| 400 | Dữ liệu sai kiểu, thiếu trường. FastAPI mặc định trả 422 cho lỗi này, nên `main.py` đăng ký handler chuyển `RequestValidationError` sang 400 (giữ 422 riêng cho vi phạm BR) |
+| 400 | Dữ liệu sai kiểu, thiếu trường. FastAPI mặc định trả 422 cho lỗi này, nên `main.py` đăng ký handler chuyển `RequestValidationError` sang 400 (giữ 422 riêng cho vi phạm BR). Số vượt cột CSDL (`DataError`) hay ngày tràn (`OverflowError`) cũng trả 400, mã `VUOT_GIOI_HAN` (kiểm thử khám phá 23/11) |
 | 401 | Chưa đăng nhập, token hết hạn |
 | 403 | Sai vai trò, hoặc đúng vai trò nhưng không phải chủ sở hữu (tài xế khác chuyến). Chuyến của chính mình nhưng sai trạng thái là 409, không phải 403 |
 | 404 | Không tồn tại |

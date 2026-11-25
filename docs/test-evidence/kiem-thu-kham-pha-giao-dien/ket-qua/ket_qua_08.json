@@ -1,0 +1,70 @@
+{
+  "muc": 8,
+  "ten_muc": "Phân quyền giao diện, hết phiên (xóa cookie) & Đăng xuất rồi Back",
+  "tong": 6,
+  "dat": 3,
+  "loi": 3,
+  "thoi_gian_giay": 67.4,
+  "ca": [
+    {
+      "ma": "PQ01_TAIXE_URL_KHAC",
+      "ten": "Tài xế mở thẳng 10 URL của Quản lý / Điều phối / Kế toán",
+      "dat": true,
+      "ly_do": "Cả 10 URL vai trò khác đều chuyển hướng về /tai-xe/...",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Đăng nhập taixe -> mở thẳng /quan-ly/*, /dieu-phoi/*, /ke-toan/*",
+      "mong_doi": "Mọi URL vai trò khác đều redirect về /tai-xe/chuyen, không lộ dữ liệu"
+    },
+    {
+      "ma": "PQ02_DIEUPHOI_URL_KHAC",
+      "ten": "Điều phối mở thẳng 9 URL của Quản lý / Kế toán / Tài xế",
+      "dat": true,
+      "ly_do": "Cả 9 URL trái quyền đều redirect về /dieu-phoi/...",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Đăng nhập dieuphoi -> mở thẳng /quan-ly/*, /ke-toan/*, /tai-xe/chuyen",
+      "mong_doi": "Mọi URL trái quyền đều redirect về /dieu-phoi/chuyen"
+    },
+    {
+      "ma": "PQ03_KETOAN_URL_KHAC",
+      "ten": "Kế toán mở thẳng 7 URL của Quản lý / Điều phối / Tài xế",
+      "dat": true,
+      "ly_do": "Cả 7 URL trái quyền đều redirect về /ke-toan/...",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "Đăng nhập ketoan -> mở thẳng /quan-ly/*, /dieu-phoi/*, /tai-xe/chuyen",
+      "mong_doi": "Mọi URL trái quyền đều redirect về /ke-toan/tong-quan"
+    },
+    {
+      "ma": "PQ04_QUANLY_CHIXEM",
+      "ten": "Quản lý bị chặn /ke-toan/* & /tai-xe/*, và chỉ xem ở /quan-ly/cong-no, /quyet-toan",
+      "dat": false,
+      "ly_do": "Quản lý thấy nút 'Quyết toán' ở /quan-ly/quyet-toan (phải chỉ xem)",
+      "muc": "Nghiêm trọng",
+      "anh": "anh/m08_PQ04_QUANLY_CHIXEM.png",
+      "tai_hien": "Đăng nhập quanly -> mở /ke-toan/*, /tai-xe/* -> kiểm nút ghi ở /quan-ly/cong-no & /quyet-toan",
+      "mong_doi": "Chặn /ke-toan/* và /tai-xe/*, ẩn toàn bộ nút ghi tiền ở Công nợ & Quyết toán"
+    },
+    {
+      "ma": "PQ05_HET_PHIEN_COOKIE",
+      "ten": "Hết phiên (xóa cookie) rồi bấm menu tiếp và F5: phải tự về /dang-nhap gọn",
+      "dat": false,
+      "ly_do": "Hết cookie nhưng bấm menu tiếp KHÔNG tự đưa về /dang-nhap (vẫn kẹt ở /dieu-phoi/don, chỉ báo lỗi/trống)",
+      "muc": "Vừa",
+      "anh": "anh/m08_PQ05_HET_PHIEN_COOKIE.png",
+      "tai_hien": "Đăng nhập dieuphoi -> clear_cookies() -> bấm menu sang /dieu-phoi/don -> F5",
+      "mong_doi": "Nhận 401 thì chuyển gọn về /dang-nhap, không kẹt trang cũ/màn trống"
+    },
+    {
+      "ma": "PQ06_DANG_XUAT_BACK",
+      "ten": "Đăng xuất rồi bấm nút Back trình duyệt: không lộ trang nội bộ cũ",
+      "dat": false,
+      "ly_do": "Đăng xuất xong bấm Back bị lộ trang cũ: ['Back #2: url=about:blank, tables=0'], pageerror=[]",
+      "muc": "Nghiêm trọng",
+      "anh": "anh/m08_PQ06_DANG_XUAT_BACK.png",
+      "tai_hien": "Đăng nhập -> mở Chuyến -> mở Đơn -> Đăng xuất -> bấm Back 2 lần",
+      "mong_doi": "Giữ ở /dang-nhap, không hiện lại bảng đơn hàng hay chuyến cũ"
+    }
+  ]
+}

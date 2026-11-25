@@ -2,6 +2,7 @@ import unicodedata
 from datetime import date
 
 from sqlalchemy import func, or_, select
+from sqlalchemy.dialects.postgresql import distinct_on
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
@@ -71,7 +72,7 @@ def id_dang_ap_dung(db: Session) -> set[int]:
     q = (
         select(BangGia.id)
         .where(BangGia.hieu_luc_tu <= hom_nay_vn())
-        .distinct(*CAP)
+        .ext(distinct_on(*CAP))
         .order_by(*CAP, BangGia.hieu_luc_tu.desc())
     )
     return set(db.scalars(q))

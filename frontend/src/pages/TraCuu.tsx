@@ -1,9 +1,11 @@
 import { useRef, useState, type CSSProperties, type FormEvent } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import { LoiApi } from '../api/goi'
 import { traCuu, type KetQuaTraCuu } from '../api/traCuu'
-import { NEN } from '../nen'
+import { XeTaiHanhTrinhPixel } from '../HieuUngPixel'
+import { dangHieuUngPixel, NEN, phongCachDaLuu } from '../nen'
 import { useHienKhiCuon } from '../useHienKhiCuon'
+import { LogoTK, TenThuongHieu } from '../LogoTK'
 
 // Tên trạng thái đơn viết cho khách (không dùng từ nội bộ như "ghép", "thất bại")
 const TEN_CHO_KHACH: Record<string, string> = {
@@ -28,16 +30,22 @@ const luc = (iso: string) =>
 export default function TraCuu() {
   const [thamSo] = useSearchParams()
   const [ma, setMa] = useState(thamSo.get('ma') ?? '')
-  const [so, setSo] = useState('')
-  const [kq, setKq] = useState<KetQuaTraCuu | null>(null)
+  // Từ phiếu tra cứu ở trang đăng nhập đã có sẵn kết quả (state.kq, state.so): dùng luôn, khỏi gọi API
+  // lần nữa. 4 số cuối SĐT không bao giờ nằm trên URL (api.md 3.4).
+  const sanTuPhieu = useLocation().state as { kq?: KetQuaTraCuu; so?: string } | null
+  const kqSan = sanTuPhieu?.kq
+  const [so, setSo] = useState(() => sanTuPhieu?.so ?? '')
+  const coSan =
+    !!kqSan && kqSan.ma_don.toUpperCase() === (thamSo.get('ma') ?? '').trim().toUpperCase()
+  const [kq, setKq] = useState<KetQuaTraCuu | null>(coSan ? kqSan : null)
   const [loi, setLoi] = useState('')
   const [dangGui, setDangGui] = useState(false)
   const oMa = useRef<HTMLInputElement>(null)
   const oKq = useRef<HTMLHeadingElement>(null)
   useHienKhiCuon(kq?.ma_don)
 
-  async function gui(e: FormEvent) {
-    e.preventDefault()
+  async function gui(e?: FormEvent) {
+    e?.preventDefault()
     if (!ma.trim() || !/^\d{4}$/.test(so))
       return setLoi('Nhập mã đơn và đúng 4 chữ số cuối số điện thoại')
     setLoi('')
@@ -63,7 +71,13 @@ export default function TraCuu() {
 
   // Mốc mới nhất trên cùng; mốc đầu là trạng thái hiện tại
   const moc = kq ? [...kq.moc].reverse() : []
+  const veMayIn = useNavigate()
   const traKhac = () => {
+    // Pixel: quay về máy in ở trang đăng nhập và in luôn phiếu tra cứu mới
+    if (phongCachDaLuu() === 'pixel') {
+      veMayIn('/dang-nhap', { state: { inPhieu: 'khach' } })
+      return
+    }
     setKq(null)
     setSo('')
     requestAnimationFrame(() => oMa.current?.select())
@@ -73,8 +87,13 @@ export default function TraCuu() {
     <main className="tra-cuu">
       <div className="tc-trai">
         <header>
-          <span className="thuong-hieu">Quản lý vận tải</span>
-          <Link to="/dang-nhap">Nhân viên đăng nhập</Link>
+          <span className="thuong-hieu">
+            <LogoTK co={22} />
+            <TenThuongHieu />
+          </span>
+          <Link to="/dang-nhap" className="tc-nv">
+            Nhân viên đăng nhập
+          </Link>
         </header>
 
         {kq ? (
@@ -135,6 +154,8 @@ export default function TraCuu() {
             <h2 ref={oKq} tabIndex={-1}>
               {TEN_CHO_KHACH[kq.trang_thai] ?? kq.trang_thai}
             </h2>
+            {/* Hiệu ứng Pixel: xe tải pixel chạy trên dải mốc hành trình tới trạng thái hiện tại */}
+            {dangHieuUngPixel() && <XeTaiHanhTrinhPixel trangThai={kq.trang_thai} moc={kq.moc} />}
             <ol className="lt">
               {moc.map((m, i) => (
                 <li key={`${m.trang_thai}-${m.luc}`} className={i === 0 ? 'toi' : 'xong'}>
@@ -157,7 +178,12 @@ export default function TraCuu() {
       <section
         className="dn-hinh tc-hinh"
         aria-hidden="true"
-        style={{ '--anh': `url(${NEN.anh})` } as CSSProperties}
+        style={
+          {
+            // Pixel: dùng ảnh pixel art như màn đăng nhập
+            '--anh': `url(${phongCachDaLuu() === 'pixel' ? '/anh/dang-nhap-hoang-hon-pixel.png?v=3' : NEN.anh})`,
+          } as CSSProperties
+        }
       />
     </main>
   )

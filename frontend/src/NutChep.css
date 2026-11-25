@@ -1,0 +1,26 @@
+/* Nút chép cạnh SĐT: nhỏ, không chiếm vai nút chính; !important để không dính kiểu nút của khung chứa */
+button.nut-chep {
+  display: inline-grid !important;
+  place-items: center;
+  width: 28px !important;
+  min-width: 0 !important;
+  height: 28px;
+  min-height: 0 !important;
+  margin: 0 0 0 8px !important;
+  padding: 0 !important;
+  vertical-align: middle;
+  color: var(--muc) !important;
+  background: transparent !important;
+  border: 1px solid var(--vien-dam) !important;
+  cursor: pointer;
+}
+button.nut-chep:hover {
+  background: color-mix(in srgb, var(--muc) 10%, transparent) !important;
+}
+:root[data-phong-cach='pixel'] button.nut-chep {
+  border: 2px solid var(--n-charcoal) !important;
+  border-radius: 0 !important;
+}
+:root[data-phong-cach='pixel'] button.nut-chep:active {
+  translate: 1px 1px;
+}

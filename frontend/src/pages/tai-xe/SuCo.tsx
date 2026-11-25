@@ -3,6 +3,9 @@ import { LoiApi, loiTheoTruong } from '../../api/goi'
 import { baoSuCo, suCoChuyen, TEN_LOAI_SU_CO, type LoaiSuCo, type SuCo } from '../../api/suCo'
 import { ngayGio } from '../../api/toi'
 import ChonTep from '../../ChonTep'
+import { NoiDungNutGuiPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
+import { NoteLoi } from '../../NoteLoi'
 import { nenAnh } from '../../nenAnh'
 import { LOI_MANG, SO_ANH_TOI_DA } from './QuetLay'
 import { ThongBao } from '../../thongBao'
@@ -34,11 +37,14 @@ export function SuCoChuyen({ chuyenId, baoDuoc }: { chuyenId: number; baoDuoc: b
     <div className="the">
       <strong>Sự cố</strong>
       <ThongBao chu={thongBao} />
-      {loi && (
-        <p role="alert" className="loi">
-          {loi}
-        </p>
-      )}
+      {loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          <NoteLoi noiDung={loi} kieu="nho" />
+        ) : (
+          <p role="alert" className="loi">
+            {loi}
+          </p>
+        ))}
       {ds && ds.length === 0 && <p className="ghi-chu">Chưa báo sự cố nào</p>}
       <ul className="ds-chi">
         {ds?.map((s) => (
@@ -89,12 +95,21 @@ function FormSuCo({
   const [anh, setAnh] = useState<File[]>([])
   const [dangGui, setDangGui] = useState(false)
   const [loi, setLoi] = useState('')
+  // Hiệu ứng Pixel: cờ hiện "Xong ✓" ngắn trên nút gửi sau khi báo sự cố thành công (≤ 1,2 s)
+  const [vuaXong, setVuaXong] = useState(false)
+
+  useEffect(() => {
+    if (!vuaXong) return
+    const t = window.setTimeout(() => setVuaXong(false), 1100)
+    return () => window.clearTimeout(t)
+  }, [vuaXong])
 
   async function gui(e: FormEvent) {
     e.preventDefault()
     if (!ghiChu.trim()) return setLoi('Ghi rõ sự cố trước khi báo')
     if (anh.length > SO_ANH_TOI_DA) return setLoi(`Tối đa ${SO_ANH_TOI_DA} ảnh`)
     setLoi('')
+    setVuaXong(false)
     setDangGui(true)
     const xong = await onGui(loai, ghiChu.trim(), anh)
     setDangGui(false)
@@ -102,8 +117,12 @@ function FormSuCo({
       setGhiChu('')
       setAnh([])
       ;(e.target as HTMLFormElement).reset()
+      // Hiệu ứng Pixel: đổi nhãn nút sang "Xong ✓" sau khi báo sự cố thành công
+      if (dangHieuUngPixel()) setVuaXong(true)
     }
   }
+
+  const huPixel = dangHieuUngPixel()
 
   return (
     <form className="form-km" onSubmit={gui}>
@@ -131,14 +150,33 @@ function FormSuCo({
         accept="image/jpeg,image/png"
         capture="environment"
         multiple
+        dangNen={dangGui && anh.length > 0}
         onChange={(e) => setAnh([...(e.target.files ?? [])])}
       />
-      {loi && (
-        <p role="alert" className="loi">
-          {loi}
-        </p>
-      )}
-      <button disabled={dangGui}>{dangGui ? 'Đang gửi…' : 'Báo sự cố'}</button>
+      {loi &&
+        (phongCachDaLuu() === 'pixel' ? (
+          <NoteLoi noiDung={loi} kieu="nho" />
+        ) : (
+          <p role="alert" className="loi">
+            {loi}
+          </p>
+        ))}
+      {/* Hiệu ứng Pixel: nút gửi giữ bề ngang và đổi chữ theo bậc "Đang gửi…" → "Xong ✓" */}
+      <button
+        disabled={dangGui}
+        aria-busy={dangGui || undefined}
+        className={
+          huPixel ? `px-nut-gui${dangGui ? ' dang-gui' : vuaXong ? ' vua-xong' : ''}` : undefined
+        }
+      >
+        {huPixel ? (
+          <NoiDungNutGuiPixel nhan="Báo sự cố" dangGui={dangGui} vuaXong={vuaXong} />
+        ) : dangGui ? (
+          'Đang gửi…'
+        ) : (
+          'Báo sự cố'
+        )}
+      </button>
     </form>
   )
 }

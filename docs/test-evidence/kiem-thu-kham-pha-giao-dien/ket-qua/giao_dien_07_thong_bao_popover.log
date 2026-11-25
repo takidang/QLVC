@@ -1,0 +1,19 @@
+
+============================================================================
+MỤC 07: Chuông thông báo, menu tài khoản, ô tìm kiếm & popover 'ĐƠN THẤT BẠI'
+============================================================================
+[ĐẠT] TB01_CHUONG_LOGIC - Chuông thông báo: số 'mới' khớp API, cuộn danh sách, bấm mục điều hướng đúng trang: Số mới khớp API (9/9), hộp gọn, bấm mục đi đúng (/dieu-phoi/chuyen/17 -> /dieu-phoi/chuyen/17)
+[ĐẠT] TB02_NOI_1100 - Chuông, Menu tài khoản & Ô tìm kiếm ở 1100x800: không tràn màn hay che menu: Chuông, Menu tài khoản & Tìm chung gọn trong 1100x800
+[ĐẠT] TB02_NOI_390 - Chuông, Menu tài khoản & Ô tìm kiếm ở 390x844: không tràn màn hay che menu: Chuông, Menu tài khoản & Tìm chung gọn trong 390x844
+[ĐẠT] TB03_TIM_CHUNG_CLICK - Ô tìm kiếm trên cùng: gõ từ khóa, hiện danh sách nhóm và bấm điều hướng đúng: Tìm chung mở hộp, bấm kết quả điều hướng đúng (/dieu-phoi/chuyen/23)
+[LỖI (Vừa)] TB04_POPOVER_1100 - Popover cảnh báo 'ĐƠN THẤT BẠI' ở 1100x800: tràn màn, che menu & rê chuột không tắt giữa chừng: Ngoại lệ khi chạy ca: TimeoutError: Locator.click: Timeout 12000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text(\"ĐƠN THẤT BẠI\"), button:has-text(\"Đơn thất bại\"), [class*=\"that-bai\"], [class*=\"canh-bao\"] button").first
+    - locator reso | ảnh: anh/m07_TB04_POPOVER_1100_exc.png
+[LỖI (Vừa)] TB04_POPOVER_390 - Popover cảnh báo 'ĐƠN THẤT BẠI' ở 390x844: tràn màn, che menu & rê chuột không tắt giữa chừng: Ngoại lệ khi chạy ca: TimeoutError: Locator.click: Timeout 12000ms exceeded.
+Call log:
+  - waiting for locator("button:has-text(\"ĐƠN THẤT BẠI\"), button:has-text(\"Đơn thất bại\"), [class*=\"that-bai\"], [class*=\"canh-bao\"] button").first
+    - locator reso | ảnh: anh/m07_TB04_POPOVER_390_exc.png
+
+==> TỔNG KẾT MỤC 07 (Chuông thông báo, menu tài khoản, ô tìm kiếm & popover 'ĐƠN THẤT BẠI'): 6 ca | ĐẠT: 4 | LỖI: 2 | 42.0s
+    Đã lưu JSON: C:\Users\Lenovo\Desktop\DoAnChuyenNganh\QLVC-agy-pha\kiem-thu-kham-pha\ket_qua_07.json

@@ -8,7 +8,10 @@ import {
 } from '../../api/congNo'
 import { LoiApi } from '../../api/goi'
 import { ngayGio } from '../../api/toi'
+import { DongXuRoiKetPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel } from '../../nen'
 import { ThongBao } from '../../thongBao'
+import { useXacNhan } from '../../xacNhanKho'
 
 const dong = (so: number) => `${so.toLocaleString('vi-VN')} đ`
 // Ngày theo giờ máy người dùng (Việt Nam), không theo UTC: sáng sớm không bị lùi một ngày
@@ -27,6 +30,15 @@ export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
   const [dangGui, setDangGui] = useState(false)
   const [thongBao, setThongBao] = useState('')
   const [loi, setLoi] = useState('')
+  // Hiệu ứng Pixel: cờ hiện đồng xu rơi vào két sau khi ghi thu công nợ thành công (≤ 1,4 s)
+  const [xuRoi, setXuRoi] = useState(0)
+  const hoi = useXacNhan()
+
+  useEffect(() => {
+    if (xuRoi === 0) return
+    const t = window.setTimeout(() => setXuRoi(0), 1400)
+    return () => window.clearTimeout(t)
+  }, [xuRoi])
 
   const taiNo = useCallback(() => {
     noTheoKhach()
@@ -69,18 +81,16 @@ export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
 
   async function danhDau() {
     if (!khach || !chon.size) return
-    if (
-      !window.confirm(
-        `Đã thu ${dong(tongChon)} của ${khach.ten_khach} (${chon.size} khoản) ngày ${ngayVN(ngay)}?`,
-      )
-    )
-      return
+    const cau = `Đã thu ${dong(tongChon)} của ${khach.ten_khach} (${chon.size} khoản) ngày ${ngayVN(ngay)}?`
+    if (!(await hoi(cau, 'Đã thu'))) return
     setDangGui(true)
     setThongBao('')
     setLoi('')
     try {
       const r = await danhDauDaThu([...chon], ngay)
       setThongBao(`Đã lập phiếu thu #${r.phieu_thu_id}: ${dong(r.tong_tien)} (${r.so_khoan} khoản)`)
+      // Hiệu ứng Pixel: đồng xu rơi vào két sau khi API ghi thu trả thành công
+      if (dangHieuUngPixel()) setXuRoi((n) => n + 1)
       setChon(new Set())
       taiNo()
       taiKhoan()
@@ -99,6 +109,8 @@ export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
         đó và đánh dấu đã thu: hệ thống lập một phiếu thu, trạng thái đơn không đổi (BR-56).
       </p>
       <ThongBao chu={thongBao} />
+      {/* Hiệu ứng Pixel: đồng xu rơi vào két sau khi ghi thu công nợ thành công */}
+      {xuRoi > 0 && dangHieuUngPixel() && <DongXuRoiKetPixel key={xuRoi} />}
       {loi && (
         <p role="alert" className="loi">
           {loi}
@@ -185,7 +197,7 @@ export default function CongNo({ chiXem = false }: { chiXem?: boolean }) {
                             />
                           </td>
                         )}
-                        <td className="bien-so">{k.ma_don}</td>
+                        <td className="ma-don">{k.ma_don}</td>
                         <td>{k.ngay_giao ? ngayGio(k.ngay_giao) : '–'}</td>
                         <td className="so">{dong(k.so_tien)}</td>
                         {xem === 'DA_THU' && (

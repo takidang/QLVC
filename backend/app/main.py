@@ -1,8 +1,10 @@
+import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from sqlalchemy.exc import DataError
 
 from app.auth.router import router as auth_router
 from app.config import get_settings
@@ -91,6 +93,21 @@ async def loi_du_lieu(request: Request, exc: RequestValidationError) -> JSONResp
 async def loi_nghiep_vu(request: Request, exc: LoiNghiepVu) -> JSONResponse:
     return JSONResponse(
         status_code=exc.status_code, content={"ma": exc.ma, "thong_diep": exc.thong_diep, "chi_tiet": exc.chi_tiet}
+    )
+
+
+@app.exception_handler(DataError)
+@app.exception_handler(OverflowError)
+async def loi_vuot_gioi_han(request: Request, exc: Exception) -> JSONResponse:
+    # Số vượt cột CSDL (bigint, numeric) hay ngày tràn (năm 9999 + thời gian chạy): lỗi người nhập, không phải 500
+    # Vẫn ghi log để dò được lỗi lập trình bị đổi thành 400. Chỉ dòng đầu lỗi gốc, không ghi SQL và tham số
+    goc = str(getattr(exc, "orig", exc)).splitlines()
+    logging.getLogger(__name__).warning(
+        "VUOT_GIOI_HAN %s %s: %s %s", request.method, request.url.path, type(exc).__name__, goc[0] if goc else ""
+    )
+    return JSONResponse(
+        status_code=400,
+        content={"ma": "VUOT_GIOI_HAN", "thong_diep": "Giá trị vượt giới hạn cho phép", "chi_tiet": []},
     )
 
 

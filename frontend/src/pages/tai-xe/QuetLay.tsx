@@ -3,6 +3,8 @@ import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { LoiApi } from '../../api/goi'
 import { layGps, lyDo, quetMa, type Gps, type KetQuaQuet, type LyDo } from '../../api/toi'
 import ChonTep from '../../ChonTep'
+import { TiaLaserPixel } from '../../HieuUngPixel'
+import { dangHieuUngPixel } from '../../nen'
 import { nenAnh } from '../../nenAnh'
 
 export const LOI_MANG = 'Không gửi được, kiểm tra mạng rồi thử lại'
@@ -120,7 +122,11 @@ export function Camera(p: {
 
   return (
     <div className="camera">
-      <video ref={video} muted playsInline />
+      <div className="px-camera-vung">
+        <video ref={video} muted playsInline />
+        {/* Hiệu ứng Pixel: tia laser quét trên khung camera khi đang quét mã QR */}
+        {dangHieuUngPixel() && <TiaLaserPixel />}
+      </div>
       <button type="button" className="phu" onClick={p.onDong}>
         Tắt camera
       </button>

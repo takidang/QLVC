@@ -1,0 +1,221 @@
+
+==================== kiem-thu-kham-pha/test_01_phan_quyen_idor.py ====================
+  [DAT] PQ-01: Chưa đăng nhập gọi GET /api/auth/toi -> HTTP 401: {"ma": "CHUA_DANG_NHAP", "thong_diep": "Chưa đăng nhập hoặc phiên đã hết hạn", "chi_tiet": []}
+  [DAT] PQ-02: Chưa đăng nhập gọi GET /api/don -> HTTP 401: {"ma": "CHUA_DANG_NHAP", "thong_diep": "Chưa đăng nhập hoặc phiên đã hết hạn", "chi_tiet": []}
+  [DAT] PQ-03: Chưa đăng nhập gọi GET /api/chuyen -> HTTP 401: {"ma": "CHUA_DANG_NHAP", "thong_diep": "Chưa đăng nhập hoặc phiên đã hết hạn", "chi_tiet": []}
+  [DAT] PQ-04: Chưa đăng nhập gọi GET /api/nguoi-dung -> HTTP 401: {"ma": "CHUA_DANG_NHAP", "thong_diep": "Chưa đăng nhập hoặc phiên đã hết hạn", "chi_tiet": []}
+  [DAT] PQ-05: taixe gọi GET /api/don -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-06: taixe gọi POST /api/don -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-07: taixe gọi GET /api/chuyen -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-08: taixe gọi GET /api/chuyen/18/quyet-toan -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-09: taixe gọi POST /api/chuyen/18/quyet-toan -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-10: taixe gọi GET /api/tam-ung -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-11: taixe gọi POST /api/chuyen/20/tam-ung -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-12: taixe gọi GET /api/phai-thu -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-13: taixe gọi GET /api/nguoi-dung -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-14: taixe gọi GET /api/bang-gia -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-15: taixe gọi GET /api/cau-hinh -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-16: taixe gọi GET /api/bao-cao/lai-lo -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-17: taixe gọi GET /api/bao-cao/hieu-suat-xe -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-18: taixe gọi GET /api/tong-quan -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-19: taixe gọi GET /api/canh-bao -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-20: taixe gọi GET /api/xe -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-21: taixe gọi GET /api/tai-xe -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-22: dieuphoi gọi POST /api/phai-thu/da-thu -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-23: dieuphoi gọi GET /api/phai-thu -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-24: dieuphoi gọi GET /api/bang-gia -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-25: dieuphoi gọi POST /api/bang-gia -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-26: dieuphoi gọi GET /api/nguoi-dung -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-27: dieuphoi gọi GET /api/cau-hinh -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-28: dieuphoi gọi PUT /api/cau-hinh/CFG-01 -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-29: dieuphoi gọi GET /api/tam-ung -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-30: dieuphoi gọi GET /api/chuyen/18/quyet-toan -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-31: dieuphoi gọi GET /api/bao-cao/hieu-suat-xe -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-32: dieuphoi gọi PUT /api/xe/1/chi-phi-co-dinh/2026-11 -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-33: dieuphoi gọi GET /api/toi/chuyen -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-34: ketoan gọi GET /api/nguoi-dung -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-35: ketoan gọi GET /api/bang-gia -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-36: ketoan gọi GET /api/cau-hinh -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-37: ketoan gọi POST /api/don -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-38: ketoan gọi POST /api/chuyen -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-39: ketoan gọi POST /api/chuyen/19/chot -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-40: ketoan gọi GET /api/canh-bao -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-41: ketoan gọi GET /api/du-doan-tre?ngay=2026-11-23 -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-42: ketoan gọi GET /api/toi/chuyen -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-43: ketoan gọi GET /api/nut -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-44: ketoan gọi GET /api/tuyen -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [LOI[Nhe]] PQ-45: ketoan gọi GET /api/tai-xe (đối chiếu docs/api.md) -> HTTP 200 (trả về 8 tài xế gồm SĐT, số GPLX)
+  [DAT] PQ-46: quanly gọi POST /api/chuyen/20/tam-ung -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-47: quanly gọi POST /api/phai-thu/da-thu -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-48: quanly gọi POST /api/chuyen/18/quyet-toan -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-49: quanly gọi PUT /api/xe/1/chi-phi-co-dinh/2026-11 -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-50: quanly gọi GET /api/toi/chuyen -> HTTP 403: {"ma": "KHONG_DU_QUYEN", "thong_diep": "Bạn không có quyền thực hiện thao tác này", "chi_tiet": []}
+  [DAT] PQ-51: taixe gọi PATCH /api/auth/ho-so (hồ sơ chỉ xem) -> HTTP 405: {"detail": "Method Not Allowed"}
+Traceback (most recent call last):
+  File "C:\Users\Lenovo\Desktop\DoAnChuyenNganh\QLVC-agy-pha\kiem-thu-kham-pha\test_01_phan_quyen_idor.py", line 293, in <module>
+    main()
+  File "C:\Users\Lenovo\Desktop\DoAnChuyenNganh\QLVC-agy-pha\kiem-thu-kham-pha\test_01_phan_quyen_idor.py", line 199, in main
+    assert st_bd == 200, f"Bat dau chuyen tx2 fail: {st_bd} {d_bd}"
+           ^^^^^^^^^^^^
+AssertionError: Bat dau chuyen tx2 fail: 409 {'ma': 'BR-26', 'thong_diep': 'Xe 51C-111.11 đang chạy chuyến CH-261111-01: chờ chuyến đó kết thúc, hoặc báo Điều phối mở chốt để đổi xe', 'chi_tiet': []}
+!!! kiem-thu-kham-pha/test_01_phan_quyen_idor.py thoat voi ma 1
+
+==================== kiem-thu-kham-pha/test_02_du_lieu_nhap_bua.py ====================
+  [DAT] NB-01: Tạo đơn kg âm (-10) -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "kg"], "msg": "Input should be greater than 0", "ty
+  [DAT] NB-02: Tạo đơn kg = 0 -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "kg"], "msg": "Input should be greater than 0", "ty
+  [DAT] NB-03: Tạo đơn m3 = 0 -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "m3"], "msg": "Input should be greater than 0", "ty
+  [DAT] NB-04: Tạo đơn so_kien = 0 -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "so_kien"], "msg": "Input should be greater than or
+  [DAT] NB-05: Tạo đơn so_kien âm (-5) -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "so_kien"], "msg": "Input should be greater than or
+  [DAT] NB-06: Tạo đơn so_kien thập phân (1.5) -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "so_kien"], "msg": "Input should be a valid integer
+  [LOI[Nhe]] NB-07: Tạo đơn so_kien dạng float nguyên (2.0) -> HTTP 201: {"id": 45, "ma_don": "DH-XAW9BT", "khach_hang_id": 1, "ten_khach": "Cty A", "mo_ta": "Hàng thử nhập bừa", "kg": "100.00", "m3": "1.00", "so_kien": 2, 
+  [LOI[Vua]] NB-08: Tạo đơn so_kien cực lớn (1e15 = 1000000000000000) -> HTTP 201: {"id": 46, "ma_don": "DH-RAXHWR", "khach_hang_id": 1, "ten_khach": "Cty A", "mo_ta": "Hàng thử nhập bừa", "kg": "100.00", "m3": "1.00", "so_kien": 100
+  [LOI[Nghiem trong]] NB-09: Tạo đơn so_kien vượt BIGINT (10^19) -> HTTP 500: Internal Server Error
+  [LOI[Nghiem trong]] NB-10: Tạo đơn m3=350000 -> kl_quy_doi vượt Numeric(10,2) -> HTTP 500: Internal Server Error
+  [DAT] NB-11: Tạo đơn kg cực lớn (1e15) -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "kg"], "msg": "Decimal input should have no more th
+  [DAT] NB-12: Tạo đơn chuỗi rỗng ở dia_chi_lay -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "dia_chi_lay"], "msg": "Value error, Không được để 
+  [DAT] NB-13: Tạo đơn mo_ta 10.000 ký tự -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "mo_ta"], "msg": "String should have at most 300 ch
+  [DAT] NB-14: Tạo đơn dia_chi_lay 10.000 ký tự -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "dia_chi_lay"], "msg": "Value should have at most 3
+  [DAT] NB-15: Tạo đơn ngày sai 30/02 (2026-02-30) -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "han_giao"], "msg": "Input should be a valid dateti
+  [DAT] NB-16: Tạo đơn hạn giao năm 1900 -> HTTP 422: {"ma": "BR-31", "thong_diep": "Đơn hàng không hợp lệ", "chi_tiet": [{"ma": "BR-31", "thong_diep": "Hạn giao phải sau thời điểm tạo đơn"}]}
+  [LOI[Vua]] NB-17: Tạo đơn hạn giao năm 3000 -> HTTP 201: {"id": 47, "ma_don": "DH-2ZQ7D6", "khach_hang_id": 1, "ten_khach": "Cty A", "mo_ta": "Hàng thử nhập bừa", "kg": "100.00", "m3": "1.00", "so_kien": 2, 
+  [DAT] NB-18: Tạo đơn thiếu múi giờ ở han_giao -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "han_giao"], "msg": "Input should have timezone inf
+  [DAT] NB-19: Tạo đơn điểm lấy == điểm giao (địa chỉ giống nhau) -> HTTP 422: {"ma": "BR-31", "thong_diep": "Đơn hàng không hợp lệ", "chi_tiet": [{"ma": "BR-31", "thong_diep": "Địa chỉ lấy trùng địa chỉ giao"}]}
+  [DAT] NB-20: Bảng giá don_gia_kg âm (-100) -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "don_gia_kg"], "msg": "Input should be greater than
+  [DAT] NB-21: Bảng giá don_gia_kg thập phân (1200.5) -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "don_gia_kg"], "msg": "Input should be a valid inte
+  [LOI[Vua]] NB-22: Bảng giá don_gia_kg = 1e15 (1000000000000000) -> HTTP 201: {"id": 16, "tinh_lay": "T1E15_63E1A", "tinh_giao": "B", "don_gia_kg": 1000000000000000, "cuoc_toi_thieu": 50000, "hieu_luc_tu": "2026-11-23", "dang_ap
+  [LOI[Nghiem trong]] NB-23: Bảng giá don_gia_kg vượt BIGINT (10^19) -> HTTP 500: Internal Server Error
+  [LOI[Vua]] NB-24: Bảng giá hieu_luc_tu năm 3000 -> HTTP 201: {"id": 17, "tinh_lay": "T3000_63E1A", "tinh_giao": "B", "don_gia_kg": 1200, "cuoc_toi_thieu": 50000, "hieu_luc_tu": "3000-01-01", "dang_ap_dung": fals
+  [LOI[Vua]] NB-25: Xe tai_trong_kg = 1e15 & ktt_toan_bo_kg = 1e15 -> HTTP 201: {"id": 11, "bien_so": "99Z-63E1A", "tai_trong_kg": 1000000000000000, "the_tich_m3": "20.00", "ktt_toan_bo_kg": 1000000000000000, "han_dang_kiem": "202
+  [LOI[Nghiem trong]] NB-26: Xe tai_trong_kg vượt BIGINT (10^19) -> HTTP 500: Internal Server Error
+  [LOI[Vua]] NB-27: Xe han_dang_kiem năm 1900 & han_bao_hiem năm 3000 -> HTTP 201: {"id": 12, "bien_so": "99D-63E1A", "tai_trong_kg": 5000, "the_tich_m3": "20.00", "ktt_toan_bo_kg": 9000, "han_dang_kiem": "1900-01-01", "han_bao_hiem"
+  [LOI[Vua]] NB-28: Chi phí cố định xe so_tien = 1e15 (2026-01) -> HTTP 200: {"xe_id": 4, "thang": "2026-01", "so_tien": 1000000000000000}
+  [LOI[Nghiem trong]] NB-29: Chi phí cố định xe so_tien vượt BIGINT (10^19) -> HTTP 500: Internal Server Error
+  [DAT] NB-30: Chi phí cố định xe so_tien âm (-50000) -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "so_tien"], "msg": "Input should be greater than or
+  [LOI[Vua]] NB-31: Chi phí cố định xe tháng 0000-01 -> HTTP 200: {"xe_id": 4, "thang": "0000-01", "so_tien": 100000}
+  [DAT] NB-32: Lập chuyến giờ khởi hành trong quá khứ -> HTTP 422: {"ma": "KHOI_HANH_DA_QUA", "thong_diep": "Giờ khởi hành đã qua, không lập chuyến được", "chi_tiet": []}
+  [DAT] NB-33: Lập chuyến giờ khởi hành năm 1900 -> HTTP 422: {"ma": "KHOI_HANH_DA_QUA", "thong_diep": "Giờ khởi hành đã qua, không lập chuyến được", "chi_tiet": []}
+  [DAT] NB-34: Lập chuyến giờ khởi hành ngày sai 2026-02-30 -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "khoi_hanh_du_kien"], "msg": "Input should be a val
+  [LOI[Nghiem trong]] NB-35: Lập chuyến giờ khởi hành 9999-12-31T23:30:00+07:00 (tràn datetime) -> HTTP 500: Internal Server Error
+  [LOI[Nghiem trong]] NB-36: Báo cáo lãi lỗ tu=0000-01&den=0000-01 -> HTTP 500: Internal Server Error
+  [LOI[Nghiem trong]] NB-37: Báo cáo lãi lỗ tu=9999-12&den=9999-12 -> HTTP 500: Internal Server Error
+  [LOI[Nghiem trong]] NB-38: Báo cáo hiệu suất xe thang=0000-01 -> HTTP 500: Internal Server Error
+  [LOI[Nghiem trong]] NB-39: Báo cáo hiệu suất xe thang=9999-12 -> HTTP 500: Internal Server Error
+  [LOI[Nghiem trong]] NB-40: Phân trang trang=10^18 (tràn OFFSET BIGINT) -> HTTP 500: Internal Server Error
+  [LOI[Nghiem trong]] NB-41: Path param ID vượt BIGINT GET /api/don/99999999999999999999 -> HTTP 500: Internal Server Error
+  [DAT] NB-42: Tạm ứng số thập phân 100000.5 -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "so_tien"], "msg": "Input should be a valid integer
+  [DAT] NB-43: Tạm ứng số float nguyên 100000.0 -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "so_tien"], "msg": "Input should be a valid integer
+  [DAT] NB-44: Tạm ứng số âm -100000 -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "so_tien"], "msg": "Input should be greater than or
+  [DAT] NB-45: Tạm ứng số 0 -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "so_tien"], "msg": "Input should be greater than or
+  [DAT] NB-46: SQLi qua tìm kiếm GET /api/don?tim=%27%20OR%201%3D1%20-- -> HTTP 200, tong=0
+  [DAT] NB-47: SQLi qua tìm kiếm GET /api/chuyen?tu_khoa=%27%20OR%201%3D1%20-- -> HTTP 200, tong=0
+  [DAT] NB-48: SQLi qua tìm kiếm GET /api/khach-hang?tim=%27%20OR%201%3D1%20-- -> HTTP 200, tong=0
+  [DAT] NB-49: SQLi qua tìm kiếm GET /api/tim?q=%27%20OR%201%3D1%20-- -> HTTP 200, tong=0
+  [DAT] NB-50: SQLi tại POST /api/auth/dang-nhap -> HTTP 401: {"ma": "SAI_THONG_TIN", "thong_diep": "Sai tên đăng nhập hoặc mật khẩu", "chi_tiet": []}
+  [DAT] NB-51: Lưu tên khách hàng chứa XSS + Emoji + SQLi (kiểm không 500, chờ kiểm XSS ở UI) -> HTTP 201: {"id": 3, "ten": "Khách <script>alert(1)</script> Hàng dễ vỡ 🚚🔥💥", "sdt": "0919888777", "dia_chi": "<script>alert(1)</script> ' OR 1=1 --", "ma_so_thu
+  [LOI[Nhe]] NB-52: Kiểm tra ngôn ngữ thông báo lỗi chi tiết khi nhập dữ liệu sai (kg=-5) -> HTTP 400: thong_diep='Dữ liệu không hợp lệ', chi_tiet.msg=['Input should be greater than 0']
+
+==> Mục 2 (Dữ liệu nhập bừa (API)): 52 ca | Đạt: 30 | Lỗi: 22
+
+==================== kiem-thu-kham-pha/test_03_tranh_chap_song_song.py ====================
+  [LOI[Vua]] TC-01: Gửi 5 request POST /api/don song song cùng nội dung -> statuses=[201, 201, 201, 201, 201], tạo ra 5 đơn trùng nội dung (ids=[48, 50, 52, 49, 51])
+  [DAT] TC-02: Gửi 5 request POST /api/chuyen song song cùng xe + tài xế + giờ -> statuses=[422, 422, 422, 422, 201], số chuyến tạo được=1
+  [DAT] TC-03: Ghép cùng 1 đơn (id=48) vào chuyến 22 bằng 5 luồng song song -> statuses=[200, 409, 409, 409, 409]
+  [DAT] TC-04: Ghép cùng 1 đơn (id=50) vào 2 chuyến khác nhau (22, 23) song song -> statuses=[409, 409, 200, 409]
+  [DAT] TC-05: Ghép song song 2 đơn nặng (3000kg + 3000kg) vào xe tải 5000kg -> statuses=[200, 422], tải đã dùng=3000.0kg / 5000kg
+  [DAT] TC-06: Chốt chuyến 22 bằng 5 luồng song song -> statuses=[409, 409, 200, 409, 409]
+  [DAT] TC-07: 8 luồng song song cấp tạm ứng 500.000đ trên chuyến định mức 850,000đ (BR-53) -> statuses=[422, 422, 422, 422, 422, 422, 201, 422], tong_hieu_luc=500,000 / dinh_muc=850,000
+  [DAT] TC-08: Quét LAY song song 6 lần cùng mã DH-XNLZPC -> statuses=[200, 200, 200, 200, 200, 200], lap_lai=False: 1, lap_lai=True: 5
+  [DAT] TC-09: Quét GIAO song song 6 lần cùng mã DH-XNLZPC (kiểm idempotent + không trùng phải thu) -> statuses=[200, 200, 200, 200, 200, 200], lap_lai=False: 1, lap_lai=True: 5
+  [LOI[Nghiem trong]] TC-10: 5 luồng song song DELETE /api/toi/chi-phi/7 -> statuses=[500, 500, 500, 204, 500], chi_tiet=['Internal Server Error', 'Internal Server Error']
+  [DAT] TC-11: 5 luồng song song POST /api/chi-phi/8/duyet -> statuses=[400, 400, 400, 200, 400]
+  [DAT] TC-12: Tranh chấp Tài xế DELETE /api/toi/chi-phi/9 song song Kế toán POST /duyet -> statuses(delete, duyet)=[409, 200], bodies=[{'ma': 'BR-54', 'thong_diep': 'Khoản đã được Kế toán xử lý, không xóa được', 'chi_tiet': []}, {'id': 9, 'loai': 'CAU
+  [DAT] TC-13: 5 luồng song song POST /api/phai-thu/da-thu cho phai_thu_id=8 -> statuses=[409, 409, 409, 409, 200]
+
+==> Mục 3 (Thao tác lặp / tranh chấp song song): 13 ca | Đạt: 11 | Lỗi: 2
+
+==================== kiem-thu-kham-pha/test_04_sai_trang_thai.py ====================
+  [DAT] ST-01: Cấp tạm ứng khi chuyến đang LAP -> HTTP 409: {"ma": "BR-53", "thong_diep": "Chuyến CH-261123-04 đang lập, chỉ cấp tạm ứng khi chuyến đã chốt hoặc đang chạy", "chi_tiet": []}
+  [DAT] ST-02: Quyết toán khi chuyến đang LAP -> HTTP 409: {"ma": "BR-55", "thong_diep": "Chuyến CH-261123-04 chưa hoàn thành, chưa quyết toán được", "chi_tiet": []}
+  [DAT] ST-03: Ghép đơn vào chuyến đã chốt (DA_CHOT) -> HTTP 409: {"ma": "BR-09", "thong_diep": "Chuyến CH-261123-04 không ở trạng thái Đang lập, không thay đổi được", "chi_tiet": []}
+  [DAT] ST-04: Sửa đơn đang ở chuyến DA_CHOT -> HTTP 409: {"ma": "BR-33", "thong_diep": "Đơn đang ở chuyến CH-261123-04 không còn Đang lập (mở chốt chuyến trước), không sửa được", "chi_tiet": []}
+  [DAT] ST-05: Hủy đơn đang ở chuyến DA_CHOT -> HTTP 409: {"ma": "BR-34", "thong_diep": "Đơn đang ở chuyến CH-261123-04 không còn Đang lập (mở chốt chuyến trước), không hủy được", "chi_tiet": []}
+  [DAT] ST-06: Quét lấy khi chuyến mới DA_CHOT (chưa bắt đầu) -> HTTP 409: {"ma": "BR-38", "thong_diep": "Chuyến CH-261123-04 chưa chạy hoặc đã kết thúc, không quét được", "chi_tiet": []}
+  [DAT] ST-07: Ghi chi phí khi chuyến mới DA_CHOT -> HTTP 409: {"ma": "BR-54", "thong_diep": "Chuyến CH-261123-04 chưa chạy, chưa ghi chi phí được", "chi_tiet": []}
+  [DAT] ST-08: Mở chốt chuyến còn tạm ứng HIEU_LUC -> HTTP 409: {"ma": "BR-24", "thong_diep": "Chuyến còn tạm ứng chưa thu hồi, cần Kế toán thu hồi tạm ứng trước", "chi_tiet": []}
+  [DAT] ST-09: Hủy chuyến DA_CHOT còn tạm ứng HIEU_LUC -> HTTP 409: {"ma": "BR-25", "thong_diep": "Chuyến còn tạm ứng chưa thu hồi, cần Kế toán thu hồi tạm ứng trước", "chi_tiet": []}
+  [DAT] ST-10: Hủy chuyến đang chạy (DANG_CHAY) -> HTTP 409: {"ma": "BR-25", "thong_diep": "Chuyến CH-261123-04 đã chạy hoặc đã hủy, không hủy được", "chi_tiet": []}
+  [DAT] ST-11: Quét GIAO khi đơn chưa quét lấy (DA_GHEP) -> HTTP 409: {"ma": "BR-40", "thong_diep": "Đơn DH-JP57HZ chưa được quét lấy, không thể giao", "chi_tiet": [{"ma": "BR-40", "thong_diep": "Đơn DH-JP57HZ chưa được 
+  [DAT] ST-12: Kết thúc chuyến khi còn đơn chưa có kết quả -> HTTP 422: {"ma": "BR-28", "thong_diep": "Còn 3 đơn chưa giao hoặc báo thất bại: DH-JP57HZ, DH-RTS2DP, DH-XGKEPM", "chi_tiet": [{"ma": "BR-28", "thong_diep": "Đơ
+  [DAT] ST-13: Kế toán duyệt chi phí khi chuyến đang chạy (chưa HOAN_THANH) -> HTTP 409: {"ma": "BR-55", "thong_diep": "Chuyến CH-261123-04 chưa hoàn thành, chưa duyệt chi phí được", "chi_tiet": []}
+  [DAT] ST-14: Quyết toán chuyến đang chạy (chưa HOAN_THANH) -> HTTP 409: {"ma": "BR-55", "thong_diep": "Chuyến CH-261123-04 chưa hoàn thành, chưa quyết toán được", "chi_tiet": []}
+  [DAT] ST-15: Đóng sự cố đã đóng -> HTTP 409: {"ma": "SU_CO_DA_DONG", "thong_diep": "Sự cố đã đóng", "chi_tiet": []}
+  [DAT] ST-16: Trả hàng đơn THAT_BAI chưa có lượt quét lấy -> HTTP 422: {"ma": "BR-36", "thong_diep": "Đơn DH-XGKEPM chưa lấy hàng, không có gì để trả: ghép lại hoặc hủy", "chi_tiet": []}
+  [DAT] ST-17: Hủy đơn THAT_BAI đã có lượt quét lấy -> HTTP 422: {"ma": "BR-34", "thong_diep": "Đơn DH-RTS2DP đã lấy hàng, không hủy được: ghép lại hoặc trả hàng", "chi_tiet": []}
+  [DAT] ST-18: Quyết toán khi còn chi phí CHO_DUYET -> HTTP 409: {"ma": "BR-55", "thong_diep": "Còn 1 khoản chi chờ duyệt", "chi_tiet": [{"ma": "BR-55", "chi_phi_ids": [10]}]}
+  [DAT] ST-19: Tài xế sửa chi phí đã duyệt (DA_DUYET) -> HTTP 409: {"ma": "BR-54", "thong_diep": "Khoản đã được Kế toán xử lý, không sửa được", "chi_tiet": []}
+  [DAT] ST-20: Tài xế xóa chi phí đã duyệt (DA_DUYET) -> HTTP 409: {"ma": "BR-54", "thong_diep": "Khoản đã được Kế toán xử lý, không xóa được", "chi_tiet": []}
+  [DAT] ST-21: Cấp tạm ứng khi chuyến đã HOAN_THANH -> HTTP 409: {"ma": "BR-53", "thong_diep": "Chuyến CH-261123-04 đã hoàn thành, chỉ cấp tạm ứng khi chuyến đã chốt hoặc đang chạy", "chi_tiet": []}
+  [DAT] ST-22: Sửa tạm ứng sau khi chuyến DA_QUYET_TOAN -> HTTP 409: {"ma": "BR-29", "thong_diep": "Chuyến CH-261123-04 đã quyết toán, không sửa tạm ứng được", "chi_tiet": []}
+  [DAT] ST-23: Thu hồi tạm ứng sau khi chuyến DA_QUYET_TOAN -> HTTP 409: {"ma": "BR-29", "thong_diep": "Chuyến CH-261123-04 đã quyết toán, không thu hồi tạm ứng được", "chi_tiet": []}
+  [DAT] ST-24: Từ chối chi phí sau khi chuyến DA_QUYET_TOAN -> HTTP 409: {"ma": "BR-29", "thong_diep": "Chuyến CH-261123-04 đã quyết toán, không từ chối chi phí được", "chi_tiet": []}
+  [DAT] ST-25: Tài xế ghi thêm chi phí sau khi chuyến DA_QUYET_TOAN -> HTTP 409: {"ma": "BR-29", "thong_diep": "Chuyến CH-261123-04 đã quyết toán, không ghi chi phí được", "chi_tiet": []}
+  [DAT] ST-26: Quyết toán lại chuyến đã DA_QUYET_TOAN -> HTTP 409: {"ma": "BR-29", "thong_diep": "Chuyến CH-261123-04 đã quyết toán, không quyết toán được", "chi_tiet": []}
+
+==> Mục 4 (Sai trạng thái (State Machine)): 26 ca | Đạt: 26 | Lỗi: 0
+
+==================== kiem-thu-kham-pha/test_05_upload.py ====================
+  [DAT] UP-01: Ảnh đại diện: file text đổi đuôi .jpg -> HTTP 400: {"ma": "ANH_SAI_LOAI", "thong_diep": "Ảnh phải là JPEG hoặc PNG", "chi_tiet": []}
+  [DAT] UP-02: Ảnh đại diện: file rỗng 0 byte -> HTTP 400: {"ma": "ANH_RONG", "thong_diep": "Chưa có ảnh", "chi_tiet": []}
+  [DAT] UP-03: Ảnh đại diện: file > 500 KB (505 KB) -> HTTP 413: {"ma": "ANH_QUA_LON", "thong_diep": "Ảnh lớn hơn 500 KB", "chi_tiet": []}
+  [DAT] UP-04: Ảnh đại diện: SVG có script (.svg) -> HTTP 400: {"ma": "ANH_SAI_LOAI", "thong_diep": "Ảnh phải là JPEG hoặc PNG", "chi_tiet": []}
+  [DAT] UP-05: Ảnh đại diện: SVG có script đổi đuôi .jpg -> HTTP 400: {"ma": "ANH_SAI_LOAI", "thong_diep": "Ảnh phải là JPEG hoặc PNG", "chi_tiet": []}
+  [LOI[Vua]] UP-06: Ảnh đại diện: giả mạo 3 byte đầu JPEG (\xff\xd8\xff + thẻ script) -> HTTP 200: {"id": 17, "ten_dang_nhap": "txup_ff8e5", "ho_ten": "Tài xế Upload ff8e5", "vai_tro": "TAI_XE", "trang_thai": "HOAT_DONG", "co_anh_dai_dien": true, "t
+  [DAT] UP-07: Ảnh đại diện: tên file path traversal '../../x.jpg' (không ghi ra ngoài uploads/) -> HTTP 200, tồn tại x.jpg ngoài uploads=False
+  [DAT] UP-08: Chi phí: file text đổi đuôi .jpg -> HTTP 400: {"ma": "ANH_SAI_LOAI", "thong_diep": "Ảnh phải là JPEG hoặc PNG", "chi_tiet": []}
+  [DAT] UP-09: Chi phí: file rỗng 0 byte -> HTTP 400: {"ma": "ANH_RONG", "thong_diep": "Chưa có ảnh", "chi_tiet": []}
+  [DAT] UP-10: Chi phí: file > 500 KB -> HTTP 413: {"ma": "ANH_QUA_LON", "thong_diep": "Ảnh lớn hơn 500 KB", "chi_tiet": []}
+  [DAT] UP-11: Chi phí: SVG có script -> HTTP 400: {"ma": "ANH_SAI_LOAI", "thong_diep": "Ảnh phải là JPEG hoặc PNG", "chi_tiet": []}
+  [LOI[Vua]] UP-12: Chi phí: giả mạo 3 byte đầu JPEG + script -> HTTP 201: {"id": 11, "chuyen_id": 25, "loai": "CAU_DUONG", "so_tien_khai": 20000, "so_tien_duyet": null, "so_lit": null, "ghi_chu": "Test upload", "trang_thai":
+  [DAT] UP-13: Chi phí: tên file '../../x.jpg' không ghi ra ngoài uploads/ -> HTTP 201, tồn tại x.jpg=False
+  [DAT] UP-14: Chi phí: gửi 6 ảnh (vượt giới hạn 5 ảnh) -> HTTP 400: {"ma": "QUA_NHIEU_ANH", "thong_diep": "Tối đa 5 ảnh", "chi_tiet": []}
+  [DAT] UP-15: Sự cố: file text đổi đuôi .jpg -> HTTP 400: {"ma": "ANH_SAI_LOAI", "thong_diep": "Ảnh phải là JPEG hoặc PNG", "chi_tiet": []}
+  [DAT] UP-16: Sự cố: file rỗng 0 byte -> HTTP 400: {"ma": "ANH_RONG", "thong_diep": "Chưa có ảnh", "chi_tiet": []}
+  [DAT] UP-17: Sự cố: file > 500 KB -> HTTP 413: {"ma": "ANH_QUA_LON", "thong_diep": "Ảnh lớn hơn 500 KB", "chi_tiet": []}
+  [DAT] UP-18: Sự cố: SVG có script -> HTTP 400: {"ma": "ANH_SAI_LOAI", "thong_diep": "Ảnh phải là JPEG hoặc PNG", "chi_tiet": []}
+  [LOI[Vua]] UP-19: Sự cố: giả mạo 3 byte đầu JPEG + script -> HTTP 201: {"id": 3, "chuyen_id": 25, "loai": "KHAC", "ghi_chu": "Test upload sự cố", "trang_thai": "MO", "cach_xu_ly": null, "so_anh": 1, "luc": "2026-11-23T12:
+
+==> Mục 5 (Upload tệp (ảnh đại diện, chi phí, sự cố, quét)): 19 ca | Đạt: 16 | Lỗi: 3
+
+==================== kiem-thu-kham-pha/test_07_giao_dien.py ====================
+  [DAT] UI-01: Render tên khách hàng chứa <script>alert(1)</script> và emoji trên trang Khách hàng không kích hoạt XSS -> dialogs=[], pageerror=[], hien_chuoi_tho=True
+  [DAT] UI-02: Bấm nhanh 2 lần (dblclick) nút 'Lưu đơn' khi tạo đơn -> Số request POST /api/don=1, số đơn tạo thêm=1
+  [DAT] UI-03: Nhập hạn giao quá khứ (2020) qua form Tạo đơn -> hiện thông báo lỗi tiếng Việt, không crash -> Thông báo hiển thị='Hạn giao phải sau thời điểm tạo đơn (BR-31)'
+  [DAT] UI-04: Bấm nhanh 2 lần nút Ghép đơn trên chi tiết chuyến -> Số request POST /ghep=1, pageerror=[]
+Traceback (most recent call last):
+  File "C:\Users\Lenovo\Desktop\DoAnChuyenNganh\QLVC-agy-pha\kiem-thu-kham-pha\test_07_giao_dien.py", line 528, in <module>
+    main()
+  File "C:\Users\Lenovo\Desktop\DoAnChuyenNganh\QLVC-agy-pha\kiem-thu-kham-pha\test_07_giao_dien.py", line 291, in main
+    page.remove_listener("dialog", page._impl_obj._listeners if False else lambda *a: None)
+  File "C:\Users\Lenovo\AppData\Local\Programs\Python\Python312\Lib\site-packages\playwright\_impl\_sync_base.py", line 130, in remove_listener
+    self._impl_obj.remove_listener(event, self._wrap_handler(f))
+  File "C:\Users\Lenovo\AppData\Local\Programs\Python\Python312\Lib\site-packages\playwright\_impl\_connection.py", line 248, in remove_listener
+    super().remove_listener(event, f)
+  File "C:\Users\Lenovo\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyee\base.py", line 270, in remove_listener
+    self._remove_listener(event, f)
+  File "C:\Users\Lenovo\AppData\Local\Programs\Python\Python312\Lib\site-packages\pyee\base.py", line 263, in _remove_listener
+    self._events[event].pop(f)
+KeyError: <function ImplToApiMapping.wrap_handler.<locals>.wrapper_func at 0x00000204C09885E0>
+!!! kiem-thu-kham-pha/test_07_giao_dien.py thoat voi ma 1
+
+==================== kiem-thu-kham-pha/test_06_tra_cuu.py ====================
+  [DAT] TR-01: Tra cứu hợp lệ DH-Y8NJQG bằng 4 số cuối SĐT lấy (6001) -> HTTP 200, keys=['ma_don', 'moc', 'trang_thai'], moc_keys=['luc', 'trang_thai'], so_moc=1
+  [DAT] TR-02: Tra cứu chữ thường + khoảng trắng bằng 4 số cuối SĐT nhận -> HTTP 200: {"ma_don": "DH-Y8NJQG", "trang_thai": "CHO_GHEP", "moc": [{"trang_thai": "CHO_GHEP", "luc": "2026-11-23T12:33:50.386792Z"}]}
+  [DAT] TR-03: Tra cứu SĐT 3 chữ số -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "sdt_4_so_cuoi"], "msg": "String should match patte
+  [DAT] TR-04: Tra cứu SĐT có chữ cái -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "sdt_4_so_cuoi"], "msg": "String should match patte
+  [DAT] TR-05: Tra cứu có trường thừa -> HTTP 400: {"ma": "DU_LIEU_KHONG_HOP_LE", "thong_diep": "Dữ liệu không hợp lệ", "chi_tiet": [{"loc": ["body", "extra"], "msg": "Extra inputs are not permitted", 
+  [DAT] TR-06: Tra cứu SQLi ở ma_don -> HTTP 404: {"ma": "KHONG_TIM_THAY", "thong_diep": "Không tìm thấy đơn", "chi_tiet": []}
+  [DAT] TR-07: Sai mã đơn và đúng mã đơn + sai SĐT trả cùng HTTP 404 và cùng thông báo chung -> Sai mã=HTTP 404: {"ma": "KHONG_TIM_THAY", "thong_diep": "Không tìm thấy đơn", "chi_tiet": []} | Sai SĐT=HTTP 404: {"ma": "KHONG_TIM_THAY", "thong_diep": "Không 
+  [DAT] TR-08: Sai liên tiếp > 10 lần trong 1 phút -> bị chặn 429 QUA_TAN_SUAT -> Chuỗi mã khi gửi sai thêm=[404, 404, 404, 404, 404, 404, 404, 429]; gửi đúng khi đang bị khóa -> HTTP 429: {"ma": "QUA_TAN_SUAT", "thong_diep": "Tra cứu sai quá
+  [LOI[Nghiem trong]] TR-09: Giả mạo header X-Forwarded-For không vượt được giới hạn tần suất /api/tra-cuu -> HTTP 200: {"ma_don": "DH-Y8NJQG", "trang_thai": "CHO_GHEP", "moc": [{"trang_thai": "CHO_GHEP", "luc": "2026-11-23T12:33:50.386792Z"}]}
+
+==> Mục 6 (Tra cứu công khai /api/tra-cuu): 9 ca | Đạt: 8 | Lỗi: 1

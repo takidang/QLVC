@@ -1,0 +1,60 @@
+{
+  "muc": 10,
+  "ten_muc": "Đo hiệu năng cảm nhận trên 5 trang nặng nhất (chỉ đo, không phán)",
+  "tong": 5,
+  "dat": 5,
+  "loi": 0,
+  "thoi_gian_giay": 45.8,
+  "ca": [
+    {
+      "ma": "HN01_CHI_TIET_CHUYEN",
+      "ten": "Đo hiệu năng: Chi tiết chuyến (/dieu-phoi/chuyen/23)",
+      "dat": true,
+      "ly_do": "DOM=1511, anim=2(run=1), FPS idle=60.3 / scroll=60.1, longTasks=0(max=0.0ms)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "",
+      "mong_doi": ""
+    },
+    {
+      "ma": "HN02_DANH_SACH_DON",
+      "ten": "Đo hiệu năng: Danh sách đơn (/dieu-phoi/don)",
+      "dat": true,
+      "ly_do": "DOM=1365, anim=2(run=1), FPS idle=60.3 / scroll=60.1, longTasks=0(max=0.0ms)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "",
+      "mong_doi": ""
+    },
+    {
+      "ma": "HN05_TAI_KHOAN",
+      "ten": "Đo hiệu năng: Tài khoản (/tai-khoan)",
+      "dat": true,
+      "ly_do": "DOM=800, anim=1(run=0), FPS idle=60.6 / scroll=60.1, longTasks=0(max=0.0ms)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "",
+      "mong_doi": ""
+    },
+    {
+      "ma": "HN03_TONG_QUAN",
+      "ten": "Đo hiệu năng: Tổng quan quản lý (/quan-ly/tong-quan)",
+      "dat": true,
+      "ly_do": "DOM=1166, anim=2(run=1), FPS idle=60.1 / scroll=60.1, longTasks=0(max=0.0ms)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "",
+      "mong_doi": ""
+    },
+    {
+      "ma": "HN04_QUYET_TOAN",
+      "ten": "Đo hiệu năng: Quyết toán (/ke-toan/quyet-toan)",
+      "dat": true,
+      "ly_do": "DOM=623, anim=2(run=1), FPS idle=60.2 / scroll=60.1, longTasks=0(max=0.0ms)",
+      "muc": "",
+      "anh": "",
+      "tai_hien": "",
+      "mong_doi": ""
+    }
+  ]
+}

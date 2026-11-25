@@ -13,6 +13,7 @@ import {
   type NguoiDung,
 } from '../api/auth'
 import ChonTep from '../ChonTep'
+import { phongCachDaLuu } from '../nen'
 import { nenAnh } from '../nenAnh'
 import { DauDanhMuc, HanGiayTo, NhanHoatDong } from './danh-muc'
 
@@ -53,6 +54,8 @@ export default function TaiKhoan({
   const hoTen = hs?.ho_ten ?? nd.ho_ten
   const coAnh = hs ? hs.co_anh_dai_dien : nd.co_anh_dai_dien
   const hienAnh = coAnh && loiHienAnhV !== phienBanAnh
+  const laPixel = phongCachDaLuu() === 'pixel'
+  const maTaiKhoan = `#${String(nd.id).padStart(3, '0')}`
 
   async function chonAnh(e: ChangeEvent<HTMLInputElement>) {
     const tep = e.target.files?.[0]
@@ -104,7 +107,7 @@ export default function TaiKhoan({
     <section className="noi-dung cd-trang">
       {nd.vai_tro === 'TAI_XE' && (
         <Link to="/tai-xe/chuyen" className="ct-ve">
-          ← Chuyến của tôi
+          <span className="mui-ten-thuong">← </span>Chuyến của tôi
         </Link>
       )}
       <DauDanhMuc
@@ -112,108 +115,232 @@ export default function TaiKhoan({
         phu="Ảnh đại diện, thông tin cá nhân và đổi mật khẩu đăng nhập."
       />
 
-      <div className="cd-cot">
-        <section className="kinh cd-khoi" aria-labelledby="tk-anh">
-          <h2 id="tk-anh">Ảnh đại diện</h2>
-          <p className="ghi-chu">Ảnh JPEG hoặc PNG, tối đa 500 KB (tự nén trước khi gửi).</p>
-          <div className="tk-anh-hang">
-            <div className="tk-anh">
-              {hienAnh ? (
-                <img
-                  src={urlAnhDaiDien(phienBanAnh)}
-                  alt={`Ảnh đại diện của ${hoTen}`}
-                  onError={() => setLoiHienAnhV(phienBanAnh)}
-                />
-              ) : (
-                <span aria-hidden="true">{chuTat(hoTen)}</span>
-              )}
+      {laPixel ? (
+        /* Pixel: bố cục 2 cột kiểu thẻ nhân vật (trái) + hồ sơ & đổi mật khẩu (phải) */
+        <div className="px-tk-luoi">
+          <section className="px-tk-the" aria-labelledby="tk-anh">
+            <div className="px-tk-the-dau" aria-hidden="true">
+              <span className="px-tk-the-nhan">Thẻ nhân vật</span>
+              <span className="px-tk-the-ma">{maTaiKhoan}</span>
             </div>
-            <div className="tk-anh-nut">
-              <ChonTep
-                accept="image/jpeg,image/png"
-                aria-label="Chọn ảnh đại diện"
-                onChange={chonAnh}
-                disabled={dangXuLyAnh}
-                nut={dangXuLyAnh ? 'Đang xử lý…' : 'Chọn ảnh'}
-                chinh
-                hienTrangThai={false}
-              />
-              {coAnh && (
-                <button type="button" className="phu" onClick={xoaAnh} disabled={dangXuLyAnh}>
-                  Xóa ảnh
-                </button>
-              )}
+
+            <div className="px-tk-the-than">
+              <div className="px-tk-chan-dung">
+                <div className="tk-anh">
+                  {hienAnh ? (
+                    <img
+                      src={urlAnhDaiDien(phienBanAnh)}
+                      alt={`Ảnh đại diện của ${hoTen}`}
+                      onError={() => setLoiHienAnhV(phienBanAnh)}
+                    />
+                  ) : (
+                    <span aria-hidden="true">{chuTat(hoTen)}</span>
+                  )}
+                </div>
+              </div>
+
+              <div className="px-tk-dinh-danh">
+                <p className="px-tk-ten">{hoTen}</p>
+                <div className="px-tk-huy-hieu">
+                  <span className="px-tk-vai-tro">{tenVaiTro}</span>
+                  {hs && <NhanHoatDong trangThai={hs.trang_thai} />}
+                </div>
+                <p className="px-tk-ma-dn ma">{hs ? `@${hs.ten_dang_nhap}` : '…'}</p>
+              </div>
+
+              <dl className="px-tk-tom-tat" aria-label="Tóm tắt hồ sơ">
+                <div>
+                  <dt>Mã hồ sơ</dt>
+                  <dd className="ma">{maTaiKhoan}</dd>
+                </div>
+                <div>
+                  <dt>Ảnh hồ sơ</dt>
+                  <dd>{coAnh ? 'Đã tải lên' : 'Chữ tắt'}</dd>
+                </div>
+                {hs?.tai_xe && (
+                  <>
+                    <div>
+                      <dt>Hạng GPLX</dt>
+                      <dd>Hạng {hs.tai_xe.hang_gplx}</dd>
+                    </div>
+                    <div>
+                      <dt>Số GPLX</dt>
+                      <dd className="ma">{hs.tai_xe.so_gplx}</dd>
+                    </div>
+                  </>
+                )}
+              </dl>
+
+              <div className="px-tk-hanh-dong">
+                <h2 id="tk-anh">Ảnh đại diện</h2>
+                <p className="ghi-chu">Ảnh JPEG hoặc PNG, tối đa 500 KB (tự nén trước khi gửi).</p>
+                <div className="tk-anh-nut">
+                  <ChonTep
+                    accept="image/jpeg,image/png"
+                    aria-label="Chọn ảnh đại diện"
+                    onChange={chonAnh}
+                    disabled={dangXuLyAnh}
+                    nut={dangXuLyAnh ? 'Đang xử lý…' : 'Chọn ảnh'}
+                    chinh
+                    hienTrangThai={false}
+                  />
+                  {coAnh && (
+                    <button type="button" className="phu" onClick={xoaAnh} disabled={dangXuLyAnh}>
+                      Xóa ảnh
+                    </button>
+                  )}
+                </div>
+                {loiAnh && (
+                  <p role="alert" className="loi">
+                    {loiAnh}
+                  </p>
+                )}
+              </div>
             </div>
+          </section>
+
+          <div className="px-tk-phai">
+            <section className="kinh cd-khoi px-tk-khoi-tt" aria-labelledby="tk-thong-tin">
+              <div className="px-tk-khoi-dau">
+                <h2 id="tk-thong-tin">Thông tin cá nhân</h2>
+                <span className="px-tk-chi-xem" aria-hidden="true">
+                  Chỉ xem
+                </span>
+              </div>
+              <p className="ghi-chu">Thông tin chỉ xem · Liên hệ Quản lý để thay đổi.</p>
+              {loiTai && (
+                <p role="alert" className="loi">
+                  {loiTai}
+                </p>
+              )}
+              <ThongTinCaNhan hs={hs} hoTen={hoTen} tenVaiTro={tenVaiTro} />
+            </section>
+
+            <section className="kinh cd-khoi px-tk-khoi-mk" aria-labelledby="tk-doi-mk">
+              <h2 id="tk-doi-mk">Đổi mật khẩu</h2>
+              <p className="ghi-chu">Mật khẩu mới từ 8 đến 200 ký tự, khác mật khẩu hiện tại.</p>
+              <DoiMatKhau laPixel />
+            </section>
           </div>
-          {loiAnh && (
-            <p role="alert" className="loi">
-              {loiAnh}
-            </p>
-          )}
-        </section>
-
-        <section className="kinh cd-khoi" aria-labelledby="tk-thong-tin">
-          <h2 id="tk-thong-tin">Thông tin cá nhân</h2>
-          <p className="ghi-chu">Thông tin chỉ xem · Liên hệ Quản lý để thay đổi.</p>
-          {loiTai && (
-            <p role="alert" className="loi">
-              {loiTai}
-            </p>
-          )}
-          <dl className="tk-tt">
-            <div>
-              <dt>Họ tên</dt>
-              <dd>{hoTen}</dd>
+        </div>
+      ) : (
+        <div className="cd-cot">
+          <section className="kinh cd-khoi" aria-labelledby="tk-anh">
+            <h2 id="tk-anh">Ảnh đại diện</h2>
+            <p className="ghi-chu">Ảnh JPEG hoặc PNG, tối đa 500 KB (tự nén trước khi gửi).</p>
+            <div className="tk-anh-hang">
+              <div className="tk-anh">
+                {hienAnh ? (
+                  <img
+                    src={urlAnhDaiDien(phienBanAnh)}
+                    alt={`Ảnh đại diện của ${hoTen}`}
+                    onError={() => setLoiHienAnhV(phienBanAnh)}
+                  />
+                ) : (
+                  <span aria-hidden="true">{chuTat(hoTen)}</span>
+                )}
+              </div>
+              <div className="tk-anh-nut">
+                <ChonTep
+                  accept="image/jpeg,image/png"
+                  aria-label="Chọn ảnh đại diện"
+                  onChange={chonAnh}
+                  disabled={dangXuLyAnh}
+                  nut={dangXuLyAnh ? 'Đang xử lý…' : 'Chọn ảnh'}
+                  chinh
+                  hienTrangThai={false}
+                />
+                {coAnh && (
+                  <button type="button" className="phu" onClick={xoaAnh} disabled={dangXuLyAnh}>
+                    Xóa ảnh
+                  </button>
+                )}
+              </div>
             </div>
-            <div>
-              <dt>Tên đăng nhập</dt>
-              <dd className="ma">{hs ? hs.ten_dang_nhap : '…'}</dd>
-            </div>
-            <div>
-              <dt>Vai trò</dt>
-              <dd>{tenVaiTro}</dd>
-            </div>
-            <div>
-              <dt>Trạng thái</dt>
-              <dd>{hs ? <NhanHoatDong trangThai={hs.trang_thai} /> : '…'}</dd>
-            </div>
-            {hs?.tai_xe && (
-              <>
-                <div>
-                  <dt>Số điện thoại</dt>
-                  <dd className="ma">{hs.tai_xe.sdt}</dd>
-                </div>
-                <div>
-                  <dt>Số GPLX</dt>
-                  <dd className="ma">{hs.tai_xe.so_gplx}</dd>
-                </div>
-                <div>
-                  <dt>Hạng GPLX</dt>
-                  <dd>Hạng {hs.tai_xe.hang_gplx}</dd>
-                </div>
-                <div>
-                  <dt>Hạn GPLX</dt>
-                  <dd>
-                    <HanGiayTo han={hs.tai_xe.han_gplx} />
-                  </dd>
-                </div>
-              </>
+            {loiAnh && (
+              <p role="alert" className="loi">
+                {loiAnh}
+              </p>
             )}
-          </dl>
-        </section>
+          </section>
 
-        <section className="kinh cd-khoi" aria-labelledby="tk-doi-mk">
-          <h2 id="tk-doi-mk">Đổi mật khẩu</h2>
-          <p className="ghi-chu">Mật khẩu mới từ 8 đến 200 ký tự, khác mật khẩu hiện tại.</p>
-          <DoiMatKhau />
-        </section>
-      </div>
+          <section className="kinh cd-khoi" aria-labelledby="tk-thong-tin">
+            <h2 id="tk-thong-tin">Thông tin cá nhân</h2>
+            <p className="ghi-chu">Thông tin chỉ xem · Liên hệ Quản lý để thay đổi.</p>
+            {loiTai && (
+              <p role="alert" className="loi">
+                {loiTai}
+              </p>
+            )}
+            <ThongTinCaNhan hs={hs} hoTen={hoTen} tenVaiTro={tenVaiTro} />
+          </section>
+
+          <section className="kinh cd-khoi" aria-labelledby="tk-doi-mk">
+            <h2 id="tk-doi-mk">Đổi mật khẩu</h2>
+            <p className="ghi-chu">Mật khẩu mới từ 8 đến 200 ký tự, khác mật khẩu hiện tại.</p>
+            <DoiMatKhau />
+          </section>
+        </div>
+      )}
     </section>
   )
 }
 
+function ThongTinCaNhan({
+  hs,
+  hoTen,
+  tenVaiTro,
+}: {
+  hs: HoSo | null
+  hoTen: string
+  tenVaiTro: string
+}) {
+  return (
+    <dl className="tk-tt">
+      <div>
+        <dt>Họ tên</dt>
+        <dd>{hoTen}</dd>
+      </div>
+      <div>
+        <dt>Tên đăng nhập</dt>
+        <dd className="ma">{hs ? hs.ten_dang_nhap : '…'}</dd>
+      </div>
+      <div>
+        <dt>Vai trò</dt>
+        <dd>{tenVaiTro}</dd>
+      </div>
+      <div>
+        <dt>Trạng thái</dt>
+        <dd>{hs ? <NhanHoatDong trangThai={hs.trang_thai} /> : '…'}</dd>
+      </div>
+      {hs?.tai_xe && (
+        <>
+          <div>
+            <dt>Số điện thoại</dt>
+            <dd className="ma">{hs.tai_xe.sdt}</dd>
+          </div>
+          <div>
+            <dt>Số GPLX</dt>
+            <dd className="ma">{hs.tai_xe.so_gplx}</dd>
+          </div>
+          <div>
+            <dt>Hạng GPLX</dt>
+            <dd>Hạng {hs.tai_xe.hang_gplx}</dd>
+          </div>
+          <div>
+            <dt>Hạn GPLX</dt>
+            <dd>
+              <HanGiayTo han={hs.tai_xe.han_gplx} />
+            </dd>
+          </div>
+        </>
+      )}
+    </dl>
+  )
+}
+
 // UC-35: mật khẩu hiện tại + mật khẩu mới (8–200 ký tự) + nhập lại. Xong thì báo bằng toast, phiên vẫn dùng tiếp
-function DoiMatKhau() {
+function DoiMatKhau({ laPixel = false }: { laPixel?: boolean }) {
   const [cu, setCu] = useState('')
   const [moi, setMoi] = useState('')
   const [lai, setLai] = useState('')
@@ -248,7 +375,7 @@ function DoiMatKhau() {
     }
   }
 
-  return (
+  const form = (
     <form className="tk-mk" onSubmit={gui} noValidate>
       <label>
         Mật khẩu hiện tại
@@ -293,5 +420,41 @@ function DoiMatKhau() {
         </button>
       </div>
     </form>
+  )
+
+  if (!laPixel) return form
+
+  const duDoDai = moi.length >= 8 && moi.length <= 200
+  const khacCu = moi.length > 0 && cu.length > 0 && moi !== cu
+  const trungLai = moi.length > 0 && moi === lai
+
+  return (
+    <div className="px-tk-mk-luoi">
+      {form}
+      <aside className="px-tk-goi-y" aria-label="Yêu cầu mật khẩu">
+        <p className="px-tk-goi-y-dau">Yêu cầu mật khẩu</p>
+        <ul className="px-tk-goi-y-ds">
+          <li className={duDoDai ? 'dat' : undefined}>
+            <span className="px-tk-goi-y-o" aria-hidden="true">
+              {duDoDai ? '✓' : ''}
+            </span>
+            Từ 8 đến 200 ký tự
+          </li>
+          <li className={khacCu ? 'dat' : undefined}>
+            <span className="px-tk-goi-y-o" aria-hidden="true">
+              {khacCu ? '✓' : ''}
+            </span>
+            Khác mật khẩu hiện tại
+          </li>
+          <li className={trungLai ? 'dat' : undefined}>
+            <span className="px-tk-goi-y-o" aria-hidden="true">
+              {trungLai ? '✓' : ''}
+            </span>
+            Hai lần nhập trùng khớp
+          </li>
+        </ul>
+        <p className="px-tk-goi-y-phu">Đổi xong vẫn giữ phiên đăng nhập hiện tại.</p>
+      </aside>
+    </div>
   )
 }

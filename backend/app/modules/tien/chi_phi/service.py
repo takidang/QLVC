@@ -134,6 +134,8 @@ def _khoan_cua_toi(db: Session, nd: NguoiDung, chi_phi_id: int, viec: str) -> Ch
         raise LoiNghiepVu("KHONG_TIM_THAY", "Không tìm thấy khoản chi phí", 404)
     c = _chuyen_cua_toi(db, nd, chuyen_id, khoa=True)
     cp = db.get(ChiPhi, chi_phi_id, with_for_update=True, populate_existing=True)
+    if cp is None:  # request song song đã xóa khoản trong lúc đợi khóa chuyến
+        raise LoiNghiepVu("KHONG_TIM_THAY", "Không tìm thấy khoản chi phí", 404)
     _kiem_ghi_duoc(c, viec)
     if cp.trang_thai != "CHO_DUYET":
         raise LoiNghiepVu("BR-54", f"Khoản đã được Kế toán xử lý, không {viec} được", 409)

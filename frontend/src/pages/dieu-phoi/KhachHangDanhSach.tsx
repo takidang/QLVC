@@ -1,7 +1,10 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
+import { DangTaiPixel } from '../../HieuUngPixel'
+import { phongCachDaLuu } from '../../nen'
 import { DauDanhMuc, LocTrangThai, NhanHoatDong, OTim } from '../danh-muc'
 import { danhSachKhachHang, suaKhachHang, themKhachHang, type KhachHang } from '../../api/khachHang'
+import { NutChep } from '../../NutChep'
 
 const SO_DONG = 20
 type Form = { ten: string; sdt: string; dia_chi: string; ma_so_thue: string }
@@ -99,7 +102,10 @@ export default function KhachHangDanhSach() {
             {duLieu.map((kh) => (
               <tr key={kh.id} className={kh.trang_thai === 'NGUNG' ? 'mo' : undefined}>
                 <td className="tuyen">{kh.ten}</td>
-                <td className="ma">{kh.sdt}</td>
+                <td className="ma">
+                  {kh.sdt}
+                  <NutChep chu={kh.sdt} />
+                </td>
                 <td>{kh.dia_chi || <span className="ghi-chu">—</span>}</td>
                 <td className="ma">{kh.ma_so_thue || '—'}</td>
                 <td>
@@ -118,7 +124,14 @@ export default function KhachHangDanhSach() {
             {duLieu.length === 0 && (ds || !loiTai) && (
               <tr>
                 <td colSpan={6} className="trong">
-                  {ds ? 'Chưa có khách hàng nào phù hợp' : 'Đang tải…'}
+                  {ds ? (
+                    'Chưa có khách hàng nào phù hợp'
+                  ) : phongCachDaLuu() === 'pixel' ? (
+                    /* Hiệu ứng Pixel: màn tải bảng kiểu Pixel thay chữ Đang tải… */
+                    <DangTaiPixel kieu="bang" soCot={6} />
+                  ) : (
+                    'Đang tải…'
+                  )}
                 </td>
               </tr>
             )}
