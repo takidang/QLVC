@@ -12,7 +12,6 @@ import {
   DAU_XE_Y,
   GAM_XE_X,
   GAM_XE_Y,
-  NGUONG_VUA,
   PX0,
   PX1,
   PY0,
@@ -251,17 +250,6 @@ export default function XepHang({
             const dsKien = laPixel
               ? xepHangTheoCo(Math.abs(d.id) % 4, rongOKhoi, caoOKhoang, fKhoi)
               : []
-            const caoHangO = dsKien.reduce((m, k) => Math.max(m, k.y + k.sprite.cao), 0)
-            const khoangTrongTren = y1 - caoHangO * TI_LE_PIXEL - y0
-            const cxNhan = kx + w / 2
-            const datNhanTren = laPixel && fKhoi < NGUONG_VUA && khoangTrongTren >= 40
-            const cyNhan = datNhanTren
-              ? Math.max(y0 + 20, Math.round(y0 + (khoangTrongTren - 2) / 2))
-              : (y0 + y1) / 2 + 2
-            const rongNhan = Math.min(
-              Math.max(bw - 4, 46),
-              Math.max(52, Math.max(maNgan.length, chuM3.length) * 7.2 + 12),
-            )
             return (
               <g
                 key={d.id}
@@ -277,6 +265,7 @@ export default function XepHang({
                   }
                 }}
               >
+                {laPixel && <title>{`${d.ma_don} · ${chuM3}`}</title>}
                 {laPixel && (
                   <g clipPath={`url(#xh-cat-${c.id}-${d.id})`} aria-hidden="true">
                     {dsKien.map((k, j) => (
@@ -308,36 +297,12 @@ export default function XepHang({
                     aria-hidden="true"
                   />
                 )}
-                {w > 54 && (
+                {/* Pixel không ghi chữ trên thùng: nhận đơn theo màu khung (khối nhỏ không đủ chỗ) */}
+                {!laPixel && w > 54 && (
                   <>
-                    {laPixel && (
-                      <g className="xh-nhan-px" shapeRendering="crispEdges" aria-hidden="true">
-                        <rect
-                          x={cxNhan - rongNhan / 2 + 2}
-                          y={cyNhan - 19 + 2}
-                          width={rongNhan}
-                          height={38}
-                          className="xh-nhan-bong"
-                        />
-                        <rect
-                          x={cxNhan - rongNhan / 2}
-                          y={cyNhan - 19}
-                          width={rongNhan}
-                          height={38}
-                          className="xh-nhan-nen"
-                        />
-                        <rect
-                          x={cxNhan - rongNhan / 2 + 2}
-                          y={cyNhan - 17}
-                          width={Math.max(rongNhan - 4, 2)}
-                          height={3}
-                          className="xh-nhan-dai"
-                        />
-                      </g>
-                    )}
                     <text
                       x={kx + w / 2}
-                      y={laPixel ? cyNhan - 1 : (y0 + y1) / 2 - 4}
+                      y={(y0 + y1) / 2 - 4}
                       textAnchor="middle"
                       className="xh-chu"
                     >
@@ -345,7 +310,7 @@ export default function XepHang({
                     </text>
                     <text
                       x={kx + w / 2}
-                      y={laPixel ? cyNhan + 13 : (y0 + y1) / 2 + 14}
+                      y={(y0 + y1) / 2 + 14}
                       textAnchor="middle"
                       className="xh-chu nho"
                     >
@@ -402,6 +367,17 @@ export default function XepHang({
           )}
         </svg>
 
+        {/* Chuyến đang lập không có danh sách "Đơn trên xe": chú giải màu để biết khối nào là đơn nào */}
+        {laPixel && dangLap && ds.length > 0 && (
+          <ul className="xh-chu-giai">
+            {ds.map((d, i) => (
+              <li key={d.id} className={`don-mau${i % 5}`}>
+                {d.ma_don}
+              </li>
+            ))}
+          </ul>
+        )}
+
         <div className="xh-thanh">
           <Thanh nhan="Thể tích" dung={m3} them={m3Thu} max={m3Max} donVi="m³" />
           <Thanh nhan="Tải trọng" dung={kg} them={kgThu} max={kgMax} donVi="kg" />
@@ -442,8 +418,8 @@ export default function XepHang({
             Đơn trên xe <em>{ds.length}</em>
           </h2>
           <ul>
-            {ds.map((d) => (
-              <li key={d.id}>
+            {ds.map((d, i) => (
+              <li key={d.id} className={laPixel ? `don-mau${i % 5}` : undefined}>
                 <div>
                   <strong>{d.ma_don}</strong>
                   <span>
