@@ -22,6 +22,7 @@ import {
   SPRITE_GAM_XE,
   TI_LE_PIXEL,
   VI_TRI_BANH_X,
+  coKhoi,
   xepHangTheoCo,
   type SpriteDaGop,
 } from '../../spritesXepHang'
@@ -170,14 +171,26 @@ export default function XepHang({
   const y1 = laPixel ? PY1 : Y1
 
   // Vị trí từng khối theo thể tích cộng dồn; x là mép phải sau khối cuối
-  const rongKhoi = (d: Don) => (Number(d.m3) / m3Max) * (x1 - x0)
+  // Pixel: cỡ cả ngang lẫn dọc theo thể tích (coKhoi); giao diện thường: cột cao tới nóc, rộng theo thể tích
+  const tinhCo = (dsM3: number[]) =>
+    laPixel
+      ? coKhoi(
+          dsM3.map((v) => v / m3Max),
+          x1 - x0,
+          y1 - y0,
+          10 * TI_LE_PIXEL,
+        )
+      : dsM3.map((v) => ({ w: (v / m3Max) * (x1 - x0), h: y1 - y0 }))
+  const dsM3 = ds.map((d) => Number(d.m3))
+  const co = tinhCo(dsM3)
   const khoi = ds.map((d, i) => ({
     d,
-    x: x0 + ds.slice(0, i).reduce((t, e) => t + rongKhoi(e), 0),
-    w: rongKhoi(d),
+    x: x0 + co.slice(0, i).reduce((t, k) => t + k.w, 0),
+    ...co[i],
   }))
-  const x = x0 + ds.reduce((t, e) => t + rongKhoi(e), 0)
-  const wThu = (m3Thu / m3Max) * (x1 - x0)
+  const x = x0 + co.reduce((t, k) => t + k.w, 0)
+  const coThu = tinhCo([...dsM3, m3Thu])[ds.length]
+  const wThu = coThu.w
   const dangChon = ds.find((d) => d.id === chon)
   const conM3 = Math.max(m3Max - m3, 0)
   const conKg = Math.max(kgMax - kg, 0)
@@ -198,9 +211,9 @@ export default function XepHang({
         >
           {laPixel && khoi.length > 0 && (
             <defs>
-              {khoi.map(({ d, x: kx, w }) => (
+              {khoi.map(({ d, x: kx, w, h }) => (
                 <clipPath key={`cat-${d.id}`} id={`xh-cat-${c.id}-${d.id}`}>
-                  <rect x={kx + 1} y={y0} width={Math.max(w - 2, 2)} height={y1 - y0} />
+                  <rect x={kx + 1} y={y1 - h} width={Math.max(w - 2, 2)} height={h} />
                 </clipPath>
               ))}
             </defs>
@@ -239,14 +252,14 @@ export default function XepHang({
               className="xh-vach"
             />
           ))}
-          {khoi.map(({ d, x: kx, w }, i) => {
+          {khoi.map(({ d, x: kx, w, h }, i) => {
             const dangRoi = vuaRoi.includes(d.id) && dangHieuUngPixel()
             const bw = Math.max(w - 2, 2)
             const maNgan = d.ma_don.replace('DH-', '')
             const chuM3 = `${so(Number(d.m3))} m³`
             const fKhoi = x1 > x0 ? w / (x1 - x0) : 0
             const rongOKhoi = Math.floor(bw / TI_LE_PIXEL)
-            const caoOKhoang = Math.floor((y1 - y0) / TI_LE_PIXEL)
+            const caoOKhoang = Math.floor(h / TI_LE_PIXEL)
             const dsKien = laPixel
               ? xepHangTheoCo(Math.abs(d.id) % 4, rongOKhoi, caoOKhoang, fKhoi)
               : []
@@ -280,9 +293,9 @@ export default function XepHang({
                 )}
                 <rect
                   x={kx + 1}
-                  y={y0}
+                  y={y1 - h}
                   width={bw}
-                  height={y1 - y0}
+                  height={h}
                   rx={laPixel ? 0 : 4}
                   className={`xh-o o${i % 3}`}
                 />
@@ -290,9 +303,9 @@ export default function XepHang({
                 {laPixel && (
                   <rect
                     x={kx + 3}
-                    y={y0 + 2}
+                    y={y1 - h + 2}
                     width={Math.max(bw - 4, 2)}
-                    height={y1 - y0 - 4}
+                    height={h - 4}
                     className="xh-khung-don"
                     aria-hidden="true"
                   />
@@ -332,9 +345,9 @@ export default function XepHang({
           {thu && wThu > 0 && (
             <rect
               x={x + 1}
-              y={y0}
+              y={y1 - coThu.h}
               width={Math.max(Math.min(wThu, x1 + 40 - x) - 2, 2)}
-              height={y1 - y0}
+              height={coThu.h}
               rx={laPixel ? 0 : 4}
               className={quaTai ? 'xh-thu qua' : 'xh-thu'}
             />

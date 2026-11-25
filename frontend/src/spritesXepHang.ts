@@ -1101,3 +1101,27 @@ export function xepHangTheoCo(
   }
   return kq
 }
+
+// Cỡ khối từng đơn trong thùng: diện tích theo phần thể tích f, đơn nhỏ thành hộp gần vuông nằm trên sàn
+// (không phải vạch mỏng cao tới nóc), đơn lớn cao tới nóc. Khối không bé hơn toiThieu × toiThieu;
+// tổng bề rộng không vượt W: thiếu chỗ thì các khối lớn nhường bề ngang trước.
+export function coKhoi(
+  dsF: readonly number[],
+  W: number,
+  H: number,
+  toiThieu: number,
+): { w: number; h: number }[] {
+  const ds = dsF.map((f) => {
+    const dienTich = f > 0 ? Math.max(f * W * H, toiThieu * toiThieu) : 0
+    const muon = Math.max(dienTich / H, Math.min(Math.sqrt(dienTich), H))
+    return { dienTich, muon, it: Math.min(muon, toiThieu) }
+  })
+  const tongMuon = ds.reduce((t, k) => t + k.muon, 0)
+  const tongIt = ds.reduce((t, k) => t + k.it, 0)
+  return ds.map(({ dienTich, muon, it }) => {
+    let w = muon
+    if (tongIt > W) w = (it * W) / tongIt
+    else if (tongMuon > W) w = it + ((muon - it) * (W - tongIt)) / (tongMuon - tongIt)
+    return { w, h: w > 0 ? Math.max(Math.min(H, dienTich / w), Math.min(toiThieu, H)) : 0 }
+  })
+}
