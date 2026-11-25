@@ -17,7 +17,7 @@ Mục tiêu: tìm lỗi mà test theo tiêu chí chấp nhận không bắt đư
 
 ## 0. Chuẩn bị (hỏi Tài nếu chưa rõ)
 - Làm trên **nhánh riêng** tách từ nhánh tích hợp (vd `tai/kiem-tra-truoc-bao-cao`). Push lên nhánh đó được, **không mở PR / không gộp** khi sát ngày demo, trừ khi Tài bảo.
-- Chạy app trên **CSDL dev**, không bao giờ CSDL demo/production: agent sẽ tạo nhiều dữ liệu rác.
+- Chạy app trên **CSDL thử riêng**, không bao giờ CSDL demo/production: agent sẽ tạo nhiều dữ liệu rác.
 - Đọc luật dự án: `CLAUDE.md`, quy tắc bảo mật (vd `docs/security-rules.md`), nghiệp vụ (BR).
 
 ## 1. Tự rà tĩnh (làm trước, rẻ, chính xác)
@@ -58,6 +58,6 @@ Bẫy đã gặp: uvicorn mặc định tin `X-Forwarded-For` từ 127.0.0.1, v�
 - Chạy toàn bộ test suite + lint trước khi commit.
 
 ## 5. Kết quả
-- Commit trên nhánh: code sửa + test + báo cáo `docs/test-evidence/kiem-thu-kham-pha/bao-cao.md` (bảng mục | số ca | đạt | lỗi thật | báo nhầm; mỗi lỗi: mức, tái hiện, thấy, mong đợi, đã sửa/để sau) + script của agent.
+- Commit trên nhánh: code sửa + test + báo cáo `docs/test-evidence/kiem-thu-kham-pha-<yyyy-mm-dd>/bao-cao.md` (bảng mục | số ca | đạt | lỗi thật | báo nhầm; mỗi lỗi: mức, tái hiện, thấy, mong đợi, đã sửa/để sau) + script của agent.
 - Báo Tài ngắn: bao nhiêu ca, lỗi thật đã sửa, việc để sau (kèm lý do), nhánh nào, chưa gộp.
 - Gỡ worktree của agent khi xong (`git worktree remove`; trước đó lưu file gitignore cần giữ).
