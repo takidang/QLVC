@@ -94,6 +94,8 @@ export default function BangGiaDanhSach() {
                 <td>
                   {bg.dang_ap_dung ? (
                     <Nhan loai="HOAN_THANH">Đang áp dụng</Nhan>
+                  ) : phongCachDaLuu() === 'pixel' ? (
+                    <Nhan loai="HUY">Đã thay hoặc chưa tới ngày</Nhan>
                   ) : (
                     <span className="ghi-chu">Đã thay hoặc chưa tới ngày</span>
                   )}

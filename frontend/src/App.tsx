@@ -21,6 +21,7 @@ import BatLoiTrang from './BatLoiTrang'
 import ChuongThongBao from './ChuongThongBao'
 import DanConTro from './DanConTro'
 import DongDauPixel from './DongDauPixel'
+import { HopXacNhan } from './HopXacNhan'
 import MenuTaiKhoan from './MenuTaiKhoan'
 import TimChung from './TimChung'
 import { useHienKhiCuon } from './useHienKhiCuon'
@@ -297,6 +298,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <KhungThongBao />
+      <HopXacNhan />
       <BatLoiTrang>
         {/* Hiệu ứng Pixel: màn tải kiểu Pixel thay chữ Đang tải… khi tải tuyến trang */}
         <Suspense

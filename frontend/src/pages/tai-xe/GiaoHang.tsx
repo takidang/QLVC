@@ -6,6 +6,7 @@ import { DaiDieuKienGiaoPixel } from '../../HieuUngPixel'
 import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
 import { NoteLoi } from '../../NoteLoi'
 import { nenAnh } from '../../nenAnh'
+import { useXacNhan } from '../../xacNhanKho'
 import { Camera, LOI_MANG, SO_ANH_TOI_DA } from './QuetLay'
 
 const chuan = (ma: string) => ma.trim().toUpperCase()
@@ -21,6 +22,7 @@ export function GiaoHang({ maDon, onXong }: { maDon: string; onXong: (kq: KetQua
   const [oKy, setOKy] = useState<HTMLCanvasElement | null>(null) // null: chưa ký
   const [dangGui, setDangGui] = useState(false)
   const [loi, setLoi] = useState('')
+  const hoi = useXacNhan()
 
   // Quyết định 2: mã quét / gõ phải là đơn của điểm này; sai thì báo ngay, chưa gửi gì lên máy chủ
   function xacNhan(ma: string) {
@@ -38,7 +40,7 @@ export function GiaoHang({ maDon, onXong }: { maDon: string; onXong: (kq: KetQua
     if (anh.length > SO_ANH_TOI_DA) return setLoi(`Tối đa ${SO_ANH_TOI_DA} ảnh`)
     const gps = layGps() // xin vị trí ngay lúc bấm Xác nhận giao (Safari chỉ hỏi khi có thao tác)
     // Hỏi lại sau khi đã xin vị trí: nút sáng từ nét ký đầu tiên, dễ chạm nhầm
-    if (!window.confirm(`Xác nhận đã giao đơn ${maDon} cho ${ten.trim()}?`)) return
+    if (!(await hoi(`Xác nhận đã giao đơn ${maDon} cho ${ten.trim()}?`, 'Đã giao'))) return
     setLoi('')
     setDangGui(true)
     try {

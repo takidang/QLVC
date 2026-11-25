@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent, type InputHTMLAttributes } from 'react'
+import { useEffect, useRef, useState, type FormEvent, type InputHTMLAttributes } from 'react'
 import { toi, type VaiTro } from '../../api/auth'
 import { LoiApi, loiTheoTruong } from '../../api/goi'
 import {
@@ -13,6 +13,7 @@ import { DangTaiPixel } from '../../HieuUngPixel'
 import { phongCachDaLuu } from '../../nen'
 import { Nhan } from '../../nhan'
 import { DauDanhMuc, LocTrangThai, OTim } from '../danh-muc'
+import { useXacNhan } from '../../xacNhanKho'
 
 const SO_DONG = 20
 const TEN_VAI_TRO: Record<VaiTro, string> = {
@@ -45,6 +46,8 @@ export default function NguoiDungDanhSach() {
   const [datMk, setDatMk] = useState<TaiKhoan | null>(null)
   const [lanTai, setLanTai] = useState(0) // tăng lên để tải lại sau khi thêm/sửa
   const tai = () => setLanTai((n) => n + 1)
+  const hoi = useXacNhan()
+  const dangDoi = useRef(new Set<number>()) // bấm hai lần không gửi hai yêu cầu
 
   useEffect(() => {
     toi()
@@ -70,13 +73,17 @@ export default function NguoiDungDanhSach() {
 
   async function doiTrangThai(tk: TaiKhoan) {
     const khoa = tk.trang_thai === 'HOAT_DONG'
-    if (khoa && !confirm(`Khóa tài khoản "${tk.ten_dang_nhap}"? Người này bị đăng xuất ngay.`))
-      return
+    if (dangDoi.current.has(tk.id)) return
+    const cau = `Khóa tài khoản "${tk.ten_dang_nhap}"? Người này bị đăng xuất ngay.`
+    if (khoa && !(await hoi(cau, 'Khóa'))) return
+    dangDoi.current.add(tk.id)
     try {
       await suaNguoiDung(tk.id, { trang_thai: khoa ? 'NGUNG' : 'HOAT_DONG' })
       tai()
     } catch (e) {
       setLoiTai(e instanceof LoiApi ? e.message : 'Không đổi được trạng thái')
+    } finally {
+      dangDoi.current.delete(tk.id)
     }
   }
 

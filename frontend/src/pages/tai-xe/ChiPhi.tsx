@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type FormEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react'
 import {
   chiPhiChuyen,
   ghiChiPhi,
@@ -17,8 +17,10 @@ import { NoiDungNutGuiPixel } from '../../HieuUngPixel'
 import { dangHieuUngPixel, phongCachDaLuu } from '../../nen'
 import { NoteLoi } from '../../NoteLoi'
 import { nenAnh } from '../../nenAnh'
+import { Nhan } from '../../nhan'
 import { LOI_MANG, SO_ANH_TOI_DA } from './QuetLay'
 import { ThongBao } from '../../thongBao'
+import { useXacNhan } from '../../xacNhanKho'
 
 const dong = (so: number) => `${so.toLocaleString('vi-VN')} đ`
 const thongBaoLoi = (err: unknown) => {
@@ -33,6 +35,8 @@ export function ChiPhi({ chuyenId, ghiDuoc }: { chuyenId: number; ghiDuoc: boole
   const [dangSua, setDangSua] = useState<number | null>(null)
   const [thongBao, setThongBao] = useState('')
   const [loi, setLoi] = useState('')
+  const hoi = useXacNhan()
+  const daXoa = useRef(new Set<number>()) // bấm hai lần không gửi hai yêu cầu xóa
 
   const tai = useCallback(() => {
     chiPhiChuyen(chuyenId)
@@ -56,10 +60,13 @@ export function ChiPhi({ chuyenId, ghiDuoc }: { chuyenId: number; ghiDuoc: boole
     }
   }
 
-  function xoa(k: KhoanChi) {
-    if (!window.confirm(`Xóa khoản ${TEN_LOAI_CHI[k.loai].toLowerCase()} ${dong(k.so_tien_khai)}?`))
-      return
-    void lam(() => xoaChiPhi(k.id), 'Đã xóa khoản chi')
+  async function xoa(k: KhoanChi) {
+    if (daXoa.current.has(k.id)) return
+    const cau = `Xóa khoản ${TEN_LOAI_CHI[k.loai].toLowerCase()} ${dong(k.so_tien_khai)}?`
+    if (!(await hoi(cau, 'Xóa'))) return
+    daXoa.current.add(k.id)
+    // Xóa hỏng thì cho bấm lại
+    if (!(await lam(() => xoaChiPhi(k.id), 'Đã xóa khoản chi'))) daXoa.current.delete(k.id)
   }
 
   return (
@@ -99,7 +106,9 @@ export function ChiPhi({ chuyenId, ghiDuoc }: { chuyenId: number; ghiDuoc: boole
                   {TEN_LOAI_CHI[k.loai]} · <strong>{dong(k.so_tien_khai)}</strong>
                   {k.so_lit !== null && ` · ${Number(k.so_lit).toLocaleString('vi-VN')} lít`}
                 </span>
-                <span className="nhan xam">{TEN_TRANG_THAI_CHI[k.trang_thai] ?? k.trang_thai}</span>
+                <Nhan loai={`CHI_${k.trang_thai}`}>
+                  {TEN_TRANG_THAI_CHI[k.trang_thai] ?? k.trang_thai}
+                </Nhan>
               </div>
               <div className="ghi-chu">
                 {k.ghi_chu} · {k.so_anh} ảnh
@@ -109,7 +118,7 @@ export function ChiPhi({ chuyenId, ghiDuoc }: { chuyenId: number; ghiDuoc: boole
                   <button type="button" className="phu" onClick={() => setDangSua(k.id)}>
                     Sửa
                   </button>
-                  <button type="button" className="phu" onClick={() => xoa(k)}>
+                  <button type="button" className="phu" onClick={() => void xoa(k)}>
                     Xóa
                   </button>
                 </div>
