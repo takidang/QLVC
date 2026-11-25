@@ -20,6 +20,7 @@ import { ChiPhi } from './ChiPhi'
 import { SuCoChuyen } from './SuCo'
 import { GiaoHang } from './GiaoHang'
 import { KhongLay, QuetLay } from './QuetLay'
+import { NutChep } from '../../NutChep'
 
 const gio = (iso: string) =>
   new Date(iso).toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
@@ -255,6 +256,7 @@ export default function ChuyenCuaToiChiTiet() {
                   <div>
                     {p.nguoi_lien_he && `${p.nguoi_lien_he} · `}
                     <a href={`tel:${p.sdt}`}>{p.sdt}</a>
+                    <NutChep chu={p.sdt} />
                   </div>
                   <div className="ghi-chu">
                     {p.viec === 'GIAO'
