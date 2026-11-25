@@ -5976,48 +5976,6 @@
     stroke-width: 2;
   }
 
-  /* 4. Tấm nhãn nhỏ nền kem viền than trên mỗi kiện hàng: chữ than đậm đủ tương phản trên nền pixel */
-  :root[data-phong-cach='pixel'] .xh-nhan-px {
-    pointer-events: none;
-  }
-  :root[data-phong-cach='pixel'] .xh-nhan-bong {
-    fill: var(--n-charcoal);
-  }
-  :root[data-phong-cach='pixel'] .xh-nhan-nen {
-    fill: var(--noi);
-    stroke: var(--n-charcoal);
-    stroke-width: 2;
-    transition: fill 90ms steps(2, end);
-  }
-  :root[data-phong-cach='pixel'] .xh-nhan-dai {
-    fill: var(--n-teal);
-  }
-  :root[data-phong-cach='pixel'] .xh-khoi.chon .xh-nhan-nen {
-    fill: var(--n-butter);
-  }
-  :root[data-phong-cach='pixel'] .xh-khoi.chon .xh-nhan-dai {
-    fill: var(--n-coral);
-  }
-  :root[data-phong-cach='pixel'] .xh-khoi .xh-chu,
-  :root[data-phong-cach='pixel'] .xh-khoi:has(.o0) .xh-chu,
-  :root[data-phong-cach='pixel'] .xh-khoi:has(.o1, .o2) .xh-chu,
-  :root[data-phong-cach='pixel'] .xh-khoi.chon .xh-chu {
-    fill: var(--n-charcoal);
-    font-size: 11.5px;
-    font-weight: 700;
-    pointer-events: none;
-  }
-  :root[data-phong-cach='pixel'] .xh-khoi .xh-chu.nho,
-  :root[data-phong-cach='pixel'] .xh-khoi:has(.o0) .xh-chu.nho,
-  :root[data-phong-cach='pixel'] .xh-khoi:has(.o1, .o2) .xh-chu.nho {
-    fill: var(--n-teal);
-    font-size: 10.5px;
-    font-weight: 600;
-  }
-  :root[data-phong-cach='pixel'] .xh-khoi.chon .xh-chu.nho {
-    fill: var(--n-charcoal);
-  }
-
   /* 5. Khối xem trước khi rê chuột (.xh-thu) và chữ khi thùng trống (.xh-trong) */
   :root[data-phong-cach='pixel'] .xh-thu {
     fill: color-mix(in srgb, var(--n-sky) 24%, transparent);
@@ -6040,11 +5998,11 @@
 
   /* 6. Tắt chuyển động cho phần mới của Phiếu 29 khi bật Giảm chuyển động hoặc tắt Hiệu ứng Pixel */
   :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
-    :is(.xh-o, .xh-nhan-nen) {
+    .xh-o {
     transition: none;
   }
   @media (prefers-reduced-motion: reduce) {
-    :root[data-phong-cach='pixel'] :is(.xh-o, .xh-nhan-nen) {
+    :root[data-phong-cach='pixel'] .xh-o {
       transition: none;
     }
   }
@@ -8984,4 +8942,52 @@
 /* SĐT, mã số thuế trong bảng: màu than thay màu xanh nhạt (dòng đã ngừng vẫn xám) */
 :root[data-phong-cach='pixel'] main.trang table tbody tr:not(.mo) .ma {
   color: var(--n-charcoal);
+}
+
+/* Xếp hàng: mỗi đơn một màu (khung + dải trên nhãn), xoay vòng 5 màu để hai đơn cạnh nhau luôn khác màu */
+:root[data-phong-cach='pixel'] .don-mau0 {
+  --mau-don: var(--n-coral);
+}
+:root[data-phong-cach='pixel'] .don-mau1 {
+  --mau-don: var(--n-ochre);
+}
+:root[data-phong-cach='pixel'] .don-mau2 {
+  --mau-don: var(--n-plum);
+}
+:root[data-phong-cach='pixel'] .don-mau3 {
+  --mau-don: var(--n-sage);
+}
+:root[data-phong-cach='pixel'] .don-mau4 {
+  --mau-don: var(--n-cobalt);
+}
+:root[data-phong-cach='pixel'] .xh-khung-don {
+  fill: color-mix(in srgb, var(--mau-don) 16%, transparent);
+  stroke: var(--mau-don);
+  stroke-width: 4;
+  shape-rendering: crispEdges;
+  pointer-events: none;
+}
+:root[data-phong-cach='pixel'] .xh-khoi.chon .xh-khung-don {
+  stroke: var(--n-butter);
+  stroke-dasharray: 6 3;
+}
+:root[data-phong-cach='pixel'] main.trang .xh-cho li[class*='don-mau'] {
+  background: color-mix(in srgb, var(--mau-don) 20%, var(--noi));
+  border: 3px solid var(--mau-don);
+  border-left-width: 10px;
+}
+:root[data-phong-cach='pixel'] .xh-chu-giai {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+:root[data-phong-cach='pixel'] .xh-chu-giai li {
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  background: color-mix(in srgb, var(--mau-don) 20%, var(--noi));
+  border: 3px solid var(--mau-don);
 }
