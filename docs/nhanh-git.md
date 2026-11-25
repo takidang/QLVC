@@ -32,6 +32,7 @@ git merge origin/dev                        # chỉ gộp dev vào, không sửa
 git push
 ```
 - Thử giao diện các AC loại UI còn `CHƯA KIỂM`, chạy toàn bộ test. Lỗi thì sửa trên nhánh use case → PR vào `dev` → gộp `dev` vào `test` lại.
+- Kiểm thử khám phá trên `test` (skill `kiem-thu-kham-pha`, CSDL thử trên máy local): nên xong ít nhất 2 ngày trước mốc. Lỗi thật sửa kèm test như dòng trên; ghi báo cáo trong `docs/test-evidence/`. Mốc gấp không kịp chạy thì ghi rõ trong PR lên `main`.
 - Đạt thì mở PR `test` → `main`, người kia duyệt, gộp.
 
 ## 3. Sửa lỗi gấp trên `main`
