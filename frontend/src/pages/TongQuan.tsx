@@ -382,7 +382,7 @@ function GiuCho({ loai }: { loai: 'cot' | 'xe' | 'bang' }) {
 }
 
 // Hiệu ứng Pixel: nhịp cuộn theo bậc steps() cho số tiền KPI kiểu 8-bit trên @number-flow/react
-const NHIP_KPI_PIXEL: EffectTiming = { duration: 340, easing: 'steps(5, end)' }
+const NHIP_KPI_PIXEL: EffectTiming = { duration: 340, easing: 'steps(20, end)' }
 
 function SoLieu({
   nhan,

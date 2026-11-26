@@ -250,7 +250,9 @@ export default function App() {
   useEffect(() => {
     const khiNhanPhim = (e: KeyboardEvent) => {
       if (e.key !== 'Escape' || e.defaultPrevented || e.isComposing) return
-      const nen = Array.from(document.querySelectorAll<HTMLElement>('.nen-mo')).pop()
+      const nen = Array.from(
+        document.querySelectorAll<HTMLElement>('.nen-mo:not(.dang-dong)'),
+      ).pop()
       if (nen) nen.click()
     }
     document.addEventListener('keydown', khiNhanPhim)
