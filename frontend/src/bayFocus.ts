@@ -2,6 +2,9 @@
 // Tab / Shift+Tab đi vòng trong hộp trên cùng; mở thì đưa focus vào hộp; đóng thì trả về chỗ cũ.
 const CO_THE_FOCUS = 'a[href], button, input, select, textarea, summary, [tabindex]'
 
+// Bỏ bản sao đang mờ dần của hộp vừa đóng (moDanHop.ts)
+const HOP_MO = '.nen-mo:not(.dang-dong)'
+
 const dungDuoc = (el: HTMLElement) =>
   el.tabIndex >= 0 &&
   !el.matches(':disabled, input[type="hidden"]') &&
@@ -18,7 +21,7 @@ export function ganBayFocus() {
 
   const khiPhim = (e: KeyboardEvent) => {
     if (e.key !== 'Tab' || e.defaultPrevented) return
-    const nen = Array.from(document.querySelectorAll('.nen-mo')).pop()
+    const nen = Array.from(document.querySelectorAll(HOP_MO)).pop()
     if (!nen) return
     const ds = Array.from(nen.querySelectorAll<HTMLElement>(CO_THE_FOCUS)).filter(dungDuoc)
     const i = ds.indexOf(document.activeElement as HTMLElement)
@@ -29,7 +32,7 @@ export function ganBayFocus() {
   }
 
   const quanSat = new MutationObserver(() => {
-    const dangCo = new Set(document.querySelectorAll('.nen-mo'))
+    const dangCo = new Set(document.querySelectorAll(HOP_MO))
     for (const [nen, tro] of hopMo) {
       if (dangCo.has(nen)) continue
       hopMo.delete(nen)

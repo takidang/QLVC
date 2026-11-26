@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { NGUONG_LON, NGUONG_NHO, NGUONG_VUA, xepHangTheoCo } from './spritesXepHang'
+import { coKhoi, NGUONG_LON, NGUONG_NHO, NGUONG_VUA, xepHangTheoCo } from './spritesXepHang'
 
 const CAO_KHOANG = 28 // lòng thùng Pixel cao 28 ô
 const RONG_KHOANG = 93
@@ -39,5 +39,35 @@ describe('xepHangTheoCo: kiện luôn nguyên, không cắt', () => {
   it('id đơn âm hoặc lẻ vẫn chọn được loại hàng hợp lệ', () => {
     expect(xepHangTheoCo(-3, 40, CAO_KHOANG, 0.3).length).toBeGreaterThan(0)
     expect(xepHangTheoCo(2.7, 40, CAO_KHOANG, 0.3).length).toBeGreaterThan(0)
+  })
+})
+
+describe('coKhoi: cỡ khối theo thể tích', () => {
+  const W = 558
+  const H = 168
+  const MIN = 60
+  const tong = (ds: { w: number }[]) => ds.reduce((t, k) => t + k.w, 0)
+
+  it('đơn nhỏ thành hộp thấp trên sàn, đủ lớn để thấy; đơn lớn cao tới nóc', () => {
+    const [nho, lon] = coKhoi([0.2 / 14, 7 / 14], W, H, MIN)
+    expect(nho).toEqual({ w: MIN, h: MIN })
+    expect(lon.h).toBe(H)
+    expect(lon.w).toBeCloseTo(W / 2)
+  })
+
+  it('còn chỗ thì diện tích khối đúng tỉ lệ thể tích', () => {
+    const [a, b] = coKhoi([0.1, 0.2], W, H, MIN)
+    expect((b.w * b.h) / (a.w * a.h)).toBeCloseTo(2)
+  })
+
+  it('thùng đầy: tổng bề rộng không vượt thùng, đơn nhỏ vẫn giữ bề rộng tối thiểu', () => {
+    const ds = coKhoi([0.97, 0.01, 0.01, 0.01], W, H, MIN)
+    expect(tong(ds)).toBeLessThanOrEqual(W + 1e-6)
+    expect(ds[1].w).toBeCloseTo(MIN)
+  })
+
+  it('quá nhiều đơn nhỏ vẫn nằm trong thùng; thể tích 0 không vẽ', () => {
+    expect(tong(coKhoi(Array(30).fill(0.01), W, H, MIN))).toBeCloseTo(W)
+    expect(coKhoi([0], W, H, MIN)).toEqual([{ w: 0, h: 0 }])
   })
 })

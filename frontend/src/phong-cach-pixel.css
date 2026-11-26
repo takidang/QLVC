@@ -117,7 +117,7 @@
     box-shadow: var(--bong) !important;
     pointer-events: auto;
     transition-duration: 180ms;
-    transition-timing-function: steps(4, end);
+    transition-timing-function: steps(11, end);
   }
 
   /* #04 Ô nhập lỗi: viền màu --do và rung ngang ngắn 1 lần khi xuất hiện */
@@ -180,7 +180,7 @@
   :root[data-phong-cach='pixel'] :is(.hop-thoai, .menu-tk-hop, .chuong-hop, .tim-hop) {
     border: 2px solid var(--vien-dam);
     border-radius: var(--bo-the);
-    animation: pixel-mo-lop-noi 140ms steps(3, end);
+    animation: pixel-mo-lop-noi 140ms steps(8, end);
   }
   :root[data-phong-cach='pixel'] .hop-thoai {
     animation-duration: 160ms;
@@ -191,8 +191,8 @@
     border: 2px solid transparent;
     border-radius: var(--bo);
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .vien-thuoc button[aria-pressed='true'] {
     border-color: var(--vien-dam);
@@ -266,7 +266,7 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    animation: px-laser-quet 1.5s steps(12, end) infinite alternate;
+    animation: px-laser-quet 1.5s steps(90, end) infinite alternate;
   }
   :root[data-phong-cach='pixel'] .px-laser-thanh::before {
     content: '';
@@ -314,7 +314,7 @@
     left: 50%;
     z-index: 42;
     pointer-events: none;
-    animation: px-dong-dau 1300ms steps(3, end) forwards;
+    animation: px-dong-dau 1300ms steps(42, end) forwards;
   }
   :root[data-phong-cach='pixel'] .px-con-dau-khung {
     display: inline-block;
@@ -369,7 +369,7 @@
     }
   }
   :root[data-phong-cach='pixel'] .xh-khoi.px-khoi-roi {
-    animation: px-khoi-roi 280ms steps(4, end) 1 both;
+    animation: px-khoi-roi 280ms steps(9, end) 1 both;
   }
   :root[data-phong-cach='pixel'] .xh-khoi.px-khoi-roi .xh-o {
     shape-rendering: crispEdges;
@@ -378,7 +378,7 @@
   }
   :root[data-phong-cach='pixel'] .px-bui-roi {
     pointer-events: none;
-    animation: px-bui-bat 320ms steps(3, end) 1 forwards;
+    animation: px-bui-bat 320ms steps(11, end) 1 forwards;
   }
   :root[data-phong-cach='pixel'] .px-bui-o {
     fill: var(--nhan-sang);
@@ -445,7 +445,7 @@
     position: absolute;
     inset: 0;
     transform: translateX(var(--px-xe-dich, 0%));
-    animation: px-xe-chay 420ms steps(8, end) 1 both;
+    animation: px-xe-chay 420ms steps(25, end) 1 both;
   }
   :root[data-phong-cach='pixel'] .px-xe-tai {
     position: absolute;
@@ -453,7 +453,7 @@
     left: 0;
     display: block;
     transform: translateX(-50%);
-    animation: px-xe-nhun 140ms steps(2, end) 3;
+    animation: px-xe-nhun 140ms steps(4, end) 3;
   }
   :root[data-phong-cach='pixel'] .px-xe-thung {
     fill: var(--chay);
@@ -509,7 +509,7 @@
     background: var(--chay);
     transform-origin: left center;
     transform: scaleX(var(--px-ty-le, 0));
-    animation: px-duong-chay 420ms steps(8, end) 1 both;
+    animation: px-duong-chay 420ms steps(25, end) 1 both;
   }
   :root[data-phong-cach='pixel'] .px-hanh-trinh.xong .px-duong-tien {
     background: var(--xong);
@@ -627,7 +627,7 @@
     padding: 8px 12px;
     border-color: var(--xong);
     box-shadow: var(--bong);
-    animation: px-odo-hien 1300ms steps(4, end) forwards;
+    animation: px-odo-hien 1300ms steps(42, end) forwards;
   }
   :root[data-phong-cach='pixel'] .px-odo-so {
     display: inline-flex;
@@ -657,7 +657,7 @@
     display: flex;
     flex-direction: column;
     transform: translate3d(0, 0, 0);
-    transition: transform 340ms steps(5, end);
+    transition: transform 340ms steps(20, end);
   }
   :root[data-phong-cach='pixel'] .px-odo-o {
     display: grid;
@@ -734,7 +734,7 @@
   }
   :root[data-phong-cach='pixel'] .px-can-kim {
     transform-origin: 60px 58px;
-    transition: transform 320ms steps(6, end);
+    transition: transform 320ms steps(19, end);
   }
   :root[data-phong-cach='pixel'] .px-can-mui {
     fill: var(--cam);
@@ -831,7 +831,7 @@
   }
   :root[data-phong-cach='pixel'] .px-dm-kim-boc {
     transform-origin: 82px 64px;
-    transition: transform 360ms steps(6, end);
+    transition: transform 360ms steps(22, end);
   }
   :root[data-phong-cach='pixel'] .px-dm-kim-rung {
     transform-origin: 82px 64px;
@@ -960,7 +960,7 @@
     left: 50%;
     z-index: 42;
     pointer-events: none;
-    animation: px-xu-hien 1300ms steps(4, end) forwards;
+    animation: px-xu-hien 1300ms steps(55, end) forwards;
   }
   :root[data-phong-cach='pixel'] .px-xu-khung {
     display: flex;
@@ -978,13 +978,13 @@
     overflow: visible;
   }
   :root[data-phong-cach='pixel'] .px-xu-1 {
-    animation: px-xu-roi 440ms steps(5, end) 60ms both;
+    animation: px-xu-roi 440ms steps(16, end) 60ms both;
   }
   :root[data-phong-cach='pixel'] .px-xu-2 {
-    animation: px-xu-roi 440ms steps(5, end) 180ms both;
+    animation: px-xu-roi 440ms steps(16, end) 180ms both;
   }
   :root[data-phong-cach='pixel'] .px-xu-3 {
-    animation: px-xu-roi 440ms steps(5, end) 290ms both;
+    animation: px-xu-roi 440ms steps(16, end) 290ms both;
   }
   :root[data-phong-cach='pixel'] .px-xu-vien,
   :root[data-phong-cach='pixel'] .px-ket-vien,
@@ -1007,10 +1007,10 @@
     fill: var(--xong);
   }
   :root[data-phong-cach='pixel'] .px-xu-tia {
-    animation: px-xu-loe 360ms steps(3, end) 360ms both;
+    animation: px-xu-loe 360ms steps(12, end) 360ms both;
   }
   :root[data-phong-cach='pixel'] .px-ket-than {
-    animation: px-ket-nhun 260ms steps(3, end) 340ms 1;
+    animation: px-ket-nhun 260ms steps(9, end) 340ms 1;
   }
   :root[data-phong-cach='pixel'] .px-xu-chu {
     padding: 2px 8px;
@@ -1068,7 +1068,7 @@
     align-items: center;
     overflow: hidden;
     pointer-events: none;
-    animation: px-np-an 1300ms steps(4, end) forwards;
+    animation: px-np-an 1300ms steps(62, end) forwards;
   }
   :root[data-phong-cach='pixel'] .px-np-bang {
     position: relative;
@@ -1081,7 +1081,7 @@
     border-top: 2px solid var(--muc);
     border-bottom: 2px solid var(--muc);
     box-shadow: 0 3px 0 color-mix(in srgb, var(--muc) 26%, transparent);
-    animation: px-np-keo 420ms steps(8, end) forwards;
+    animation: px-np-keo 420ms steps(25, end) forwards;
   }
   :root[data-phong-cach='pixel'] .px-np-chu {
     padding: 2px 10px;
@@ -1101,7 +1101,7 @@
     height: 36px;
     margin-top: -18px;
     pointer-events: none;
-    animation: px-np-cuon-chay 420ms steps(8, end) forwards;
+    animation: px-np-cuon-chay 420ms steps(21, end) forwards;
   }
   :root[data-phong-cach='pixel'] .px-np-cuon::before {
     content: '';
@@ -1146,7 +1146,7 @@
     left: 50%;
     z-index: 42;
     pointer-events: none;
-    animation: px-xu-hien 1300ms steps(4, end) forwards;
+    animation: px-xu-hien 1300ms steps(55, end) forwards;
   }
   :root[data-phong-cach='pixel'] .px-hop-khung {
     display: flex;
@@ -1165,11 +1165,11 @@
   }
   :root[data-phong-cach='pixel'] .px-hop-nap-trai {
     transform-origin: 20px 34px;
-    animation: px-nap-trai 360ms steps(4, end) 80ms both;
+    animation: px-nap-trai 360ms steps(22, end) 80ms both;
   }
   :root[data-phong-cach='pixel'] .px-hop-nap-phai {
     transform-origin: 76px 34px;
-    animation: px-nap-phai 360ms steps(4, end) 130ms both;
+    animation: px-nap-phai 360ms steps(22, end) 130ms both;
   }
   :root[data-phong-cach='pixel'] .px-hop-nap {
     fill: var(--giay);
@@ -1188,7 +1188,7 @@
   :root[data-phong-cach='pixel'] .px-hop-keo {
     fill: var(--nhan-sang);
     transform-origin: 48px 34px;
-    animation: px-keo-dan 220ms steps(4, end) 440ms both;
+    animation: px-keo-dan 220ms steps(13, end) 440ms both;
   }
   :root[data-phong-cach='pixel'] .px-hop-nhan {
     fill: var(--noi);
@@ -1231,7 +1231,7 @@
     border-radius: var(--bo);
     box-shadow: inset 2px 2px 0 color-mix(in srgb, var(--muc) 14%, transparent);
     text-shadow: 1px 1px 0 color-mix(in srgb, var(--muc) 14%, transparent);
-    animation: px-kpi-bat 220ms steps(3, end) 1;
+    animation: px-kpi-bat 220ms steps(7, end) 1;
   }
   :root[data-phong-cach='pixel'] .px-kpi-nf {
     font-variant-numeric: tabular-nums;
@@ -1264,7 +1264,7 @@
     width: 36%;
     background: color-mix(in srgb, var(--nhan-sang) 42%, var(--noi));
     pointer-events: none;
-    animation: px-skel-quet 1.1s steps(8, end) infinite;
+    animation: px-skel-quet 1.1s steps(66, end) infinite;
   }
   :root[data-phong-cach='pixel'] .px-skel-bang {
     display: grid;
@@ -1299,7 +1299,7 @@
     width: 42%;
     background: color-mix(in srgb, var(--nhan-sang) 52%, var(--noi));
     transform: translateX(-120%);
-    animation: px-skel-quet 1.1s steps(8, end) var(--px-tre, 0ms) infinite;
+    animation: px-skel-quet 1.1s steps(66, end) var(--px-tre, 0ms) infinite;
   }
 
   /* Hiệu ứng Pixel: 14. Nút gửi giữ bề ngang & đổi chữ theo bậc "Đang gửi…" → "Xong ✓" */
@@ -1365,7 +1365,7 @@
     flex: none;
   }
   :root[data-phong-cach='pixel'] .px-nut-gui:is(.dang-gui, .vua-xong) .px-ng-chu {
-    animation: px-ng-doi 180ms steps(3, end) 1;
+    animation: px-ng-doi 180ms steps(11, end) 1;
   }
   :root[data-phong-cach='pixel'] .px-ng-xoay {
     position: relative;
@@ -1374,7 +1374,7 @@
     height: 12px;
     flex: none;
     pointer-events: none;
-    animation: px-ng-xoay 560ms steps(4, end) infinite;
+    animation: px-ng-xoay 560ms steps(34, end) infinite;
   }
   :root[data-phong-cach='pixel'] .px-ng-xoay::before {
     content: '';
@@ -1438,8 +1438,8 @@
   :root[data-phong-cach='pixel']
     :is(.xh-ray i, .day span i, .ct-thanh i, .kx-thanh i, .tq-xe-truc i) {
     transition:
-      width 220ms steps(6, end),
-      background-color 140ms steps(2, end);
+      width 220ms steps(13, end),
+      background-color 140ms steps(8, end);
   }
   :root[data-phong-cach='pixel'] :is(.day.cao span, .ct-thanh.cao, .xh-hang.qua .xh-ray) {
     border-color: var(--cam);
@@ -1453,7 +1453,7 @@
     background: var(--mat-2);
     border: 1.5px solid var(--vien-dam);
     border-radius: 0;
-    transition: background-color 180ms steps(3, end);
+    transition: background-color 180ms steps(11, end);
   }
   :root[data-phong-cach='pixel'] .doan i:is(.x, .c, .f) {
     border-color: var(--muc);
@@ -1568,7 +1568,7 @@
     display: block;
     height: 100%;
     background: var(--chay);
-    transition: width 240ms steps(8, end);
+    transition: width 240ms steps(14, end);
   }
   :root[data-phong-cach='pixel'] .px-thuoc-tu.cao .px-tu-muc {
     background: var(--cam);
@@ -1664,7 +1664,7 @@
     height: 7px;
     background: var(--mat);
     border: 1.5px solid var(--vien-dam);
-    transition: background-color 180ms steps(3, end);
+    transition: background-color 180ms steps(11, end);
   }
   :root[data-phong-cach='pixel'] .px-dk-nac.dat {
     background: var(--xong);
@@ -1690,7 +1690,7 @@
     color: var(--xong-chu);
     background: color-mix(in srgb, var(--xong) 14%, var(--noi));
     border-color: var(--xong);
-    animation: px-dk-sang 220ms steps(3, end) 1;
+    animation: px-dk-sang 220ms steps(7, end) 1;
   }
   :root[data-phong-cach='pixel'] .px-dk-o {
     display: inline-grid;
@@ -1730,7 +1730,7 @@
     background: var(--xong);
     border: 1.5px solid var(--muc);
     pointer-events: none;
-    animation: px-dk-sang 180ms steps(3, end) 1;
+    animation: px-dk-sang 180ms steps(6, end) 1;
   }
   :root[data-phong-cach='pixel'] .px-ky-quet {
     position: absolute;
@@ -1743,7 +1743,7 @@
       transparent 100%
     );
     pointer-events: none;
-    animation: px-ky-quet 220ms steps(5, end) 1 forwards;
+    animation: px-ky-quet 220ms steps(13, end) 1 forwards;
   }
 
   /* Hiệu ứng Pixel: 18. Phản hồi chọn tệp: ô tệp "nhai" ảnh theo bậc & thanh nấc nén ảnh */
@@ -1812,7 +1812,7 @@
   }
   :root[data-phong-cach='pixel'] .chon-tep-nut.px-tep-nhai {
     border-color: var(--xong);
-    animation: px-tep-nut-nhai 320ms steps(3, end) 1;
+    animation: px-tep-nut-nhai 320ms steps(7, end) 1;
   }
   :root[data-phong-cach='pixel'] .px-tep-ph {
     display: inline-flex;
@@ -1826,7 +1826,7 @@
     border-radius: var(--bo);
     box-shadow: var(--bong-nho);
     pointer-events: none;
-    animation: px-tep-ph-hien 1150ms steps(4, end) forwards;
+    animation: px-tep-ph-hien 1150ms steps(46, end) forwards;
   }
   :root[data-phong-cach='pixel'] .px-tep-svg {
     display: block;
@@ -1834,10 +1834,10 @@
     overflow: hidden;
   }
   :root[data-phong-cach='pixel'] .px-tep-anh {
-    animation: px-tep-nuot 420ms steps(4, end) 1 forwards;
+    animation: px-tep-nuot 420ms steps(14, end) 1 forwards;
   }
   :root[data-phong-cach='pixel'] .px-tep-ph.nen .px-tep-anh {
-    animation: px-tep-nuot 520ms steps(4, end) 2;
+    animation: px-tep-nuot 520ms steps(17, end) 2;
   }
   :root[data-phong-cach='pixel'] .px-tep-giay {
     fill: var(--noi);
@@ -1931,7 +1931,7 @@
     left: 50%;
     z-index: 42;
     pointer-events: none;
-    animation: px-bl-hien 1420ms steps(4, end) forwards;
+    animation: px-bl-hien 1420ms steps(61, end) forwards;
   }
   :root[data-phong-cach='pixel'] .px-bl-may {
     display: flex;
@@ -1994,7 +1994,7 @@
     background: var(--noi);
     border-left: 2px solid var(--muc);
     border-right: 2px solid var(--muc);
-    animation: px-bl-in 540ms steps(5, end) 80ms both;
+    animation: px-bl-in 540ms steps(32, end) 80ms both;
   }
   :root[data-phong-cach='pixel'] .px-bl-hang {
     display: flex;
@@ -2522,7 +2522,7 @@
       var(--n-sky) 40% 75%,
       var(--n-coral) 75% 100%
     );
-    animation: px-tai-nac 1.2s steps(10, end) infinite;
+    animation: px-tai-nac 1.2s steps(72, end) infinite;
   }
   :root[data-phong-cach='pixel'] .px-tai-luoi {
     display: grid;
@@ -2584,7 +2584,7 @@
     width: 42%;
     background: color-mix(in srgb, var(--n-butter) 58%, var(--noi));
     transform: translateX(-120%);
-    animation: px-skel-quet 1.1s steps(8, end) var(--px-tre, 0ms) infinite;
+    animation: px-skel-quet 1.1s steps(66, end) var(--px-tre, 0ms) infinite;
   }
   :root[data-phong-cach='pixel'] .px-tai-bang {
     gap: 8px;
@@ -2839,8 +2839,8 @@
     border-radius: var(--bo-the);
     box-shadow: 6px 6px 0 var(--n-charcoal);
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .dn-thuong-hieu.dn-bam-logo .logo-pixel {
     width: 110px;
@@ -2879,7 +2879,7 @@
     }
   }
   :root[data-phong-cach='pixel'] .dn-than:not([hidden]) {
-    animation: px-mo-cua-so 360ms steps(6, end) backwards;
+    animation: px-mo-cua-so 360ms steps(22, end) backwards;
   }
   :root[data-phong-cach='pixel']:is([data-giam-chuyen-dong='bat'], [data-hieu-ung-pixel='tat'])
     :is(.dn-goi-y, .dn-than, .dn-bam-logo) {
@@ -3031,7 +3031,7 @@
     transform-origin: 0 0;
     filter: drop-shadow(2px 0 0 var(--n-charcoal)) drop-shadow(-2px 0 0 var(--n-charcoal))
       drop-shadow(0 2px 0 var(--n-charcoal)) drop-shadow(4px 4px 0 var(--n-charcoal));
-    animation: px-giay-ra 520ms steps(9, end) both;
+    animation: px-giay-ra 520ms steps(31, end) both; /* ~60 nấc/giây */
   }
   @keyframes px-giay-ra {
     from {
@@ -3049,7 +3049,7 @@
   }
   :root[data-phong-cach='pixel'] .dn-giay.xe {
     pointer-events: none;
-    animation: px-giay-xe 350ms steps(5, end) forwards;
+    animation: px-giay-xe 350ms steps(21, end) forwards;
   }
   /* Giấy nhiệt: kem sáng, mép dưới răng cưa */
   :root[data-phong-cach='pixel'] .dang-nhap .dn-phieu {
@@ -3196,12 +3196,12 @@
     rotate: -8deg;
     pointer-events: none;
     animation:
-      px-dau-dap 250ms steps(3, end) both,
-      px-dau-mo 400ms steps(4, end) 1100ms forwards;
+      px-dau-dap 250ms steps(9, end) both,
+      px-dau-mo 400ms steps(24, end) 1100ms forwards;
   }
   :root[data-phong-cach='pixel'] .dn-dau.ok {
     --mau-dau: var(--n-teal);
-    animation: px-dau-dap 250ms steps(3, end) both;
+    animation: px-dau-dap 250ms steps(9, end) both;
   }
   :root[data-phong-cach='pixel'] .dn-dau b {
     font-size: 1.6rem;
@@ -3592,7 +3592,7 @@
   }
   :root[data-phong-cach='pixel'] .px-note-ghim {
     rotate: 3deg;
-    animation: px-note-ghim-vao 280ms steps(4, end) 1 both;
+    animation: px-note-ghim-vao 280ms steps(8, end) 1 both;
   }
   :root[data-phong-cach='pixel'] .dn-may > .px-note-ghim {
     position: absolute;
@@ -3643,9 +3643,9 @@
     cursor: pointer;
     animation: px-note-rung 240ms steps(4, end) 1;
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      background 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      background 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] button.px-note-nut::before {
     content: '';
@@ -3737,7 +3737,7 @@
     width: min(280px, calc(100vw - 48px));
     background: color-mix(in srgb, var(--n-rose) 22%, var(--n-butter));
     rotate: -2.5deg;
-    animation: px-note-bung 180ms steps(3, end) 1 both;
+    animation: px-note-bung 180ms steps(7, end) 1 both;
   }
   /* Cầu nối hover giữa mẩu nhỏ và tờ note để rê chuột lên tờ note không bị thu lại */
   :root[data-phong-cach='pixel'] .px-note-pop.mo::after {
@@ -4068,9 +4068,9 @@
     border-radius: 0;
     box-shadow: 2px 2px 0 var(--n-charcoal);
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      background-color 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .ct2-ds-dau {
     flex-wrap: wrap;
@@ -4399,9 +4399,9 @@
     border-radius: 0;
     box-shadow: 2px 2px 0 var(--n-charcoal);
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      background-color 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .xh-cho li:not(.ghi-chu):hover,
   :root[data-phong-cach='pixel'] .xh-cho li:not(.ghi-chu):focus-within {
@@ -4481,9 +4481,9 @@
   }
   :root[data-phong-cach='pixel'] a.the {
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      background-color 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] a.the:hover {
     background: color-mix(in srgb, var(--n-butter) 24%, var(--noi));
@@ -4591,7 +4591,7 @@
   }
   :root[data-phong-cach='pixel'] .chu-y a {
     border-top: 1px dashed var(--vien-dam);
-    transition: background-color 90ms steps(2, end);
+    transition: background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .chu-y a:hover {
     background: color-mix(in srgb, var(--n-butter) 26%, var(--noi));
@@ -4606,7 +4606,7 @@
     line-height: 22px;
     border: 2px solid var(--n-charcoal);
     border-radius: 0;
-    transition: box-shadow 90ms steps(2, end);
+    transition: box-shadow 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .lg-thanh:hover {
     box-shadow: 2px 2px 0 var(--n-charcoal);
@@ -4694,8 +4694,8 @@
       inset -2px -2px 0 color-mix(in srgb, var(--n-charcoal) 45%, transparent),
       2px 2px 0 var(--n-charcoal);
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .xh-cho li button:enabled:not(.phu):active {
     transform: translate(2px, 2px);
@@ -4716,8 +4716,8 @@
   :root[data-phong-cach='pixel'] .the-chon button {
     border: 2px solid transparent;
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .the-chon button.phu:enabled {
     color: var(--phu);
@@ -4904,7 +4904,7 @@
   :root[data-phong-cach='pixel'] main.trang table tbody td {
     background: var(--noi);
     border-top: 1px dashed var(--vien-dam);
-    transition: background-color 90ms steps(2, end);
+    transition: background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] main.trang table tbody tr:first-child td {
     border-top: 0;
@@ -5125,12 +5125,12 @@
     box-shadow: 4px 4px 0 var(--n-charcoal);
     rotate: -1.5deg;
     cursor: pointer;
-    animation: px-cb-ghim 220ms steps(3, end) 1;
+    animation: px-cb-ghim 220ms steps(8, end) 1;
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      rotate 90ms steps(2, end),
-      background-color 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      rotate 90ms steps(5, end),
+      background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] button.px-cb-nut:enabled:hover,
   :root[data-phong-cach='pixel'] button.px-cb-nut[aria-expanded='true'] {
@@ -5200,7 +5200,7 @@
     box-shadow: none;
     filter: drop-shadow(4px 4px 0 var(--n-charcoal));
     rotate: 0deg;
-    animation: px-cb-bung 180ms steps(3, end) 1 both;
+    animation: px-cb-bung 180ms steps(7, end) 1 both;
   }
   /* Cầu nối hover giữa mẩu note và trang giấy bung ra */
   :root[data-phong-cach='pixel'] .px-cb-pop.mo::before {
@@ -5261,9 +5261,9 @@
     border-radius: 0;
     box-shadow: 2px 2px 0 var(--n-charcoal);
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      background-color 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] button.px-cb-dong:enabled:hover {
     color: var(--noi);
@@ -5372,7 +5372,7 @@
     border-radius: 0;
     box-shadow: 4px 4px 0 var(--n-charcoal);
     rotate: 0deg;
-    animation: px-phieu-in-ra 180ms steps(4, end) both;
+    animation: px-phieu-in-ra 180ms steps(11, end) both;
   }
 
   /* Dải đầu phiếu bằng ::before: thanh than chữ vàng bơ in hoa giãn chữ, ô vuông đầu dòng & lỗ kim bên phải */
@@ -5510,9 +5510,9 @@
     border-radius: 0;
     box-shadow: inset 2px 2px 0 color-mix(in srgb, var(--n-charcoal) 16%, transparent);
     transition:
-      border-color 90ms steps(2, end),
-      background-color 90ms steps(2, end),
-      box-shadow 90ms steps(2, end);
+      border-color 90ms steps(5, end),
+      background-color 90ms steps(5, end),
+      box-shadow 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel']
     .nen-mo
@@ -5666,9 +5666,9 @@
     border: 2px solid var(--n-charcoal);
     border-radius: 0;
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      background-color 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .hop-thoai .nut button:not(.phu):enabled {
     color: var(--n-charcoal);
@@ -5792,9 +5792,9 @@
     rotate: -8deg;
     pointer-events: none;
     animation:
-      px-dau-dap 200ms steps(3, end) both,
+      px-dau-dap 200ms steps(7, end) both,
       px-dd-rung 90ms steps(2, end) 180ms 1,
-      px-dau-mo 200ms steps(4, end) 700ms forwards;
+      px-dau-mo 200ms steps(12, end) 700ms forwards;
   }
   :root[data-phong-cach='pixel'] .px-dd-dau.huy {
     --mau-dau: color-mix(in srgb, var(--n-coral) 62%, var(--n-charcoal));
@@ -5955,8 +5955,8 @@
     filter: none;
     shape-rendering: crispEdges;
     transition:
-      fill 90ms steps(2, end),
-      stroke 90ms steps(2, end);
+      fill 90ms steps(5, end),
+      stroke 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .xh-khoi[role='button']:hover .xh-o,
   :root[data-phong-cach='pixel'] .xh-khoi[role='button']:focus-visible .xh-o {
@@ -6279,9 +6279,9 @@
       inset -2px -2px 0 color-mix(in srgb, var(--n-charcoal) 30%, transparent),
       2px 2px 0 var(--n-charcoal);
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      background-color 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel']
     .px-tk-the
@@ -6415,9 +6415,9 @@
     border: 2px solid var(--n-charcoal);
     border-radius: 0;
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      background-color 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .px-tk-phai .tk-mk-nut button:enabled {
     color: var(--n-charcoal);
@@ -6631,9 +6631,9 @@
     box-shadow: 3px 3px 0 var(--n-charcoal);
     cursor: pointer;
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      background-color 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] button.px-cd-pc-o:not(.chon):hover {
     background: color-mix(in srgb, var(--n-butter) 24%, var(--noi));
@@ -6807,8 +6807,8 @@
     border-radius: 0;
     box-shadow: 3px 3px 0 var(--n-charcoal);
     transition:
-      border-color 90ms steps(2, end),
-      box-shadow 90ms steps(2, end);
+      border-color 90ms steps(5, end),
+      box-shadow 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .px-cd-the.bat {
     border: 3px solid var(--n-butter);
@@ -7142,9 +7142,9 @@
       inset -2px -2px 0 color-mix(in srgb, var(--n-charcoal) 22%, transparent),
       2px 2px 0 var(--n-charcoal);
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      background-color 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .noi-dung > .ct-ve {
     margin: 0 0 12px;
@@ -7169,7 +7169,7 @@
       70% 100%,
       100% 100%
     );
-    transition: transform 90ms steps(2, end);
+    transition: transform 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] :is(main.trang .vd-cong-cu a, .ct-ve):hover {
     color: var(--n-charcoal);
@@ -7208,9 +7208,9 @@
       inset -2px -2px 0 color-mix(in srgb, var(--n-charcoal) 30%, transparent),
       3px 3px 0 var(--n-charcoal);
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      background-color 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .vd-cong-cu button::before {
     content: '';
@@ -7281,9 +7281,9 @@
     border: 2px solid var(--n-charcoal);
     border-radius: 0;
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      background-color 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel']
     :is(
@@ -7546,9 +7546,9 @@
     border: 2px solid var(--n-charcoal);
     border-radius: 0;
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      background-color 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel']
     :is(
@@ -7729,9 +7729,9 @@
       inset -2px -2px 0 color-mix(in srgb, var(--n-charcoal) 30%, transparent),
       2px 2px 0 var(--n-charcoal);
     transition:
-      transform 90ms steps(2, end),
-      box-shadow 90ms steps(2, end),
-      background-color 90ms steps(2, end);
+      transform 90ms steps(5, end),
+      box-shadow 90ms steps(5, end),
+      background-color 90ms steps(5, end);
   }
   :root[data-phong-cach='pixel'] .chon-tep-nut.chinh {
     background: var(--n-butter);
@@ -8990,4 +8990,68 @@
   font-weight: 700;
   background: color-mix(in srgb, var(--mau-don) 20%, var(--noi));
   border: 3px solid var(--mau-don);
+}
+
+/* Đóng hộp thoại (bản sao do moDanHop.ts dựng) và đổi mục menu trái: chuyển theo nấc thay vì tắt phụt */
+@media screen {
+  :root[data-phong-cach='pixel'] .nen-mo.dang-dong {
+    pointer-events: none;
+    animation: px-dong-hop 140ms steps(8, end) forwards;
+  }
+  :root[data-phong-cach='pixel'] .nen-mo.dang-dong * {
+    animation: none;
+  }
+  @keyframes px-dong-hop {
+    to {
+      opacity: 0;
+    }
+  }
+  :root[data-phong-cach='pixel'] .canh nav a,
+  :root[data-phong-cach='pixel'] .canh nav a svg {
+    transition:
+      background-color 150ms steps(9, end),
+      border-color 150ms steps(9, end),
+      box-shadow 150ms steps(9, end),
+      color 150ms steps(9, end);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :root[data-phong-cach='pixel'] .canh nav a,
+    :root[data-phong-cach='pixel'] .canh nav a svg {
+      transition: none;
+    }
+  }
+}
+
+/* Bấm logo in phiếu: logo nhỏ thu từ cỡ lớn xuống cùng nhịp thân máy co (320 ms, ~60 nấc/giây) */
+@media screen and (prefers-reduced-motion: no-preference) {
+  :root[data-phong-cach='pixel']:not([data-giam-chuyen-dong='bat']):not([data-hieu-ung-pixel='tat'])
+    .dn-may-logo {
+    animation: px-logo-thu 320ms steps(20, end) both;
+  }
+  @keyframes px-logo-thu {
+    from {
+      opacity: 0.2;
+      transform: scale(1.6);
+    }
+  }
+}
+/* Khi thân máy đang co (cao hơn nội dung) khe in vẫn phải nằm sát đáy, phiếu mới chui ra đúng từ khe */
+@media screen {
+  :root[data-phong-cach='pixel'] .dn-may-than {
+    align-content: space-between;
+  }
+}
+
+/* Bảng chuyến: tên tài xế đậm, tối, cách biển số cho dễ đọc (cột hẹp nên giữ hai dòng) */
+@media screen {
+  :root[data-phong-cach='pixel'] main.trang table .xe-tx {
+    display: grid;
+    justify-items: start;
+    gap: 7px;
+  }
+  :root[data-phong-cach='pixel'] main.trang table .xe-tx small {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--n-charcoal);
+  }
 }

@@ -568,8 +568,10 @@ export default function ChuyenDanhSach() {
                     </span>
                   </td>
                   <td>
-                    <span className="bien">{c.bien_so}</span>
-                    <small>{c.ten_tai_xe}</small>
+                    <div className="xe-tx">
+                      <span className="bien">{c.bien_so}</span>
+                      <small>{c.ten_tai_xe}</small>
+                    </div>
                   </td>
                   {ngay && (
                     <td>
