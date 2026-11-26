@@ -1,6 +1,7 @@
 """Story DEMO: lệnh nạp dữ liệu demo (seed/demo.py) trên CSDL test, ngày cố định để kết quả không đổi."""
 
 from datetime import datetime, time, timedelta
+from decimal import Decimal
 
 import pytest
 from sqlalchemy import func, select
@@ -87,6 +88,31 @@ def test_demo_ac4_so_lieu_khop(da_nap):
         for d in db.scalars(select(DonHang).limit(10)):
             vao = {"nut_lay_id": d.nut_lay_id, "nut_giao_id": d.nut_giao_id, "kg": str(d.kg), "m3": str(d.m3)}
             assert dp.post("/api/don/tinh-cuoc", json=vao).json()["cuoc"] == d.cuoc_tinh
+
+
+# AC7 – dầu theo km thật của chuyến; có cả ca tài xế nộp lại lẫn công ty trả thêm; ghi chú trạm theo tuyến
+def test_demo_ac7_dau_theo_km_va_chenh_lech_hai_chieu(da_nap):
+    db = da_nap
+    kt = may("ketoan")
+    dau = db.execute(
+        select(ChiPhi.so_lit, ChiPhi.ghi_chu, Chuyen.km_bat_dau, Chuyen.km_ket_thuc, Xe.dinh_muc_lit_100km, Tuyen.ma)
+        .join(Chuyen, Chuyen.id == ChiPhi.chuyen_id)
+        .join(Xe, Xe.id == Chuyen.xe_id)
+        .join(Tuyen, Tuyen.id == Chuyen.tuyen_id)
+        .where(ChiPhi.loai == "DAU", Chuyen.km_ket_thuc.is_not(None))
+    ).all()
+    assert len(dau) >= 14
+    for lit, ghi_chu, km0, km1, dinh_muc, ma_tuyen in dau:
+        tham_khao = (km1 - km0) * dinh_muc / 100
+        assert tham_khao <= lit <= tham_khao * Decimal("1.2"), (ma_tuyen, lit, tham_khao)
+        assert ("Biên Hòa" in ghi_chu) == (ma_tuyen == "T03")  # tuyến Đồng Nai không ghi trạm Trung Lương
+    chenh = [
+        kt.get(f"/api/chuyen/{qt.chuyen_id}/quyet-toan").json()["chenh_lech_tam_ung"]
+        for qt in db.scalars(select(QuyetToan))
+    ]
+    assert any(Decimal(str(c)) > 0 for c in chenh)  # tài xế nộp lại
+    assert any(Decimal(str(c)) < 0 for c in chenh)  # công ty trả thêm
+    assert dem(db, ChiPhi, ChiPhi.loai == "BOC_XEP") >= 1
 
 
 # AC5 – không nạp chồng; --ngay-moi

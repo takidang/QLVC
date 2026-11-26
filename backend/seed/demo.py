@@ -79,6 +79,13 @@ TUYEN = [
     ),
 ]
 DON_GIA = {"Long An": 600, "Tiền Giang": 800, "Vĩnh Long": 1100, "Cần Thơ": 1300, "Bình Dương": 500, "Đồng Nai": 700}
+# Dầu: định mức mọi xe 18 L/100 km; tài xế đổ ≈ km cả chuyến × định mức × 1,1 (dư cho kẹt xe), giá 22.000 đ/L
+DINH_MUC_LIT = 18
+GIA_DAU = 22000
+KM_THEM = 4  # km chạy thêm ngoài tuyến (ra vào kho), cộng vào đồng hồ lúc kết thúc
+TRAM_DAU = {"T01": "trạm Trung Lương", "T02": "trạm Trung Lương", "T03": "trạm Biên Hòa"}
+# Bốc xếp thuê ngoài, bằng định mức bốc xếp của tuyến. Chuyến có khoản này chi vượt tạm ứng → công ty trả thêm
+BOC_XEP = {"T01": 300000, "T02": 200000, "T03": 200000}
 XE = [
     ("51C-201.11", 5000),
     ("51C-202.22", 5000),
@@ -188,7 +195,7 @@ def tao_danh_muc(dp: TestClient, ql: TestClient, hom_nay: date) -> None:
                     "ktt_toan_bo_kg": tai * 2,
                     "han_dang_kiem": han,
                     "han_bao_hiem": han,
-                    "dinh_muc_lit_100km": "18",
+                    "dinh_muc_lit_100km": str(DINH_MUC_LIT),
                     "km_dong_ho": 100000,
                 },
             )
@@ -247,11 +254,19 @@ class KichBan:
     den: str = "HOAN_THANH"  # LAP | DA_CHOT | DANG_CHAY | HOAN_THANH | DA_QUYET_TOAN | HUY
     tre: int = 0  # phút trễ mỗi điểm cộng dồn
     chi_phi: bool = True
+    boc_xep: bool = False  # thêm khoản bốc xếp: chi vượt tạm ứng, công ty trả thêm
 
 
 def _tam_ung(t: dict) -> int:
     """80% định mức tuyến, làm tròn chục nghìn (không vượt định mức, BR-53)."""
     return (t["dm_dau"] + t["dm_cau_duong"] + t["dm_boc_xep"]) * 8 // 10 // 10000 * 10000
+
+
+def _dau(t: dict) -> tuple[int, int]:
+    """(số lít, số tiền) đổ dầu cho cả chuyến: T01 174 km → 34 L, T02 74 km → 15 L, T03 64 km → 13 L."""
+    km = t["nut"][-1]["km_tu_diem_dau"] + KM_THEM
+    lit = round(km * DINH_MUC_LIT * 11 / 1000)
+    return lit, lit * GIA_DAU
 
 
 def _ten_nhan(i: int) -> str:
@@ -360,23 +375,33 @@ def chay(m: dict, dm: DanhMuc, ngay: date, kb: KichBan, so: list[int]) -> int:
             files.append(("chu_ky", ("ky.png", PNG, "image/png")))
         _kiem(tx.post("/api/toi/quet", data=data, files=files))
         if kb.chi_phi and i == len(lt) // 2:
+            lit, tien = _dau(dm.tuyen[kb.tuyen])
+            ghi_chu = f"Đổ dầu {TRAM_DAU[kb.tuyen]}"
             _kiem(
                 tx.post(
                     f"/api/toi/chuyen/{cid}/chi-phi",
-                    data={"loai": "DAU", "so_tien": "880000", "so_lit": "40", "ghi_chu": "Đổ dầu trạm Trung Lương"},
+                    data={"loai": "DAU", "so_tien": str(tien), "so_lit": str(lit), "ghi_chu": ghi_chu},
                     files=files[:1],
                 )
             )
     if kb.den == "DANG_CHAY":
         return cid
 
-    km = km0 + dm.tuyen[kb.tuyen]["nut"][-1]["km_tu_diem_dau"] + 4
+    km = km0 + dm.tuyen[kb.tuyen]["nut"][-1]["km_tu_diem_dau"] + KM_THEM
     dong_ho.dat(luc_cuoi + timedelta(minutes=20))
     if kb.chi_phi:
         _kiem(
             tx.post(
                 f"/api/toi/chuyen/{cid}/chi-phi",
                 data={"loai": "CAU_DUONG", "so_tien": "235000", "ghi_chu": "Trạm BOT"},
+                files=[("anh", ("a.jpg", JPG, "image/jpeg"))],
+            )
+        )
+    if kb.chi_phi and kb.boc_xep:
+        _kiem(
+            tx.post(
+                f"/api/toi/chuyen/{cid}/chi-phi",
+                data={"loai": "BOC_XEP", "so_tien": str(BOC_XEP[kb.tuyen]), "ghi_chu": "Thuê bốc xếp tại kho giao"},
                 files=[("anh", ("a.jpg", JPG, "image/jpeg"))],
             )
         )
@@ -416,8 +441,9 @@ def ngay_truoc(m: dict, dm: DanhMuc, ngay: date, i: int, so: list[int]) -> None:
         ("Long An", "Cần Thơ", 900, "GIAO"),
     ]
     t03 = [("TP.HCM", "Đồng Nai", 1500, "GIAO"), ("TP.HCM", "Bình Dương", 800, "GIAO")]
-    chay(m, dm, ngay, KichBan("T01", i % 2, i % 6, 6 * 60, t01, "DA_QUYET_TOAN", tre=i * 3), so)
-    chay(m, dm, ngay, KichBan("T03", 2 + i % 2, (i + 3) % 6, 7 * 60, t03, "DA_QUYET_TOAN"), so)
+    # Bốc xếp ở vài chuyến để có cả ca tài xế nộp lại lẫn công ty trả thêm
+    chay(m, dm, ngay, KichBan("T01", i % 2, i % 6, 6 * 60, t01, "DA_QUYET_TOAN", tre=i * 3, boc_xep=i % 3 == 0), so)
+    chay(m, dm, ngay, KichBan("T03", 2 + i % 2, (i + 3) % 6, 7 * 60, t03, "DA_QUYET_TOAN", boc_xep=i % 2 == 0), so)
 
 
 def hom_nay(m: dict, dm: DanhMuc, ngay: date, t: int, so: list[int]) -> None:
@@ -451,6 +477,7 @@ def hom_nay(m: dict, dm: DanhMuc, ngay: date, t: int, so: list[int]) -> None:
             t - 240,
             [("TP.HCM", "Đồng Nai", 1600, "GIAO"), ("TP.HCM", "Bình Dương", 900, "GIAO")],
             "DA_QUYET_TOAN",
+            boc_xep=True,
         ),
         so,
     )
