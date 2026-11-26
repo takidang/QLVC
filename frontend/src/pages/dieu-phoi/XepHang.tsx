@@ -305,7 +305,7 @@ export default function XepHang({
                     x={kx + 3}
                     y={y1 - h + 2}
                     width={Math.max(bw - 4, 2)}
-                    height={h - 4}
+                    height={Math.max(h - 4, 0)} /* đơn 0 m³ thì h = 0 */
                     className="xh-khung-don"
                     aria-hidden="true"
                   />
