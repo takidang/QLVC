@@ -116,7 +116,7 @@
 > 3. ✅ (xong 19/11) **Review PR giao diện mới của Tài** (menu tài khoản gọn, trang Tài khoản, trang Cài đặt), thử theo story `GD-cai-dat-tai-khoan` khi Tài mở PR.
 > 4. **UML** (`docs/uml/README.md`): cần có trước buổi báo cáo.
 > 5. ✅ (xong 19/11, PR #66) **E2E**: một kịch bản chạy trọn vòng: lập đơn, lập chuyến, ghép, chốt, tài xế quét lấy và giao, quyết toán.
-> 6. **Trước buổi báo cáo**: gộp xong các PR thì đưa `dev` lên `test`, thử lại toàn bộ, mở PR `test` → `main` (`docs/nhanh-git.md`); Kiệt duyệt PR lên `main`.
+> 6. ✅ (xong 26/11; Kiệt duyệt #72, #82, #90, #96, #117, #122) **Trước buổi báo cáo**: gộp xong các PR thì đưa `dev` lên `test`, thử lại toàn bộ, mở PR `test` → `main` (`docs/nhanh-git.md`); Kiệt duyệt PR lên `main`.
 > 7. Không gấp, Kiệt tự quyết: việc "để sau" của UC-19/20 (GPS Safari iPhone, khối Kết thúc chuyến tràn khung iPhone, hỏi lại trước khi bấm Xác nhận giao).
 
 | Việc | Tuần | Trạng thái | AC đạt/tổng | Còn thiếu |
@@ -128,8 +128,12 @@
 | Quét đầy đủ, UC-21, 23, 33 (báo sự cố) | 5–6 | Xong | UC-21 14/14, UC-23 14/14, UC-33 9/9 | UC-23 Tạm ứng gộp `dev` 08/11 (PR #17). UC-21 Chi phí (kèm nhãn điểm "Đã lấy") gộp `dev` 10/11 (PR #29). UC-33 Báo sự cố gộp `dev` 11/11 (PR #39) |
 | UC-24, 25 | 7 | Xong | UC-24 14/14, UC-25 10/10 | UC-25 Công nợ gộp `dev` 10/11 (PR #30). UC-24 Quyết toán gộp `dev` 10/11 (PR #33, sớm hơn mốc 29/11); trang Công nợ, Quyết toán cho Quản lý (chỉ xem) làm cùng UC-24 |
 | UC-26, 27, 34 (hiệu suất xe, ưu tiên S – thiếu giờ thì cắt trước), E2E | 8 | Xong | UC-26 8/8, UC-27 8/8, UC-34 7/7, E2E 6/6 | Backend gộp `dev` 11/11 (PR #43, #44, #47). Giao diện v3 Kiệt thử 18/11 (PR #60), đóng 3 story 19/11. E2E chạy trọn vòng (test API 18 bước) gộp `dev` 19/11 (PR #66) |
+| Review, duyệt lên `main`, CSDL demo | 9 | Xong | DEMO 7/7 | Duyệt 6 lần lên `main` (#72 … #122, chạy đủ test trên `test` trước mỗi lần). CSDL demo sạch `qlvc_demo2` (21/11), `qlvc_demo3` (25/11, dựng lại 26/11) kèm zip khôi phục. Seed dầu theo km + bốc xếp (PR #121, DEMO-AC7) |
 
 ### Nhật ký Kiệt (mới nhất ở trên)
+- 26/11: Review, thử #119 (Pixel 1440 và 390 px: đăng nhập, hộp thoại mờ dần, Esc, xếp hàng xem trước). PR #121 seed demo: dầu theo km tuyến (T01 34 L, T02 15 L, T03 13 L), bốc xếp ở 6 chuyến để có cả ca công ty trả thêm, ghi chú trạm theo tuyến (DEMO-AC7, test làm hỏng 2 kiểu → đỏ). Dựng lại `qlvc_demo3`, zip 2611 gửi Tài. Review #123; duyệt #122 lên `main` (1142 passed, frontend vitest 18/18, build đạt). Từ nay giữ `main` cho demo, chỉ sửa lỗi chặn.
+- 24–25/11: Review Pixel #98–#106, #107, #111–#116. Thử thật #109 (hộp xác nhận chung ở Quyết toán, Công nợ, Tạm ứng, Giao hàng 390 px; cả 2 phong cách: Thôi / Esc / bấm nền không lưu, bấm đúp chỉ lưu 1 lần) và #110 trên điện thoại (nút chép, giao hàng có GPS thật). Duyệt #117 lên `main` (1141 passed). Dựng CSDL demo `qlvc_demo3` từ `main` mới kèm zip.
+- 21–22/11: Duyệt #72 (bản demo đầu tiên lên `main`), #82, #90, #96; review #73, #75–#77, #79, #80, #84, #85, #87, #89, #92, #94. Dựng CSDL demo sạch `qlvc_demo2` kèm zip khôi phục cho Tài. Soạn kịch bản demo và tài liệu ôn giải thích UC phần Kiệt.
 - 19/11 (chiều): E2E chạy trọn vòng xong (6/6 AC, 18 bước, làm hỏng 3 chỗ để chứng minh test đỏ; sửa 2 góp ý review: ngày theo giờ VN, tháng báo cáo theo khởi hành), gộp `dev` (#66). Thử, review #64 Cài đặt / Tài khoản (5/5 AC) và #67 UC-39 ảnh đại diện (AC7 đạt, 1102 passed); review README #59. Tiếp theo: UML.
 - 19/11: Review, thử UC-30 Dự đoán nguy cơ trễ (PR #63): 1063 passed, AC7 giao diện v3 đạt, 4 góp ý không chặn ("Thấp · 72%" dễ hiểu lầm, mũi tên yếu tố, làm tròn tại ngưỡng, docstring ngưỡng cũ). Đóng UC-26 (8/8), UC-27 (8/8), UC-34 (7/7). Thay khối "Việc của Kiệt" bằng danh sách Tài gửi 19/11.
 - 16–18/11: Thử giao diện v3 (thao tác lưu, màn hẹp 1024 / 720 / 390 px, bản tối, chạy trọn chuyến trên iPhone thật), chọn v3, mở PR #61; bằng chứng UC-22 ca e, UC-26, 27, 28, 34 (PR #60). Kiểm README chạy demo (PR #59), 2 góp ý.
